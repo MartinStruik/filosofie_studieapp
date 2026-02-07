@@ -1,0 +1,838 @@
+import { useState, useEffect, useCallback } from "react";
+
+// ============================================================
+// FILOSOFIE STUDIEAPP \u2014 VWO 2026
+// Examenvragen (v4.2) + Flashcards (v4.4) gecombineerd
+// ============================================================
+
+const KWESTIES = [
+  { id: 1, title: "Wat is de mens?", subtitle: "Filosofische antwoorden op de vraag naar de mens", color: "#2D5A8E", accent: "#4A90D9", chapters: "H1\u2013H4 (Lia 1)", eindtermen: "ET 5\u20139" },
+  { id: 2, title: "Hoe veranderen techniek en wetenschap ons mensbeeld?", subtitle: "Metaforen, hersenwetenschappen en 4E-cognitie", color: "#8E4A2D", accent: "#D97A4A", chapters: "H5\u2013H7 (Lia 1)", eindtermen: "ET 10\u201312" },
+  { id: 3, title: "Verandert het wezen van de mens door techniek?", subtitle: "Natural-born cyborg, zintuigen, moraal en identiteit", color: "#2D8E5A", accent: "#4AD97A", chapters: "H8\u2013H11 (Lia 2)", eindtermen: "ET 13\u201317" },
+  { id: 4, title: "Grensvervagingen", subtitle: "Mens/dier, levend/niet-levend, fysiek/niet-fysiek", color: "#7A2D8E", accent: "#B04AD9", chapters: "H12\u2013H14 (Lia 2)", eindtermen: "ET 18\u201323" },
+];
+
+const FILOSOFEN = [
+  { name: "Descartes", kwestie: 1, kern: "Dualisme: denkend bewustzijn (res cogitans) + mechanisch lichaam (res extensa). Methodische twijfel: \u2018cogito ergo sum\u2019. Het lichaam als machine.", begrippen: ["dualisme", "res cogitans", "res extensa", "methodische twijfel", "cogito"], et: "ET 5" },
+  { name: "Sheets-Johnstone", kwestie: 1, kern: "Fenomenologie van dans: pre-reflectieve lichamelijke gewaarwording. We zijn een reflecterend, bewegend lichaam. Lichaamsschema gaat vooraf aan bewuste reflectie.", begrippen: ["pre-reflectief", "lichaamsschema", "fenomenologie", "dans"], et: "ET 6" },
+  { name: "Plessner", kwestie: 1, kern: "Excentrische positionaliteit: de mens kan buiten zichzelf treden. Wetten: bemiddelde onmiddellijkheid, natuurlijke kunstmatigheid, utopische standplaats. Lachen en wenen als grenservaringen.", begrippen: ["excentrische positionaliteit", "bemiddelde onmiddellijkheid", "natuurlijke kunstmatigheid", "utopische standplaats"], et: "ET 7" },
+  { name: "De Beauvoir", kwestie: 1, kern: "\u2018Men wordt niet als vrouw geboren, men wordt het.\u2019 Geleefde ervaring en de blik van de ander. Lichaam als situatie, niet als lot.", begrippen: ["situatie", "geleefde ervaring", "de ander", "vrouwwording"], et: "ET 8" },
+  { name: "Fanon", kwestie: 1, kern: "De \u2018blik van de witte ander\u2019 objectiveert. Ras als opgedrongen lichamelijke ervaring. Historisch lichaamsschema vs. raciaal-epidermaal schema.", begrippen: ["historisch lichaamsschema", "raciaal-epidermaal schema", "objectivering", "vervreemding"], et: "ET 9" },
+  { name: "Lakoff & Johnson", kwestie: 2, kern: "Belichaamde metaforen structureren ons denken. Ori\u00ebnterende metaforen (boven=goed, onder=slecht) zijn geworteld in lichamelijke ervaring. Ontologische metaforen behandelen abstracte dingen als concrete objecten.", begrippen: ["ori\u00ebnterende metafoor", "ontologische metafoor", "belichaamde cognitie", "conceptuele metafoor"], et: "ET 10" },
+  { name: "Vroon & Draaisma", kwestie: 2, kern: "Mensbeelden zijn historisch contingent: de dominante metafoor voor de geest verandert mee met de techniek van de tijd. Nu: de computermetafoor.", begrippen: ["historische contingentie", "computermetafoor", "theoriegeladenheid"], et: "ET 10" },
+  { name: "Swaab / computationalisme", kwestie: 2, kern: "\u2018Wij zijn ons brein.\u2019 Hersenen als informatieverwerkende machine. Functionalistisch mensbeeld. Brein-als-computer metafoor.", begrippen: ["computationalisme", "functionalisme", "brein-als-computer", "neurowetenschappen"], et: "ET 11" },
+  { name: "Dreyfus", kwestie: 2, kern: "Kritiek op computationalisme: menselijk denken is niet reduceerbaar tot symboolmanipulatie. Het lichaam, de context en de emoties zijn onmisbaar voor intelligent gedrag.", begrippen: ["kritiek op AI", "belichaamd denken", "drie problemen", "symboolmanipulatie"], et: "ET 11" },
+  { name: "4E-cognitie", kwestie: 2, kern: "Embodied, Embedded, Extended, Enactive. Cognitie is niet beperkt tot het brein maar verspreid over lichaam en omgeving. Clark & Chalmers: extended mind (Otto & Inga).", begrippen: ["embodied", "embedded", "extended", "enactive", "extended mind", "offloading"], et: "ET 12" },
+  { name: "Clark", kwestie: 3, kern: "Natural-born cyborgs: mens is van nature technologisch. Brein gebruikt omgeving, technologie wordt transparant ingelijfd. Cyborg-paradox. Dynamische apparaten.", begrippen: ["natural-born cyborg", "cyborg-paradox", "dynamische apparaten", "cognitieve symbiose", "interface"], et: "ET 14" },
+  { name: "Kockelkoren", kwestie: 3, kern: "Techniek verandert zintuiglijke ervaring. Decentreren: nieuwe techniek verstoort oude waarneming. Recentreren: zintuigen lijven techniek in.", begrippen: ["decentreren", "recentreren", "inlijving", "technische bemiddeling"], et: "ET 15" },
+  { name: "Verbeek", kwestie: 3, kern: "Technologische bemiddeling: techniek is nooit moreel neutraal. Echoscopie verandert morele situatie. Ontwerpen is moraal ontwerpen. Vrijheid = je bewust verhouden tot technologische invloeden.", begrippen: ["technologische bemiddeling", "moreel handelingsvermogen", "ontwerpen van moraal", "vrijheid als je verhouden"], et: "ET 16" },
+  { name: "De Mul", kwestie: 3, kern: "NBIN-technologie\u00ebn transformeren menselijke identiteit. Drie scenario\u2019s: extrahumanisme (zwermgeest), transhumanisme (alien), posthumanisme (zombie). Nietzsche: herwaardering van waarden.", begrippen: ["NBIN", "extrahumanisme", "transhumanisme", "posthumanisme", "humanisme", "herwaardering van waarden"], et: "ET 17" },
+  { name: "Morton", kwestie: 4, kern: "Ecologisch denken: alles is verbonden in \u2018the mesh\u2019. Hyperobjecten. Mens/dier-grens vervaagt. Ecologische crisis dwingt tot herdenken.", begrippen: ["the mesh", "hyperobject", "ecologisch denken", "interconnectedness"], et: "ET 18\u201319" },
+  { name: "Despret", kwestie: 4, kern: "Dieren hebben eigen perspectief en agency. \u2018What would animals say?\u2019 Wetenschappers moeten goede vragen stellen. Staying with the trouble (via Haraway).", begrippen: ["dierlijke agency", "goede vragen stellen", "antropomorfisme"], et: "ET 18\u201320" },
+  { name: "Haraway", kwestie: 4, kern: "Cyborg Manifesto: grenzen mens/dier, mens/machine vervagen. Staying with the trouble: verantwoordelijkheid nemen. Symbiopoiesis. Response-ability.", begrippen: ["cyborg manifesto", "staying with the trouble", "symbiopoiesis", "response-ability", "companion species"], et: "ET 18" },
+  { name: "Latour", kwestie: 4, kern: "Actor-Network Theory: niet alleen mensen maar ook dingen (actanten) handelen. Berlijnse sleutel als voorbeeld. Symmetrisch denken over mens en niet-mens.", begrippen: ["actant", "actor-network theory", "Berlijnse sleutel", "symmetrie", "non-human agency"], et: "ET 18, 21" },
+  { name: "Hayles", kwestie: 4, kern: "Cognitieve non-mens: technische systemen \u2018denken\u2019 zonder bewustzijn. Unthought: cognitie voorbij het menselijke. Cognitieve assemblages.", begrippen: ["unthought", "cognitieve non-mens", "technische cognitie", "cognitieve assemblage"], et: "ET 18, 21" },
+  { name: "Barad", kwestie: 4, kern: "Intra-actie: dingen bestaan niet voorafgaand aan hun relaties. Materie is actief. Agentieel realisme. Grens fysiek/niet-fysiek vervaagt.", begrippen: ["intra-actie", "agentieel realisme", "materie als actief"], et: "ET 18, 22" },
+  { name: "Harari", kwestie: 4, kern: "Data\u00efsme: data als ultieme bron van waarde en autoriteit. Algoritmes begrijpen ons beter dan wijzelf. Homo Deus.", begrippen: ["data\u00efsme", "Homo Deus", "algoritme", "dataficatie"], et: "ET 18, 23" },
+  { name: "Rasch", kwestie: 4, kern: "\u2018Het else\u2019: datareducties missen altijd iets. Kloof tussen data en werkelijkheid. Ruimte voor interpretatie en vrijheid.", begrippen: ["het else", "datareductie", "kloof data-werkelijkheid"], et: "ET 18, 23" },
+];
+
+// ============================================================
+// FLASHCARDS (v4.4) \u2014 70 kaarten, alle eindtermen gedekt
+// ============================================================
+
+const FLASHCARDS = [
+  // ========== ALGEMENE EINDTERMEN (ET 1\u20134) ==========
+  { term: "Mensbeeld (3e persoon)", def: "Een abstracte, theoretische beschrijving van wat de mens is \u2014 van buitenaf, als object van studie. Bijvoorbeeld: \u2018de mens is een rationeel wezen\u2019 of \u2018de mens is een machine\u2019.", kwestie: 0 },
+  { term: "Bestaanservaring (1e persoon)", def: "Hoe je de wereld concreet ervaart vanuit je eigen lichaam en situatie. Niet beschrijven w\u00e1t de mens is, maar hoe het v\u00f3\u00e9lt om mens te zijn.", kwestie: 0 },
+  { term: "Fenomenologie", def: "Filosofische benadering die vertrekt vanuit de geleefde ervaring (1e persoon). Niet: wat zegt de wetenschap over de mens, maar: hoe ervaren we de wereld?", kwestie: 0 },
+  { term: "Begripsanalyse", def: "Filosofische methode: neem een begrip (bv. \u2018techniek\u2019), definieer het, onderzoek de vooronderstellingen en trek de implicaties na. Centraal in ET 2.", kwestie: 0 },
+  { term: "Wezen / essentie", def: "Wat maakt iets tot wat het is? De kern van de examenvraag: heeft de mens een vaststaand wezen, of verandert dat door techniek en wetenschap?", kwestie: 0 },
+
+  // ========== KWESTIE 1: WAT IS DE MENS? (ET 5\u20139) ==========
+  { term: "Dualisme (Descartes)", def: "De opvatting dat de mens bestaat uit twee gescheiden substanties: een denkend bewustzijn (res cogitans) en een uitgebreid/mechanisch lichaam (res extensa).", kwestie: 1 },
+  { term: "Methodische twijfel", def: "Descartes\u2019 methode om aan alles te twijfelen wat maar enigszins betwijfeld kan worden, om zo tot een onbetwijfelbaar fundament te komen: \u2018cogito ergo sum\u2019.", kwestie: 1 },
+  { term: "Cogito ergo sum", def: "\u2018Ik denk, dus ik ben.\u2019 Het onbetwijfelbare fundament van Descartes: ook als je aan alles twijfelt, kun je niet twijfelen d\u00e1t je twijfelt (= denkt).", kwestie: 1 },
+  { term: "Introspectie (Descartes)", def: "De methode om door naar binnen te keren de eigen geest te onderzoeken. Descartes vertrouwt hierop: het denken is transparant voor zichzelf.", kwestie: 1 },
+  { term: "Interactieprobleem", def: "Het kernprobleem van Descartes\u2019 dualisme: als geest en lichaam twee totaal verschillende substanties zijn, hoe kunnen ze dan op elkaar inwerken? (Pijnappelklier als \u2018oplossing\u2019.)", kwestie: 1 },
+  { term: "Mechanistisch wereldbeeld", def: "Descartes\u2019 opvatting dat het lichaam en de natuur werken als een machine \u2014 volgens mechanische wetmatigheden. Alleen de geest (res cogitans) valt hierbuiten.", kwestie: 1 },
+  { term: "Pre-reflectief (Sheets-Johnstone)", def: "De lichamelijke gewaarwording die voorafgaat aan bewuste reflectie. Je voelt je lichaam bewegen in de ruimte v\u00f3\u00f3rdat je erover nadenkt.", kwestie: 1 },
+  { term: "Lichaamsschema", def: "Het onbewuste \u2018kaart\u2019 van je lichaam dat bepaalt hoe je beweegt en de ruimte ervaart. Flexibel en aanpasbaar (zie ook Clark: incorporatie van technologie).", kwestie: 1 },
+  { term: "Intentionaliteit", def: "Bewustzijn is altijd bewustzijn \u2018van\u2019 iets \u2014 het is gericht op de wereld. Fenomenologisch kernbegrip (Husserl/Merleau-Ponty) dat Sheets-Johnstone toepast op het lichaam.", kwestie: 1 },
+  { term: "Bewustzijns-lichaam (Sheets-Johnstone)", def: "Wij zijn geen geest \u00edn een lichaam, maar een reflecterend, bewegend lichaam. Het bewustzijn is niet gescheiden van het lichaam maar is er altijd al mee verweven.", kwestie: 1 },
+  { term: "Excentrische positionaliteit (Plessner)", def: "Het unieke menselijke vermogen om \u2018buiten zichzelf\u2019 te treden: je kunt jezelf waarnemen alsof je een ander bent, terwijl je tegelijk het centrum van je eigen ervaring blijft.", kwestie: 1 },
+  { term: "Bemiddelde onmiddellijkheid (Plessner)", def: "Onze directe ervaringen zijn altijd al bemiddeld door ons vermogen tot reflectie. We kunnen niet \u2018puur\u2019 ervaren zonder er tegelijk afstand van te nemen.", kwestie: 1 },
+  { term: "Natuurlijke kunstmatigheid (Plessner)", def: "Het is de natuur van de mens om \u2018kunstmatig\u2019 te zijn: we moeten onszelf en onze wereld vormgeven door cultuur, techniek en expressie.", kwestie: 1 },
+  { term: "Utopische standplaats (Plessner)", def: "De mens ervaart een fundamentele \u2018thuisloosheid\u2019: we zoeken altijd naar een plek die we nooit volledig bereiken. We zijn nooit helemaal thuis in de wereld.", kwestie: 1 },
+  { term: "Lachen en wenen (Plessner)", def: "Grenservaringen waarin de excentrische positionaliteit doorbreekt: het lichaam \u2018neemt het over\u2019 en de mens verliest tijdelijk de greep op zichzelf. Bewijs dat we geen pure geesten zijn.", kwestie: 1 },
+  { term: "Situatie (De Beauvoir)", def: "De concrete omstandigheden (lichamelijk, sociaal, historisch) waarin een mens zich bevindt. \u2018Men wordt niet als vrouw geboren, men wordt het\u2019 \u2014 gender is een situatie, niet een lot.", kwestie: 1 },
+  { term: "Geleefde ervaring (De Beauvoir)", def: "Het concrete, doorleefde lichaam in een specifieke situatie. Niet het abstracte \u2018vrouw-zijn\u2019 maar hoe het voelt om als vrouw bejegend te worden.", kwestie: 1 },
+  { term: "Medewereld (Plessner)", def: "De mens bestaat altijd in relatie tot anderen: de ander is constitutief voor wie je bent. Vergelijk De Beauvoir (blik) en Fanon (objectiverende blik).", kwestie: 1 },
+  { term: "Historisch lichaamsschema (Fanon)", def: "Het lichaamsschema dat niet alleen individueel is, maar gevormd door collectieve geschiedenis. Voor mensen van kleur: de raciale ervaring wordt in het lichaam gegrift.", kwestie: 1 },
+  { term: "Raciaal-epidermaal schema (Fanon)", def: "Het schema dat door de blik van de witte ander op het zwarte lichaam wordt gelegd: huidskleur wordt een \u2018label\u2019 dat de bestaanservaring bepaalt en beperkt.", kwestie: 1 },
+  { term: "Existentialisme", def: "Stroming die stelt dat existentie voorafgaat aan essentie: de mens h\u00e9\u00e9ft geen vaststaand wezen maar m\u00e1\u00e1kt zichzelf. Achtergrond van De Beauvoir en Fanon.", kwestie: 1 },
+
+  // ========== KWESTIE 2: MENSBEELD EN TECHNIEK (ET 10\u201312) ==========
+  { term: "Ori\u00ebnterende metafoor (Lakoff & Johnson)", def: "Metaforen gebaseerd op ruimtelijke ori\u00ebntatie van het lichaam: BOVEN = goed/meer, ONDER = slecht/minder. Bv. \u2018ik voel me down\u2019 of \u2018de koers stijgt\u2019.", kwestie: 2 },
+  { term: "Ontologische metafoor (Lakoff & Johnson)", def: "Metaforen die abstracte dingen behandelen alsof het concrete objecten of stoffen zijn. Bv. \u2018inflatie vreet ons spaargeld op\u2019 \u2014 inflatie wordt een levend wezen.", kwestie: 2 },
+  { term: "Conceptuele metafoor", def: "Een onbewust denkpatroon waarbij we het ene concept begrijpen in termen van het andere. Bv. \u2018het brein is een computer\u2019 structureert hoe we over denken denken.", kwestie: 2 },
+  { term: "Historische contingentie (Vroon & Draaisma)", def: "Mensbeelden zijn niet tijdloos maar historisch bepaald: ze veranderen mee met de dominante techniek van een tijdperk. Ze hadden ook anders kunnen zijn.", kwestie: 2 },
+  { term: "Computermetafoor (Vroon & Draaisma)", def: "De huidige dominante metafoor voor de geest: het brein als informatieverwerkende computer. Eerder waren het klokwerk, telegraaf, stoommachine.", kwestie: 2 },
+  { term: "Theoriegeladenheid", def: "Metaforen en theorie\u00ebn bepalen mede wat we waarnemen. Als je het brein als computer ziet, zoek je naar \u2018input\u2019, \u2018output\u2019 en \u2018verwerking\u2019 \u2014 en mis je wat niet in dat kader past.", kwestie: 2 },
+  { term: "Computationalisme / functionalisme", def: "De opvatting dat het brein werkt als een computer: mentale toestanden zijn functionele toestanden die in principe door machines gerepliceerd kunnen worden.", kwestie: 2 },
+  { term: "Symboolmanipulatie", def: "Kern van het klassieke functionalisme: denken = symbolen verwerken volgens formele regels. Het brein is een symbolenprocessor, net als een computer.", kwestie: 2 },
+  { term: "Dreyfus\u2019 kritiek op AI", def: "Menselijk denken is niet reduceerbaar tot symboolmanipulatie. Drie problemen: (1) het contextprobleem, (2) het relevantieproblem, (3) het lichaamsprobleem. Belichaamd denken is niet simuleerbaar.", kwestie: 2 },
+  { term: "Connectionisme / neurale netwerken", def: "Alternatief voor klassieke AI: leert patronen door verbindingen tussen knooppunten te versterken/verzwakken, niet via expliciete regels. Ligt dichter bij de werking van het brein.", kwestie: 2 },
+  { term: "Productsimulatie vs. processimulatie", def: "Twee vormen van AI: productsimulatie bootst het eindresultaat na (bv. schaakcomputer), processimulatie bootst het menselijke leerproces na (bv. neuraal netwerk).", kwestie: 2 },
+  { term: "Extended mind (Clark & Chalmers)", def: "De hypothese dat cognitie zich uitstrekt voorbij het brein, naar het lichaam en de omgeving. Otto\u2019s notitieboekje functioneert als deel van zijn geheugen (vergelijk met Inga\u2019s biologisch geheugen).", kwestie: 2 },
+  { term: "4E-cognitie", def: "Cognitie is: Embodied (belichaamd), Embedded (ingebed in omgeving), Extended (uitgebreid naar buiten), Enactive (ontstaat door actieve interactie met de wereld).", kwestie: 2 },
+  { term: "Enactieve cognitie (No\u00eb)", def: "Waarneming is geen passief ontvangen maar een actieve vaardigheid. Zien = weten wat er verandert als je beweegt. Sensomotorische kennis is cruciaal.", kwestie: 2 },
+  { term: "Sensomotorisch lichaam (No\u00eb)", def: "Het waarnemende, bewegende lichaam als basis van cognitie. Waarneming is niet iets dat \u2018in het hoofd\u2019 gebeurt maar een activiteit van het hele lichaam in de wereld.", kwestie: 2 },
+  { term: "Offloading", def: "Het \u2018uitbesteden\u2019 van cognitieve taken aan externe middelen: een boodschappenlijstje, een rekenmachine, GPS. Centraal concept bij extended cognition.", kwestie: 2 },
+
+  // ========== KWESTIE 3: WEZEN EN TECHNIEK (ET 13\u201317) ==========
+  { term: "Natural-born cyborg (Clark)", def: "De mens is van nature een hybride van biologie en technologie. We zijn altijd al cyborgs geweest \u2014 taal en gereedschap waren onze eerste cognitieve technologie\u00ebn.", kwestie: 3 },
+  { term: "Cyborg-paradox (Clark)", def: "De meest succesvolle technologie\u00ebn worden \u2018transparant\u2019: we merken ze niet meer op. Je kijkt door je bril, niet naar je bril. Hoe beter de integratie, hoe onzichtbaarder.", kwestie: 3 },
+  { term: "Interface vs. cyborg (Clark)", def: "Interface: techniek als extern hulpmiddel dat je bedient (afstandsbediening). Cyborg: techniek wordt deel van je lichaam en cognitie (ingelijfd, transparant).", kwestie: 3 },
+  { term: "Dynamische apparaten (Clark)", def: "Technologie\u00ebn die niet alleen door ons worden gebruikt, maar ook leren over ons en zich aanpassen. Bv. smartphones, adaptieve software. Leidt tot cognitieve symbiose.", kwestie: 3 },
+  { term: "Incorporatie (Ramachandran)", def: "Het lichaam kan kunstmatige elementen \u2018inlijven\u2019: fantoomledematen, rubber hand illusie. Het lichaamsschema is flexibeler dan gedacht.", kwestie: 3 },
+  { term: "Decentreren (Kockelkoren)", def: "Nieuwe techniek verstoort bestaande waarneming. De eerste treinreizigers werden misselijk \u2014 hun zintuigen konden de ervaring niet plaatsen.", kwestie: 3 },
+  { term: "Recentreren (Kockelkoren)", def: "Na decentrering lijven de zintuigen de techniek in: treinreizen wordt normaal, het landschap \u2018stroomt\u2019 voorbij als een film. Nieuwe waarnemingsgewoonten ontstaan.", kwestie: 3 },
+  { term: "Inlijving (Kockelkoren)", def: "Het proces waarbij techniek zo vertrouwd wordt dat het deel wordt van onze lichamelijke ervaring. De techniek \u2018verdwijnt\u2019 in het gebruik.", kwestie: 3 },
+  { term: "Technologische bemiddeling (Verbeek)", def: "Technologie is nooit neutraal: ze bemiddelt actief tussen mens en wereld. Ze vormt onze waarneming \u00e9n ons handelen. Bv. echoscopie maakt foetus tot medisch object.", kwestie: 3 },
+  { term: "Ontwerpen van moraal (Verbeek)", def: "Omdat technologie moreel handelen bemiddelt, is ontwerpen ook moraal ontwerpen. Ontwerpers bouwen (bewust of onbewust) waarden in. Bv. verkeersdrempel = waarde veiligheid.", kwestie: 3 },
+  { term: "Vrijheid als je verhouden (Verbeek)", def: "Vrijheid \u2260 vrij van invloed. Vrijheid = je bewust verhouden tot technologische invloeden: ze herkennen, evalueren en er actief mee omgaan.", kwestie: 3 },
+  { term: "NBIN-technologie\u00ebn (De Mul)", def: "Nano-, Bio-, Info- en Neurotechnologie. Deze convergerende technologie\u00ebn grijpen in op de biologische basis van de mens en transformeren onze identiteit.", kwestie: 3 },
+  { term: "Humanisme (De Mul)", def: "Het traditionele kader: de mens als autonoom, rationeel wezen met een vaststaande essentie. Uitgangspunt waartegen De Mul zijn drie scenario\u2019s afzet.", kwestie: 3 },
+  { term: "Extrahumanisme (De Mul)", def: "Scenario \u2018Zwermgeest\u2019: neurotechnologie verbindt breinen tot een collectief bewustzijn. Het individu lost op in een groter geheel.", kwestie: 3 },
+  { term: "Transhumanisme (De Mul)", def: "Scenario \u2018Alien\u2019: biotechnologie (CRISPR) cre\u00ebert een nieuw soort mens. De mens evolueert tot iets fundamenteel anders, een \u2018nieuwe biologische soort\u2019.", kwestie: 3 },
+  { term: "Posthumanisme (De Mul)", def: "Scenario \u2018Zombie\u2019: robotica/AI cre\u00ebert kunstmatig leven zonder bewustzijn. De grens tussen leven en niet-leven vervaagt.", kwestie: 3 },
+  { term: "Herwaardering van waarden (Nietzsche/De Mul)", def: "Bestaande waarden en normen moeten opnieuw onderzocht worden in het licht van technologische veranderingen. Niet vasthouden aan het oude, maar nieuwe waarden cre\u00ebren.", kwestie: 3 },
+
+  // ========== KWESTIE 4: GRENSVERVAGINGEN (ET 18\u201323) ==========
+  { term: "The mesh (Morton)", def: "Het netwerk van alle levende en niet-levende wezens die fundamenteel met elkaar verbonden zijn. Er is geen \u2018buiten\u2019 de natuur \u2014 alles is verweven.", kwestie: 4 },
+  { term: "Hyperobject (Morton)", def: "Objecten die zo enorm verspreid zijn in tijd en ruimte dat ze onze waarneming te boven gaan. Bv. klimaatverandering, radioactief afval, plasticsoep.", kwestie: 4 },
+  { term: "Ecologisch denken (Morton)", def: "Twee aspecten: (1) alles is met alles verbonden (the mesh), en (2) elk wezen heeft een eigen perspectief. Dwingt tot herziening van de mens/dier-grens.", kwestie: 4 },
+  { term: "Dierlijke agency (Despret)", def: "Dieren zijn niet louter objecten van onderzoek maar actieve subjecten met eigen perspectief en handelingsvermogen. Wetenschappers moeten \u2018goede vragen\u2019 stellen.", kwestie: 4 },
+  { term: "Staying with the trouble (Haraway)", def: "Niet wegvluchten in utopie of dystopie, maar verantwoordelijkheid nemen in het rommelige heden. Symbiotisch samenleven met andere soorten.", kwestie: 4 },
+  { term: "Symbiopoiesis (Haraway)", def: "Leven ontstaat niet uit zichzelf (auto-poiesis) maar altijd in samenwerking met andere soorten. \u2018Making-with\u2019: samen worden, samen leven.", kwestie: 4 },
+  { term: "Response-ability (Haraway)", def: "Het vermogen \u00e9n de plicht om te antwoorden op andere wezens. Niet \u2018verantwoordelijkheid\u2019 als abstract principe maar als concreet antwoord-geven.", kwestie: 4 },
+  { term: "Companion species (Haraway)", def: "Soorten die samen evolueren en elkaars bestaan vormgeven. De mens is geen onafhankelijk wezen maar altijd al verweven met andere soorten.", kwestie: 4 },
+  { term: "Cyborg Manifesto (Haraway)", def: "Grenzen tussen mens/dier, mens/machine en fysiek/niet-fysiek zijn doorbroken. De cyborg is een metafoor voor het overstijgen van dualismen.", kwestie: 4 },
+  { term: "Actant (Latour)", def: "Alles (mens \u00e9n niet-mens) dat handelt of een verschil maakt in een netwerk. Een drempel, een sleutel, een virus \u2014 allemaal actanten met \u2018agency\u2019.", kwestie: 4 },
+  { term: "Actor-Network Theory (Latour)", def: "Sociale relaties bestaan uit netwerken van menselijke en niet-menselijke actoren. De Berlijnse sleutel dwingt je de deur te sluiten \u2014 het \u2018handelt\u2019.", kwestie: 4 },
+  { term: "Parlement der Dingen (Latour)", def: "Politieke besluitvorming moet niet alleen mensen maar ook niet-menselijke actanten een \u2018stem\u2019 geven. Technologie en natuur als politieke medespelers.", kwestie: 4 },
+  { term: "Unthought / cognitieve non-mens (Hayles)", def: "Technische systemen (algoritmen, sensoren) die \u2018cognitieve taken\u2019 uitvoeren zonder bewustzijn. Cognitie voorbij het menselijke.", kwestie: 4 },
+  { term: "Cognitieve assemblage (Hayles)", def: "Complexe systemen waarin menselijke en niet-menselijke cognitie samenwerken. Bv. een piloot met autopilot: het denken is verdeeld over mens en machine.", kwestie: 4 },
+  { term: "Intra-actie (Barad)", def: "Niet inter-actie (twee vooraf bestaande dingen) maar intra-actie: dingen ontstaan pas in hun onderlinge relatie. Materie is actief en producerend.", kwestie: 4 },
+  { term: "Agentieel realisme (Barad)", def: "Werkelijkheid ontstaat door intra-acties: materie, betekenis en agency zijn niet vooraf gegeven maar worden samen geproduceerd in relaties.", kwestie: 4 },
+  { term: "Despret \u2013 goede vragen stellen", def: "Onderzoekers moeten niet hun eigen kaders opleggen maar vragen stellen die dieren de ruimte geven om te \u2018antwoorden\u2019. Slechte vragen leiden tot slechte wetenschap.", kwestie: 4 },
+  { term: "Data\u00efsme (Harari)", def: "De opvatting dat data de ultieme bron van waarde en autoriteit is. Algoritmes begrijpen ons beter dan wijzelf. \u2018Homo Deus\u2019 voorbij het humanisme.", kwestie: 4 },
+  { term: "Het else (Rasch)", def: "Dat wat bij datareductie altijd verloren gaat. De kloof tussen data en werkelijkheid. In die \u2018kier van licht\u2019 doet zich iets als vrijheid voor.", kwestie: 4 },
+
+  // ========== DOMEINEN B1/C1/D1/E1 ==========
+  { term: "Constructivisme (epistemologie)", def: "Kennis is niet een passieve afspiegeling van de werkelijkheid maar wordt actief geconstrueerd door de waarnemer. Verband met theoriegeladenheid en metaforen.", kwestie: 0 },
+  { term: "Rationalisme vs. empirisme", def: "Rationalisme (Descartes): kennis begint bij het denken. Empirisme: kennis begint bij zintuiglijke ervaring. De 4E-cognitie overstijgt dit klassieke debat.", kwestie: 0 },
+  { term: "Is-ought gap (Hume)", def: "Uit hoe iets \u2018is\u2019 (feit) volgt niet hoe het \u2018moet zijn\u2019 (norm). Relevant bij: mag alles wat technologisch k\u00e1n? NBIN, genetische modificatie, data\u00efsme.", kwestie: 0 },
+];
+
+// ============================================================
+// QUIZ QUESTIONS
+// ============================================================
+
+const QUIZ_QUESTIONS = [
+  // Kwestie 1
+  { q: "Descartes stelt dat de mens bestaat uit twee substanties. Welke zijn dat?", options: ["Res cogitans (denken) en res extensa (uitgebreidheid)", "Bewustzijns-lichaam en lichaamsschema", "Excentrische en centrische positionaliteit", "Mensbeeld en bestaanservaring"], correct: 0, explanation: "Descartes\u2019 dualisme onderscheidt res cogitans (denkend bewustzijn) en res extensa (uitgebreid/materieel lichaam). \u2018Bewustzijns-lichaam\u2019 is juist Sheets-Johnstones term die deze scheiding verwerpt.", kwestie: 1 },
+  { q: "Wat bedoelt Sheets-Johnstone met \u2018pre-reflectief\u2019?", options: ["De bewuste reflectie die voorafgaat aan lichamelijke actie", "Lichamelijke gewaarwording die voorafgaat aan bewuste reflectie", "Het lichaamsschema dat ontstaat door nadenken over beweging", "De fenomenologische methode van bewuste zelfobservatie"], correct: 1, explanation: "Pre-reflectief = de directe lichamelijke ervaring die er al is v\u00f3\u00f3r bewuste reflectie. Optie A draait de volgorde om (d\u00e1t is juist de cartesiaanse positie).", kwestie: 1 },
+  { q: "Plessners \u2018excentrische positionaliteit\u2019 houdt in dat de mens:", options: ["Altijd in het centrum van de wereld staat (centrische positie)", "Buiten zichzelf kan treden en zichzelf kan waarnemen", "Excentriek gedrag vertoont ten opzichte van dieren", "Via bemiddelde onmiddellijkheid zijn ervaring vormgeeft"], correct: 1, explanation: "De mens kan zichzelf van buitenaf beschouwen (excentrisch) terwijl hij tegelijk het centrum van zijn eigen ervaring blijft. Optie D noemt een wet van Plessner maar beschrijft niet de excentrische positionaliteit zelf.", kwestie: 1 },
+  { q: "Wat bedoelt Fanon met het \u2018raciaal-epidermaal schema\u2019?", options: ["Een biologische classificatie van rassen door de wetenschap", "Het schema dat door de blik van de witte ander op het zwarte lichaam wordt gelegd", "Plessners lichaamsschema toegepast op raciale ervaring", "De Beauvoirs situatie-begrip vertaald naar ras"], correct: 1, explanation: "Het raciaal-epidermaal schema is het door de dominante (witte) blik opgelegde beeld dat de bestaanservaring van zwarte mensen bepaalt en beperkt. Optie C klinkt aannemelijk maar is Fanons eigen begrip, niet afgeleid van Plessner.", kwestie: 1 },
+  { q: "De Beauvoir stelt: \u2018Men wordt niet als vrouw geboren, men wordt het.\u2019 Dit illustreert:", options: ["Dat vrouwelijkheid een biologisch gegeven is dat cultureel versterkt wordt", "Dat gender een sociale situatie is, niet een biologisch lot", "Plessners wet van natuurlijke kunstmatigheid toegepast op gender", "Dat het mensbeeld van vrouwen verschilt van dat van mannen"], correct: 1, explanation: "De Beauvoir benadrukt dat vrouwelijkheid niet biologisch bepaald is maar een situatie: een complex van sociale verwachtingen, blikken en rollen.", kwestie: 1 },
+
+  // Kwestie 2
+  { q: "Welke metafoor is een voorbeeld van een ori\u00ebnterende metafoor (Lakoff & Johnson)?", options: ["\u2018De tijd is geld\u2019 \u2014 tijd als verhandelbaar object", "\u2018Ik voel me down\u2019 \u2014 negatief = onder, positief = boven", "\u2018Inflatie vreet ons spaargeld op\u2019 \u2014 inflatie als levend wezen", "\u2018Kennis is macht\u2019 \u2014 kennis als instrument"], correct: 1, explanation: "Ori\u00ebnterende metaforen zijn gebaseerd op de ruimtelijke ori\u00ebntatie van het lichaam: BOVEN = goed/positief, ONDER = slecht/negatief. Optie C is een ontologische metafoor (inflatie als concreet wezen).", kwestie: 2 },
+  { q: "Het gedachtenexperiment van Otto en Inga (Clark & Chalmers) illustreert:", options: ["Dat alleen biologische hersenen echt geheugen bevatten", "De extended mind-hypothese: Otto\u2019s notitieboekje is deel van zijn geheugen", "Dreyfus\u2019 argument dat computers niet kunnen denken", "Het verschil tussen productsimulatie en processimulatie"], correct: 1, explanation: "Otto (met Alzheimer) gebruikt een notitieboekje; Inga haar biologisch geheugen. Beide functioneren als geheugen \u2014 dus cognitie strekt zich uit voorbij het brein.", kwestie: 2 },
+  { q: "Wat houdt \u2018enactieve cognitie\u2019 (No\u00eb) in?", options: ["Cognitie wordt geactiveerd door neurale prikkels in het brein", "Waarneming is passief ontvangen van zintuiglijke informatie", "Waarneming is een actieve vaardigheid gebaseerd op sensomotorische kennis", "Enactief betekent dat cognitie alleen binnen het lichaam plaatsvindt"], correct: 2, explanation: "Volgens No\u00eb is zien niet passief: het is weten wat er visueel verandert als je beweegt. Waarneming vereist actieve, lichamelijke interactie met de wereld.", kwestie: 2 },
+  { q: "Het computationalisme stelt dat:", options: ["Computers bewustzijn hebben net als mensen", "Het brein werkt als een informatieverwerkende machine", "Alleen het lichaam denkt, niet het brein", "Denken onmogelijk nagebootst kan worden"], correct: 1, explanation: "Het computationalisme / functionalisme ziet het brein als een informatieverwerkende machine: mentale toestanden zijn functionele toestanden. Dit is precies wat Dreyfus bekritiseert.", kwestie: 2 },
+
+  // Kwestie 3
+  { q: "Clark noemt de mens een \u2018natural-born cyborg\u2019. Wat bedoelt hij daarmee?", options: ["Mensen worden steeds meer machine door implantaten", "De mens is van nature een hybride van biologie en technologie", "Alleen mensen met protheses of chips zijn cyborgs", "De mens zal in de toekomst een cyborg worden (transhumanisme)"], correct: 1, explanation: "Volgens Clark zijn we altijd al cyborgs geweest. Taal, gereedschap en schrift waren onze eerste cognitieve technologie\u00ebn. Optie D is De Muls transhumanisme-scenario.", kwestie: 3 },
+  { q: "Kockelkoren beschrijft hoe de eerste treinreizigers misselijk werden. Dit is een voorbeeld van:", options: ["Recentreren \u2014 de zintuigen passen zich aan", "Decentreren \u2014 nieuwe techniek verstoort bestaande waarneming", "Technologische bemiddeling volgens Verbeek", "De cyborg-paradox van Clark"], correct: 1, explanation: "Decentreren = nieuwe techniek verstoort bestaande waarneming. De zintuigen kunnen de nieuwe ervaring (snelheid van de trein) nog niet plaatsen.", kwestie: 3 },
+  { q: "Verbeek stelt: \u2018Ontwerpen is moraal ontwerpen.\u2019 Wat bedoelt hij?", options: ["Ontwerpers moeten een ethiekcursus volgen", "Technologie bevat altijd ingebouwde waarden die moreel handelen be\u00efnvloeden", "Moraal kan alleen door mensen worden bepaald, niet door techniek", "Kockelkoren: ontwerpen bepaalt zintuiglijke ervaring"], correct: 1, explanation: "Omdat technologie niet neutraal is maar ons handelen bemiddelt, bouwen ontwerpers (bewust of onbewust) morele waarden in hun producten in.", kwestie: 3 },
+  { q: "De Muls scenario \u2018transhumanisme\u2019 beschrijft:", options: ["Verbinding van breinen tot een collectief bewustzijn (zwermgeest)", "Biotechnologische verandering naar een nieuwe soort mens (alien)", "Kunstmatig leven zonder bewustzijn (zombie)", "Terugkeer naar het klassieke humanisme"], correct: 1, explanation: "Transhumanisme = het \u2018alien\u2019-scenario: biotechnologie (zoals CRISPR) kan leiden tot een fundamenteel andere, nieuwe biologische soort mens. De zwermgeest is extrahumanisme, de zombie is posthumanisme.", kwestie: 3 },
+  { q: "Wat bedoelt Verbeek met \u2018vrijheid als je verhouden\u2019?", options: ["Vrijheid betekent doen wat je wilt zonder technologische dwang", "Vrijheid = je bewust verhouden tot technologische invloeden", "Vrijheid is onmogelijk geworden door technologische bemiddeling", "Vrijheid = technologie weigeren en terugkeren naar de natuur"], correct: 1, explanation: "Vrijheid is niet \u2018vrij van invloed\u2019 maar: technologische invloeden herkennen, evalueren en er actief mee omgaan.", kwestie: 3 },
+
+  // Kwestie 4
+  { q: "Latours \u2018Berlijnse sleutel\u2019 illustreert:", options: ["Dat alleen mensen morele keuzes kunnen maken", "Dat ook niet-menselijke dingen (actanten) \u2018agency\u2019 hebben", "Dat techniek de menselijke ervaring decentreert (Kockelkoren)", "Dat sleutels symbolen zijn van eigendom en macht"], correct: 1, explanation: "De Berlijnse sleutel dwingt je de deur achter je te sluiten. Het object \u2018handelt\u2019 \u2014 het is een actant met ingebouwde agency.", kwestie: 4 },
+  { q: "Harari\u2019s \u2018data\u00efsme\u2019 houdt in:", options: ["Dat data neutraal en objectief de werkelijkheid weerspiegelt", "Dat data de ultieme bron van waarde en autoriteit is", "Dat Rasch gelijk heeft over het else", "Dat datawetenschappers de nieuwe filosofen zijn"], correct: 1, explanation: "Data\u00efsme is de opvatting dat informatie/data de hoogste waarde heeft. Algoritmes zouden ons beter begrijpen dan wijzelf. Rasch (het else) bekritiseert juist deze reductie.", kwestie: 4 },
+  { q: "Rasch spreekt over \u2018het else\u2019. Wat is dat?", options: ["Een programmeertaal voor data-analyse", "Dat wat bij datareductie altijd verloren gaat", "Harari\u2019s term voor het posthumane tijdperk", "Barads alternatief voor intra-actie"], correct: 1, explanation: "\u2018Het else\u2019 is dat wat bij elke datareductie ontsnapt. De kloof tussen data en werkelijkheid \u2014 daarin schuilt ruimte voor interpretatie en vrijheid.", kwestie: 4 },
+  { q: "Barads begrip \u2018intra-actie\u2019 verschilt van \u2018interactie\u2019 omdat:", options: ["Het hetzelfde betekent maar korter is", "Dingen pas ontstaan \u00edn hun onderlinge relatie, niet erv\u00f3\u00f3r", "Het alleen betrekking heeft op materie, niet op mensen", "Het Latours actor-network theory vervangt"], correct: 1, explanation: "Bij inter-actie bestaan twee dingen al los van elkaar en ontmoeten ze elkaar. Bij intra-actie (Barad) ontstaan de dingen pas in en door hun relatie.", kwestie: 4 },
+  { q: "Morton gebruikt het begrip \u2018the mesh\u2019 om uit te drukken dat:", options: ["De natuur een net is dat de mens gevangen houdt", "Alles (levend en niet-levend) fundamenteel met elkaar verbonden is", "Wifi-netwerken de natuur bedreigen (hyperobject)", "Mensen gevangen zitten in technologische systemen"], correct: 1, explanation: "The mesh = het netwerk van alle wezens en dingen die fundamenteel verweven zijn. Er is geen \u2018buiten\u2019 de natuur.", kwestie: 4 },
+  { q: "Hayles\u2019 concept \u2018unthought\u2019 verwijst naar:", options: ["Onbewuste menselijke gedachten volgens Freud", "Cognitieve processen in technische systemen zonder bewustzijn", "Vergeten filosofische idee\u00ebn die herontdekt moeten worden", "Het onvermogen van AI om echt te denken (Dreyfus)"], correct: 1, explanation: "Unthought = cognitie voorbij het menselijke bewustzijn. Technische systemen (algoritmen, sensoren) voeren cognitieve taken uit zonder bewust te zijn. Dreyfus\u2019 kritiek gaat juist over iets anders: het onvermogen om belichaamd denken te simuleren.", kwestie: 4 },
+];
+
+// ============================================================
+// EXAM QUESTIONS (v4.2) \u2014 18 vragen met casuscontext
+// ============================================================
+
+const EXAM_QUESTIONS = [
+  // EXAMEN 2025-T1 \u2014 Opgave 1: Real Humans
+  { year: "2025-T1", nr: 1, points: 3, question: "Leg uit wat het mensbeeld van het functionalisme inhoudt. Gebruik daarbij de begrippen input/output en mentale representatie. Leg vervolgens uit dat Anita\u2019s opvatting past bij het functionalisme.", context: "Casus \u2018Real Humans\u2019: Zweedse serie over \u2018hubots\u2019 \u2014 robots die bijna niet van mensen te onderscheiden zijn. Anita is een hubot die in een gezin woont en huishoudelijk werk doet. Ze lijkt emoties te hebben en bouwt een band op met het gezin.", model: "Functionalisme: mentale toestanden worden gedefinieerd door hun functionele rol \u2014 de relatie tussen input (prikkels), interne verwerking (mentale representaties) en output (gedrag). Het gaat niet om het materiaal (vlees of silicium) maar om de functie. (2p)\nAnita past hierbij: zij vertoont gedrag (output) dat past bij bepaalde prikkels (input), alsof zij mentale toestanden heeft. (1p)", kwestie: 2, et: "ET 11" },
+  { year: "2025-T1", nr: 2, points: 3, question: "Noem drie functies die het lichaam volgens Dreyfus heeft voor intelligent gedrag. Leg bij elk uit waarom Anita (als hubot) hierin verschilt van een mens.", context: "Casus \u2018Real Humans\u2019: Anita is een hubot die menselijk gedrag vertoont maar een kunstmatig lichaam heeft.", model: "Drie functies van het lichaam (Dreyfus): (1) Het lichaam als bron van behoeften en motivatie \u2014 Anita heeft geen honger, angst of verlangen. (1p) (2) Het lichaam als basis van vaardigheden \u2014 Anita leert niet door te oefenen maar is geprogrammeerd. (1p) (3) Het lichaam als basis van sociale interactie \u2014 Anita\u2019s lichaamstaal is gesimuleerd, niet gegroeid uit ervaring. (1p)", kwestie: 2, et: "ET 11, 12" },
+  { year: "2025-T1", nr: 5, points: 1, question: "Leg met het begrip cognitieve assemblages (Hayles) uit hoe de relatie tussen opa en de huishoudster-hubot begrepen kan worden.", context: "Casus \u2018Real Humans\u2019: Een bejaarde man (opa) is gehecht aan zijn huishoudster-hubot en vertrouwt op haar voor dagelijkse taken en gezelschap.", model: "Cognitieve assemblage (Hayles): het samenwerkingsverband van menselijke en niet-menselijke cognitie. Opa en de hubot vormen samen een cognitief systeem: opa\u2019s denken en handelen wordt aangevuld door de cognitieve capaciteiten van de hubot. (1p)", kwestie: 4, et: "ET 21" },
+  { year: "2025-T1", nr: 6, points: 2, question: "Beargumenteer dat Hayles g\u00e9\u00e9n rechten zou toekennen aan hubots. Gebruik haar begrip \u2018cognitieve non-mens\u2019.", context: "Casus \u2018Real Humans\u2019: In de serie wordt gedebatteerd of hubots rechten zouden moeten krijgen.", model: "Hayles maakt onderscheid tussen menselijke cognitie (met bewustzijn) en technische cognitie (\u2018unthought\u2019). Hubots zijn cognitieve non-mensen: ze voeren cognitieve taken uit maar zonder bewustzijn of subjectieve ervaring. (1p)\nOmdat rechten traditioneel gekoppeld zijn aan bewuste ervaring en subjectiviteit, zou Hayles hubots geen rechten toekennen \u2014 het zijn cognitieve systemen, geen bewuste wezens. (1p)", kwestie: 4, et: "ET 21" },
+
+  // EXAMEN 2025-T1 \u2014 Opgave 2: Afrofuturisme
+  { year: "2025-T1", nr: 7, points: 2, question: "Leg het mensbeeld van Clark uit als natural-born cyborg, met zijn opvatting dat het brein goed is in het gebruiken van de omgeving.", context: "Casus \u2018Afrofuturisme\u2019: Kunstenaar Rashaad Newsome maakt AI-kunst met \u2018Being\u2019 \u2014 een digitaal wezen dat leert van Black culture. Being danst, rapt en voert gesprekken.", model: "Clark stelt dat mensen tweeslachtige wezens zijn: deels vlees en bloed, deels technologisch. De mens is van nature een cyborg, een kunstmatig wezen. (1p)\nHet menselijk brein kan de omgeving gebruiken om het denkvermogen te ontlasten en uit te breiden \u2014 dingen en symbolen buiten het brein worden onderdeel van het denken. (1p)", kwestie: 3, et: "ET 14" },
+  { year: "2025-T1", nr: 8, points: 1, question: "Leg met Clarks onderscheid tussen cyborg en interface uit of Being een cyborg of een interface is.", context: "Casus \u2018Afrofuturisme\u2019: Being is een AI-kunstwerk van Newsome dat fungeert als digitale danser en gesprekspartner.", model: "Being is een interface: het is een extern hulpmiddel dat Newsome bedient, niet iets dat ingelijfd is in zijn lichaam of cognitie. Een cyborg-relatie zou betekenen dat Being transparant deel wordt van Newsomes denken en handelen. (1p)", kwestie: 3, et: "ET 14" },
+  { year: "2025-T1", nr: 9, points: 4, question: "Leg De Muls extrahumanistisch en posthumanistisch scenario uit. Schets bij elk scenario een ethische vraag.", context: "Casus \u2018Afrofuturisme\u2019: De kunstwerken roepen vragen op over de toekomst van de mens in relatie tot technologie.", model: "Extrahumanisme (\u2018zwermgeest\u2019): neurotechnologie verbindt breinen tot een collectief bewustzijn. Het individu verdwijnt. (1p) Ethische vraag: is het verlies van individualiteit wenselijk? Wie beslist over de collectieve gedachten? (1p)\nPosthumanisme (\u2018zombie\u2019): AI/robotica cre\u00ebert kunstmatig leven zonder bewustzijn. (1p) Ethische vraag: als machines \u2018leven\u2019 zonder bewustzijn, hoe gaan we om met de status van biologisch leven? Heeft bewustzijn nog waarde? (1p)", kwestie: 3, et: "ET 17" },
+  { year: "2025-T1", nr: 10, points: 1, question: "Leg uit dat afrofuturistische mensbeelden laten zien dat mensbeelden historisch contingent zijn.", context: "Casus \u2018Afrofuturisme\u2019: Afrofuturisme combineert Afrikaanse tradities met science fiction en technologie om alternatieve mensbeelden te scheppen.", model: "Afrofuturistische mensbeelden tonen dat het antwoord op \u2018wat is de mens\u2019 verandert door culturele invloeden die ook anders hadden kunnen zijn dan het westerse perspectief. Het raciale perspectief is niet noodzakelijk maar historisch gegroeid. (1p)", kwestie: 1, et: "ET 4" },
+  { year: "2025-T1", nr: 11, points: 3, question: "Leg de afrofuturistische kritiek op de raciale blik uit met Fanons argument over bestaanservaring en Plessners begrippen excentrische positionaliteit en bemiddelde onmiddellijkheid.", context: "Casus \u2018Afrofuturisme\u2019: Afrofuturistische kunstenaars bekritiseren de westerse blik die mensen van kleur reduceert tot hun uiterlijk.", model: "Fanon: de bestaanservaring van mensen van kleur wordt gevormd/overstempt door de blik van witte anderen, die het zwarte lichaam objectiveren. (1p)\nPlessner: excentrische positionaliteit \u2014 de mens bestaat niet alleen als centrum van zijn handelen, maar kan dit ook van buiten beschouwen. (1p)\nPlessner: wet van bemiddelde onmiddellijkheid \u2014 directe ervaringen worden altijd tegelijk bemiddeld door reflectie en (bij Fanon) door de blik van de ander. (1p)", kwestie: 1, et: "ET 7, 9" },
+  { year: "2025-T1", nr: 12, points: 2, question: "Leg uit hoe Sheets-Johnstone de bestaanservaring grondt in het bewegende lichaam. Pas dit toe op danseres Cherish Menzo.", context: "Casus \u2018Afrofuturisme\u2019: Danseres Cherish Menzo gebruikt dans om de ervaring van het zwarte lichaam te onderzoeken en te bevrijden van opgelegde beelden.", model: "Sheets-Johnstone: bestaanservaring is primair geworteld in het bewegende lichaam \u2014 pre-reflectieve, lichamelijke gewaarwording gaat vooraf aan bewuste reflectie. (1p)\nMenzo\u2019s dans is hiervan een voorbeeld: door te bewegen onderzoekt zij haar bestaanservaring en bevrijdt zij zich van het door anderen opgelegde (raciaal-epidermale) schema. (1p)", kwestie: 1, et: "ET 6" },
+
+  // EXAMEN 2024-T2 \u2014 Opgave: Leven als das
+  { year: "2024-T2", nr: 20, points: 2, question: "Leg met een metafoor die past bij het lopen op handen en knie\u00ebn uit wat een ori\u00ebnterende metafoor is.", context: "Casus \u2018Leven als das\u2019: Charles Foster leefde wekenlang als das in een hol om de dierlijke ervaring te begrijpen. Hij kroop op handen en knie\u00ebn en at wormen.", model: "Een ori\u00ebnterende metafoor structureert denken via lichamelijke ori\u00ebntatie. Bv. bij lopen op handen en knie\u00ebn: \u2018vooruit = goed\u2019 (in plaats van boven = goed). (1p)\nDe metafoor is geworteld in de lichamelijke ervaring: als je op handen en knie\u00ebn loopt, verandert de ori\u00ebntatie en daarmee potentieel ook de metaforen. (1p)", kwestie: 2, et: "ET 10" },
+  { year: "2024-T2", nr: 22, points: 3, question: "Leg met het begrip decentreren een overeenkomst tussen de treinervaringen van Foster en Kockelkoren uit. Leg vervolgens met het begrip recentreren een overeenkomst en een verschil uit.", context: "Casus \u2018Leven als das\u2019: Foster beschrijft hoe hij na weken als das leven de trein weer als overweldigend ervoer \u2014 vergelijkbaar met de eerste treinreizigers.", model: "Decentreren overeenkomst: zowel Foster als de eerste treinreizigers ervaren dat de trein hun waarneming verstoort \u2014 de zintuigen kunnen de ervaring niet plaatsen. (1p)\nRecentreren overeenkomst: in beide gevallen wennen de zintuigen aan de treinervaring \u2014 het landschap wordt \u2018normaal\u2019. (1p)\nRecentreren verschil: bij Kockelkoren is recentreren positief (nieuwe blik), bij Foster juist negatief \u2014 hij verliest de rijke zintuiglijke ervaring van het dassenleven. (1p)", kwestie: 3, et: "ET 15" },
+  { year: "2024-T2", nr: 23, points: 1, question: "Beargumenteer of de les die Foster trekt uit zijn leven als das aansluit bij Haraways pleidooi voor \u2018staying with the trouble\u2019.", context: "Casus \u2018Leven als das\u2019: Foster concludeert dat het dassenleven hem bewuster maakte van de verwevenheid van mens en natuur.", model: "Ja: Foster neemt verantwoordelijkheid door zich te verbinden met het dassenleven en daaruit te leren voor zijn menselijk bestaan \u2014 dit past bij Haraways oproep om in het rommelige heden met andere soorten samen te leven. OF Nee: Foster trekt zich juist terug uit de \u2018trouble\u2019 door weer mens te worden. (1p)", kwestie: 4, et: "ET 18" },
+
+  // EXAMEN 2024-T1 \u2014 Extra vragen
+  { year: "2024-T1", nr: 15, points: 2, question: "Leg uit wat Harari bedoelt met data\u00efsme en waarom dit volgens Rasch problematisch is.", context: "Casus over kunstmatige intelligentie en de toekomst van data. In de tekst wordt beschreven hoe algoritmes steeds meer beslissingen nemen over ons leven.", model: "Harari: data\u00efsme is de opvatting dat data de ultieme bron van waarde en autoriteit is. Algoritmes zouden ons beter begrijpen dan wijzelf. (1p)\nRasch: problematisch omdat bij elke datareductie altijd iets verloren gaat (\u2018het else\u2019). De kloof tussen data en werkelijkheid laat ruimte voor wat niet in data te vangen is. (1p)", kwestie: 4, et: "ET 23" },
+  { year: "2024-T1", nr: 8, points: 2, question: "Leg uit hoe Verbeeks begrip technologische bemiddeling van toepassing is op de echoscopie. Gebruik de begrippen waarneming en handelen.", context: "Casus over medische technologie: de echoscopie maakt de ongeboren foetus zichtbaar en verandert daarmee de ervaring van zwangerschap.", model: "De echoscopie bemiddelt de waarneming: de foetus wordt zichtbaar als medisch object met meetbare eigenschappen (1p). Dit bemiddelt ook het handelen: ouders en artsen nemen beslissingen op basis van echo-beelden die zonder de technologie niet genomen zouden worden (1p).", kwestie: 3, et: "ET 16" },
+  { year: "2025-T1", nr: 13, points: 2, question: "Leg uit hoe Haraways begrip \u2018response-ability\u2019 van toepassing is op Menzo\u2019s danswerk.", context: "Casus \u2018Afrofuturisme\u2019: Danseres Menzo reageert met haar dans op de objectivering van het zwarte lichaam en zoekt nieuwe vormen van verbinding.", model: "Response-ability (Haraway): het vermogen \u00e9n de plicht om te antwoorden op andere wezens. (1p)\nMenzo beantwoordt met haar dans de objectiverende blik: ze neemt verantwoordelijkheid door actief te reageren op de manier waarop het zwarte lichaam wordt bekeken en cre\u00ebert daarmee nieuwe vormen van verbinding. (1p)", kwestie: 4, et: "ET 18" },
+];
+
+const ALGEMENE_EINDTERMEN = [
+  { nr: 1, text: "De filosofische vraag naar de mens benaderen vanuit de rol van wetenschap en techniek." },
+  { nr: 2, text: "Begripsanalyse maken van \u2018het wezen van de mens\u2019, \u2018lichaam\u2019 en \u2018techniek\u2019." },
+  { nr: 3, text: "Verschillende manieren waarop wetenschap en techniek de vraag naar de mens be\u00efnvloeden herkennen, uitleggen, vergelijken, toepassen en evalueren." },
+  { nr: 4, text: "Uitleggen dat de vraag naar het wezen van de mens op twee manieren (mensbeeld of bestaanservaring) kan worden opgevat." },
+];
+
+// ============================================================
+// COMPONENTS
+// ============================================================
+
+function KwestieTag({ kwestie, small }) {
+  if (kwestie === 0) {
+    return (
+      <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: small ? "10px" : "11px", fontWeight: 700, background: "#90909020", color: "#666", letterSpacing: "0.5px" }}>ALG</span>
+    );
+  }
+  const k = KWESTIES.find(k => k.id === kwestie);
+  if (!k) return null;
+  return (
+    <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: small ? "10px" : "11px", fontWeight: 700, background: `${k.color}20`, color: k.color, letterSpacing: "0.5px" }}>K{k.id}</span>
+  );
+}
+
+function Home({ setView, progress }) {
+  const totalFlash = FLASHCARDS.length;
+  const seenFlash = (progress.seenCards || []).length;
+  const quizScores = progress.quizScores || [];
+  const quizBest = quizScores.length > 0 ? Math.max(...quizScores.map(s => s.pct)) : 0;
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
+        <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "26px", color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>
+          \ud83c\udfdb\ufe0f Filosofie VWO 2026
+        </h1>
+        <p style={{ color: "#666", fontSize: "14px", margin: "8px 0 0", fontFamily: "'Source Sans 3', sans-serif" }}>
+          De vraag naar de mens in relatie tot techniek en wetenschap
+        </p>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "24px" }}>
+        {[
+          { icon: "\ud83c\udfb4", label: "Flashcards", sub: `${seenFlash}/${totalFlash} gezien`, view: "flashcards", bg: "#f0f4ff" },
+          { icon: "\u2753", label: "Quiz", sub: quizBest > 0 ? `Beste: ${quizBest}%` : "Test je kennis", view: "quiz", bg: "#fff5f0" },
+          { icon: "\ud83d\udd0d", label: "Examenvragen", sub: `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
+          { icon: "\ud83d\udc64", label: "Filosofen", sub: `${FILOSOFEN.length} denkers`, view: "filosofen", bg: "#faf0ff" },
+        ].map(item => (
+          <button key={item.view} onClick={() => setView(item.view)} style={{
+            background: item.bg, border: "1px solid #e8e8f0", borderRadius: "12px", padding: "20px 16px",
+            cursor: "pointer", textAlign: "left", transition: "transform 0.15s, box-shadow 0.15s",
+          }}
+          onMouseOver={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)"; }}
+          onMouseOut={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
+          >
+            <div style={{ fontSize: "28px", marginBottom: "8px" }}>{item.icon}</div>
+            <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{item.label}</div>
+            <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{item.sub}</div>
+          </button>
+        ))}
+      </div>
+
+      <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "18px", color: "#1a1a2e", margin: "28px 0 12px" }}>
+        De vier kwesties
+      </h2>
+      {KWESTIES.map(k => (
+        <button key={k.id} onClick={() => setView(`kwestie-${k.id}`)} style={{
+          display: "block", width: "100%", background: "#fff", border: `2px solid ${k.color}22`,
+          borderLeft: `4px solid ${k.color}`, borderRadius: "8px", padding: "14px 16px",
+          marginBottom: "10px", cursor: "pointer", textAlign: "left", transition: "border-color 0.2s",
+        }}
+        onMouseOver={e => e.currentTarget.style.borderColor = k.color}
+        onMouseOut={e => { e.currentTarget.style.borderColor = `${k.color}22`; e.currentTarget.style.borderLeftColor = k.color; }}
+        >
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <span style={{ background: k.color, color: "#fff", width: "28px", height: "28px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "14px", flexShrink: 0 }}>{k.id}</span>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{k.title}</div>
+              <div style={{ fontSize: "11px", color: "#888", marginTop: "2px" }}>{k.chapters} \u00b7 {k.eindtermen}</div>
+            </div>
+          </div>
+        </button>
+      ))}
+
+      <div style={{ marginTop: "24px", padding: "16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0" }}>
+        <h3 style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px", fontFamily: "'Source Sans 3', sans-serif" }}>\ud83d\udcca Studietip</h3>
+        <p style={{ fontSize: "12px", color: "#666", margin: 0, lineHeight: 1.5 }}>
+          ~90% van de examenvragen gaat over de specifieke eindtermen (ET 5\u201323). Focus daarop! De overige ~10% gaat over de algemene eindtermen (ET 1\u20134): begripsanalyse, mensbeeld vs. bestaanservaring, en de rol van techniek.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// --- FLASHCARDS ---
+function Flashcards({ progress, setProgress }) {
+  const [filter, setFilter] = useState(null);
+  const [idx, setIdx] = useState(0);
+  const [flipped, setFlipped] = useState(false);
+
+  const cards = filter === null ? FLASHCARDS : FLASHCARDS.filter(c => c.kwestie === filter);
+
+  const markSeen = useCallback((i) => {
+    const card = cards[i];
+    if (!card) return;
+    const key = card.term;
+    setProgress(prev => {
+      const seen = prev.seenCards || [];
+      if (!seen.includes(key)) return { ...prev, seenCards: [...seen, key] };
+      return prev;
+    });
+  }, [cards, setProgress]);
+
+  const next = () => { setFlipped(false); markSeen(idx); setIdx(i => (i + 1) % cards.length); };
+  const prev = () => { setFlipped(false); setIdx(i => (i - 1 + cards.length) % cards.length); };
+
+  if (cards.length === 0) return <p style={{ padding: "40px 20px", textAlign: "center", color: "#888" }}>Geen kaarten voor deze selectie.</p>;
+
+  const card = cards[idx];
+  const kwestieColor = card.kwestie === 0 ? "#666" : (KWESTIES.find(k => k.id === card.kwestie)?.color || "#1a1a2e");
+  const isSeen = (progress.seenCards || []).includes(card.term);
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
+        {[{ id: null, label: "Alle" }, { id: 0, label: "Alg." }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
+          <button key={String(f.id)} onClick={() => { setFilter(f.id); setIdx(0); setFlipped(false); }} style={{
+            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            background: filter === f.id ? (f.id === null ? "#1a1a2e" : f.id === 0 ? "#666" : KWESTIES.find(k => k.id === f.id)?.color || "#1a1a2e") : "#f0f0f5",
+            color: filter === f.id ? "#fff" : "#666",
+          }}>{f.label}</button>
+        ))}
+      </div>
+
+      <div style={{ textAlign: "center", fontSize: "12px", color: "#888", marginBottom: "12px" }}>
+        {idx + 1} / {cards.length} {isSeen && <span style={{ color: "#4AD97A" }}>{"\u2714"} gezien</span>}
+      </div>
+
+      <div
+        onClick={() => setFlipped(!flipped)}
+        style={{
+          background: flipped ? "#fff" : kwestieColor,
+          color: flipped ? "#1a1a2e" : "#fff",
+          borderRadius: "16px", padding: "32px 24px", minHeight: "200px",
+          display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
+          cursor: "pointer", transition: "all 0.3s ease",
+          border: flipped ? `2px solid ${kwestieColor}` : "2px solid transparent",
+          boxShadow: "0 4px 20px rgba(0,0,0,0.1)", textAlign: "center",
+        }}
+      >
+        {!flipped ? (
+          <>
+            <div style={{ fontSize: "20px", fontWeight: 700, fontFamily: "'Playfair Display', Georgia, serif", lineHeight: 1.3 }}>{card.term}</div>
+            <div style={{ fontSize: "11px", marginTop: "16px", opacity: 0.7 }}>Tik om te draaien</div>
+          </>
+        ) : (
+          <>
+            <div style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "1px", opacity: 0.5, marginBottom: "12px" }}>Definitie</div>
+            <div style={{ fontSize: "15px", lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif" }}>{card.def}</div>
+          </>
+        )}
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "center", gap: "16px", marginTop: "20px" }}>
+        <button onClick={prev} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"\u2190"}</button>
+        <button onClick={next} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"\u2192"}</button>
+      </div>
+    </div>
+  );
+}
+
+// --- QUIZ ---
+function Quiz({ progress, setProgress }) {
+  const [filter, setFilter] = useState(0);
+  const [current, setCurrent] = useState(0);
+  const [selected, setSelected] = useState(null);
+  const [score, setScore] = useState(0);
+  const [finished, setFinished] = useState(false);
+
+  const questions = filter === 0 ? QUIZ_QUESTIONS : QUIZ_QUESTIONS.filter(q => q.kwestie === filter);
+
+  const restart = () => { setCurrent(0); setSelected(null); setScore(0); setFinished(false); };
+
+  const handleAnswer = (optIdx) => {
+    if (selected !== null) return;
+    setSelected(optIdx);
+    if (optIdx === questions[current].correct) setScore(s => s + 1);
+  };
+
+  const nextQ = () => {
+    if (current + 1 >= questions.length) {
+      const finalPct = Math.round(score / questions.length * 100);
+      setProgress(prev => ({
+        ...prev,
+        quizScores: [...(prev.quizScores || []), { pct: finalPct, date: new Date().toISOString(), kwestie: filter }]
+      }));
+      setFinished(true);
+    } else {
+      setCurrent(c => c + 1);
+      setSelected(null);
+    }
+  };
+
+  if (questions.length === 0) return <p style={{ padding: "40px 20px", textAlign: "center", color: "#888" }}>Geen vragen voor deze selectie.</p>;
+
+  if (finished) {
+    const pct = Math.round(score / questions.length * 100);
+    return (
+      <div style={{ padding: "40px 20px", textAlign: "center" }}>
+        <div style={{ fontSize: "48px", marginBottom: "16px" }}>{pct >= 70 ? "\ud83c\udf89" : pct >= 50 ? "\ud83d\udcaa" : "\ud83d\udcda"}</div>
+        <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "24px", color: "#1a1a2e" }}>
+          {score} / {questions.length} correct ({pct}%)
+        </h2>
+        <p style={{ color: "#888", fontSize: "14px", marginTop: "8px" }}>
+          {pct >= 70 ? "Uitstekend! Je beheerst de stof goed." : pct >= 50 ? "Goed op weg! Bestudeer de begrippen die je miste." : "Blijf oefenen \u2014 herhaal de flashcards per kwestie."}
+        </p>
+        <button onClick={restart} style={{ marginTop: "24px", padding: "12px 32px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: 600 }}>
+          Opnieuw
+        </button>
+      </div>
+    );
+  }
+
+  const q = questions[current];
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
+        {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
+          <button key={f.id} onClick={() => { setFilter(f.id); restart(); }} style={{
+            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            background: filter === f.id ? "#1a1a2e" : "#f0f0f5",
+            color: filter === f.id ? "#fff" : "#666",
+          }}>{f.label}</button>
+        ))}
+      </div>
+
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+        <span style={{ fontSize: "12px", color: "#888" }}>Vraag {current + 1}/{questions.length}</span>
+        <KwestieTag kwestie={q.kwestie} small />
+      </div>
+
+      <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "20px", marginBottom: "16px" }}>
+        <p style={{ fontSize: "15px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{q.q}</p>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {q.options.map((opt, i) => {
+          let bg = "#fff"; let border = "#e0e0e8"; let color = "#1a1a2e";
+          if (selected !== null) {
+            if (i === q.correct) { bg = "#e8f5e9"; border = "#4caf50"; color = "#2e7d32"; }
+            else if (i === selected) { bg = "#fce4ec"; border = "#ef5350"; color = "#c62828"; }
+          }
+          return (
+            <button key={i} onClick={() => handleAnswer(i)} style={{
+              padding: "14px 16px", background: bg, border: `2px solid ${border}`, borderRadius: "10px",
+              cursor: selected !== null ? "default" : "pointer", textAlign: "left", fontSize: "14px", color,
+              fontFamily: "'Source Sans 3', sans-serif", transition: "all 0.2s",
+              fontWeight: selected !== null && i === q.correct ? 600 : 400,
+            }}>
+              <span style={{ fontWeight: 700, marginRight: "8px", opacity: 0.5 }}>{String.fromCharCode(65 + i)}</span>
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+
+      {selected !== null && (
+        <div style={{ marginTop: "16px", padding: "16px", background: selected === q.correct ? "#e8f5e9" : "#fff3e0", borderRadius: "10px", border: `1px solid ${selected === q.correct ? "#a5d6a7" : "#ffcc80"}` }}>
+          <p style={{ fontSize: "13px", color: "#333", margin: 0, lineHeight: 1.5 }}>
+            <strong>{selected === q.correct ? "\u2714 Correct!" : "\u2718 Helaas."}</strong> {q.explanation}
+          </p>
+          <button onClick={nextQ} style={{ marginTop: "12px", padding: "10px 24px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
+            {current + 1 >= questions.length ? "Bekijk resultaat" : "Volgende vraag \u2192"}
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// --- EXAM QUESTIONS (v4.2: context boven de vraag, altijd zichtbaar) ---
+function ExamQuestions() {
+  const [openIdx, setOpenIdx] = useState(null);
+  const [filter, setFilter] = useState(0);
+
+  const questions = filter === 0 ? EXAM_QUESTIONS : EXAM_QUESTIONS.filter(q => q.kwestie === filter);
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <p style={{ fontSize: "13px", color: "#888", margin: "16px 0" }}>
+        Echte examenvragen uit 2024 en 2025 met correctiemodel. Oefen met het formuleren van antwoorden!
+      </p>
+
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
+        {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
+          <button key={f.id} onClick={() => { setFilter(f.id); setOpenIdx(null); }} style={{
+            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            background: filter === f.id ? "#1a1a2e" : "#f0f0f5",
+            color: filter === f.id ? "#fff" : "#666",
+          }}>{f.label}</button>
+        ))}
+      </div>
+
+      {questions.map((eq, i) => (
+        <div key={i} style={{ marginBottom: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden" }}>
+          {/* Casus context - always visible */}
+          {eq.context && (
+            <div style={{ padding: "12px 16px", background: "#f0f0ff", borderBottom: "1px solid #e0e0f0" }}>
+              <div style={{ fontSize: "10px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Casus</div>
+              <p style={{ fontSize: "12px", color: "#555", margin: 0, lineHeight: 1.5, fontStyle: "italic" }}>{eq.context}</p>
+            </div>
+          )}
+
+          {/* Question */}
+          <button onClick={() => setOpenIdx(openIdx === i ? null : i)} style={{
+            width: "100%", padding: "16px", background: "transparent", border: "none", cursor: "pointer", textAlign: "left",
+            display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px",
+          }}>
+            <div style={{ flex: 1 }}>
+              <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "6px", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "#888", background: "#f0f0f5", padding: "2px 8px", borderRadius: "4px" }}>{eq.year}</span>
+                <span style={{ fontSize: "11px", fontWeight: 600, color: "#1a1a2e" }}>Vr. {eq.nr}</span>
+                <span style={{ fontSize: "11px", color: "#888" }}>{eq.points}p</span>
+                <KwestieTag kwestie={eq.kwestie} small />
+                <span style={{ fontSize: "10px", color: "#aaa" }}>{eq.et}</span>
+              </div>
+              <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{eq.question}</p>
+            </div>
+            <span style={{ fontSize: "18px", color: "#ccc", flexShrink: 0, transform: openIdx === i ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>{"\u25be"}</span>
+          </button>
+
+          {/* Model answer */}
+          {openIdx === i && (
+            <div style={{ padding: "0 16px 16px", borderTop: "1px solid #f0f0f5" }}>
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "#2D8E5A", textTransform: "uppercase", letterSpacing: "0.5px", margin: "12px 0 8px" }}>Modelantwoord</div>
+              <div style={{ fontSize: "13px", color: "#333", lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif", whiteSpace: "pre-wrap" }}>
+                {eq.model}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// --- FILOSOFEN ---
+function FilosofenView() {
+  const [selected, setSelected] = useState(null);
+  const [filter, setFilter] = useState(0);
+
+  const list = filter === 0 ? FILOSOFEN : FILOSOFEN.filter(f => f.kwestie === filter);
+
+  if (selected) {
+    const f = selected;
+    const k = KWESTIES.find(k => k.id === f.kwestie);
+    return (
+      <div style={{ padding: "0 20px 40px" }}>
+        <button onClick={() => setSelected(null)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "14px", color: "#888", padding: "16px 0", fontFamily: "'Source Sans 3', sans-serif" }}>{"\u2190"} Terug</button>
+        <div style={{ background: k?.color || "#1a1a2e", color: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "20px" }}>
+          <KwestieTag kwestie={f.kwestie} small />
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "26px", margin: "12px 0 4px" }}>{f.name}</h2>
+          <div style={{ fontSize: "11px", opacity: 0.8 }}>{f.et}</div>
+        </div>
+        <div style={{ padding: "16px", background: "#f8f8fc", borderRadius: "10px", marginBottom: "16px" }}>
+          <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 8px", color: "#1a1a2e" }}>Kernpositie</h3>
+          <p style={{ fontSize: "14px", color: "#333", lineHeight: 1.6, margin: 0, fontFamily: "'Source Sans 3', sans-serif" }}>{f.kern}</p>
+        </div>
+        <div style={{ padding: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px" }}>
+          <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 10px", color: "#1a1a2e" }}>Kernbegrippen</h3>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+            {f.begrippen.map(b => (
+              <span key={b} style={{ background: `${k?.color}15`, color: k?.color, border: `1px solid ${k?.color}30`, padding: "4px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: 500 }}>{b}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
+        {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
+          <button key={f.id} onClick={() => setFilter(f.id)} style={{
+            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            background: filter === f.id ? "#1a1a2e" : "#f0f0f5",
+            color: filter === f.id ? "#fff" : "#666",
+          }}>{f.label}</button>
+        ))}
+      </div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+        {list.map(f => {
+          const k = KWESTIES.find(k => k.id === f.kwestie);
+          return (
+            <button key={f.name} onClick={() => setSelected(f)} style={{
+              display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px",
+              background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px",
+              cursor: "pointer", textAlign: "left", transition: "box-shadow 0.2s",
+            }}
+            onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
+            onMouseOut={e => e.currentTarget.style.boxShadow = ""}
+            >
+              <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: k?.color || "#ccc", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "14px", flexShrink: 0, fontFamily: "'Playfair Display', Georgia, serif" }}>
+                {f.name[0]}
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{f.name}</div>
+                <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.et} \u00b7 {f.begrippen.slice(0, 3).join(", ")}</div>
+              </div>
+              <KwestieTag kwestie={f.kwestie} small />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// --- KWESTIE DETAIL ---
+function KwestieDetail({ id }) {
+  const k = KWESTIES.find(k => k.id === id);
+  const filosofen = FILOSOFEN.filter(f => f.kwestie === id);
+  const begrippen = FLASHCARDS.filter(f => f.kwestie === id);
+  const examQ = EXAM_QUESTIONS.filter(eq => eq.kwestie === id);
+
+  const eindtermenMap = {
+    1: [
+      { nr: 5, text: "Opvattingen van Descartes, Sheets-Johnstone, Plessner, De Beauvoir en Fanon over de vraag naar de mens uitleggen, vergelijken, toepassen en evalueren." },
+      { nr: 6, text: "Uitleggen dat mensen volgens Sheets-Johnstone een reflecterend, bewegend lichaam zijn (pre-reflectief, lichaamsschema, tekstfragment 1)." },
+      { nr: 7, text: "Uitleggen dat volgens Plessner mensen in een verhouding tot zichzelf staan (excentrische positionaliteit, drie wetten)." },
+      { nr: 8, text: "Uitleggen dat volgens De Beauvoir mensen lichamelijk in verhouding tot anderen staan (situatie, geleefde ervaring)." },
+      { nr: 9, text: "Uitleggen dat volgens Fanon de bestaanservaring van mensen van kleur wordt gevormd door de blik van de ander (raciaal-epidermaal schema)." },
+    ],
+    2: [
+      { nr: 10, text: "Uitleggen dat volgens Lakoff & Johnson metaforen en ervaringen elkaar wederzijds be\u00efnvloeden (ori\u00ebnterende metafoor, ontologische metafoor)." },
+      { nr: 11, text: "Uitleggen dat de \u2018wij zijn ons brein\u2019-these het brein als computer voorstelt (computationalisme, functionalisme, Dreyfus\u2019 kritiek)." },
+      { nr: 12, text: "Uitleggen dat 4E-cognitie stelt dat we niet alleen met ons brein denken maar ook met lichaam in omgeving (embodied, embedded, extended, enactive)." },
+    ],
+    3: [
+      { nr: 13, text: "Opvattingen van Clark, Kockelkoren, Verbeek en De Mul over de vraag of het wezen van de mens verandert door techniek uitleggen, vergelijken, toepassen en evalueren." },
+      { nr: 14, text: "Uitleggen dat volgens Clark mensen van nature technologische wezens zijn (natural-born cyborg, interface, dynamische apparaten)." },
+      { nr: 15, text: "Uitleggen dat volgens Kockelkoren techniek de zintuiglijke ervaring verandert (decentreren, recentreren)." },
+      { nr: 16, text: "Uitleggen dat volgens Verbeek techniek het moreel oordeelsvermogen verandert (technologische bemiddeling)." },
+      { nr: 17, text: "Uitleggen dat volgens De Mul hedendaagse techniek de menselijke identiteit verandert (humanisme, NBIN, drie scenario\u2019s)." },
+    ],
+    4: [
+      { nr: 18, text: "Opvattingen van Haraway, Morton, Despret, Latour, Hayles, Barad, Harari en Rasch over grensvervagingen uitleggen, vergelijken, toepassen en evalueren." },
+      { nr: 19, text: "Uitleggen dat volgens Morton/Despret de grens mens-dier vervaagt (the mesh, ecologisch denken, dierlijke agency)." },
+      { nr: 20, text: "Uitleggen dat volgens Despret/Haraway we op een andere manier met dieren moeten omgaan." },
+      { nr: 21, text: "Uitleggen dat volgens Latour/Hayles de grens levend/niet-levend vervaagt (actant, ANT, unthought, cognitieve assemblage)." },
+      { nr: 22, text: "Uitleggen dat volgens Barad de grens fysiek/niet-fysiek vervaagt (intra-actie, agentieel realisme)." },
+      { nr: 23, text: "Uitleggen en evalueren dat volgens Harari/Rasch data en mens vervlechten (data\u00efsme, het else)." },
+    ],
+  };
+
+  const ets = eindtermenMap[id] || [];
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <div style={{ background: k.color, color: "#fff", borderRadius: "16px", padding: "24px", margin: "16px 0 20px" }}>
+        <div style={{ fontSize: "13px", opacity: 0.8, marginBottom: "4px" }}>Kwestie {k.id}</div>
+        <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", margin: "0 0 8px", lineHeight: 1.2 }}>{k.title}</h2>
+        <p style={{ fontSize: "13px", opacity: 0.8, margin: 0 }}>{k.chapters} \u00b7 {k.eindtermen}</p>
+      </div>
+
+      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px" }}>{"\ud83d\udccb"} Eindtermen (examenrelevant!)</h3>
+      {ets.map(et => (
+        <div key={et.nr} style={{ marginBottom: "6px", padding: "12px", background: "#f8f8fc", borderRadius: "8px", border: "1px solid #e8e8f0" }}>
+          <div style={{ fontSize: "11px", fontWeight: 700, color: k.color }}>ET {et.nr}</div>
+          <p style={{ fontSize: "13px", color: "#333", margin: "4px 0 0", lineHeight: 1.4 }}>{et.text}</p>
+        </div>
+      ))}
+
+      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "20px 0 8px" }}>{"\ud83d\udc64"} Filosofen ({filosofen.length})</h3>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+        {filosofen.map(f => (
+          <span key={f.name} style={{ background: `${k.color}15`, color: k.color, padding: "6px 12px", borderRadius: "6px", fontSize: "13px", fontWeight: 600 }}>{f.name}</span>
+        ))}
+      </div>
+
+      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "20px 0 8px" }}>{"\ud83c\udfb4"} Begrippen ({begrippen.length})</h3>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+        {begrippen.map(b => (
+          <span key={b.term} style={{ background: "#f0f0f5", color: "#555", padding: "4px 10px", borderRadius: "4px", fontSize: "11px" }}>{b.term}</span>
+        ))}
+      </div>
+
+      {examQ.length > 0 && (
+        <>
+          <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "20px 0 8px" }}>{"\ud83d\udd0d"} Examenvragen ({examQ.length})</h3>
+          {examQ.map((eq, i) => (
+            <div key={i} style={{ marginBottom: "6px", padding: "10px 12px", background: "#fff5f0", borderRadius: "8px", fontSize: "13px", color: "#333" }}>
+              <span style={{ fontWeight: 600 }}>{eq.year} vr.{eq.nr}</span> ({eq.points}p) \u2014 {eq.question.substring(0, 80)}...
+            </div>
+          ))}
+        </>
+      )}
+    </div>
+  );
+}
+
+// --- EINDTERMEN OVERVIEW ---
+function EindtermenView() {
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: "20px 0 8px" }}>Algemene eindtermen (ET 1\u20134)</h2>
+      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>~10% van het examen. Altijd relevant!</p>
+      {ALGEMENE_EINDTERMEN.map(et => (
+        <div key={et.nr} style={{ padding: "12px", background: "#f8f8fc", borderRadius: "8px", border: "1px solid #e8e8f0", marginBottom: "8px" }}>
+          <div style={{ fontSize: "12px", fontWeight: 700, color: "#1a1a2e" }}>ET {et.nr}</div>
+          <p style={{ fontSize: "13px", color: "#333", margin: "4px 0 0", lineHeight: 1.4 }}>{et.text}</p>
+        </div>
+      ))}
+
+      <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: "28px 0 12px" }}>Specifieke eindtermen per kwestie</h2>
+      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>~90% van het examen. De ruggengraat!</p>
+      {KWESTIES.map(k => (
+        <div key={k.id} style={{ marginBottom: "16px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+            <span style={{ background: k.color, color: "#fff", width: "24px", height: "24px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "12px" }}>{k.id}</span>
+            <span style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e" }}>{k.title}</span>
+          </div>
+          <div style={{ fontSize: "12px", color: "#888", paddingLeft: "32px" }}>{k.eindtermen}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ============================================================
+// MAIN APP
+// ============================================================
+
+export default function App() {
+  const [view, setView] = useState("home");
+  const [progress, setProgress] = useState({ seenCards: [], quizScores: [] });
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const result = await window.storage.get("filosofie-progress");
+        if (result?.value) {
+          setProgress(JSON.parse(result.value));
+        }
+      } catch (e) {}
+      setLoaded(true);
+    })();
+  }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+    (async () => {
+      try {
+        await window.storage.set("filosofie-progress", JSON.stringify(progress));
+      } catch (e) {
+        console.error("Storage save error:", e);
+      }
+    })();
+  }, [progress, loaded]);
+
+  const viewTitles = {
+    home: "Studieapp",
+    flashcards: "Flashcards",
+    quiz: "Quiz",
+    exam: "Examenvragen",
+    filosofen: "Filosofen",
+    eindtermen: "Eindtermen",
+  };
+
+  const isKwestie = view.startsWith("kwestie-");
+  const kwestieId = isKwestie ? parseInt(view.split("-")[1]) : null;
+  const title = isKwestie ? `Kwestie ${kwestieId}` : (viewTitles[view] || "Studieapp");
+
+  const renderView = () => {
+    if (isKwestie) return <KwestieDetail id={kwestieId} />;
+    switch (view) {
+      case "flashcards": return <Flashcards progress={progress} setProgress={setProgress} />;
+      case "quiz": return <Quiz progress={progress} setProgress={setProgress} />;
+      case "exam": return <ExamQuestions />;
+      case "filosofen": return <FilosofenView />;
+      case "eindtermen": return <EindtermenView />;
+      default: return <Home setView={setView} progress={progress} />;
+    }
+  };
+
+  return (
+    <div style={{ maxWidth: "520px", margin: "0 auto", minHeight: "100vh", background: "#fff", fontFamily: "'Source Sans 3', -apple-system, sans-serif" }}>
+      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+      <div style={{
+        position: "sticky", top: 0, zIndex: 100,
+        background: "rgba(255,255,255,0.95)", backdropFilter: "blur(10px)",
+        borderBottom: "1px solid #f0f0f5", padding: "12px 20px",
+        display: "flex", alignItems: "center", gap: "12px",
+      }}>
+        {view !== "home" && (
+          <button onClick={() => setView("home")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "18px", color: "#888", padding: "4px" }}>{"\u2190"}</button>
+        )}
+        <span style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{title}</span>
+        <div style={{ marginLeft: "auto" }}>
+          <button onClick={() => setView("eindtermen")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "11px", color: "#888", textDecoration: "underline" }}>ET</button>
+        </div>
+      </div>
+
+      {renderView()}
+
+      <div style={{
+        position: "fixed", bottom: 0, left: 0, right: 0,
+        background: "rgba(255,255,255,0.97)", backdropFilter: "blur(10px)",
+        borderTop: "1px solid #f0f0f5", display: "flex", justifyContent: "space-around",
+        padding: "8px 0 12px", maxWidth: "520px", margin: "0 auto",
+      }}>
+        {[
+          { icon: "\ud83c\udfe0", label: "Home", v: "home" },
+          { icon: "\ud83c\udfb4", label: "Cards", v: "flashcards" },
+          { icon: "\u2753", label: "Quiz", v: "quiz" },
+          { icon: "\ud83d\udd0d", label: "Examen", v: "exam" },
+          { icon: "\ud83d\udc64", label: "Denkers", v: "filosofen" },
+        ].map(nav => (
+          <button key={nav.v} onClick={() => setView(nav.v)} style={{
+            background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", padding: "4px 8px",
+            opacity: view === nav.v ? 1 : 0.5, transition: "opacity 0.2s",
+          }}>
+            <span style={{ fontSize: "20px" }}>{nav.icon}</span>
+            <span style={{ fontSize: "10px", fontWeight: 600, color: "#1a1a2e" }}>{nav.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <div style={{ height: "70px" }} />
+    </div>
+  );
+}
