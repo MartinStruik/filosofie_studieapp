@@ -130,10 +130,48 @@ const FLASHCARDS = [
   { term: "Dataïsme (Harari)", def: "De opvatting dat data de ultieme bron van waarde en autoriteit is. Algoritmes begrijpen ons beter dan wijzelf. ‘Homo Deus’ voorbij het humanisme.", kwestie: 4 },
   { term: "Het else (Rasch)", def: "Dat wat bij datareductie altijd verloren gaat. De kloof tussen data en werkelijkheid. In die ‘kier van licht’ doet zich iets als vrijheid voor.", kwestie: 4 },
 
-  // ========== DOMEINEN B1/C1/D1/E1 ==========
+  // ========== DOMEIN B1: WIJSGERIGE ANTROPOLOGIE ==========
+  { term: "Subjectiviteit", def: "Het vermogen om de wereld vanuit een eigen, uniek perspectief te ervaren — het 'ik' dat ervaart. Centraal begrip in de wijsgerige antropologie.", kwestie: 0 },
+  { term: "Intersubjectiviteit", def: "Gedeelde betekenisgeving tussen subjecten. Kennis en ervaring ontstaan niet in isolatie maar in relatie tot anderen. Basis voor taal, cultuur en wetenschap.", kwestie: 0 },
+  { term: "Cultuur vs. natuur", def: "Is de mens primair een natuurwezen (bepaald door biologie) of een cultuurwezen (gevormd door opvoeding, taal, tradities)? Kernvraag van de wijsgerige antropologie.", kwestie: 0 },
+  { term: "Monisme vs. dualisme", def: "Monisme: geest en lichaam zijn één (of alleen materie bestaat). Dualisme: geest en lichaam zijn twee gescheiden substanties (Descartes). Pluralisme erkent meerdere werkelijkheidslagen.", kwestie: 0 },
+  { term: "Vrijheid vs. determinisme", def: "Is de mens vrij in haar keuzes, of wordt alles bepaald door oorzaken (genen, opvoeding, hersenen)? Centraal debat dat raakt aan verantwoordelijkheid en moraal.", kwestie: 0 },
+  { term: "Materialisme / philosophy of mind", def: "Het mens-zijn wordt in verband gebracht met lichamelijke processen, in het bijzonder hersenprocessen. Mentale toestanden zijn uiteindelijk fysieke toestanden.", kwestie: 0 },
+  { term: "Structuralisme (antropologie)", def: "De mens als functioneel onderdeel van een dominant systeem (taal, cultuur, economie). Niet het individu maar de structuur bepaalt het handelen.", kwestie: 0 },
+  { term: "Sociobiologie", def: "De mens als onderdeel van de evolutie en als biologisch-genetische eenheid. Menselijk gedrag (ook sociaal en moreel) wordt verklaard vanuit evolutionaire aanpassing.", kwestie: 0 },
+
+  // ========== DOMEIN C1: ETHIEK ==========
+  { term: "Deugdethiek (Aristoteles)", def: "De mens als gemeenschapswezen neemt deugd als uitgangspunt. Het goede leven bereik je door deugden te ontwikkelen: moed, matigheid, rechtvaardigheid, praktische wijsheid.", kwestie: 0 },
+  { term: "Plicht-ethiek (Kant)", def: "Morele afweging gaat altijd uit van principes en plicht, ongeacht het resultaat. De categorische imperatief: handel alleen volgens regels die je als universele wet zou willen.", kwestie: 0 },
+  { term: "Utilisme (Mill)", def: "Het goede is datgene wat leidt tot de maximalisering van geluk voor het grootste aantal mensen. Consequenties bepalen of een handeling moreel goed is.", kwestie: 0 },
+  { term: "Waardencreatie (Nietzsche)", def: "Waarden worden niet ontdekt maar door de mens zelf gecreëerd. Bestaande moraal moet kritisch onderzocht en zo nodig verworpen worden (herwaardering van waarden).", kwestie: 0 },
+  { term: "Communicatief handelen (Habermas)", def: "Ethiek is gebaseerd op vrije, gelijkwaardige dialoog. Morele normen zijn geldig als alle betrokkenen er in een open gesprek mee zouden instemmen.", kwestie: 0 },
+  { term: "Waarden vs. normen", def: "Waarden zijn idealen die richting geven (vrijheid, rechtvaardigheid). Normen zijn concrete regels die uit waarden voortvloeien ('je mag niet stelen'). Ethiek onderzoekt beide.", kwestie: 0 },
+  { term: "Is-ought gap (Hume)", def: "Uit hoe iets 'is' (feit) volgt niet hoe het 'moet zijn' (norm). Relevant bij: mag alles wat technologisch kán? Feiten alleen bepalen geen moraal.", kwestie: 0 },
+  { term: "Intrinsiek vs. instrumenteel handelen", def: "Intrinsiek handelen: iets doen omdat het op zichzelf waardevol is. Instrumenteel handelen: iets doen als middel voor een ander doel. Ethische vraag: wanneer is iets doel, wanneer middel?", kwestie: 0 },
+  { term: "Rechten vs. plichten", def: "Rechten zijn aanspraken die je kunt maken (bijv. recht op vrijheid). Plichten zijn verplichtingen jegens anderen. In de ethiek: hoe verhouden deze zich tot elkaar?", kwestie: 0 },
+
+  // ========== DOMEIN D1: KENNISLEER ==========
+  { term: "A priori vs. a posteriori", def: "A priori: kennis onafhankelijk van ervaring (bijv. wiskunde). A posteriori: kennis op basis van ervaring (bijv. 'water kookt bij 100°C'). Centraal onderscheid in de kennisleer.", kwestie: 0 },
+  { term: "Schijn vs. werkelijkheid", def: "Komt onze waarneming overeen met hoe de werkelijkheid echt is? Filosofisch kernprobleem sinds Plato's allegorie van de grot: wat we zien is misschien slechts een schaduw.", kwestie: 0 },
+  { term: "Rationalisme (Descartes)", def: "Kennis is primair een proces van rationeel denken. Door methodische twijfel en zuiver redeneren komen we tot zekere kennis. De rede is betrouwbaarder dan de zintuigen.", kwestie: 0 },
+  { term: "Empirisme (Locke, Hume)", def: "Kennis is gebaseerd op zintuiglijke ervaring. De geest is bij geboorte een 'onbeschreven blad' (tabula rasa). Alle kennis komt uiteindelijk voort uit waarneming.", kwestie: 0 },
+  { term: "Synthese ervaring en denken (Kant)", def: "Kennis komt voort uit een synthese: de zintuigen leveren ruwe ervaring, het verstand ordent die met aangeboren categorieën (ruimte, tijd, causaliteit). Zonder begrippen is ervaring blind, zonder ervaring zijn begrippen leeg.", kwestie: 0 },
   { term: "Constructivisme (epistemologie)", def: "Kennis is niet een passieve afspiegeling van de werkelijkheid maar wordt actief geconstrueerd door de waarnemer. Verband met theoriegeladenheid en metaforen.", kwestie: 0 },
-  { term: "Rationalisme vs. empirisme", def: "Rationalisme (Descartes): kennis begint bij het denken. Empirisme: kennis begint bij zintuiglijke ervaring. De 4E-cognitie overstijgt dit klassieke debat.", kwestie: 0 },
-  { term: "Is-ought gap (Hume)", def: "Uit hoe iets ‘is’ (feit) volgt niet hoe het ‘moet zijn’ (norm). Relevant bij: mag alles wat technologisch kán? NBIN, genetische modificatie, dataïsme.", kwestie: 0 },
+  { term: "Kennis vs. geloof", def: "Kennis vereist rechtvaardiging en waarheid, geloof niet. Filosofische vraag: waar ligt de grens? Wanneer is overtuiging kennis en wanneer slechts mening of geloof?", kwestie: 0 },
+  { term: "Feit vs. fictie", def: "Feiten beschrijven wat het geval is, ficties zijn verzonnen. Maar: is het onderscheid scherp? Narrativisme stelt dat ook feitelijke kennis narratief gestructureerd is.", kwestie: 0 },
+
+  // ========== DOMEIN E1: WETENSCHAPSFILOSOFIE ==========
+  { term: "Hypothese en empirische toetsing", def: "Een hypothese is een voorlopige veronderstelling die empirisch getoetst moet worden. De empirische cyclus: waarneming → hypothese → toetsing → conclusie.", kwestie: 0 },
+  { term: "Demarcatieprobleem", def: "Hoe onderscheid je wetenschap van niet-wetenschap (pseudowetenschap)? Kernvraag van de wetenschapsfilosofie. Popper: falsifieerbaarheid als criterium.", kwestie: 0 },
+  { term: "Positivisme (Comte)", def: "Wetenschap is gebaseerd op positieve (waarneembare) feiten. Alleen empirisch verifieerbare uitspraken zijn wetenschappelijk zinvol. De Wiener Kreis radicaliseerde dit idee.", kwestie: 0 },
+  { term: "Falsificationisme (Popper)", def: "Een theorie is wetenschappelijk als ze in principe weerlegbaar (falsifieerbaar) is. Wetenschap vordert niet door verificatie maar door pogingen theorieën te weerleggen.", kwestie: 0 },
+  { term: "Paradigma (Kuhn)", def: "Een paradigma is het gedeelde denkpatroon van een wetenschappelijke gemeenschap: theorieën, methoden, standaardvoorbeelden. Wetenschappelijke revoluties = paradigmawisselingen.", kwestie: 0 },
+  { term: "Methodologisch anarchisme (Feyerabend)", def: "'Anything goes': er is geen enkele methode die alle wetenschappelijke vooruitgang verklaart. Vele methoden van onderzoek kunnen wetenschappelijk zijn.", kwestie: 0 },
+  { term: "Verklaren vs. verstaan", def: "Verklaren: causale wetmatigheden zoeken (natuurwetenschappen). Verstaan: betekenis en intenties begrijpen (geesteswetenschappen/hermeneutiek). Twee verschillende benaderingen van kennis.", kwestie: 0 },
+  { term: "Inductie vs. deductie", def: "Inductie: van losse waarnemingen naar een algemene regel ('alle zwanen die ik zag zijn wit, dus alle zwanen zijn wit'). Deductie: van algemene regel naar specifieke conclusie. Inductieprobleem: inductie levert nooit absolute zekerheid.", kwestie: 0 },
+  { term: "Waardevrijheid vs. waardegebondenheid", def: "Is wetenschap objectief en waardevrij, of wordt ze altijd beïnvloed door de waarden en belangen van onderzoekers? Latour: wetenschap is een maatschappelijke praktijk, nooit volledig waardevrij.", kwestie: 0 },
+  { term: "Techniek vs. technologie", def: "Techniek: het praktische kunnen, het maken en gebruiken van middelen. Technologie: de systematische, wetenschappelijke studie van techniek. In de wetenschapsfilosofie: hoe verhouden wetenschap en techniek zich?", kwestie: 0 },
 ];
 
 // ============================================================
