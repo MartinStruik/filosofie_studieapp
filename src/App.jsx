@@ -708,7 +708,7 @@ function EindtermenView() {
   return (
     <div style={{ padding: "0 20px 40px" }}>
       <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: "20px 0 8px" }}>Algemene eindtermen (ET 1–4)</h2>
-      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>~10% van het examen. Altijd relevant!</p>
+      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>10% van het examen. Globale eindtermen over antropologie, ethiek, kennistheorie en wetenschapsfilosofie.</p>
       {ALGEMENE_EINDTERMEN.map(et => (
         <div key={et.nr} style={{ padding: "12px", background: "#f8f8fc", borderRadius: "8px", border: "1px solid #e8e8f0", marginBottom: "8px" }}>
           <div style={{ fontSize: "12px", fontWeight: 700, color: "#1a1a2e" }}>ET {et.nr}</div>
@@ -717,7 +717,7 @@ function EindtermenView() {
       ))}
 
       <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: "28px 0 12px" }}>Specifieke eindtermen per kwestie</h2>
-      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>~90% van het examen. De ruggengraat!</p>
+      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>90% van het examen. De syllabus met bijbehorende eindtermen.</p>
       {KWESTIES.map(k => (
         <div key={k.id} style={{ marginBottom: "16px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
