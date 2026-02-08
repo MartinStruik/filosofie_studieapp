@@ -360,6 +360,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 4,
+    filosoof: "Lakoff & Johnson",
+    titel: "Metaphors we live by (1980)",
+    kwestie: 2,
+    et: "ET 10",
+    inleiding: "George Lakoff (1941) en Mark Johnson (1949) tonen dat metaforen niet slechts een stijlmiddel zijn, maar ons denken en handelen fundamenteel structureren. Ons conceptueel systeem is in wezen metaforisch van aard, geworteld in onze lichamelijke ervaring.",
+    fragmenten: [
+      {
+        label: "Metaforen structureren ons denken",
+        tekst: "De meeste mensen zien de metafoor als een van de middelen die de dichter ter beschikking staan, als een manier om een tekst cachet te geven \u2014 iets wat eerder onder het bijzondere dan onder het gewone taalgebruik wordt geschaard. Wij zijn daarentegen tot de conclusie gekomen dat de metafoor alomtegenwoordig is in het leven van alledag; niet alleen in de taal, maar ook in de manier waarop we denken en handelen. Het conceptuele systeem waarop ons denken en handelen is gebaseerd, is in wezen metaforisch van aard.\n\nDe concepten waar het denken door gestructureerd wordt, zijn niet alleen een zaak van het intellect; ze sturen ons dagelijks functioneren tot in de kleinste details. Onze concepten ordenen wat we waarnemen, hoe we ons redden in de wereld en hoe we ons tot andere mensen verhouden.",
+      },
+      {
+        label: "Ori\u00ebntatiemetaforen: de lichamelijke basis",
+        tekst: "Ori\u00ebntatiemetaforen hebben met ori\u00ebntatie in de ruimte te maken: boven-beneden, binnen-buiten, voor-achter. Deze vormen van ruimtelijke ori\u00ebntatie komen voort uit het gegeven dat we nu eenmaal een bepaald soort lichaam hebben, en dat dat lichaam in onze fysieke omgeving nu eenmaal op een bepaalde manier functioneert.\n\nGELUKKIG IS BOVEN; DROEVIG IS BENEDEN\nZij is in hogere sferen. Het vrolijkt me altijd op. Hij zit in de put.\nFysieke basis: een gebukte houding gaat over het algemeen samen met bedroefdheid, een rechtopgaande houding met een goed humeur.\n\nMEER IS BOVEN; MINDER IS BENEDEN\nHet aantal boeken blijft elk jaar stijgen. Zijn inkomsten daalden.\nFysieke basis: Als je meer van iets toevoegt, gaat het niveau omhoog.",
+      },
+      {
+        label: "Ontologische metaforen: de geest als machine",
+        tekst: "Onze ervaringen van fysieke objecten (in het bijzonder onze lichamen) leveren de basis voor ontologische metaforen: manieren om gebeurtenissen, handelingen, emoties, idee\u00ebn als entiteiten en substanties te beschouwen.\n\nDE GEEST IS EEN MACHINE\nIk kom maar moeilijk op gang vandaag. Mijn verstand werkt vandaag gewoon niet. Ik heb de hele nacht liggen malen. Zet je verstand op nul.\n\nDE GEEST IS EEN BREEKBAAR VOORWERP\nHij is een gebroken man. Toen knapte er iets in hem. Ze is erg kwetsbaar.\n\nDeze metaforen geven ons verschillende metaforische modellen voor de geest. De MACHINE-metafoor geeft ons een voorstelling van de geest als zou deze een aan/uit-stand hebben, effici\u00ebnt zijn en beschikken over een productief vermogen. De metafoor van het BREEKBARE VOORWERP stelt ons alleen in staat te praten over psychologische kracht.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Lakoff & Johnson stellen dat 'het conceptuele systeem waarop ons denken en handelen is gebaseerd, in wezen metaforisch van aard is'. Leg uit wat ze hiermee bedoelen en geef aan hoe ori\u00ebntatiemetaforen dit ondersteunen.",
+        antwoord: "Lakoff & Johnson bedoelen dat we de wereld niet begrijpen via neutrale, letterlijke begrippen, maar via metaforen die ons denken onbewust structureren. We denken in vergelijkingen die ontleend zijn aan onze lichamelijke ervaring.\n\nOri\u00ebntatiemetaforen illustreren dit: we koppelen abstracte begrippen aan ruimtelijke ori\u00ebntaties die voortkomen uit ons lichaam. Bijvoorbeeld: GELUKKIG IS BOVEN ('ik voel me down', 'ze is in hogere sferen') is geworteld in het feit dat een rechtopgaande houding samengaat met een positief gevoel. MEER IS BOVEN ('de koers stijgt') komt voort uit de ervaring dat een hogere stapel meer materiaal bevat.\n\nDeze metaforen zijn niet willekeurig gekozen stijlfiguren, maar fundamentele denkpatronen die bepalen hoe we de werkelijkheid waarnemen, interpreteren en erover communiceren.",
+      },
+      {
+        vraag: "Vergelijk de twee ontologische metaforen 'DE GEEST IS EEN MACHINE' en 'DE GEEST IS EEN BREEKBAAR VOORWERP'. Welke aspecten van de menselijke ervaring belichten ze elk, en wat verhullen ze?",
+        antwoord: "DE GEEST IS EEN MACHINE belicht: effici\u00ebntie, productiviteit, een aan/uit-stand, een intern mechanisme met een energiebron. We spreken van 'op gang komen', 'malen', 'op nul zetten'. Deze metafoor stelt de geest voor als iets dat functioneert of niet functioneert.\n\nDE GEEST IS EEN BREEKBAAR VOORWERP belicht: kwetsbaarheid en psychologische kracht. We spreken van 'gebroken', 'er knapte iets', 'kwetsbaar'. Bij breuk 'vliegen de stukken in het rond' \u2014 dit past bij situaties van verlies van controle met mogelijke schade.\n\nBeide metaforen verhullen dat de geest geen ding is maar een complex, belichaamd proces. De machine-metafoor verhult emotie, creativiteit en bewuste ervaring. De breekbaarheids-metafoor verhult veerkracht en herstel. Bovendien suggereren beide dat de geest een los object is, terwijl Lakoff & Johnson juist benadrukken dat ons denken lichamelijk en relationeel is.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
