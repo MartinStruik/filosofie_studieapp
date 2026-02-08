@@ -287,7 +287,7 @@ function Home({ setView, progress }) {
       <div style={{ marginTop: "24px", padding: "16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0" }}>
         <h3 style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px", fontFamily: "'Source Sans 3', sans-serif" }}>📊 Studietip</h3>
         <p style={{ fontSize: "12px", color: "#666", margin: 0, lineHeight: 1.5 }}>
-          ~90% van de examenvragen gaat over de specifieke eindtermen (ET 5–23). Focus daarop! De overige ~10% gaat over de algemene eindtermen (ET 1–4): begripsanalyse, mensbeeld vs. bestaanservaring, en de rol van techniek.
+          90% gaat over de syllabus, waarin de bijbehorende eindtermen centraal staan. Focus daar in eerste instantie op. 10% gaat over de globale eindtermen over antropologie, ethiek, kennistheorie en wetenschapsfilosofie.
         </p>
       </div>
     </div>
