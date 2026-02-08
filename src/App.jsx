@@ -516,6 +516,66 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 9,
+    filosoof: "Verbeek",
+    titel: "Op de vleugels van Icarus (2014)",
+    kwestie: 3,
+    et: "ET 16",
+    inleiding: "Peter-Paul Verbeek (1970) analyseert hoe echoscopie de ervaring van zwangerschap transformeert. Technologie is niet neutraal maar bemiddelt actief onze waarneming en ons moreel handelen. Ontwerpen is daarmee ook moraal ontwerpen.",
+    fragmenten: [
+      {
+        label: "De blik in de baarmoeder is niet neutraal",
+        tekst: "Zwanger zijn is in de westerse wereld nauwelijks nog denkbaar zonder echoscopie. De 'blik in de baarmoeder' die deze technologie biedt, is verre van neutraal. Deze blik heeft als vanzelf een diagnostische component: er kan nu worden vastgesteld wat de gezondheidstoestand van het ongeboren kind is.\n\nEchoscopie geeft, kortom, actief inhoud aan de morele vragen die rondom zwangerschap spelen en draagt actief bij aan de manier waarop die vragen een antwoord krijgen.",
+      },
+      {
+        label: "De foetus als persoon en als pati\u00ebnt",
+        tekst: "Echoscopie representeert de foetus onafhankelijk van het lichaam van zijn of haar moeder, alsof het vrij in de ruimte zweeft. Het beeld is vele malen groter dan het ongeboren kind in werkelijkheid is. Zo ontstaat 'fetal personhood': de foetus wordt een persoon.\n\nTegelijk stelt echoscopie de foetus aanwezig als mogelijke pati\u00ebnt, in termen van medische variabelen en risico op bepaalde ziektes. Echoscopie beeldt het ongeboren kind dus niet neutraal af, maar vertaalt het impliciet tot een mogelijke pati\u00ebnt. Hierdoor wordt zwangerschap een medisch proces en 'verwachten' wordt onvermijdelijk een kwestie van 'kiezen'.",
+      },
+      {
+        label: "Echoscopie maakt ouders tot beslissers",
+        tekst: "De belangrijkste bemiddelende rol van echoscopie is dat deze technologie ouders in verwachting verandert in beslissers met betrekking tot het leven van hun ongeboren kind. Enerzijds moedigt deze technologie abortus aan, omdat ze het mogelijk maakt om lijden te voorkomen. Anderzijds ontmoedigt echoscopie abortus omdat het de emotionele band tussen ouders en kind versterkt.\n\nDe mogelijkheid om echoscopisch onderzoek te laten doen verandert onomkeerbaar wat het betekent om een kind te verwachten. Ook de keuze om g\u00e9\u00e9n echo te laten maken is tenslotte een keuze.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Verbeek stelt dat echoscopie 'verre van neutraal' is. Leg uit op welke manieren echoscopie de ervaring van zwangerschap bemiddelt en waarom dit een voorbeeld is van technologische bemiddeling.",
+        antwoord: "Echoscopie bemiddelt de ervaring van zwangerschap op drie manieren:\n\n1. Waarneming: de technologie maakt de foetus zichtbaar als een vergroot, ge\u00efsoleerd wezen \u2014 los van het moederlichaam. Dit cre\u00ebert 'fetal personhood': de foetus wordt ervaren als een zelfstandig persoon.\n\n2. Interpretatie: de foetus wordt gepresenteerd in medische variabelen en risicoschattingen. Het ongeboren kind wordt zo 'vertaald' tot een mogelijke pati\u00ebnt.\n\n3. Handelen: door de diagnostische mogelijkheid verandert 'verwachten' in 'kiezen'. Ouders worden beslissers over het leven van hun kind, ook als ze ervoor kiezen g\u00e9\u00e9n echo te laten maken.\n\nDit is technologische bemiddeling omdat de technologie niet slechts een neutraal venster biedt, maar actief vormgeeft aan hoe het ongeboren kind ervaren wordt en welke morele keuzes zich aandienen.",
+      },
+      {
+        vraag: "Verbeek stelt: 'Ook de keuze om g\u00e9\u00e9n echo te laten maken is tenslotte een keuze.' Leg uit wat hij hiermee bedoelt en verbind dit met zijn opvatting van 'vrijheid als je verhouden tot technologische invloeden'.",
+        antwoord: "Verbeek bedoelt dat zodra echoscopie als technologie beschikbaar is, je er niet meer neutraal tegenover kunt staan. Niet kiezen is \u00f3\u00f3k een keuze, en wel een zeer bewuste in een samenleving waar het de norm is om echo's te laten maken. Je 'loopt doelbewust het risico' op een kind met afwijkingen.\n\nDit illustreert Verbeeks opvatting van vrijheid: vrijheid is niet 'vrij zijn van technologische invloeden' (want die kun je niet ongedaan maken), maar 'je op een vrije manier verhouden tot' die invloeden. De ouder die bewust g\u00e9\u00e9n echo laat maken, is even vrij als de ouder die dat wel doet \u2014 mits beiden zich bewust zijn van de manier waarop echoscopie hun situatie bemiddelt en ze daar een doordachte houding tegenover innemen.",
+      },
+    ],
+  },
+  {
+    id: 10,
+    filosoof: "De Mul",
+    titel: "Kunstmatig van nature (2016)",
+    kwestie: 3,
+    et: "ET 17",
+    inleiding: "Jos de Mul (1956) schetst drie scenario's voor hoe hedendaagse technologie de menselijke identiteit kan transformeren: het zwermgeest-scenario (extrahumanisme), het alien-scenario (transhumanisme) en het zombie-scenario (posthumanisme).",
+    fragmenten: [
+      {
+        label: "Drie scenario's: extra-, trans- en posthumanisme",
+        tekst: "Ik zal drie mogelijke scenario's schetsen. Het gaat nadrukkelijk niet om voorspellingen, maar om drie mogelijkheden die zich aftekenen in de ontwikkelingen binnen de versmeltende technologie\u00ebn.\n\n1. Het zwermgeest-scenario of extrahumanisme, gedacht vanuit neurotechnologie.\n2. Het alien-scenario of transhumanisme, gedacht vanuit biotechnologie.\n3. Het zombie-scenario of posthumanisme, gedacht vanuit de robotica.\n\nDe volgorde hangt samen met de toenemende avontuurlijkheid ervan.",
+      },
+      {
+        label: "Zwermgeest, alien en zombie",
+        tekst: "Het neurotechnologische zwermgeest-scenario schetst een beeld van de mens die samen met andere mensen en met computers als een zwerm vogels een soort superbrein zal vormen. Omdat dit scenario primair gericht is op mensverbetering door technologische supplementen, zou het ook het cyborg-scenario kunnen worden genoemd.\n\nHet biotechnologische alien-scenario is gericht op de ontwikkeling van nieuwe levensvormen via genetische modificatie. Het gaat niet om technische uitbreidingen maar om veelal onomkeerbare ingrepen in ons biologische bouwplan.\n\nHet zombie-scenario is het meest revolutionaire: gericht op de creatie van geheel kunstmatige levensvormen, zoals robots en andere intelligente entiteiten die niet gebaseerd zijn op koolstofchemie maar op bijvoorbeeld silicium.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg de drie scenario's van De Mul uit en verklaar waarom hij ze presenteert in een volgorde van 'toenemende avontuurlijkheid'.",
+        antwoord: "1. Extrahumanisme (zwermgeest): neurotechnologie verbindt menselijke breinen en computers tot een collectief superbrein. Dit is het minst 'avontuurlijk' omdat het de mens uitbreidt met technologische supplementen \u2014 vergelijkbaar met Clarks natural-born cyborg.\n\n2. Transhumanisme (alien): biotechnologie (genetische modificatie) grijpt in op ons biologische bouwplan. Dit is avontuurlijker omdat de ingrepen onomkeerbaar zijn en leiden tot een fundamenteel andere levensvorm \u2014 voorbij de huidige mens.\n\n3. Posthumanisme (zombie): robotica cre\u00ebert geheel kunstmatig leven op basis van silicium in plaats van koolstof. Dit is het meest avontuurlijk omdat het leven buiten de biologische sfeer wordt gebracht.\n\nDe toenemende avontuurlijkheid zit in de mate van transformatie: van uitbreiding (extra-), via biologische verandering (trans-), naar volledig nieuw, niet-biologisch leven (post-).",
+      },
+      {
+        vraag: "De Mul stelt dat de mens 'van nature kunstmatig' is, net als Plessner. Leg uit hoe zijn drie scenario's zich verhouden tot Plessners wet van natuurlijke kunstmatigheid.",
+        antwoord: "Plessner stelt dat het de natuur van de mens is om zichzelf en haar wereld voortdurend vorm te geven (natuurlijke kunstmatigheid). De mens heeft geen vaststaande essentie maar moet zich vanuit haar excentrische positie steeds opnieuw verhouden tot haar bestaan.\n\nDe Muls drie scenario's zijn een radicale doordenking hiervan: als de mens van nature kunstmatig is, dan is het transformeren van de eigen identiteit door technologie geen breuk met het menselijke, maar juist een voortzetting ervan. Het extrahumanisme breidt de kunstmatigheid uit (supplementen), het transhumanisme herschrijft de biologische basis, het posthumanisme overstijgt de biologie geheel.\n\nHet verschil met Plessner is dat De Mul de mogelijkheid opent dat de transformatie z\u00f3 ver gaat dat er iets ontstaat dat niet meer 'mens' is in de huidige zin \u2014 terwijl Plessners natuurlijke kunstmatigheid juist het blijvende wezen van de mens beschrijft.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
