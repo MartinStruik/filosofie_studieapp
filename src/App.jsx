@@ -424,6 +424,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 6,
+    filosoof: "O'Regan, Myin & No\u00eb",
+    titel: "Sensory consciousness explained (2005)",
+    kwestie: 2,
+    et: "ET 12",
+    inleiding: "Kevin O'Regan, Erik Myin en Alva No\u00eb (1964) verdedigen een enactivistische benadering van bewustzijn: ervaring wordt niet veroorzaakt door hersenprocessen, maar is geconstitueerd door de verkennende activiteit van het sensomotorische lichaam in interactie met de omgeving.",
+    fragmenten: [
+      {
+        label: "Het probleem met de neurale verklaring van bewustzijn",
+        tekst: "Als je naar een tafereel in je omgeving kijkt, komt het licht uit dat tafereel samen in je ogen. De informatie wordt verwerkt door je visueel systeem; een interne representatie van het tafereel wordt gevormd in je brein; en dan gebeurt er iets magisch: je wordt bewust van het tafereel.\n\nEen neurale theorie van fenomenaal bewustzijn moet rekenschap kunnen geven voor waarom en hoe neurale mechanismen de specifieke gevoelens voortbrengen die ze worden verondersteld voort te brengen. Welk exact kenmerk van de neuronen in visuele hersengebieden is het dat het visuele, in plaats van bijvoorbeeld auditieve sensaties voortbrengt?",
+      },
+      {
+        label: "Het Porsche-voorbeeld: ervaring als impliciete kennis",
+        tekst: "De meeste mensen zouden beamen dat het als iets voelt om een auto te besturen, en dat verschillende auto's verschillende 'gevoelens' geven. Maar wat is het bijzondere gevoel van met een Porsche te rijden?\n\nJe raast met je Porsche op de Autobahn. Heel even sluit je je ogen, trek je je handen van het stuur en je voet van het gaspedaal. Je krijgt nu heel weinig zintuiglijke prikkels. Toch heb je nog steeds het gevoel van het rijden met een Porsche.\n\nDit toont aan dat het Porscherijdengevoel niet afkomstig is van onmiddellijke zintuiglijke prikkels, en evengoed niet van breinmechanismen. Het is geconstitueerd door het feit dat je het proces van de Porsche te besturen aan het uitvoeren bent; het bestaat uit het feit van je te beroepen op je impliciete kennis van wat nu zou gebeuren als je bepaalde dingen deed.",
+      },
+      {
+        label: "Neurale activiteit als mogelijkheidsvoorwaarde",
+        tekst: "We kunnen argumenteren dat neurale activiteit een andere rol speelt met betrekking tot fenomenaal bewustzijn dan algemeen aangenomen. In plaats van bewustzijn te genereren, laat neurale activiteit de verkennende activiteit toe waaruit het ervaren van zintuiglijk gevoel bestaat.\n\nDe neurale processen spelen geen directe oorzakelijke rol meer in fenomenaal bewustzijn. Ze zijn noodzakelijk om de verkennende activiteit mogelijk te maken, maar ze zijn zelf niet de rechtstreekse oorzaak van de bijbehorende gevoelens. In de plaats daarvan worden de gevoelens helemaal niet rechtstreeks veroorzaakt, ze zijn geconstitueerd door het feit dat specifieke vaardigheden worden uitgeoefend.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg aan de hand van het Porsche-voorbeeld uit wat No\u00eb e.a. bedoelen met de stelling dat ervaring niet wordt veroorzaakt door hersenprocessen maar geconstitueerd wordt door sensomotorische activiteit.",
+        antwoord: "In het Porsche-voorbeeld sluit je even je ogen en laat je het stuur los, waardoor je bijna geen zintuiglijke prikkels meer ontvangt. Toch heb je nog steeds het 'Porscherijdengevoel'. Dit kan niet verklaard worden door hersenactiviteit alleen (want de prikkels vallen weg) en ook niet door de zintuigen (want die zijn afgesloten).\n\nHet gevoel bestaat volgens No\u00eb e.a. uit je impliciete kennis van wat er zou gebeuren als je handelt: als je het gaspedaal indrukt schiet de auto vooruit, als je aan het stuur komt slingert hij. Deze sensomotorische kennis \u2014 je weten-hoe \u2014 constitueert de ervaring.\n\nDit is de kern van het enactivisme: ervaring is geen product van hersenprocessen die een innerlijk beeld genereren, maar een activiteit van het hele sensomotorische lichaam in interactie met de omgeving. Hersenen maken deze activiteit m\u00f3gelijk, maar veroorzaken de ervaring niet rechtstreeks.",
+      },
+      {
+        vraag: "No\u00eb e.a. stellen dat de neurale processen 'geen directe oorzakelijke rol spelen in fenomenaal bewustzijn'. Hoe verschilt dit van het computationalisme (Swaab) en waarom is dit relevant voor de vraag naar de mens?",
+        antwoord: "Het computationalisme (Swaab) stelt dat hersenprocessen het bewustzijn veroorzaken: 'wij zijn ons brein'. Mentale ervaringen zijn het product van neurale activiteit. De hersenen genereren bewustzijn zoals een computer output genereert uit input.\n\nNo\u00eb e.a. keren dit om: hersenen veroorzaken het bewustzijn niet, maar maken de verkennende activiteit m\u00f3gelijk waaruit bewuste ervaring bestaat. De ervaring zelf is geconstitueerd door wat je met je lichaam doet in de omgeving \u2014 niet door wat er in je hoofd gebeurt.\n\nDit is relevant voor de vraag naar de mens omdat het een ander mensbeeld oplevert: de mens is geen informatieverwerker (brein-als-computer) maar een belichaamd, handelend wezen wiens bewustzijn bestaat in de wisselwerking met de wereld. Dit sluit aan bij de fenomenologie (Sheets-Johnstone) en de 4E-cognitie: de mens is niet te reduceren tot haar brein.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
