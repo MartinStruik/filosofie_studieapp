@@ -229,6 +229,7 @@ function Home({ setView, progress }) {
   const seenFlash = (progress.seenCards || []).length;
   const quizScores = progress.quizScores || [];
   const quizBest = quizScores.length > 0 ? Math.max(...quizScores.map(s => s.pct)) : 0;
+  const examDone = Object.values(progress.examTracker || {}).filter(v => v === "goed" || v === "lastig").length;
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
@@ -245,7 +246,7 @@ function Home({ setView, progress }) {
         {[
           { icon: "🎴", label: "Flashcards", sub: `${seenFlash}/${totalFlash} gezien`, view: "flashcards", bg: "#f0f4ff" },
           { icon: "❓", label: "Quiz", sub: quizBest > 0 ? `Beste: ${quizBest}%` : "Test je kennis", view: "quiz", bg: "#fff5f0" },
-          { icon: "🔍", label: "Examenvragen", sub: `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
+          { icon: "🔍", label: "Examenvragen", sub: examDone > 0 ? `${examDone}/${EXAM_QUESTIONS.length} gedaan` : `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
           { icon: "👤", label: "Filosofen", sub: `${FILOSOFEN.length} denkers`, view: "filosofen", bg: "#faf0ff" },
         ].map(item => (
           <button key={item.view} onClick={() => setView(item.view)} style={{
@@ -482,17 +483,48 @@ function Quiz({ progress, setProgress }) {
 }
 
 // --- EXAM QUESTIONS (v4.2: context boven de vraag, altijd zichtbaar) ---
-function ExamQuestions() {
+function ExamQuestions({ progress, setProgress }) {
   const [openIdx, setOpenIdx] = useState(null);
   const [filter, setFilter] = useState(0);
 
+  const examTracker = progress.examTracker || {};
+
+  const getKey = (eq) => `${eq.year}-${eq.nr}`;
+
+  const setStatus = (eq, status) => {
+    const key = getKey(eq);
+    setProgress(prev => {
+      const tracker = { ...(prev.examTracker || {}) };
+      tracker[key] = tracker[key] === status ? null : status;
+      return { ...prev, examTracker: tracker };
+    });
+  };
+
   const questions = filter === 0 ? EXAM_QUESTIONS : EXAM_QUESTIONS.filter(q => q.kwestie === filter);
+
+  const totalDone = Object.values(examTracker).filter(v => v === "goed" || v === "lastig").length;
+  const totalGoed = Object.values(examTracker).filter(v => v === "goed").length;
+  const totalLastig = Object.values(examTracker).filter(v => v === "lastig").length;
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
       <p style={{ fontSize: "13px", color: "#888", margin: "16px 0" }}>
         Echte examenvragen uit 2024 en 2025 met correctiemodel. Oefen met het formuleren van antwoorden!
       </p>
+
+      {totalDone > 0 && (
+        <div style={{ display: "flex", gap: "10px", marginBottom: "16px", padding: "12px 16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0" }}>
+          <div style={{ fontSize: "12px", color: "#888" }}>
+            <strong style={{ color: "#1a1a2e" }}>{totalDone}/{EXAM_QUESTIONS.length}</strong> gedaan
+          </div>
+          <div style={{ fontSize: "12px", color: "#4caf50" }}>
+            ✔ {totalGoed} goed
+          </div>
+          <div style={{ fontSize: "12px", color: "#ef5350" }}>
+            ✗ {totalLastig} lastig
+          </div>
+        </div>
+      )}
 
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
         {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
@@ -504,8 +536,13 @@ function ExamQuestions() {
         ))}
       </div>
 
-      {questions.map((eq, i) => (
-        <div key={i} style={{ marginBottom: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden" }}>
+      {questions.map((eq, i) => {
+        const key = getKey(eq);
+        const status = examTracker[key];
+        const borderLeft = status === "goed" ? "4px solid #4caf50" : status === "lastig" ? "4px solid #ef5350" : "4px solid transparent";
+
+        return (
+        <div key={i} style={{ marginBottom: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden", borderLeft }}>
           {/* Casus context - always visible */}
           {eq.context && (
             <div style={{ padding: "12px 16px", background: "#f0f0ff", borderBottom: "1px solid #e0e0f0" }}>
@@ -541,8 +578,25 @@ function ExamQuestions() {
               </div>
             </div>
           )}
+
+          {/* Tracker buttons */}
+          <div style={{ display: "flex", gap: "8px", padding: "10px 16px", borderTop: "1px solid #f0f0f5", background: "#fafafe" }}>
+            <button onClick={() => setStatus(eq, "goed")} style={{
+              flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+              border: status === "goed" ? "2px solid #4caf50" : "1px solid #e0e0e8",
+              background: status === "goed" ? "#e8f5e9" : "#fff",
+              color: status === "goed" ? "#2e7d32" : "#888",
+            }}>✔ Goed</button>
+            <button onClick={() => setStatus(eq, "lastig")} style={{
+              flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+              border: status === "lastig" ? "2px solid #ef5350" : "1px solid #e0e0e8",
+              background: status === "lastig" ? "#fce4ec" : "#fff",
+              color: status === "lastig" ? "#c62828" : "#888",
+            }}>✗ Lastig</button>
+          </div>
         </div>
-      ))}
+        );
+      })}
     </div>
   );
 }
@@ -777,7 +831,7 @@ export default function App() {
     switch (view) {
       case "flashcards": return <Flashcards progress={progress} setProgress={setProgress} />;
       case "quiz": return <Quiz progress={progress} setProgress={setProgress} />;
-      case "exam": return <ExamQuestions />;
+      case "exam": return <ExamQuestions progress={progress} setProgress={setProgress} />;
       case "filosofen": return <FilosofenView />;
       case "eindtermen": return <EindtermenView />;
       default: return <Home setView={setView} progress={progress} />;
