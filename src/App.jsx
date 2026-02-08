@@ -12,6 +12,13 @@ const KWESTIES = [
   { id: 4, title: "Grensvervagingen", subtitle: "Mens/dier, levend/niet-levend, fysiek/niet-fysiek", color: "#7A2D8E", accent: "#B04AD9", chapters: "H12–H14 (Lia 2)", eindtermen: "ET 18–23" },
 ];
 
+const DOMEINEN = [
+  { id: "B1", title: "Wijsgerige antropologie", color: "#5A7A2D" },
+  { id: "C1", title: "Ethiek", color: "#2D6E8E" },
+  { id: "D1", title: "Kennisleer", color: "#8E6B2D" },
+  { id: "E1", title: "Wetenschapsfilosofie", color: "#6B2D6E" },
+];
+
 const FILOSOFEN = [
   { name: "Descartes", kwestie: 1, kern: "Dualisme: denkend bewustzijn (res cogitans) + mechanisch lichaam (res extensa). Methodische twijfel: ‘cogito ergo sum’. Het lichaam als machine.", begrippen: ["dualisme", "res cogitans", "res extensa", "methodische twijfel", "cogito"], et: "ET 5" },
   { name: "Sheets-Johnstone", kwestie: 1, kern: "Fenomenologie van dans: pre-reflectieve lichamelijke gewaarwording. We zijn een reflecterend, bewegend lichaam. Lichaamsschema gaat vooraf aan bewuste reflectie.", begrippen: ["pre-reflectief", "lichaamsschema", "fenomenologie", "dans"], et: "ET 6" },
@@ -131,47 +138,47 @@ const FLASHCARDS = [
   { term: "Het else (Rasch)", def: "Dat wat bij datareductie altijd verloren gaat. De kloof tussen data en werkelijkheid. In die ‘kier van licht’ doet zich iets als vrijheid voor.", kwestie: 4 },
 
   // ========== DOMEIN B1: WIJSGERIGE ANTROPOLOGIE ==========
-  { term: "Subjectiviteit", def: "Het vermogen om de wereld vanuit een eigen, uniek perspectief te ervaren — het 'ik' dat ervaart. Centraal begrip in de wijsgerige antropologie.", kwestie: 0 },
-  { term: "Intersubjectiviteit", def: "Gedeelde betekenisgeving tussen subjecten. Kennis en ervaring ontstaan niet in isolatie maar in relatie tot anderen. Basis voor taal, cultuur en wetenschap.", kwestie: 0 },
-  { term: "Cultuur vs. natuur", def: "Is de mens primair een natuurwezen (bepaald door biologie) of een cultuurwezen (gevormd door opvoeding, taal, tradities)? Kernvraag van de wijsgerige antropologie.", kwestie: 0 },
-  { term: "Monisme vs. dualisme", def: "Monisme: geest en lichaam zijn één (of alleen materie bestaat). Dualisme: geest en lichaam zijn twee gescheiden substanties (Descartes). Pluralisme erkent meerdere werkelijkheidslagen.", kwestie: 0 },
-  { term: "Vrijheid vs. determinisme", def: "Is de mens vrij in haar keuzes, of wordt alles bepaald door oorzaken (genen, opvoeding, hersenen)? Centraal debat dat raakt aan verantwoordelijkheid en moraal.", kwestie: 0 },
-  { term: "Materialisme / philosophy of mind", def: "Het mens-zijn wordt in verband gebracht met lichamelijke processen, in het bijzonder hersenprocessen. Mentale toestanden zijn uiteindelijk fysieke toestanden.", kwestie: 0 },
-  { term: "Structuralisme (antropologie)", def: "De mens als functioneel onderdeel van een dominant systeem (taal, cultuur, economie). Niet het individu maar de structuur bepaalt het handelen.", kwestie: 0 },
-  { term: "Sociobiologie", def: "De mens als onderdeel van de evolutie en als biologisch-genetische eenheid. Menselijk gedrag (ook sociaal en moreel) wordt verklaard vanuit evolutionaire aanpassing.", kwestie: 0 },
+  { term: "Subjectiviteit", def: "Het vermogen om de wereld vanuit een eigen, uniek perspectief te ervaren — het 'ik' dat ervaart. Centraal begrip in de wijsgerige antropologie.", kwestie: "B1" },
+  { term: "Intersubjectiviteit", def: "Gedeelde betekenisgeving tussen subjecten. Kennis en ervaring ontstaan niet in isolatie maar in relatie tot anderen. Basis voor taal, cultuur en wetenschap.", kwestie: "B1" },
+  { term: "Cultuur vs. natuur", def: "Is de mens primair een natuurwezen (bepaald door biologie) of een cultuurwezen (gevormd door opvoeding, taal, tradities)? Kernvraag van de wijsgerige antropologie.", kwestie: "B1" },
+  { term: "Monisme vs. dualisme", def: "Monisme: geest en lichaam zijn één (of alleen materie bestaat). Dualisme: geest en lichaam zijn twee gescheiden substanties (Descartes). Pluralisme erkent meerdere werkelijkheidslagen.", kwestie: "B1" },
+  { term: "Vrijheid vs. determinisme", def: "Is de mens vrij in haar keuzes, of wordt alles bepaald door oorzaken (genen, opvoeding, hersenen)? Centraal debat dat raakt aan verantwoordelijkheid en moraal.", kwestie: "B1" },
+  { term: "Materialisme / philosophy of mind", def: "Het mens-zijn wordt in verband gebracht met lichamelijke processen, in het bijzonder hersenprocessen. Mentale toestanden zijn uiteindelijk fysieke toestanden.", kwestie: "B1" },
+  { term: "Structuralisme (antropologie)", def: "De mens als functioneel onderdeel van een dominant systeem (taal, cultuur, economie). Niet het individu maar de structuur bepaalt het handelen.", kwestie: "B1" },
+  { term: "Sociobiologie", def: "De mens als onderdeel van de evolutie en als biologisch-genetische eenheid. Menselijk gedrag (ook sociaal en moreel) wordt verklaard vanuit evolutionaire aanpassing.", kwestie: "B1" },
 
   // ========== DOMEIN C1: ETHIEK ==========
-  { term: "Deugdethiek (Aristoteles)", def: "De mens als gemeenschapswezen neemt deugd als uitgangspunt. Het goede leven bereik je door deugden te ontwikkelen: moed, matigheid, rechtvaardigheid, praktische wijsheid.", kwestie: 0 },
-  { term: "Plicht-ethiek (Kant)", def: "Morele afweging gaat altijd uit van principes en plicht, ongeacht het resultaat. De categorische imperatief: handel alleen volgens regels die je als universele wet zou willen.", kwestie: 0 },
-  { term: "Utilisme (Mill)", def: "Het goede is datgene wat leidt tot de maximalisering van geluk voor het grootste aantal mensen. Consequenties bepalen of een handeling moreel goed is.", kwestie: 0 },
-  { term: "Waardencreatie (Nietzsche)", def: "Waarden worden niet ontdekt maar door de mens zelf gecreëerd. Bestaande moraal moet kritisch onderzocht en zo nodig verworpen worden (herwaardering van waarden).", kwestie: 0 },
-  { term: "Communicatief handelen (Habermas)", def: "Ethiek is gebaseerd op vrije, gelijkwaardige dialoog. Morele normen zijn geldig als alle betrokkenen er in een open gesprek mee zouden instemmen.", kwestie: 0 },
-  { term: "Waarden vs. normen", def: "Waarden zijn idealen die richting geven (vrijheid, rechtvaardigheid). Normen zijn concrete regels die uit waarden voortvloeien ('je mag niet stelen'). Ethiek onderzoekt beide.", kwestie: 0 },
-  { term: "Is-ought gap (Hume)", def: "Uit hoe iets 'is' (feit) volgt niet hoe het 'moet zijn' (norm). Relevant bij: mag alles wat technologisch kán? Feiten alleen bepalen geen moraal.", kwestie: 0 },
-  { term: "Intrinsiek vs. instrumenteel handelen", def: "Intrinsiek handelen: iets doen omdat het op zichzelf waardevol is. Instrumenteel handelen: iets doen als middel voor een ander doel. Ethische vraag: wanneer is iets doel, wanneer middel?", kwestie: 0 },
-  { term: "Rechten vs. plichten", def: "Rechten zijn aanspraken die je kunt maken (bijv. recht op vrijheid). Plichten zijn verplichtingen jegens anderen. In de ethiek: hoe verhouden deze zich tot elkaar?", kwestie: 0 },
+  { term: "Deugdethiek (Aristoteles)", def: "De mens als gemeenschapswezen neemt deugd als uitgangspunt. Het goede leven bereik je door deugden te ontwikkelen: moed, matigheid, rechtvaardigheid, praktische wijsheid.", kwestie: "C1" },
+  { term: "Plicht-ethiek (Kant)", def: "Morele afweging gaat altijd uit van principes en plicht, ongeacht het resultaat. De categorische imperatief: handel alleen volgens regels die je als universele wet zou willen.", kwestie: "C1" },
+  { term: "Utilisme (Mill)", def: "Het goede is datgene wat leidt tot de maximalisering van geluk voor het grootste aantal mensen. Consequenties bepalen of een handeling moreel goed is.", kwestie: "C1" },
+  { term: "Waardencreatie (Nietzsche)", def: "Waarden worden niet ontdekt maar door de mens zelf gecreëerd. Bestaande moraal moet kritisch onderzocht en zo nodig verworpen worden (herwaardering van waarden).", kwestie: "C1" },
+  { term: "Communicatief handelen (Habermas)", def: "Ethiek is gebaseerd op vrije, gelijkwaardige dialoog. Morele normen zijn geldig als alle betrokkenen er in een open gesprek mee zouden instemmen.", kwestie: "C1" },
+  { term: "Waarden vs. normen", def: "Waarden zijn idealen die richting geven (vrijheid, rechtvaardigheid). Normen zijn concrete regels die uit waarden voortvloeien ('je mag niet stelen'). Ethiek onderzoekt beide.", kwestie: "C1" },
+  { term: "Is-ought gap (Hume)", def: "Uit hoe iets 'is' (feit) volgt niet hoe het 'moet zijn' (norm). Relevant bij: mag alles wat technologisch kán? Feiten alleen bepalen geen moraal.", kwestie: "C1" },
+  { term: "Intrinsiek vs. instrumenteel handelen", def: "Intrinsiek handelen: iets doen omdat het op zichzelf waardevol is. Instrumenteel handelen: iets doen als middel voor een ander doel. Ethische vraag: wanneer is iets doel, wanneer middel?", kwestie: "C1" },
+  { term: "Rechten vs. plichten", def: "Rechten zijn aanspraken die je kunt maken (bijv. recht op vrijheid). Plichten zijn verplichtingen jegens anderen. In de ethiek: hoe verhouden deze zich tot elkaar?", kwestie: "C1" },
 
   // ========== DOMEIN D1: KENNISLEER ==========
-  { term: "A priori vs. a posteriori", def: "A priori: kennis onafhankelijk van ervaring (bijv. wiskunde). A posteriori: kennis op basis van ervaring (bijv. 'water kookt bij 100°C'). Centraal onderscheid in de kennisleer.", kwestie: 0 },
-  { term: "Schijn vs. werkelijkheid", def: "Komt onze waarneming overeen met hoe de werkelijkheid echt is? Filosofisch kernprobleem sinds Plato's allegorie van de grot: wat we zien is misschien slechts een schaduw.", kwestie: 0 },
-  { term: "Rationalisme (Descartes)", def: "Kennis is primair een proces van rationeel denken. Door methodische twijfel en zuiver redeneren komen we tot zekere kennis. De rede is betrouwbaarder dan de zintuigen.", kwestie: 0 },
-  { term: "Empirisme (Locke, Hume)", def: "Kennis is gebaseerd op zintuiglijke ervaring. De geest is bij geboorte een 'onbeschreven blad' (tabula rasa). Alle kennis komt uiteindelijk voort uit waarneming.", kwestie: 0 },
-  { term: "Synthese ervaring en denken (Kant)", def: "Kennis komt voort uit een synthese: de zintuigen leveren ruwe ervaring, het verstand ordent die met aangeboren categorieën (ruimte, tijd, causaliteit). Zonder begrippen is ervaring blind, zonder ervaring zijn begrippen leeg.", kwestie: 0 },
-  { term: "Constructivisme (epistemologie)", def: "Kennis is niet een passieve afspiegeling van de werkelijkheid maar wordt actief geconstrueerd door de waarnemer. Verband met theoriegeladenheid en metaforen.", kwestie: 0 },
-  { term: "Kennis vs. geloof", def: "Kennis vereist rechtvaardiging en waarheid, geloof niet. Filosofische vraag: waar ligt de grens? Wanneer is overtuiging kennis en wanneer slechts mening of geloof?", kwestie: 0 },
-  { term: "Feit vs. fictie", def: "Feiten beschrijven wat het geval is, ficties zijn verzonnen. Maar: is het onderscheid scherp? Narrativisme stelt dat ook feitelijke kennis narratief gestructureerd is.", kwestie: 0 },
+  { term: "A priori vs. a posteriori", def: "A priori: kennis onafhankelijk van ervaring (bijv. wiskunde). A posteriori: kennis op basis van ervaring (bijv. 'water kookt bij 100°C'). Centraal onderscheid in de kennisleer.", kwestie: "D1" },
+  { term: "Schijn vs. werkelijkheid", def: "Komt onze waarneming overeen met hoe de werkelijkheid echt is? Filosofisch kernprobleem sinds Plato's allegorie van de grot: wat we zien is misschien slechts een schaduw.", kwestie: "D1" },
+  { term: "Rationalisme (Descartes)", def: "Kennis is primair een proces van rationeel denken. Door methodische twijfel en zuiver redeneren komen we tot zekere kennis. De rede is betrouwbaarder dan de zintuigen.", kwestie: "D1" },
+  { term: "Empirisme (Locke, Hume)", def: "Kennis is gebaseerd op zintuiglijke ervaring. De geest is bij geboorte een 'onbeschreven blad' (tabula rasa). Alle kennis komt uiteindelijk voort uit waarneming.", kwestie: "D1" },
+  { term: "Synthese ervaring en denken (Kant)", def: "Kennis komt voort uit een synthese: de zintuigen leveren ruwe ervaring, het verstand ordent die met aangeboren categorieën (ruimte, tijd, causaliteit). Zonder begrippen is ervaring blind, zonder ervaring zijn begrippen leeg.", kwestie: "D1" },
+  { term: "Constructivisme (epistemologie)", def: "Kennis is niet een passieve afspiegeling van de werkelijkheid maar wordt actief geconstrueerd door de waarnemer. Verband met theoriegeladenheid en metaforen.", kwestie: "D1" },
+  { term: "Kennis vs. geloof", def: "Kennis vereist rechtvaardiging en waarheid, geloof niet. Filosofische vraag: waar ligt de grens? Wanneer is overtuiging kennis en wanneer slechts mening of geloof?", kwestie: "D1" },
+  { term: "Feit vs. fictie", def: "Feiten beschrijven wat het geval is, ficties zijn verzonnen. Maar: is het onderscheid scherp? Narrativisme stelt dat ook feitelijke kennis narratief gestructureerd is.", kwestie: "D1" },
 
   // ========== DOMEIN E1: WETENSCHAPSFILOSOFIE ==========
-  { term: "Hypothese en empirische toetsing", def: "Een hypothese is een voorlopige veronderstelling die empirisch getoetst moet worden. De empirische cyclus: waarneming → hypothese → toetsing → conclusie.", kwestie: 0 },
-  { term: "Demarcatieprobleem", def: "Hoe onderscheid je wetenschap van niet-wetenschap (pseudowetenschap)? Kernvraag van de wetenschapsfilosofie. Popper: falsifieerbaarheid als criterium.", kwestie: 0 },
-  { term: "Positivisme (Comte)", def: "Wetenschap is gebaseerd op positieve (waarneembare) feiten. Alleen empirisch verifieerbare uitspraken zijn wetenschappelijk zinvol. De Wiener Kreis radicaliseerde dit idee.", kwestie: 0 },
-  { term: "Falsificationisme (Popper)", def: "Een theorie is wetenschappelijk als ze in principe weerlegbaar (falsifieerbaar) is. Wetenschap vordert niet door verificatie maar door pogingen theorieën te weerleggen.", kwestie: 0 },
-  { term: "Paradigma (Kuhn)", def: "Een paradigma is het gedeelde denkpatroon van een wetenschappelijke gemeenschap: theorieën, methoden, standaardvoorbeelden. Wetenschappelijke revoluties = paradigmawisselingen.", kwestie: 0 },
-  { term: "Methodologisch anarchisme (Feyerabend)", def: "'Anything goes': er is geen enkele methode die alle wetenschappelijke vooruitgang verklaart. Vele methoden van onderzoek kunnen wetenschappelijk zijn.", kwestie: 0 },
-  { term: "Verklaren vs. verstaan", def: "Verklaren: causale wetmatigheden zoeken (natuurwetenschappen). Verstaan: betekenis en intenties begrijpen (geesteswetenschappen/hermeneutiek). Twee verschillende benaderingen van kennis.", kwestie: 0 },
-  { term: "Inductie vs. deductie", def: "Inductie: van losse waarnemingen naar een algemene regel ('alle zwanen die ik zag zijn wit, dus alle zwanen zijn wit'). Deductie: van algemene regel naar specifieke conclusie. Inductieprobleem: inductie levert nooit absolute zekerheid.", kwestie: 0 },
-  { term: "Waardevrijheid vs. waardegebondenheid", def: "Is wetenschap objectief en waardevrij, of wordt ze altijd beïnvloed door de waarden en belangen van onderzoekers? Latour: wetenschap is een maatschappelijke praktijk, nooit volledig waardevrij.", kwestie: 0 },
-  { term: "Techniek vs. technologie", def: "Techniek: het praktische kunnen, het maken en gebruiken van middelen. Technologie: de systematische, wetenschappelijke studie van techniek. In de wetenschapsfilosofie: hoe verhouden wetenschap en techniek zich?", kwestie: 0 },
+  { term: "Hypothese en empirische toetsing", def: "Een hypothese is een voorlopige veronderstelling die empirisch getoetst moet worden. De empirische cyclus: waarneming → hypothese → toetsing → conclusie.", kwestie: "E1" },
+  { term: "Demarcatieprobleem", def: "Hoe onderscheid je wetenschap van niet-wetenschap (pseudowetenschap)? Kernvraag van de wetenschapsfilosofie. Popper: falsifieerbaarheid als criterium.", kwestie: "E1" },
+  { term: "Positivisme (Comte)", def: "Wetenschap is gebaseerd op positieve (waarneembare) feiten. Alleen empirisch verifieerbare uitspraken zijn wetenschappelijk zinvol. De Wiener Kreis radicaliseerde dit idee.", kwestie: "E1" },
+  { term: "Falsificationisme (Popper)", def: "Een theorie is wetenschappelijk als ze in principe weerlegbaar (falsifieerbaar) is. Wetenschap vordert niet door verificatie maar door pogingen theorieën te weerleggen.", kwestie: "E1" },
+  { term: "Paradigma (Kuhn)", def: "Een paradigma is het gedeelde denkpatroon van een wetenschappelijke gemeenschap: theorieën, methoden, standaardvoorbeelden. Wetenschappelijke revoluties = paradigmawisselingen.", kwestie: "E1" },
+  { term: "Methodologisch anarchisme (Feyerabend)", def: "'Anything goes': er is geen enkele methode die alle wetenschappelijke vooruitgang verklaart. Vele methoden van onderzoek kunnen wetenschappelijk zijn.", kwestie: "E1" },
+  { term: "Verklaren vs. verstaan", def: "Verklaren: causale wetmatigheden zoeken (natuurwetenschappen). Verstaan: betekenis en intenties begrijpen (geesteswetenschappen/hermeneutiek). Twee verschillende benaderingen van kennis.", kwestie: "E1" },
+  { term: "Inductie vs. deductie", def: "Inductie: van losse waarnemingen naar een algemene regel ('alle zwanen die ik zag zijn wit, dus alle zwanen zijn wit'). Deductie: van algemene regel naar specifieke conclusie. Inductieprobleem: inductie levert nooit absolute zekerheid.", kwestie: "E1" },
+  { term: "Waardevrijheid vs. waardegebondenheid", def: "Is wetenschap objectief en waardevrij, of wordt ze altijd beïnvloed door de waarden en belangen van onderzoekers? Latour: wetenschap is een maatschappelijke praktijk, nooit volledig waardevrij.", kwestie: "E1" },
+  { term: "Techniek vs. technologie", def: "Techniek: het praktische kunnen, het maken en gebruiken van middelen. Technologie: de systematische, wetenschappelijke studie van techniek. In de wetenschapsfilosofie: hoe verhouden wetenschap en techniek zich?", kwestie: "E1" },
 ];
 
 // ============================================================
@@ -267,6 +274,12 @@ function KwestieTag({ kwestie, small }) {
   if (kwestie === 0) {
     return (
       <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: small ? "10px" : "11px", fontWeight: 700, background: "#90909020", color: "#666", letterSpacing: "0.5px" }}>ALG</span>
+    );
+  }
+  const d = DOMEINEN.find(d => d.id === kwestie);
+  if (d) {
+    return (
+      <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: small ? "10px" : "11px", fontWeight: 700, background: `${d.color}20`, color: d.color, letterSpacing: "0.5px" }}>{d.id}</span>
     );
   }
   const k = KWESTIES.find(k => k.id === kwestie);
@@ -372,19 +385,27 @@ function Flashcards({ progress, setProgress }) {
   if (cards.length === 0) return <p style={{ padding: "40px 20px", textAlign: "center", color: "#888" }}>Geen kaarten voor deze selectie.</p>;
 
   const card = cards[idx];
-  const kwestieColor = card.kwestie === 0 ? "#666" : (KWESTIES.find(k => k.id === card.kwestie)?.color || "#1a1a2e");
+  const kwestieColor = card.kwestie === 0 ? "#666" : (KWESTIES.find(k => k.id === card.kwestie)?.color || DOMEINEN.find(d => d.id === card.kwestie)?.color || "#1a1a2e");
   const isSeen = (progress.seenCards || []).includes(card.term);
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
-        {[{ id: null, label: "Alle" }, { id: 0, label: "Alg." }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
+        {[
+          { id: null, label: "Alle" },
+          { id: 0, label: "Alg." },
+          ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` })),
+          ...DOMEINEN.map(d => ({ id: d.id, label: d.id })),
+        ].map(f => {
+          const activeColor = f.id === null ? "#1a1a2e" : f.id === 0 ? "#666" : KWESTIES.find(k => k.id === f.id)?.color || DOMEINEN.find(d => d.id === f.id)?.color || "#1a1a2e";
+          return (
           <button key={String(f.id)} onClick={() => { setFilter(f.id); setIdx(0); setFlipped(false); }} style={{
             padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
-            background: filter === f.id ? (f.id === null ? "#1a1a2e" : f.id === 0 ? "#666" : KWESTIES.find(k => k.id === f.id)?.color || "#1a1a2e") : "#f0f0f5",
+            background: filter === f.id ? activeColor : "#f0f0f5",
             color: filter === f.id ? "#fff" : "#666",
           }}>{f.label}</button>
-        ))}
+          );
+        })}
       </div>
 
       <div style={{ textAlign: "center", fontSize: "12px", color: "#888", marginBottom: "12px" }}>
@@ -481,13 +502,20 @@ function Quiz({ progress, setProgress }) {
   return (
     <div style={{ padding: "0 20px 40px" }}>
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
-        {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
-          <button key={f.id} onClick={() => { setFilter(f.id); restart(); }} style={{
+        {[
+          { id: 0, label: "Alle" },
+          ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` })),
+          ...DOMEINEN.map(d => ({ id: d.id, label: d.id })),
+        ].map(f => {
+          const activeColor = f.id === 0 ? "#1a1a2e" : KWESTIES.find(k => k.id === f.id)?.color || DOMEINEN.find(d => d.id === f.id)?.color || "#1a1a2e";
+          return (
+          <button key={String(f.id)} onClick={() => { setFilter(f.id); restart(); }} style={{
             padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
-            background: filter === f.id ? "#1a1a2e" : "#f0f0f5",
+            background: filter === f.id ? activeColor : "#f0f0f5",
             color: filter === f.id ? "#fff" : "#666",
           }}>{f.label}</button>
-        ))}
+          );
+        })}
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
