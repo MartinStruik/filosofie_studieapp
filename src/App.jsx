@@ -328,6 +328,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 3,
+    filosoof: "Fanon",
+    titel: "Zwarte huid, witte maskers (1952)",
+    kwestie: 1,
+    et: "ET 9",
+    inleiding: "Frantz Fanon (1925-1961) was psychiater, filosoof en activist uit Martinique. In 'Zwarte Huid, Witte Maskers' beschrijft hij hoe zijn bestaanservaring als zwarte man wordt bepaald en overstemd door de blik van witte anderen. Zijn lichaamsschema wordt vervangen door een 'epidermisch-raciaal schema'.",
+    fragmenten: [
+      {
+        label: "Object worden onder de blik van de ander",
+        tekst: "'Vieze neger!' Of gewoon: 'H\u00e9, een neger!' Toen ik op de wereld kwam, wilde ik graag aan de dingen een betekenis ontfutselen, was mijn ziel vervuld van het verlangen om aan de basis van de wereld te staan, maar in plaats daarvan werd ik mezelf gewaar als object te midden van andere objecten. Opgesloten in dat verpletterende object-zijn wendde ik me tot de anderen om hulp.\n\nMaar toen kreeg ik te maken met de blanke blik. Een ongewoon zwaar gewicht daalde op me neer. Mijn aandeel in de echte wereld werd me betwist.",
+      },
+      {
+        label: "Van lichaamsschema naar epidermisch-raciaal schema",
+        tekst: "Een gekleurde persoon stuit in de witte wereld op problemen bij het uitwerken van zijn lichaamsschema. Kennis verwerven over je lichaam is een puur negatieve activiteit. Het is kennis in de derde persoon.\n\nOnder het lichaamsschema had ik een historisch-raciaal schema gecre\u00eberd. De door mij gebruikte elementen waren me niet aangeleverd door 'overblijfselen van gewaarwordingen en waarnemingen die vooral liggen op het vlak van tastzin, gehoor, motoriek en zicht'. Ze waren aangeleverd door de ander, de Blanke, die een weefsel van talloze details, anekdoten en verhalen voor me had gemaakt.\n\nOp verscheidene punten bestookt, stortte het lichaamsschema in elkaar om plaats te maken voor een epidermisch-raciaal schema.",
+      },
+      {
+        label: "De vervreemding en het verlangen mens te zijn",
+        tekst: "'H\u00e9, een neger!' Dat was een externe prikkel die me in het voorbijgaan opporde. Ik produceerde een vage glimlach.\n'H\u00e9, een neger!' Dat klopte. Ik begon het grappig te vinden.\n'H\u00e9, een neger!' Geleidelijk sloot zich de cirkel. Ik vond het een grote grap.\n'Mama, kijk toch, die neger, ik ben bang!' Bang! Bang! Nu werden ze ook nog bang voor me. Ik wilde plezier hebben tot ik erbij neerviel, maar dat was nu onmogelijk geworden.\n\nDie dag, gedesori\u00ebnteerd als ik was, niet in staat om buiten te zijn met de ander, met de Blanke die me onbarmhartig opsloot, verwijderde ik me ver, heel ver weg van mijn er-zijn en maakte ik mezelf tot object. Toch had ik geen behoefte aan zo'n herbeschouwing. Ik wilde simpelweg een mens tussen andere mensen zijn.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Fanon schrijft dat zijn lichaamsschema 'in elkaar stortte' om plaats te maken voor een 'epidermisch-raciaal schema'. Leg uit wat hij hiermee bedoelt en hoe dit verschilt van het lichaamsschema zoals Sheets-Johnstone dat beschrijft.",
+        antwoord: "Het lichaamsschema bij Sheets-Johnstone is de pre-reflectieve gewaarwording van het eigen lichaam in de ruimte: een onbewuste 'kaart' die ons in staat stelt te bewegen en de wereld te ervaren. Het is een neutraal, eerstepersoonsperspectief.\n\nFanon beschrijft hoe dit schema bij hem instort door de blik van de witte ander. In plaats van zijn lichaam pre-reflectief te ervaren, wordt zijn lichaam van buitenaf gedefinieerd door huidskleur: het epidermisch-raciaal schema. De elementen hiervoor komen niet uit eigen ervaring (tastzin, motoriek), maar zijn 'aangeleverd door de ander' \u2014 door verhalen, anekdoten en vooroordelen.\n\nHet verschil is dus dat Sheets-Johnstones lichaamsschema vertrekt vanuit de eigen geleefde ervaring (eerste persoon), terwijl Fanons epidermisch-raciaal schema wordt opgelegd door de blik van anderen (derde persoon) en de eigen bestaanservaring overstempt.",
+      },
+      {
+        vraag: "Fanon beschrijft een escalerende reeks uitroepen ('H\u00e9, een neger!') die eindigt met angst ('ik ben bang!'). Leg uit hoe deze passage de objectivering van de zwarte mens illustreert en verbind dit met Plessners begrip 'medewereld'.",
+        antwoord: "De escalerende uitroepen laten zien hoe Fanon stap voor stap wordt gereduceerd tot een object. Aanvankelijk kan hij de uitroepen nog relativeren (glimlachen, grappig vinden), maar wanneer het kind angst toont, wordt de objectivering onontkombaar: hij is niet langer een subject dat zelf betekenis geeft aan de wereld, maar een angstaanjagend object in de ogen van anderen.\n\nPlessners begrip 'medewereld' stelt dat de mens altijd bestaat in relatie tot anderen: de ander is mede-constitutief voor wie je bent. Fanons ervaring is hier een pijnlijke illustratie van. De medewereld \u2014 de witte ander \u2014 legt een schema op dat Fanons bestaanservaring bepaalt en beperkt. Waar Plessner de medewereld beschrijft als een ruimte waarin de mens zich kan uitdrukken en delen, toont Fanon dat deze medewereld ook kan objectiveren en vervreemden: 'ik maakte mezelf tot object'.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
