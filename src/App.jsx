@@ -449,22 +449,28 @@ function Flashcards({ progress, setProgress }) {
 function Quiz({ progress, setProgress }) {
   const [filter, setFilter] = useState(0);
   const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState(null);
-  const [score, setScore] = useState(0);
+  const [answers, setAnswers] = useState([]);
   const [finished, setFinished] = useState(false);
 
   const questions = filter === 0 ? QUIZ_QUESTIONS : QUIZ_QUESTIONS.filter(q => q.kwestie === filter);
 
-  const restart = () => { setCurrent(0); setSelected(null); setScore(0); setFinished(false); };
+  const selected = answers[current] ?? null;
+  const score = answers.filter((a, i) => a === questions[i]?.correct).length;
+
+  const restart = () => { setCurrent(0); setAnswers([]); setFinished(false); };
 
   const handleAnswer = (optIdx) => {
     if (selected !== null) return;
-    setSelected(optIdx);
-    if (optIdx === questions[current].correct) setScore(s => s + 1);
+    setAnswers(prev => { const next = [...prev]; next[current] = optIdx; return next; });
+  };
+
+  const prevQ = () => {
+    if (current > 0) setCurrent(c => c - 1);
   };
 
   const nextQ = () => {
     if (current + 1 >= questions.length) {
+      const finalScore = answers.filter((a, i) => a === questions[i]?.correct).length + (selected === questions[current].correct ? (answers[current] == null ? 1 : 0) : 0);
       const finalPct = Math.round(score / questions.length * 100);
       setProgress(prev => ({
         ...prev,
@@ -473,7 +479,6 @@ function Quiz({ progress, setProgress }) {
       setFinished(true);
     } else {
       setCurrent(c => c + 1);
-      setSelected(null);
     }
   };
 
@@ -553,10 +558,23 @@ function Quiz({ progress, setProgress }) {
           <p style={{ fontSize: "13px", color: "#333", margin: 0, lineHeight: 1.5 }}>
             <strong>{selected === q.correct ? "✔ Correct!" : "✘ Helaas."}</strong> {q.explanation}
           </p>
-          <button onClick={nextQ} style={{ marginTop: "12px", padding: "10px 24px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
-            {current + 1 >= questions.length ? "Bekijk resultaat" : "Volgende vraag →"}
-          </button>
+          <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+            {current > 0 && (
+              <button onClick={prevQ} style={{ padding: "10px 24px", background: "#fff", color: "#1a1a2e", border: "2px solid #e0e0e8", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
+                ← Vorige
+              </button>
+            )}
+            <button onClick={nextQ} style={{ padding: "10px 24px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
+              {current + 1 >= questions.length ? "Bekijk resultaat" : "Volgende vraag →"}
+            </button>
+          </div>
         </div>
+      )}
+
+      {selected === null && current > 0 && (
+        <button onClick={prevQ} style={{ marginTop: "16px", padding: "10px 24px", background: "#fff", color: "#1a1a2e", border: "2px solid #e0e0e8", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
+          ← Vorige
+        </button>
       )}
     </div>
   );
