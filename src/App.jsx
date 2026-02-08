@@ -392,6 +392,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 5,
+    filosoof: "Clark & Chalmers",
+    titel: "The Extended Mind (1998)",
+    kwestie: 2,
+    et: "ET 12",
+    inleiding: "Andy Clark (1957) en David Chalmers (1966) beargumenteren dat ons denken zich uitstrekt voorbij huid en schedel. Externe hulpmiddelen zoals een notitieboekje kunnen dezelfde cognitieve rol spelen als het biologisch geheugen. Het beroemde gedachtenexperiment van Otto en Inga illustreert dit 'actief externalisme'.",
+    fragmenten: [
+      {
+        label: "De uitgebreide geest: actief externalisme",
+        tekst: "Waar eindigt de geest en begint de rest van de wereld? Wij pleiten voor een actief externalisme, gebaseerd op de actieve rol van de omgeving in het sturen van cognitieve processen.\n\nIndien, als we een taak uitvoeren, een deel van de wereld functioneert als een proces dat we zonder aarzeling als deel van het cognitief proces zouden erkennen wanneer het in het hoofd volbracht zou worden, dan is dat deel van de wereld deel van het cognitief proces. Cognitieve processen zitten niet (allemaal) in het hoofd!",
+      },
+      {
+        label: "Otto en Inga: het gedachtenexperiment",
+        tekst: "Inga hoort van een vriend dat er een tentoonstelling is in het Museum voor Moderne Kunst en beslist ze te gaan bekijken. Ze denkt even en herinnert zich dat het museum aan Straat 53 is, dus ze wandelt naar Straat 53 en gaat het museum binnen.\n\nStel je nu Otto voor. Otto lijdt aan de ziekte van Alzheimer. Otto neemt altijd een notitieboekje mee. Als hij nieuwe informatie verneemt, schrijft hij die op. Hij raadpleegt zijn notitieboekje, waarin geschreven staat dat het museum aan Straat 53 is, dus hij wandelt naar Straat 53 en loopt het museum binnen.\n\nOtto had de overtuiging dat het museum aan Straat 53 was, zelfs voor hij zijn notitieboekje raadpleegde. Want in de relevante aspecten zijn de gevallen volstrekt analoog: het notitieboekje speelt voor Otto dezelfde rol als het geheugen voor Inga.",
+      },
+      {
+        label: "Er is niets heilig aan huid en schedel",
+        tekst: "De moraal van het verhaal is dat, wanneer het aankomt op overtuigingen, er niets heilig is aan huid en schedel. Wat maakt dat bepaalde informatie een overtuiging vormt, is de rol die ze speelt, en er is geen reden waarom de relevante rol enkel van binnenin het lichaam gespeeld zou kunnen worden.\n\nEens de alleenheerschappij van huid en schedel wordt doorbroken, zouden we in staat kunnen zijn om onszelf meer waarachtig als schepsels van de wereld te kunnen zien.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg aan de hand van het voorbeeld van Otto en Inga uit wat Clark & Chalmers bedoelen met de 'extended mind'-hypothese. Waarom is het notitieboekje volgens hen deel van Otto's geheugen?",
+        antwoord: "Inga onthoudt het adres van het museum in haar biologisch geheugen; Otto slaat het op in zijn notitieboekje. Clark & Chalmers stellen dat beide gevallen functioneel analoog zijn:\n\n1. In beide gevallen was de informatie beschikbaar v\u00f3\u00f3r het moment van raadplegen (Inga's sluimerende herinnering, Otto's notitie).\n2. In beide gevallen stuurt de informatie het handelen aan (beiden wandelen naar Straat 53).\n3. Het notitieboekje is betrouwbaar en constant beschikbaar, net als Inga's geheugen.\n\nDe extended mind-hypothese stelt daarom dat wat telt niet is w\u00e1\u00e1r de informatie zich bevindt (in het hoofd of in een boekje), maar welke rol ze speelt in het cognitieve proces. Het notitieboekje is een 'cognitieve extensie': het breidt Otto's geest uit voorbij huid en schedel.",
+      },
+      {
+        vraag: "Clark & Chalmers schrijven: 'er is niets heilig aan huid en schedel'. Leg uit wat ze hiermee bedoelen en welke gevolgen dit heeft voor ons begrip van wat 'de mens' is.",
+        antwoord: "Clark & Chalmers bedoelen dat de grenzen van de geest niet samenvallen met de grenzen van het lichaam. De traditionele opvatting plaatst het denken binnen het brein (schedel) en het individu (huid). Maar als externe hulpmiddelen \u2014 zoals Otto's notitieboekje \u2014 dezelfde functionele rol spelen als interne cognitieve processen, is er geen principi\u00eble reden om ze uit te sluiten van 'de geest'.\n\nDit heeft ingrijpende gevolgen voor ons begrip van de mens:\n- De mens is geen op zichzelf staand, afgesloten cognitief systeem, maar een 'gekoppeld systeem' van brein, lichaam en omgeving.\n- Ingrijpen op iemands omgeving (bijv. het afnemen van een smartphone) kan moreel gelijkwaardig zijn aan ingrijpen op de persoon zelf.\n- Dit sluit aan bij Clarks latere idee van de 'natural-born cyborg': de mens is van nature een hybride wezen dat zichzelf uitbreidt met technologie.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
