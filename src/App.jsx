@@ -296,6 +296,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 2,
+    filosoof: "Plessner",
+    titel: "Lachen en wenen: een onderzoek naar de grenzen van het menselijk gedrag (1941)",
+    kwestie: 1,
+    et: "ET 7",
+    inleiding: "Helmuth Plessner (1892-1985) illustreert het wezen van de mens aan de hand van lachen en huilen. Volgens Plessner getuigen deze verschijnselen bij uitstek van de bijzondere, dubbelzinnige verhouding tussen de mens en haar lichaam: enerzijds lichamelijke uitbarstingen die we niet kunnen beheersen, anderzijds betekenisvol op een manier die het puur fysieke overstijgt.",
+    fragmenten: [
+      {
+        label: "Lachen en wenen als uniek menselijke uitingsvormen",
+        tekst: "Lachen en wenen zijn uitingsvormen, waarover in de volle zin van het woord alleen de mens de beschikking heeft. Tevens zijn het uitingsvormen van een hoedanigheid die een eigenaardig contrast vormt met dit monopolie. Want ze hebben niets gemeen met taal en gebaar, waardoor de mens zich de meerdere van andere levende wezens toont. Ze bevinden zich niet in die laag, op dat niveau. Wie lacht of weent, verliest in zekere zin zijn beheersing en met een zakelijke verwerking van de situatie is het voorlopig gedaan.\n\nHet eruptieve karakter van het lachen en wenen wijst op een verwantschap met de emotionele uitdrukkingsbewegingen. Niettemin is het de uitingsvorm ervan die ze scheidt van de emotionele uitdrukkingsbewegingen. Terwijl toorn en vreugde, liefde en haat in het lichaam een symbolische uitdrukking krijgen, blijft de uitingsvorm van het lachen en wenen ondoorzichtig en is het verloop ervan in hoge mate vastgelegd.",
+      },
+      {
+        label: "De dubbelzinnige verhouding van de mens tot zijn lichaam",
+        tekst: "Lachen en wenen geven een andere kijk op de verhouding van de mens tot zijn lichaam. Hoewel ze vanuit de mens worden gemotiveerd, openbaren zij zich als onbeheerste en ongevormde uitbarstingen van het om zo te zeggen verzelfstandigde lichaam. De mens vervalt erin, hij vervalt \u2014 in het lachen, hij laat zich vallen in het wenen.\n\nEn in het verlies van de beheersing over zichzelf en zijn lichaam blijkt hij een wezen te zijn, van tegelijk boven-lichamelijke aard, dat leeft in een gespannen verhouding tot zijn fysieke existentie, waaraan het geheel en al gebonden is.\n\nMen zag over het hoofd, dat de mens niet in een eenzinnige, maar dubbelzinnige verhouding tot zijn lichaam staat, dat zijn existentie hem de dubbelzinnigheid van een 'lichamelijk' wezen en een wezen 'in het lichaam-ding' oplegt, hetgeen voor zijn bestaan een werkelijke breuk betekent.",
+      },
+      {
+        label: "Wanneer lachen wij, wanneer wenen wij?",
+        tekst: "Welke aanleidingen of situaties prikkelen tot lachen? Over het algemeen gesproken die situaties die niet ernstig zijn of niet ernstig worden genomen. Onbeantwoordbare situaties, waarin de mens zich niet ori\u00ebnteren kan, waarmee hij dus niets kan aanvangen. Hij kan er zich niet zonder meer van losmaken, maar wordt door de vervlochtenheid van aantrekkelijke en afstotende momenten in spanning gehouden. Zo beantwoordt de mens het onbeantwoordbare in zijn meerzinnigheid.\n\nWelke fundamentele trek van de normale bestaanssituatie moet onzeker zijn, wil de mens gaan wenen? Hij capituleert \u2014 voor een overmacht, waar hij niet tegenop kan. Het gedrag stoot op de grens van alle gesteldheid, waarvoor woord en daad, geste en gebaar tekortschieten. Hij raakt in een onbeantwoordbare situatie.\n\nDan blijft de mens niets anders over dan op zulke onmogelijke situaties de overeenkomstig onmogelijke antwoorden te vinden, dan wel te lachen of te wenen.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Plessner stelt dat lachen en wenen 'niets gemeen hebben met taal en gebaar'. Leg uit wat hij hiermee bedoelt en hoe lachen en wenen volgens Plessner de excentrische positionaliteit van de mens illustreren.",
+        antwoord: "Taal en gebaar zijn bewust gestuurde uitdrukkingsvormen waarmee de mens laat zien dat hij controle heeft over zijn lichaam. Lachen en wenen zijn daarentegen onbeheerste lichamelijke uitbarstingen: de mens 'vervalt' erin en verliest tijdelijk de greep op zichzelf.\n\nDit illustreert de excentrische positionaliteit omdat het de dubbelzinnige verhouding van de mens tot zijn lichaam blootlegt: enerzijds is de mens een 'boven-lichamelijk' wezen dat normaal gesproken controle heeft (excentrisch: buiten zichzelf kunnen staan), anderzijds is hij geheel gebonden aan zijn fysieke existentie. Bij lachen en wenen breekt deze spanning door \u2014 het lichaam 'verzelfstandigt' zich en de mens kan even niet meer buiten zichzelf treden.",
+      },
+      {
+        vraag: "Plessner beschrijft lachen als reactie op 'onbeantwoordbare situaties' en wenen als 'capitulatie voor een overmacht'. Leg uit wat deze twee reacties gemeenschappelijk hebben en wat dit zegt over het wezen van de mens.",
+        antwoord: "Zowel lachen als wenen zijn reacties op situaties waarin het normale gedragsrepertoire van de mens tekortschiet: 'woord en daad, geste en gebaar' schieten tekort. De mens raakt in een 'onbeantwoordbare situatie' waar hij geen rationeel of bewust antwoord op kan formuleren.\n\nBij lachen is de situatie niet-ernstig maar meerzinnig (tegelijk aantrekkelijk en afstotend), bij wenen is er sprake van een overmacht waartegen de mens niet opkan.\n\nDit zegt over het wezen van de mens dat hij geen zuiver rationeel of zuiver lichamelijk wezen is, maar een wezen dat in een gespannen verhouding tot zijn eigen lichaam staat. Het menselijk bestaan heeft een 'speelruimte' nodig om te functioneren, en wanneer die wegvalt, antwoordt het lichaam op de enige manier die overblijft: met lachen of wenen. Dit zijn grenservaringen die het uniek menselijke karakter van de excentrische positionaliteit bevestigen.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
