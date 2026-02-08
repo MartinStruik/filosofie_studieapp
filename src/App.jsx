@@ -842,7 +842,6 @@ function EindtermenView() {
   return (
     <div style={{ padding: "0 20px 40px" }}>
       <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: "20px 0 8px" }}>Algemene eindtermen (ET 1–4)</h2>
-      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>10% van het examen. Globale eindtermen over antropologie, ethiek, kennistheorie en wetenschapsfilosofie.</p>
       {ALGEMENE_EINDTERMEN.map(et => (
         <div key={et.nr} style={{ padding: "12px", background: "#f8f8fc", borderRadius: "8px", border: "1px solid #e8e8f0", marginBottom: "8px" }}>
           <div style={{ fontSize: "12px", fontWeight: 700, color: "#1a1a2e" }}>ET {et.nr}</div>
