@@ -259,6 +259,45 @@ const EXAM_QUESTIONS = [
   { year: "2025-T1", nr: 13, points: 2, question: "Leg uit hoe Haraways begrip ‘response-ability’ van toepassing is op Menzo’s danswerk.", context: "Casus ‘Afrofuturisme’: Danseres Menzo reageert met haar dans op de objectivering van het zwarte lichaam en zoekt nieuwe vormen van verbinding.", model: "Response-ability (Haraway): het vermogen én de plicht om te antwoorden op andere wezens. (1p)\nMenzo beantwoordt met haar dans de objectiverende blik: ze neemt verantwoordelijkheid door actief te reageren op de manier waarop het zwarte lichaam wordt bekeken en creëert daarmee nieuwe vormen van verbinding. (1p)", kwestie: 4, et: "ET 18" },
 ];
 
+// ============================================================
+// PRIMAIRE TEKSTEN — Originele tekstfragmenten uit de syllabus
+// ============================================================
+
+const PRIMAIRE_TEKSTEN = [
+  {
+    id: 1,
+    filosoof: "Sheets-Johnstone",
+    titel: "Fenomenologie van de Dans (1966)",
+    kwestie: 1,
+    et: "ET 6",
+    inleiding: "Maxine Sheets-Johnstone (1930) begon als danser en choreograaf en ontwikkelde zich tot fenomenoloog. In deze tekst legt ze uit wat fenomenologie is en hoe bewuste reflectie op ons bestaan is gebaseerd op een pre-reflectieve gewaarwording van de ruimtelijkheid en bewegingen van ons lichaam.",
+    fragmenten: [
+      {
+        label: "Wat is fenomenologie?",
+        tekst: "Fenomenologie gaat over het beschrijven van mens en wereld — niet als gegeven structuren die we trachten te leren kennen met behulp van gecontroleerde studies en experimenten, als observeerbare en registreerbare gedragspatronen. Nee, ze beschrijft de mens en de wereld eerder als mens-temidden-van-de-wereld. Dat wil zeggen: de mens zoals hij zichzelf en de wereld ervaart, helder en scherp, nog voordat enige reflectie plaatsvindt.\n\nDe fenomenoloog beschouwt de ervaring niet als een objectieve relatie tussen mens en wereld, maar onderzoekt de kern van de ervaring zelf: het onmiddellijke en directe bewustzijn van de mens, aanwezig in de wereld.",
+      },
+      {
+        label: "Pre-reflectief bewustzijn en het lichaamsschema",
+        tekst: "Voor de fenomenoloog begint elke zoektocht naar kennis over een fenomeen met de directe intuïtie over het fenomeen, los van elk vooroordeel, en van elke verwachting of reflectie. Deze directe intuïtie is daarom pre-reflectief.\n\nElke geleefde ervaring van het lichaam veronderstelt een pre-reflectief bewustzijn van zijn ruimtelijkheid door een lichaamsschema. Het lichaamsschema synthetiseert alle ruimtelijke presenties van het lichaam. Het is het lichaamsschema dat ons in staat stelt om onze gebaren en bewegingen te ervaren als een voortdurend en samenhangend 'hier-zijn'.",
+      },
+      {
+        label: "De danser en de pre-reflectieve gewaarwording",
+        tekst: "De danser moet, als ze haar dans componeert, de vorm die ze aan het ontwikkelen is steeds evalueren. Het kritische standpunt is een reflectief standpunt, maar het kan alleen een reflectief standpunt zijn als de danser eerst de vorm beleeft die ze creëert.\n\nDe pre-reflectieve gewaarwording van het lichaam-in-beweging als een dynamische vorm-in-wording is inherent aan elke geleefde ervaring van de zuivere lichaamsbeweging. Het is geen speciale soort gewaarwording die gecultiveerd hoeft te worden, of die slechts enkelen kunnen bereiken. Je hoeft alleen maar lang genoeg te stoppen met reflecteren, analyseren, interpreteren en oordelen om het te begrijpen.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Sheets-Johnstone stelt dat de fenomenoloog de ervaring niet beschouwt als een 'objectieve relatie tussen mens en wereld'. Leg uit wat zij hiermee bedoelt en hoe dit verschilt van een wetenschappelijke benadering van de mens.",
+        antwoord: "Sheets-Johnstone maakt een onderscheid tussen twee benaderingen:\n\n1. De wetenschappelijke benadering beschrijft mens en wereld als twee gescheiden, objectieve structuren die je van buitenaf (derdepersoonsperspectief) bestudeert met experimenten en observaties. De mens wordt hier een object van studie.\n\n2. De fenomenologische benadering beschrijft de mens als 'mens-temidden-van-de-wereld': de directe, geleefde ervaring van binnenuit (eerstepersoonsperspectief), vóórdat er bewust over nagedacht wordt.\n\nHet verschil is dus dat de wetenschap afstand neemt van de ervaring om haar objectief te bestuderen, terwijl de fenomenologie juist vertrekt vanuit de onmiddellijke, pre-reflectieve beleving.",
+      },
+      {
+        vraag: "Leg met behulp van het voorbeeld van de danser uit wat Sheets-Johnstone bedoelt met de stelling dat pre-reflectieve gewaarwording voorafgaat aan bewuste reflectie. Waarom is dit relevant voor de vraag 'wat is de mens'?",
+        antwoord: "De danser die een dans componeert, beoordeelt haar bewegingen niet door van buitenaf te kijken (derdepersoonsperspectief), maar door de kracht, richting en kwaliteit van haar bewegingen van binnenuit te beleven. Deze pre-reflectieve gewaarwording van het lichaam-in-beweging gaat vooraf aan elk reflectief oordeel: de danser moet de vorm eerst beleven, voordat ze erop kan reflecteren.\n\nDit is relevant voor de vraag 'wat is de mens' omdat het laat zien dat ons bewustzijn niet begint bij het denken (zoals Descartes stelt met het cogito), maar bij de lichamelijke gewaarwording. We zijn geen denkend bewustzijn dat toevallig een lichaam heeft, maar een 'bewustzijns-lichaam' dat zichzelf en de wereld primair ervaart door beweging en lichamelijke aanwezigheid in de ruimte.",
+      },
+    ],
+  },
+];
+
 const ALGEMENE_EINDTERMEN = [
   { nr: 1, text: "De filosofische vraag naar de mens benaderen vanuit de rol van wetenschap en techniek." },
   { nr: 2, text: "Begripsanalyse maken van ‘het wezen van de mens’, ‘lichaam’ en ‘techniek’." },
@@ -312,6 +351,7 @@ function Home({ setView, progress }) {
           { icon: "🎴", label: "Flashcards", sub: `${seenFlash}/${totalFlash} gezien`, view: "flashcards", bg: "#f0f4ff" },
           { icon: "❓", label: "Quiz", sub: quizBest > 0 ? `Beste: ${quizBest}%` : "Test je kennis", view: "quiz", bg: "#fff5f0" },
           { icon: "🔍", label: "Examenvragen", sub: examDone > 0 ? `${examDone}/${EXAM_QUESTIONS.length} gedaan` : `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
+          { icon: "📖", label: "Primaire teksten", sub: `${PRIMAIRE_TEKSTEN.length} tekst${PRIMAIRE_TEKSTEN.length === 1 ? "" : "en"}`, view: "teksten", bg: "#f5f0ff" },
           { icon: "👤", label: "Filosofen", sub: `${FILOSOFEN.length} denkers`, view: "filosofen", bg: "#faf0ff" },
         ].map(item => (
           <button key={item.view} onClick={() => setView(item.view)} style={{
@@ -882,6 +922,122 @@ function EindtermenView() {
   );
 }
 
+// --- PRIMAIRE TEKSTEN ---
+function PrimaireTexten() {
+  const [selectedTekst, setSelectedTekst] = useState(null);
+  const [openFragments, setOpenFragments] = useState({});
+  const [openVragen, setOpenVragen] = useState({});
+
+  const toggleFragment = (idx) => {
+    setOpenFragments(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  const toggleVraag = (idx) => {
+    setOpenVragen(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
+  if (selectedTekst === null) {
+    return (
+      <div style={{ padding: "0 20px 40px" }}>
+        <p style={{ fontSize: "13px", color: "#888", margin: "16px 0" }}>
+          Originele tekstfragmenten uit de syllabus met oefenvragen en modelantwoorden.
+        </p>
+        {PRIMAIRE_TEKSTEN.map(pt => {
+          const k = KWESTIES.find(k => k.id === pt.kwestie);
+          return (
+            <button key={pt.id} onClick={() => { setSelectedTekst(pt.id); setOpenFragments({}); setOpenVragen({}); }} style={{
+              display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0",
+              borderLeft: `4px solid ${k?.color || "#1a1a2e"}`, borderRadius: "8px", padding: "16px",
+              marginBottom: "10px", cursor: "pointer", textAlign: "left", transition: "box-shadow 0.2s",
+            }}
+            onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
+            onMouseOut={e => e.currentTarget.style.boxShadow = ""}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                <KwestieTag kwestie={pt.kwestie} small />
+                <span style={{ fontSize: "10px", color: "#aaa" }}>{pt.et}</span>
+              </div>
+              <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Playfair Display', Georgia, serif" }}>{pt.filosoof}</div>
+              <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{pt.titel}</div>
+              <div style={{ fontSize: "11px", color: "#aaa", marginTop: "6px" }}>{pt.fragmenten.length} fragmenten · {pt.vragen.length} vragen</div>
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
+  const pt = PRIMAIRE_TEKSTEN.find(t => t.id === selectedTekst);
+  if (!pt) return null;
+  const k = KWESTIES.find(k => k.id === pt.kwestie);
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      <button onClick={() => setSelectedTekst(null)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "14px", color: "#888", padding: "16px 0", fontFamily: "'Source Sans 3', sans-serif" }}>{"←"} Terug naar overzicht</button>
+
+      <div style={{ background: k?.color || "#1a1a2e", color: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "20px" }}>
+        <KwestieTag kwestie={pt.kwestie} small />
+        <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", margin: "12px 0 4px", lineHeight: 1.2 }}>{pt.filosoof}</h2>
+        <div style={{ fontSize: "13px", opacity: 0.8 }}>{pt.titel}</div>
+        <div style={{ fontSize: "11px", opacity: 0.6, marginTop: "4px" }}>{pt.et}</div>
+      </div>
+
+      <div style={{ padding: "14px 16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0", marginBottom: "20px" }}>
+        <p style={{ fontSize: "13px", color: "#555", margin: 0, lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif" }}>{pt.inleiding}</p>
+      </div>
+
+      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 12px" }}>Tekstfragmenten</h3>
+      {pt.fragmenten.map((frag, i) => (
+        <div key={i} style={{ marginBottom: "10px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden" }}>
+          <button onClick={() => toggleFragment(i)} style={{
+            width: "100%", padding: "14px 16px", background: "transparent", border: "none", cursor: "pointer",
+            textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center",
+          }}>
+            <span style={{ fontWeight: 600, fontSize: "13px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>
+              {i + 1}. {frag.label}
+            </span>
+            <span style={{ fontSize: "16px", color: "#ccc", transform: openFragments[i] ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>{"▾"}</span>
+          </button>
+          {openFragments[i] && (
+            <div style={{ padding: "0 16px 16px" }}>
+              <div style={{ fontSize: "14px", color: "#333", lineHeight: 1.8, fontFamily: "'Source Sans 3', sans-serif", fontStyle: "italic", whiteSpace: "pre-wrap", borderLeft: `3px solid ${k?.color || "#1a1a2e"}30`, paddingLeft: "16px" }}>
+                {frag.tekst}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "24px 0 12px" }}>Oefenvragen</h3>
+      {pt.vragen.map((v, i) => (
+        <div key={i} style={{ marginBottom: "12px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden" }}>
+          <div style={{ padding: "16px", background: "#f0f4ff" }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Vraag {i + 1}</div>
+            <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{v.vraag}</p>
+          </div>
+          <div style={{ padding: "12px 16px", borderTop: "1px solid #e8e8f0" }}>
+            <button onClick={() => toggleVraag(i)} style={{
+              width: "100%", padding: "10px 0", background: "transparent", border: "none", cursor: "pointer",
+              textAlign: "left", fontSize: "13px", fontWeight: 600, color: openVragen[i] ? "#2D8E5A" : "#888",
+              fontFamily: "'Source Sans 3', sans-serif",
+            }}>
+              {openVragen[i] ? "▾ Verberg antwoordmodel" : "▸ Toon antwoordmodel"}
+            </button>
+            {openVragen[i] && (
+              <div style={{ marginTop: "8px", padding: "16px", background: "#f0fff5", borderRadius: "8px", border: "1px solid #c8e6c9" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, color: "#2D8E5A", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>Modelantwoord</div>
+                <div style={{ fontSize: "13px", color: "#333", lineHeight: 1.7, fontFamily: "'Source Sans 3', sans-serif", whiteSpace: "pre-wrap" }}>
+                  {v.antwoord}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 // ============================================================
 // MAIN APP
 // ============================================================
@@ -915,6 +1071,7 @@ export default function App() {
     flashcards: "Flashcards",
     quiz: "Quiz",
     exam: "Examenvragen",
+    teksten: "Primaire teksten",
     filosofen: "Filosofen",
     eindtermen: "Eindtermen",
   };
@@ -929,6 +1086,7 @@ export default function App() {
       case "flashcards": return <Flashcards progress={progress} setProgress={setProgress} />;
       case "quiz": return <Quiz progress={progress} setProgress={setProgress} />;
       case "exam": return <ExamQuestions progress={progress} setProgress={setProgress} />;
+      case "teksten": return <PrimaireTexten />;
       case "filosofen": return <FilosofenView />;
       case "eindtermen": return <EindtermenView />;
       default: return <Home setView={setView} progress={progress} />;
@@ -967,6 +1125,7 @@ export default function App() {
           { icon: "🎴", label: "Cards", v: "flashcards" },
           { icon: "❓", label: "Quiz", v: "quiz" },
           { icon: "🔍", label: "Examen", v: "exam" },
+          { icon: "📖", label: "Teksten", v: "teksten" },
           { icon: "👤", label: "Denkers", v: "filosofen" },
         ].map(nav => (
           <button key={nav.v} onClick={() => setView(nav.v)} style={{
