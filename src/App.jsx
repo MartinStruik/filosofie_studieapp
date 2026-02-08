@@ -456,6 +456,66 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 7,
+    filosoof: "Clark",
+    titel: "Natural-born cyborgs (2003)",
+    kwestie: 3,
+    et: "ET 14",
+    inleiding: "Andy Clark stelt dat we van nature tweeslachtige wezens zijn: deels mens van vlees en bloed, deels technologie. Ons brein is bij uitstek goed in het incorporeren van de omgeving. Met experimenten van Ramachandran laat hij zien hoe flexibel ons lichaamsschema is, en met het concept 'dynamische apparaten' beschrijft hij technologie die zich aan de gebruiker aanpast.",
+    fragmenten: [
+      {
+        label: "Het maakbare lichaam: Ramachandrans experimenten",
+        tekst: "Hier zijn enkele speelse maar belangrijke experimenten. De verlengde neus: laat iemand synchroon je neus en de neus van een ander aaien terwijl je geblinddoekt bent. Na minder dan een minuut rapporteert ongeveer de helft van de proefpersonen een sterke illusie: het is alsof hun eigen neuzen nu zestig centimeter voor hen uitsteken.\n\nPijn in het bureaublad: laat iemand synchroon op het bureaublad en je verborgen hand tikken. Veel proefpersonen voelen dat 'het gevoel van getikt te worden' zich in het bureaublad bevindt. Wordt het bureaublad geraakt met een hamer, dan piekt je huidreactie alsof je eigen hand bedreigd wordt!\n\nOns belichaamd brein is dus van nature in staat om voorwerpen uit de omgeving zo in te lijven dat we ze ervaren als deel van onszelf.",
+      },
+      {
+        label: "Dynamische apparaten: technologie die leert",
+        tekst: "Al het maatwerk, het aanpassen van de technologie aan de noden van de biologische gebruiker, gebeurt door het trage culturele proces van ontwerp en herontwerp. Dit gaat voorbij aan het belangrijke potentieel van informatie-apparaten die, terwijl ze gebruikt worden, actief trachten te leren over de gebruiker. Ik zal zulke apparaten 'dynamische apparaten' noemen.\n\nDe combinatie van hersenen die leren over technologie\u00ebn, met alomtegenwoordige, steeds transparanter wordende technologie\u00ebn die 'leren' over individuele hersenen, zet de toon voor een cognitieve symbiose waarvan de volledige mogelijkheden nog door niemand volledig kunnen worden ingeschat.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg uit hoe Ramachandrans experimenten (de verlengde neus, pijn in het bureaublad) Clarks stelling ondersteunen dat de mens een 'natural-born cyborg' is.",
+        antwoord: "De experimenten tonen dat ons lichaamsschema niet vastgelegd en onveranderlijk is, maar voortdurend in opbouw en vatbaar voor plotse invloeden. Het brein kan binnen enkele seconden externe objecten (een andere neus, een bureaublad) inlijven als deel van het eigen lichaam.\n\nDit ondersteumt Clarks stelling dat we van nature cyborgs zijn, omdat:\n1. Het laat zien dat de grens tussen 'eigen lichaam' en 'omgeving' flexibel is \u2014 ons brein maakt geen principieel onderscheid.\n2. Als ons brein al zo gemakkelijk een bureaublad als 'eigen' ervaart, is het niet verwonderlijk dat technologie (bril, stok, smartphone) transparant deel wordt van ons lichaam en denken.\n3. We hoeven niet te wachten op futuristische implantaten \u2014 de basis voor cyborg-zijn ligt al in de plasticiteit van ons brein.",
+      },
+      {
+        vraag: "Wat bedoelt Clark met 'dynamische apparaten' en waarom noemt hij de combinatie ervan met het menselijk brein een 'cognitieve symbiose'?",
+        antwoord: "Dynamische apparaten zijn technologie\u00ebn die niet alleen door de gebruiker worden bediend, maar die zelf actief leren over de gebruiker en zich aan haar aanpassen. Bijvoorbeeld: spraaksoftware die leert over iemands stem, of een schrijfplatform dat veelgebruikte functies effici\u00ebnter maakt.\n\nClark noemt dit een 'cognitieve symbiose' omdat er een wederzijds leerproces ontstaat: het brein leert de technologie te gebruiken (waardoor de technologie transparant wordt), en de technologie leert over het brein (waardoor ze beter aansluit). Dit is vergelijkbaar met hoe ons biologisch brein zelf werkt: het stroomlijnt herhaalde patronen en automatiseert routines.\n\nDeze symbiose gaat verder dan de extended mind van Clark & Chalmers: niet alleen breidt het denken zich uit naar de omgeving, de omgeving past zich ook actief aan het denken aan.",
+      },
+    ],
+  },
+  {
+    id: 8,
+    filosoof: "Kockelkoren",
+    titel: "Techniek: kunst, kermis en theater (2003)",
+    kwestie: 3,
+    et: "ET 15",
+    inleiding: "Petran Kockelkoren (1949) beschrijft hoe nieuwe techniek onze zintuiglijke ervaring verstoort (decentreren) en hoe we deze vervolgens inlijven (recentreren). Het voorbeeld van de eerste treinreizigers illustreert hoe technologie onze waarneming transformeert.",
+    fragmenten: [
+      {
+        label: "Treinziektes en decentrering",
+        tekst: "Toen mensen voor het eerst in de trein stapten, werd er binnen de kortste keren gewag gemaakt van een heel leger aan typische treinziektes. Een Beierse arts schreef: 'Reizen met een of andere stoommachine zou uit gezondheidsoverwegingen verboden moeten zijn. De snelle bewegingen zullen een geestelijke onrust, delirium furiosum genaamd, teweegbrengen.'\n\nDe voetganger ziet en hoort de wind spelen in de graanvelden, hij ruikt graan, terwijl de horizon mee deint op het ritme van zijn tred. De verschillende zintuigen bevestigen elkaar: dat heet de synesthesie of samenklank van de zintuigen. Zodra hij echter in de trein stapt, valt de eerdere synesthesie in duigen. Hij ruikt wat anders dan hij ziet, hij hoort het ratelen van de wielen op de rails.",
+      },
+      {
+        label: "Hugo's eerste treinreis en de inlijving",
+        tekst: "Victor Hugo deed verslag van zijn eerste treinreis: 'De bloemen aan de wegranden zijn geen bloemen meer, maar kleurvlekken of beter gezegd rode of witte strepen, er zijn geen punten meer, alles wordt een streep; de graanvelden worden lange gele strengen. Aan de einder voeren de steden, de kerktorens en de bomen een dans uit.'\n\nNa enkele decennia waren de desori\u00ebntatie en de daaruit voortvloeiende treinziektes verdwenen. Er had zich een nieuwe synesthesie ingesteld, ditmaal door inlijving van de trein als voortbewegend medium van waarneming. De menselijke zintuiglijkheid is door en door historisch bepaald en technisch gemedieerd. Er is slechts een voortdurend heen en weer slingeren tussen decentrering en recentrering.",
+      },
+      {
+        label: "Kunst en kermis als culturele normaliseringsmachines",
+        tekst: "Nieuwe technieken en de onthutsende ervaringen die zij beloven, worden vaak door kunstenaars als eersten verkend. Op de Wereldtentoonstelling in Parijs in 1900 was een attractie die de zintuiglijke desori\u00ebntatie van de trein nabootste. Het publiek werd in namaakcoup\u00e9s geplaatst met afgedraaide landschapstaferelen.\n\nHoewel de kermis en het theater te boek staan als ontsnappingsoorden voor culturele conditionering werken ze eerder omgekeerd: namelijk als 'culturele normaliseringsmachines' bij uitstek. Mensen vergaapten zich aan exotische vergezichten en maakten zich al doende de bewogen blik eigen.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg met behulp van het voorbeeld van de trein uit wat Kockelkoren bedoelt met 'decentreren' en 'recentreren'. Waarom is de tussenperiode van belang?",
+        antwoord: "Decentreren: de eerste treinreizigers ervaren dat hun zintuiglijke synesthesie in duigen valt. De voetganger kon zien, horen en ruiken wat bij elkaar paste, maar in de trein valt dat uiteen: het landschap flitst voorbij als strepen, het lichaam zit stil terwijl alles beweegt. De zintuigen kunnen de nieuwe ervaring niet plaatsen, wat leidt tot 'treinziektes' en desori\u00ebntatie.\n\nRecentreren: na enkele decennia lijven de zintuigen de trein in als nieuw 'medium van waarneming'. Er ontstaat een nieuwe synesthesie: het voorbijtrekkende landschap wordt normaal, het lichaam went aan de onbeweeglijkheid.\n\nDe tussenperiode is van belang omdat hier de transformatie van de bestaanservaring plaatsvindt. De zintuigen worden letterlijk 'herschoold' door technologie. Dit toont dat onze waarneming niet biologisch vastligt maar 'door en door historisch bepaald en technisch gemedieerd' is.",
+      },
+      {
+        vraag: "Kockelkoren noemt kermis en theater 'culturele normaliseringsmachines'. Leg uit wat hij hiermee bedoelt en hoe dit zich verhoudt tot het decentreren-recentreren proces.",
+        antwoord: "Kockelkoren stelt dat kunst, kermis en theater niet zozeer ontsnapping bieden uit de cultuur, maar juist helpen om nieuwe, onthutsende technologische ervaringen te normaliseren. De kermisattractie die de treinervaring nabootste op de Wereldtentoonstelling (1900) hielp het publiek om zich de 'bewogen blik' eigen te maken in een veilige, speelse omgeving.\n\nDit is een fase in het recentreringsproces: door de desori\u00ebnterende ervaring te herhalen in een gecontroleerde setting, leren de zintuigen zich aanpassen. Het collectieve culturele leerproces wordt zo ondersteund. De kermis functioneert als oefenplaats voor een nieuwe zintuiglijkheid, net zoals hedendaagse VR-ervaringen ons kunnen voorbereiden op toekomstige technologische transformaties van onze waarneming.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
