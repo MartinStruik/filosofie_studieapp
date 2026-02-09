@@ -774,6 +774,7 @@ function Home({ setView, progress }) {
   const quizScores = progress.quizScores || [];
   const quizBest = quizScores.length > 0 ? Math.max(...quizScores.map(s => s.pct)) : 0;
   const examDone = Object.values(progress.examTracker || {}).filter(v => v === "goed" || v === "lastig").length;
+  const tekstDone = Object.values(progress.tekstTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
@@ -791,7 +792,7 @@ function Home({ setView, progress }) {
           { icon: "🎴", label: "Flashcards", sub: `${seenFlash}/${totalFlash} gezien`, view: "flashcards", bg: "#f0f4ff" },
           { icon: "❓", label: "Quiz", sub: quizBest > 0 ? `Beste: ${quizBest}%` : "Test je kennis", view: "quiz", bg: "#fff5f0" },
           { icon: "🔍", label: "Examenvragen", sub: examDone > 0 ? `${examDone}/${EXAM_QUESTIONS.length} gedaan` : `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
-          { icon: "📖", label: "Primaire teksten", sub: `${PRIMAIRE_TEKSTEN.length} tekst${PRIMAIRE_TEKSTEN.length === 1 ? "" : "en"}`, view: "teksten", bg: "#f5f0ff" },
+          { icon: "📖", label: "Primaire teksten", sub: tekstDone > 0 ? `${tekstDone}/${PRIMAIRE_TEKSTEN.length} beoordeeld` : `${PRIMAIRE_TEKSTEN.length} teksten`, view: "teksten", bg: "#f5f0ff" },
           { icon: "👤", label: "Filosofen", sub: `${FILOSOFEN.length} denkers`, view: "filosofen", bg: "#faf0ff" },
         ].map(item => (
           <button key={item.view} onClick={() => setView(item.view)} style={{
@@ -1363,10 +1364,20 @@ function EindtermenView() {
 }
 
 // --- PRIMAIRE TEKSTEN ---
-function PrimaireTexten() {
+function PrimaireTexten({ progress, setProgress }) {
   const [selectedTekst, setSelectedTekst] = useState(null);
   const [openFragments, setOpenFragments] = useState({});
   const [openVragen, setOpenVragen] = useState({});
+
+  const tekstTracker = progress.tekstTracker || {};
+
+  const setTekstStatus = (id, status) => {
+    setProgress(prev => {
+      const tracker = { ...(prev.tekstTracker || {}) };
+      tracker[id] = tracker[id] === status ? null : status;
+      return { ...prev, tekstTracker: tracker };
+    });
+  };
 
   const toggleFragment = (idx) => {
     setOpenFragments(prev => ({ ...prev, [idx]: !prev[idx] }));
@@ -1376,31 +1387,68 @@ function PrimaireTexten() {
     setOpenVragen(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
+  const totalDone = Object.values(tekstTracker).filter(v => v === "begrepen" || v === "lastig").length;
+  const totalBegrepen = Object.values(tekstTracker).filter(v => v === "begrepen").length;
+  const totalLastig = Object.values(tekstTracker).filter(v => v === "lastig").length;
+
   if (selectedTekst === null) {
     return (
       <div style={{ padding: "0 20px 40px" }}>
         <p style={{ fontSize: "13px", color: "#888", margin: "16px 0" }}>
           Originele tekstfragmenten uit de syllabus met oefenvragen en modelantwoorden.
         </p>
+
+        {totalDone > 0 && (
+          <div style={{ display: "flex", gap: "10px", marginBottom: "16px", padding: "12px 16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0" }}>
+            <div style={{ fontSize: "12px", color: "#888" }}>
+              <strong style={{ color: "#1a1a2e" }}>{totalDone}/{PRIMAIRE_TEKSTEN.length}</strong> beoordeeld
+            </div>
+            <div style={{ fontSize: "12px", color: "#4caf50" }}>
+              ✔ {totalBegrepen} begrepen
+            </div>
+            <div style={{ fontSize: "12px", color: "#ef5350" }}>
+              ✗ {totalLastig} lastig
+            </div>
+          </div>
+        )}
+
         {PRIMAIRE_TEKSTEN.map(pt => {
           const k = KWESTIES.find(k => k.id === pt.kwestie);
+          const status = tekstTracker[pt.id];
+          const borderColor = status === "begrepen" ? "#4caf50" : status === "lastig" ? "#ef5350" : (k?.color || "#1a1a2e");
           return (
-            <button key={pt.id} onClick={() => { setSelectedTekst(pt.id); setOpenFragments({}); setOpenVragen({}); }} style={{
-              display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0",
-              borderLeft: `4px solid ${k?.color || "#1a1a2e"}`, borderRadius: "8px", padding: "16px",
-              marginBottom: "10px", cursor: "pointer", textAlign: "left", transition: "box-shadow 0.2s",
-            }}
-            onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
-            onMouseOut={e => e.currentTarget.style.boxShadow = ""}
-            >
-              <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
-                <KwestieTag kwestie={pt.kwestie} small />
-                <span style={{ fontSize: "10px", color: "#aaa" }}>{pt.et}</span>
+            <div key={pt.id} style={{ marginBottom: "10px", background: "#fff", border: "1px solid #e8e8f0", borderLeft: `4px solid ${borderColor}`, borderRadius: "8px", overflow: "hidden" }}>
+              <button onClick={() => { setSelectedTekst(pt.id); setOpenFragments({}); setOpenVragen({}); }} style={{
+                display: "block", width: "100%", background: "transparent", border: "none", padding: "16px",
+                cursor: "pointer", textAlign: "left", transition: "box-shadow 0.2s",
+              }}
+              onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
+              onMouseOut={e => e.currentTarget.style.boxShadow = ""}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                  <KwestieTag kwestie={pt.kwestie} small />
+                  <span style={{ fontSize: "10px", color: "#aaa" }}>{pt.et}</span>
+                  {status && <span style={{ fontSize: "10px", fontWeight: 600, color: status === "begrepen" ? "#4caf50" : "#ef5350" }}>{status === "begrepen" ? "✔ begrepen" : "✗ lastig"}</span>}
+                </div>
+                <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Playfair Display', Georgia, serif" }}>{pt.filosoof}</div>
+                <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{pt.titel}</div>
+                <div style={{ fontSize: "11px", color: "#aaa", marginTop: "6px" }}>{pt.fragmenten.length} fragmenten · {pt.vragen.length} vragen</div>
+              </button>
+              <div style={{ display: "flex", gap: "8px", padding: "10px 16px", borderTop: "1px solid #f0f0f5", background: "#fafafe" }}>
+                <button onClick={() => setTekstStatus(pt.id, "begrepen")} style={{
+                  flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+                  border: status === "begrepen" ? "2px solid #4caf50" : "1px solid #e0e0e8",
+                  background: status === "begrepen" ? "#e8f5e9" : "#fff",
+                  color: status === "begrepen" ? "#2e7d32" : "#888",
+                }}>✔ Begrepen</button>
+                <button onClick={() => setTekstStatus(pt.id, "lastig")} style={{
+                  flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+                  border: status === "lastig" ? "2px solid #ef5350" : "1px solid #e0e0e8",
+                  background: status === "lastig" ? "#fce4ec" : "#fff",
+                  color: status === "lastig" ? "#c62828" : "#888",
+                }}>✗ Lastig</button>
               </div>
-              <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Playfair Display', Georgia, serif" }}>{pt.filosoof}</div>
-              <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{pt.titel}</div>
-              <div style={{ fontSize: "11px", color: "#aaa", marginTop: "6px" }}>{pt.fragmenten.length} fragmenten · {pt.vragen.length} vragen</div>
-            </button>
+            </div>
           );
         })}
       </div>
@@ -1410,6 +1458,7 @@ function PrimaireTexten() {
   const pt = PRIMAIRE_TEKSTEN.find(t => t.id === selectedTekst);
   if (!pt) return null;
   const k = KWESTIES.find(k => k.id === pt.kwestie);
+  const detailStatus = tekstTracker[pt.id];
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
@@ -1474,6 +1523,22 @@ function PrimaireTexten() {
           </div>
         </div>
       ))}
+
+      {/* Tracker buttons on detail page */}
+      <div style={{ display: "flex", gap: "8px", padding: "16px 0", marginTop: "8px", borderTop: "1px solid #e8e8f0" }}>
+        <button onClick={() => setTekstStatus(pt.id, "begrepen")} style={{
+          flex: 1, padding: "12px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600,
+          border: detailStatus === "begrepen" ? "2px solid #4caf50" : "1px solid #e0e0e8",
+          background: detailStatus === "begrepen" ? "#e8f5e9" : "#fff",
+          color: detailStatus === "begrepen" ? "#2e7d32" : "#888",
+        }}>✔ Begrepen</button>
+        <button onClick={() => setTekstStatus(pt.id, "lastig")} style={{
+          flex: 1, padding: "12px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600,
+          border: detailStatus === "lastig" ? "2px solid #ef5350" : "1px solid #e0e0e8",
+          background: detailStatus === "lastig" ? "#fce4ec" : "#fff",
+          color: detailStatus === "lastig" ? "#c62828" : "#888",
+        }}>✗ Lastig</button>
+      </div>
     </div>
   );
 }
@@ -1526,7 +1591,7 @@ export default function App() {
       case "flashcards": return <Flashcards progress={progress} setProgress={setProgress} />;
       case "quiz": return <Quiz progress={progress} setProgress={setProgress} />;
       case "exam": return <ExamQuestions progress={progress} setProgress={setProgress} />;
-      case "teksten": return <PrimaireTexten />;
+      case "teksten": return <PrimaireTexten progress={progress} setProgress={setProgress} />;
       case "filosofen": return <FilosofenView />;
       case "eindtermen": return <EindtermenView />;
       default: return <Home setView={setView} progress={progress} />;
