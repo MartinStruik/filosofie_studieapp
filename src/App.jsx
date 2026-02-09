@@ -608,6 +608,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 12,
+    filosoof: "Despret",
+    titel: "Wat zouden dieren zeggen als we ze de juiste vragen zouden stellen? (2012)",
+    kwestie: 4,
+    et: "ET 19",
+    inleiding: "Vinciane Despret (1959) bekritiseert de gangbare wetenschappelijke benadering van dieronderzoek, die gebaseerd is op onzichtbaarheid van de onderzoeker en een derde-persoonsperspectief. Ze stelt voor het perspectief van het dier zelf te betrekken en de relatie tussen dier en onderzoeker een actieve rol te geven.",
+    fragmenten: [
+      {
+        label: "Kritiek op de spiegeltest",
+        tekst: "Zelfs ik heb bewondering voor het vernuft, het geduld en het talent van de onderzoekers die dit soort spiegeltesten ontwikkelen, maar ik heb me altijd ook wel wat verbaasd over het nogal exclusieve privilege van deze test. Toegegeven, het is behoorlijk interessant om dieren te interesseren in wat onszelf zo interesseert: onszelf. Maar doen we daarmee niet te snel beweringen over dit 'ons'? Zijn we allemaal wel zo ge\u00efnteresseerd in spiegels? Of is dit onze specifieke manier om onze relatie met onszelf te defini\u00ebren vanuit een traditie die volledig in beslag is genomen door introspectie en zelfkennis en geobsedeerd is door reflectie?",
+      },
+      {
+        label: "Zelfbewustzijn als interrelationeel proces",
+        tekst: "Een bewijsvoering die een vorm van perspectivisme kan stimuleren, toestaan of ontwikkelen, lijkt me beter geschikt om een bepaalde kant van zelfbewustzijn te defini\u00ebren (op een wat minder spaarzame manier). Niet als een cognitief proces, maar als een interrelationeel proces.",
+      },
+      {
+        label: "Verstoppen als perspectivisme",
+        tekst: "Jezelf verstoppen en jezelf tonen zijn absoluut dezelfde vaardigheid. De vaardigheid waarover je moet spreken als een dier zichzelf verstopt en heel goed weet dat het zichzelf verstopt, veronderstelt dat het weet hoe anderen hem zien. Deze kennis stelt het dier in staat om zich de effectiviteit van het verstoppen voor te stellen en te voorspellen. Een dier dat zich verstopt en weet dat het zich verstopt is een dier met een mogelijkheid tot perspectivisme.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg uit waarom Despret de spiegeltest als antropocentrisch beschouwt en welk alternatief zij voorstelt.",
+        antwoord: "De spiegeltest is volgens Despret antropocentrisch omdat ze uitgaat van een specifiek menselijke manier om zelfbewustzijn te defini\u00ebren: visuele zelfherkenning via reflectie. Dit veronderstelt dat alle wezens ge\u00efnteresseerd zouden moeten zijn in spiegels, terwijl dit slechts onze eigen culturele obsessie met introspectie weerspiegelt. Dieren die geen interesse in spiegels hebben, worden automatisch uitgesloten van zelfbewustzijn.\n\nHaar alternatief is om zelfbewustzijn niet als cognitief maar als interrelationeel proces te begrijpen. Het voorbeeld van verstoppen toont dit: een dier dat zich verstopt en weet dat het zich verstopt, neemt het perspectief van de ander in. Dit 'perspectivisme' is een even geldige indicator van zelfbewustzijn als spiegelherkenning.",
+      },
+      {
+        vraag: "Vergelijk Desprets kritiek op wetenschappelijk dieronderzoek met Plessners begrip van de medewereld.",
+        antwoord: "Plessner stelt dat de mens door excentrische positionaliteit een medewereld heeft: een gedeelde sociale werkelijkheid waarin we de ander als persoon erkennen. De vraag is of dieren ook een medewereld hebben.\n\nDespret betoogt impliciet van wel. Als een dier zich kan verstoppen terwijl het weet dat het zich verstopt, neemt het het perspectief van de ander in \u2014 het heeft een vorm van medewereld. Tegelijk bekritiseert ze de wetenschappelijke methode die dit onzichtbaar maakt: door de onderzoeker onzichtbaar te houden en alleen derde-persoonsperspectief toe te staan, wordt de interrelationele dimensie (medewereld) bij voorbaat uitgesloten. Haar pleidooi voor het betrekken van het dierperspectief is dus ook een pleidooi voor het erkennen van een dierlijke medewereld.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
