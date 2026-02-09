@@ -1800,6 +1800,19 @@ function Home({ setView, progress }) {
         </p>
       </div>
 
+      {/* Introductie voor nieuwe gebruikers */}
+      {!(progress.seenCards?.length > 0 || (progress.quizScores || []).length > 0) && (
+        <div style={{ background: "#f0f4ff", border: "1px solid #d0d8f0", borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>
+          <div style={{ fontSize: "15px", fontWeight: 700, color: "#1a1a2e", marginBottom: "6px" }}>Welkom!</div>
+          <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: "0 0 8px" }}>
+            Dit is jouw persoonlijke studietool voor het filosofie-examen. De app helpt je stap voor stap de stof te beheersen: van begrippen en filosofen tot examenvragen en primaire teksten.
+          </p>
+          <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: 0 }}>
+            Begin met het instellen van je studiepad hieronder, of duik direct in de flashcards. Elke minuut telt — je kunt dit!
+          </p>
+        </div>
+      )}
+
       {/* Deze week banner */}
       <button onClick={() => setView(studiepad ? "studiepad" : "studiepad")}
         style={{
@@ -3064,9 +3077,18 @@ function PrimaireTexten({ progress, setProgress }) {
   if (selectedTekst === null) {
     return (
       <div style={{ padding: "0 20px 40px" }}>
-        <p style={{ fontSize: "13px", color: "#666", margin: "16px 0" }}>
-          Originele tekstfragmenten uit de syllabus met oefenvragen en modelantwoorden.
-        </p>
+        <div style={{ background: "#f5f0ff", border: "1px solid #e0d8f0", borderRadius: "12px", padding: "16px", margin: "16px 0" }}>
+          <div style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", marginBottom: "6px" }}>Hoe gebruik je deze teksten?</div>
+          <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: "0 0 8px" }}>
+            Bij het examen krijg je originele tekstfragmenten van filosofen voorgelegd. Je moet de kerngedachte herkennen, de argumentatie analyseren en het verband leggen met de kwestie.
+          </p>
+          <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: "0 0 8px" }}>
+            <strong>Oefen zo:</strong> lees het fragment aandachtig, beantwoord de oefenvraag in je eigen woorden, en vergelijk pas daarna met het modelantwoord. Markeer teksten als "begrepen" of "lastig" om je voortgang bij te houden.
+          </p>
+          <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
+            Tip: zoek in elke tekst naar de vooronderstelling van de filosoof en de implicatie voor het mensbeeld.
+          </p>
+        </div>
 
         {totalDone > 0 && (
           <div style={{ display: "flex", gap: "10px", marginBottom: "16px", padding: "12px 16px", background: "#f8f8fc", borderRadius: "12px", border: "1px solid #e8e8f0" }}>
@@ -3401,8 +3423,8 @@ export default function App() {
           { icon: "🏠", label: "Home", v: "home" },
           { icon: "🎴", label: "Cards", v: "flashcards" },
           { icon: "❓", label: "Quiz", v: "quiz" },
+          { icon: "🔍", label: "Examen", v: "exam" },
           { icon: "📅", label: "Studiepad", v: "studiepad" },
-          { icon: "📖", label: "Teksten", v: "teksten" },
           { icon: "📊", label: "Voortgang", v: "voortgang" },
         ].map(nav => {
           const isActive = view === nav.v || (nav.v === "home" && view === "home");
