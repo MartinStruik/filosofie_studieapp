@@ -640,6 +640,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 13,
+    filosoof: "Latour",
+    titel: "De Berlijnse sleutel (1993)",
+    kwestie: 4,
+    et: "ET 20",
+    inleiding: "Bruno Latour (1947) introduceert de actor-netwerktheorie (ANT), waarin niet alleen mensen maar ook niet-levende dingen als actoren met handelingsvermogen worden beschouwd. Hij illustreert dit met de Berlijnse sleutel: een technisch artefact dat menselijk gedrag dwingt en stuurt.",
+    fragmenten: [
+      {
+        label: "De Berlijnse sleutel dwingt gedrag af",
+        tekst: "Het handelingsprogramma in Berlijn smeekt je niet: SLUIT DE DEUR ACHTER JE ALSJEBLIEFT; het is iets ambitieuzer en gebiedt: DOE DE DEUR ACHTER JE WEER OP SLOT. Ongedisciplineerde huurders vergeten de deur achter zich op slot te doen. In plaats daarvan besloten Berlijnse smeden om het actieprogramma opnieuw aan te brengen in de vorm van de sleutel en dat van zijn slot zelf \u2014 vandaar zijn surrealistische vorm.",
+      },
+      {
+        label: "Van moraliteit naar dwang",
+        tekst: "Een programma dat berust op moraliteit is op een slimme manier vertaald in een programma dat vertrouwt op pure dwang: misschien wil je de deur niet weer op slot doen, maar je kunt niet anders. De afstand tussen moraliteit en geweld is niet zo groot als moralisten vaak denken; of beter gezegd, slimme ingenieurs hebben de kloof verkleind.",
+      },
+      {
+        label: "Handelingsprogramma\u2019s en het collectieve ding",
+        tekst: "Techniekstudenten hebben nooit te maken met mensen aan de ene kant en dingen aan de andere, maar met handelingsprogramma\u2019s met stukken die gegeven worden aan delen van mensen, en stukken die toevertrouwd worden aan delen van niet-mensen. Het alternatief voor de twee spookbeelden \u2014 maatschappij en technologie \u2014 is niet eenvoudigweg een hybride object, maar een eigenstandig, sui generis, object: het collectieve ding.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg uit hoe de Berlijnse sleutel volgens Latour handelingsvermogen heeft en wat dit illustreert over de actor-netwerktheorie.",
+        antwoord: "De Berlijnse sleutel is zo ontworpen dat je hem alleen uit het slot krijgt nadat je de deur \u00f3\u00f3k weer op slot hebt gedaan. De sleutel 'dwingt' de gebruiker tot bepaald gedrag: het op slot doen van de deur. Dit toont dat de sleutel een actor is met handelingsvermogen \u2014 hij brengt iets teweeg (de deur gaat op slot) dat niet alleen aan de menselijke intentie toe te schrijven is.\n\nDit illustreert de kern van de ANT: een handeling (action) is verdeeld over actoren in een netwerk. De deur op slot doen is geen individuele menselijke daad, maar een gedeelde handeling van mens, sleutel, slot en deur samen. Het 'collectieve ding' dat ontstaat is niet te reduceren tot \u00f3f maatschappij \u00f3f technologie, maar is een eigenstandig verschijnsel.",
+      },
+      {
+        vraag: "Vergelijk Latours idee van 'vertaling van moraliteit naar dwang' met Verbeeks begrip van technische mediatie.",
+        antwoord: "Zowel Latour als Verbeek laten zien dat techniek niet neutraal is maar menselijk handelen actief stuurt. Latour beschrijft dit als een vertaling: het morele programma (sluit de deur op slot) wordt omgezet in een technisch programma (de sleutel dwingt je). Moraliteit wordt vervangen door materiële dwang.\n\nVerbeek spreekt van technische mediatie: technologie bemiddelt onze perceptie en ons handelen. Bij de echoscopie verandert het apparaat hoe we de ongeboren vrucht waarnemen en welke morele vragen zich aandienen.\n\nHet verschil is accent: Latour benadrukt de gelijkwaardigheid van mens en ding als actoren in een netwerk, terwijl Verbeek meer nadruk legt op hoe techniek de morele ervaring van de mens transformeert. Beiden breken echter met het idee dat techniek slechts een neutraal instrument is.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
