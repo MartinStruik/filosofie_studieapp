@@ -19,29 +19,179 @@ const DOMEINEN = [
   { id: "E1", title: "Wetenschapsfilosofie", color: "#6B2D6E" },
 ];
 
+// ============================================================
+// LIA PAGINAVERWIJZINGEN — Mapping naar Lia's transformatie
+// ============================================================
+
+const LIA_PAGINAS = {
+  // Lia 1 — Filosofen
+  "Descartes": "Lia 1, p. 5–9",
+  "Sheets-Johnstone": "Lia 1, p. 12–15",
+  "Plessner": "Lia 1, p. 19–21",
+  "De Beauvoir": "Lia 1, p. 25–26",
+  "Fanon": "Lia 1, p. 26–27",
+  "Lakoff": "Lia 1, p. 31–32",
+  "Johnson": "Lia 1, p. 31–32",
+  "Vroon": "Lia 1, p. 32–33",
+  "Draaisma": "Lia 1, p. 32–33",
+  "Swaab": "Lia 1, p. 36–37",
+  "Dreyfus": "Lia 1, p. 38–39",
+  "Noë": "Lia 1, p. 44–45",
+  "Kant": "Lia 1, p. 13–14",
+  "Hume": "Lia 1, p. 27",
+  // Lia 2 — Filosofen
+  "Clark": "Lia 2, p. 2–6",
+  "Chalmers": "Lia 1, p. 43–44",
+  "Kockelkoren": "Lia 2, p. 7–12",
+  "Verbeek": "Lia 2, p. 13–18",
+  "De Mul": "Lia 2, p. 19–23",
+  "Morton": "Lia 2, p. 24–27",
+  "Despret": "Lia 2, p. 28–30",
+  "Haraway": "Lia 2, p. 26, 46–47",
+  "Latour": "Lia 2, p. 32–37",
+  "Hayles": "Lia 2, p. 36–37",
+  "Barad": "Lia 2, p. 40–41",
+  "Harari": "Lia 2, p. 41–42",
+  "Rasch": "Lia 2, p. 42–43",
+  "Nietzsche": "Lia 2, p. 22–23",
+  "Ramachandran": "Lia 2, p. 3–4",
+  // Concepten — specifiek
+  "computationalisme": "Lia 1, p. 36–38",
+  "functionalisme": "Lia 1, p. 37–38",
+  "Functionalisme": "Lia 1, p. 37–38",
+  "Computationalisme": "Lia 1, p. 36–38",
+  "4E-cognitie": "Lia 1, p. 43–45",
+  "4E": "Lia 1, p. 43–45",
+  "Extended mind": "Lia 1, p. 43–44",
+  "Enactieve": "Lia 1, p. 44–45",
+  "Sensomotorisch": "Lia 1, p. 44–45",
+  "Offloading": "Lia 1, p. 43",
+  "Embodied": "Lia 1, p. 43",
+  "Embedded": "Lia 1, p. 43",
+  "Connectionisme": "Lia 1, p. 39",
+  "Natural-born": "Lia 2, p. 2–6",
+  "Cyborg-paradox": "Lia 2, p. 4",
+  "Cyborg Manifesto": "Lia 2, p. 26",
+  "Incorporatie": "Lia 2, p. 3–4",
+  "Decentreren": "Lia 2, p. 9–10",
+  "Recentreren": "Lia 2, p. 10–11",
+  "Inlijving": "Lia 2, p. 10–11",
+  "bemiddeling": "Lia 2, p. 15–16",
+  "Ontwerpen van moraal": "Lia 2, p. 17",
+  "Vrijheid als": "Lia 2, p. 17",
+  "NBIN": "Lia 2, p. 21",
+  "Extrahumanisme": "Lia 2, p. 21–22",
+  "Transhumanisme": "Lia 2, p. 22",
+  "Posthumanisme": "Lia 2, p. 22",
+  "Humanisme": "Lia 2, p. 21",
+  "Herwaardering": "Lia 2, p. 22–23",
+  "mesh": "Lia 2, p. 26–27",
+  "Hyperobject": "Lia 2, p. 27",
+  "Desoriënterende": "Lia 2, p. 27",
+  "Ecologisch denken": "Lia 2, p. 26–27",
+  "Dierlijke agency": "Lia 2, p. 28–29",
+  "derdepersoonsperspectief": "Lia 2, p. 28–29",
+  "onzichtbare onderzoeker": "Lia 2, p. 29",
+  "Staying with": "Lia 2, p. 46–47",
+  "Symbiopoiesis": "Lia 2, p. 46",
+  "Response-ability": "Lia 2, p. 46",
+  "Companion": "Lia 2, p. 26",
+  "Actant": "Lia 2, p. 34–35",
+  "Actor-Network": "Lia 2, p. 34–36",
+  "Delegatie": "Lia 2, p. 35",
+  "Parlement": "Lia 2, p. 36",
+  "Unthought": "Lia 2, p. 36–37",
+  "Niet-bewuste": "Lia 2, p. 36–37",
+  "Kwetsbaarheid": "Lia 2, p. 37",
+  "Cognitieve assemblage": "Lia 2, p. 36–37",
+  "Intra-actie": "Lia 2, p. 40–41",
+  "Agentieel": "Lia 2, p. 40–41",
+  "Dataïsme": "Lia 2, p. 41–42",
+  "else": "Lia 2, p. 42–43",
+  // Domein-concepten
+  "Subjectiviteit": "Lia 1, p. 12–14",
+  "Intersubjectiviteit": "Lia 1, p. 25",
+  "Cultuur vs. natuur": "Lia 1, p. 19",
+  "Monisme": "Lia 1, p. 8",
+  "Vrijheid vs. determinisme": "Lia 1, p. 19–20",
+  "Materialisme": "Lia 1, p. 8, 36",
+  "Structuralisme": "Lia 1, p. 25–26",
+  "Sociobiologie": "Lia 1, p. 19",
+  "Existentialisme": "Lia 1, p. 25–26",
+  "Deugdethiek": "Lia 2, p. 17",
+  "Plicht-ethiek": "Lia 2, p. 17",
+  "Utilisme": "Lia 2, p. 17",
+  "Waardencreatie": "Lia 2, p. 22–23",
+  "Communicatief": "Lia 2, p. 36",
+  "Waarden vs. normen": "Lia 2, p. 14",
+  "Is-ought": "Lia 1, p. 27",
+  "Intrinsiek vs.": "Lia 2, p. 14",
+  "Rechten vs.": "Lia 2, p. 14",
+  "A priori": "Lia 1, p. 8, 13–14",
+  "Schijn vs.": "Lia 1, p. 13",
+  "Rationalisme": "Lia 1, p. 8",
+  "Empirisme": "Lia 1, p. 8",
+  "Synthese": "Lia 1, p. 13–14",
+  "Constructivisme": "Lia 1, p. 32",
+  "Kennis vs. geloof": "Lia 1, p. 8",
+  "Feit vs. fictie": "Lia 1, p. 32",
+  "Hypothese": "Lia 2, p. 29",
+  "Demarcatieprobleem": "Lia 2, p. 29",
+  "Positivisme": "Lia 2, p. 29",
+  "Falsificationisme": "Lia 2, p. 29",
+  "Paradigma": "Lia 2, p. 29–30",
+  "Methodologisch anarchisme": "Lia 2, p. 30",
+  "Feyerabend": "Lia 2, p. 30",
+  "Verklaren vs.": "Lia 2, p. 28–29",
+  "Inductie": "Lia 2, p. 29",
+  "Waardevrijheid": "Lia 2, p. 29",
+  "Techniek vs. technologie": "Lia 2, p. 7–8",
+};
+
+function getLiaRef(text, kwestie) {
+  if (!text) {
+    const kwestieRefs = {
+      0: null,
+      1: "Lia 1, H1–H4",
+      2: "Lia 1, H5–H7",
+      3: "Lia 2, H8–H11",
+      4: "Lia 2, H12–H14",
+      "B1": "Lia 1",
+      "C1": "Lia 1 & 2",
+      "D1": "Lia 1",
+      "E1": "Lia 2, H12",
+    };
+    return kwestieRefs[kwestie] || null;
+  }
+  for (const [key, ref] of Object.entries(LIA_PAGINAS)) {
+    if (text.includes(key)) return ref;
+  }
+  return getLiaRef(null, kwestie);
+}
+
 const FILOSOFEN = [
-  { name: "Descartes", kwestie: 1, kern: "Dualisme: denkend bewustzijn (res cogitans) + mechanisch lichaam (res extensa). Methodische twijfel: ‘cogito ergo sum’. Het lichaam als machine.", begrippen: ["dualisme", "res cogitans", "res extensa", "methodische twijfel", "cogito"], et: "ET 5" },
-  { name: "Sheets-Johnstone", kwestie: 1, kern: "Fenomenologie van dans: pre-reflectieve lichamelijke gewaarwording. We zijn een reflecterend, bewegend lichaam. Lichaamsschema gaat vooraf aan bewuste reflectie.", begrippen: ["pre-reflectief", "lichaamsschema", "fenomenologie", "dans"], et: "ET 6" },
-  { name: "Plessner", kwestie: 1, kern: "Excentrische positionaliteit: de mens kan buiten zichzelf treden. Wetten: bemiddelde onmiddellijkheid, natuurlijke kunstmatigheid, utopische standplaats. Lachen en wenen als grenservaringen.", begrippen: ["excentrische positionaliteit", "bemiddelde onmiddellijkheid", "natuurlijke kunstmatigheid", "utopische standplaats"], et: "ET 7" },
-  { name: "De Beauvoir", kwestie: 1, kern: "‘Men wordt niet als vrouw geboren, men wordt het.’ Geleefde ervaring en de blik van de ander. Lichaam als situatie, niet als lot.", begrippen: ["situatie", "geleefde ervaring", "de ander", "vrouwwording"], et: "ET 8" },
-  { name: "Fanon", kwestie: 1, kern: "De ‘blik van de witte ander’ objectiveert. Ras als opgedrongen lichamelijke ervaring. Historisch lichaamsschema vs. raciaal-epidermaal schema.", begrippen: ["historisch lichaamsschema", "raciaal-epidermaal schema", "objectivering", "vervreemding"], et: "ET 9" },
-  { name: "Lakoff & Johnson", kwestie: 2, kern: "Belichaamde metaforen structureren ons denken. Oriënterende metaforen (boven=goed, onder=slecht) zijn geworteld in lichamelijke ervaring. Ontologische metaforen behandelen abstracte dingen als concrete objecten.", begrippen: ["oriënterende metafoor", "ontologische metafoor", "belichaamde cognitie", "conceptuele metafoor"], et: "ET 10" },
-  { name: "Vroon & Draaisma", kwestie: 2, kern: "Mensbeelden zijn historisch contingent: de dominante metafoor voor de geest verandert mee met de techniek van de tijd. Nu: de computermetafoor.", begrippen: ["historische contingentie", "computermetafoor", "theoriegeladenheid"], et: "ET 10" },
-  { name: "Swaab / computationalisme", kwestie: 2, kern: "‘Wij zijn ons brein.’ Hersenen als informatieverwerkende machine. Functionalistisch mensbeeld. Brein-als-computer metafoor.", begrippen: ["computationalisme", "functionalisme", "brein-als-computer", "neurowetenschappen"], et: "ET 11" },
-  { name: "Dreyfus", kwestie: 2, kern: "Kritiek op computationalisme: menselijk denken is niet reduceerbaar tot symboolmanipulatie. Het lichaam, de context en de emoties zijn onmisbaar voor intelligent gedrag.", begrippen: ["kritiek op AI", "belichaamd denken", "drie problemen", "symboolmanipulatie"], et: "ET 11" },
-  { name: "4E-cognitie", kwestie: 2, kern: "Embodied, Embedded, Extended, Enactive. Cognitie is niet beperkt tot het brein maar verspreid over lichaam en omgeving. Clark & Chalmers: extended mind (Otto & Inga).", begrippen: ["embodied", "embedded", "extended", "enactive", "extended mind", "offloading"], et: "ET 12" },
-  { name: "Clark", kwestie: 3, kern: "Natural-born cyborgs: mens is van nature technologisch. Brein gebruikt omgeving, technologie wordt transparant ingelijfd. Cyborg-paradox. Dynamische apparaten.", begrippen: ["natural-born cyborg", "cyborg-paradox", "dynamische apparaten", "cognitieve symbiose", "interface"], et: "ET 14" },
-  { name: "Kockelkoren", kwestie: 3, kern: "Techniek verandert zintuiglijke ervaring. Decentreren: nieuwe techniek verstoort oude waarneming. Recentreren: zintuigen lijven techniek in.", begrippen: ["decentreren", "recentreren", "inlijving", "technische bemiddeling"], et: "ET 15" },
-  { name: "Verbeek", kwestie: 3, kern: "Technologische bemiddeling: techniek is nooit moreel neutraal. Echoscopie verandert morele situatie. Ontwerpen is moraal ontwerpen. Vrijheid = je bewust verhouden tot technologische invloeden.", begrippen: ["technologische bemiddeling", "moreel handelingsvermogen", "ontwerpen van moraal", "vrijheid als je verhouden"], et: "ET 16" },
-  { name: "De Mul", kwestie: 3, kern: "NBIN-technologieën transformeren menselijke identiteit. Drie scenario’s: extrahumanisme (zwermgeest), transhumanisme (alien), posthumanisme (zombie). Nietzsche: herwaardering van waarden.", begrippen: ["NBIN", "extrahumanisme", "transhumanisme", "posthumanisme", "humanisme", "herwaardering van waarden"], et: "ET 17" },
-  { name: "Morton", kwestie: 4, kern: "Ecologisch denken: alles is verbonden in ‘the mesh’. Hyperobjecten. Mens/dier-grens vervaagt. Ecologische crisis dwingt tot herdenken.", begrippen: ["the mesh", "hyperobject", "ecologisch denken", "interconnectedness"], et: "ET 18–19" },
-  { name: "Despret", kwestie: 4, kern: "Dieren hebben eigen perspectief en agency. ‘What would animals say?’ Wetenschappers moeten goede vragen stellen. Staying with the trouble (via Haraway).", begrippen: ["dierlijke agency", "goede vragen stellen", "antropomorfisme"], et: "ET 18–20" },
-  { name: "Haraway", kwestie: 4, kern: "Cyborg Manifesto: grenzen mens/dier, mens/machine vervagen. Staying with the trouble: verantwoordelijkheid nemen. Symbiopoiesis. Response-ability.", begrippen: ["cyborg manifesto", "staying with the trouble", "symbiopoiesis", "response-ability", "companion species"], et: "ET 18" },
-  { name: "Latour", kwestie: 4, kern: "Actor-Network Theory: niet alleen mensen maar ook dingen (actanten) handelen. Berlijnse sleutel als voorbeeld. Symmetrisch denken over mens en niet-mens.", begrippen: ["actant", "actor-network theory", "Berlijnse sleutel", "symmetrie", "non-human agency"], et: "ET 18, 21" },
-  { name: "Hayles", kwestie: 4, kern: "Cognitieve non-mens: technische systemen ‘denken’ zonder bewustzijn. Unthought: cognitie voorbij het menselijke. Cognitieve assemblages.", begrippen: ["unthought", "cognitieve non-mens", "technische cognitie", "cognitieve assemblage"], et: "ET 18, 21" },
-  { name: "Barad", kwestie: 4, kern: "Intra-actie: dingen bestaan niet voorafgaand aan hun relaties. Materie is actief. Agentieel realisme. Grens fysiek/niet-fysiek vervaagt.", begrippen: ["intra-actie", "agentieel realisme", "materie als actief"], et: "ET 18, 22" },
-  { name: "Harari", kwestie: 4, kern: "Dataïsme: data als ultieme bron van waarde en autoriteit. Algoritmes begrijpen ons beter dan wijzelf. Homo Deus.", begrippen: ["dataïsme", "Homo Deus", "algoritme", "dataficatie"], et: "ET 18, 23" },
-  { name: "Rasch", kwestie: 4, kern: "‘Het else’: datareducties missen altijd iets. Kloof tussen data en werkelijkheid. Ruimte voor interpretatie en vrijheid.", begrippen: ["het else", "datareductie", "kloof data-werkelijkheid"], et: "ET 18, 23" },
+  { name: "Descartes", kwestie: 1, kern: "Dualisme: denkend bewustzijn (res cogitans) + mechanisch lichaam (res extensa). Methodische twijfel: 'cogito ergo sum'. Het lichaam als machine.", begrippen: ["dualisme", "res cogitans", "res extensa", "methodische twijfel", "cogito"], et: "ET 5", lia: "Lia 1, p. 5–9" },
+  { name: "Sheets-Johnstone", kwestie: 1, kern: "Fenomenologie van dans: pre-reflectieve lichamelijke gewaarwording. We zijn een reflecterend, bewegend lichaam. Lichaamsschema gaat vooraf aan bewuste reflectie.", begrippen: ["pre-reflectief", "lichaamsschema", "fenomenologie", "dans"], et: "ET 6", lia: "Lia 1, p. 12–15" },
+  { name: "Plessner", kwestie: 1, kern: "Excentrische positionaliteit: de mens kan buiten zichzelf treden. Wetten: bemiddelde onmiddellijkheid, natuurlijke kunstmatigheid, utopische standplaats. Lachen en wenen als grenservaringen.", begrippen: ["excentrische positionaliteit", "bemiddelde onmiddellijkheid", "natuurlijke kunstmatigheid", "utopische standplaats"], et: "ET 7", lia: "Lia 1, p. 19–21" },
+  { name: "De Beauvoir", kwestie: 1, kern: "'Men wordt niet als vrouw geboren, men wordt het.' Geleefde ervaring en de blik van de ander. Lichaam als situatie, niet als lot.", begrippen: ["situatie", "geleefde ervaring", "de ander", "vrouwwording"], et: "ET 8", lia: "Lia 1, p. 25–26" },
+  { name: "Fanon", kwestie: 1, kern: "De 'blik van de witte ander' objectiveert. Ras als opgedrongen lichamelijke ervaring. Historisch lichaamsschema vs. raciaal-epidermaal schema.", begrippen: ["historisch lichaamsschema", "raciaal-epidermaal schema", "objectivering", "vervreemding"], et: "ET 9", lia: "Lia 1, p. 26–27" },
+  { name: "Lakoff & Johnson", kwestie: 2, kern: "Belichaamde metaforen structureren ons denken. Oriënterende metaforen (boven=goed, onder=slecht) zijn geworteld in lichamelijke ervaring. Ontologische metaforen behandelen abstracte dingen als concrete objecten.", begrippen: ["oriënterende metafoor", "ontologische metafoor", "belichaamde cognitie", "conceptuele metafoor"], et: "ET 10", lia: "Lia 1, p. 31–32" },
+  { name: "Vroon & Draaisma", kwestie: 2, kern: "Mensbeelden zijn historisch contingent: de dominante metafoor voor de geest verandert mee met de techniek van de tijd. Nu: de computermetafoor.", begrippen: ["historische contingentie", "computermetafoor", "theoriegeladenheid"], et: "ET 10", lia: "Lia 1, p. 32–33" },
+  { name: "Swaab / computationalisme", kwestie: 2, kern: "'Wij zijn ons brein.' Hersenen als informatieverwerkende machine. Functionalistisch mensbeeld. Brein-als-computer metafoor.", begrippen: ["computationalisme", "functionalisme", "brein-als-computer", "neurowetenschappen"], et: "ET 11", lia: "Lia 1, p. 36–37" },
+  { name: "Dreyfus", kwestie: 2, kern: "Kritiek op computationalisme: menselijk denken is niet reduceerbaar tot symboolmanipulatie. Het lichaam, de context en de emoties zijn onmisbaar voor intelligent gedrag.", begrippen: ["kritiek op AI", "belichaamd denken", "drie problemen", "symboolmanipulatie"], et: "ET 11", lia: "Lia 1, p. 38–39" },
+  { name: "4E-cognitie", kwestie: 2, kern: "Embodied, Embedded, Extended, Enactive. Cognitie is niet beperkt tot het brein maar verspreid over lichaam en omgeving. Clark & Chalmers: extended mind (Otto & Inga).", begrippen: ["embodied", "embedded", "extended", "enactive", "extended mind", "offloading"], et: "ET 12", lia: "Lia 1, p. 43–45" },
+  { name: "Clark", kwestie: 3, kern: "Natural-born cyborgs: mens is van nature technologisch. Brein gebruikt omgeving, technologie wordt transparant ingelijfd. Cyborg-paradox. Dynamische apparaten.", begrippen: ["natural-born cyborg", "cyborg-paradox", "dynamische apparaten", "cognitieve symbiose", "interface"], et: "ET 14", lia: "Lia 2, p. 2–6" },
+  { name: "Kockelkoren", kwestie: 3, kern: "Techniek verandert zintuiglijke ervaring. Decentreren: nieuwe techniek verstoort oude waarneming. Recentreren: zintuigen lijven techniek in.", begrippen: ["decentreren", "recentreren", "inlijving", "technische bemiddeling"], et: "ET 15", lia: "Lia 2, p. 7–12" },
+  { name: "Verbeek", kwestie: 3, kern: "Technologische bemiddeling: techniek is nooit moreel neutraal. Echoscopie verandert morele situatie. Ontwerpen is moraal ontwerpen. Vrijheid = je bewust verhouden tot technologische invloeden.", begrippen: ["technologische bemiddeling", "moreel handelingsvermogen", "ontwerpen van moraal", "vrijheid als je verhouden"], et: "ET 16", lia: "Lia 2, p. 13–18" },
+  { name: "De Mul", kwestie: 3, kern: "NBIN-technologieën transformeren menselijke identiteit. Drie scenario's: extrahumanisme (zwermgeest), transhumanisme (alien), posthumanisme (zombie). Nietzsche: herwaardering van waarden.", begrippen: ["NBIN", "extrahumanisme", "transhumanisme", "posthumanisme", "humanisme", "herwaardering van waarden"], et: "ET 17", lia: "Lia 2, p. 19–23" },
+  { name: "Morton", kwestie: 4, kern: "Ecologisch denken: alles is verbonden in 'the mesh'. Hyperobjecten. Mens/dier-grens vervaagt. Ecologische crisis dwingt tot herdenken.", begrippen: ["the mesh", "hyperobject", "ecologisch denken", "interconnectedness"], et: "ET 18–19", lia: "Lia 2, p. 24–27" },
+  { name: "Despret", kwestie: 4, kern: "Dieren hebben eigen perspectief en agency. 'What would animals say?' Wetenschappers moeten goede vragen stellen. Staying with the trouble (via Haraway).", begrippen: ["dierlijke agency", "goede vragen stellen", "antropomorfisme"], et: "ET 18–20", lia: "Lia 2, p. 28–30" },
+  { name: "Haraway", kwestie: 4, kern: "Cyborg Manifesto: grenzen mens/dier, mens/machine vervagen. Staying with the trouble: verantwoordelijkheid nemen. Symbiopoiesis. Response-ability.", begrippen: ["cyborg manifesto", "staying with the trouble", "symbiopoiesis", "response-ability", "companion species"], et: "ET 18", lia: "Lia 2, p. 26, 46–47" },
+  { name: "Latour", kwestie: 4, kern: "Actor-Network Theory: niet alleen mensen maar ook dingen (actanten) handelen. Berlijnse sleutel als voorbeeld. Symmetrisch denken over mens en niet-mens.", begrippen: ["actant", "actor-network theory", "Berlijnse sleutel", "symmetrie", "non-human agency"], et: "ET 18, 21", lia: "Lia 2, p. 32–37" },
+  { name: "Hayles", kwestie: 4, kern: "Cognitieve non-mens: technische systemen 'denken' zonder bewustzijn. Unthought: cognitie voorbij het menselijke. Cognitieve assemblages.", begrippen: ["unthought", "cognitieve non-mens", "technische cognitie", "cognitieve assemblage"], et: "ET 18, 21", lia: "Lia 2, p. 36–37" },
+  { name: "Barad", kwestie: 4, kern: "Intra-actie: dingen bestaan niet voorafgaand aan hun relaties. Materie is actief. Agentieel realisme. Grens fysiek/niet-fysiek vervaagt.", begrippen: ["intra-actie", "agentieel realisme", "materie als actief"], et: "ET 18, 22", lia: "Lia 2, p. 40–41" },
+  { name: "Harari", kwestie: 4, kern: "Dataïsme: data als ultieme bron van waarde en autoriteit. Algoritmes begrijpen ons beter dan wijzelf. Homo Deus.", begrippen: ["dataïsme", "Homo Deus", "algoritme", "dataficatie"], et: "ET 18, 23", lia: "Lia 2, p. 41–42" },
+  { name: "Rasch", kwestie: 4, kern: "'Het else': datareducties missen altijd iets. Kloof tussen data en werkelijkheid. Ruimte voor interpretatie en vrijheid.", begrippen: ["het else", "datareductie", "kloof data-werkelijkheid"], et: "ET 18, 23", lia: "Lia 2, p. 42–43" },
 ];
 
 // ============================================================
@@ -136,7 +286,7 @@ const FLASHCARDS = [
   { term: "Delegatie (Latour)", def: "Het overdragen van een moreel programma aan een niet-menselijk object. Bv. een verkeersdrempel 'dwingt' je langzaam te rijden — het morele gebod is gedelegeerd aan een ding. Vergelijk Verbeeks 'ontwerpen van moraal'.", kwestie: 4 },
   { term: "Parlement der Dingen (Latour)", def: "Politieke besluitvorming moet niet alleen mensen maar ook niet-menselijke actanten een ‘stem’ geven. Technologie en natuur als politieke medespelers.", kwestie: 4 },
   { term: "Unthought / cognitieve non-mens (Hayles)", def: "Technische systemen (algoritmen, sensoren) die 'cognitieve taken' uitvoeren zonder bewustzijn. Cognitie voorbij het menselijke.", kwestie: 4 },
-  { term: "Niet-bewuste cognitie (Hayles)", def: "Cognitieve processen in technische systemen die zonder bewustzijn verlopen. Verschilt van onbewust (Freud): het gaat niet om verdrongen gedachten maar om cognitie die nooit bewust was of kan zijn.", kwestie: 4 },
+  { term: "Niet-bewuste cognitie (Hayles)", def: "Cognitieve processen in technische systemen die zonder bewustzijn verlopen. Verschilt van het psychoanalytische onbewuste: het gaat niet om verdrongen gedachten maar om cognitie die nooit bewust was of kan zijn.", kwestie: 4 },
   { term: "Kwetsbaarheid (Hayles)", def: "Mensen behouden morele verantwoordelijkheid in cognitieve assemblages juist door hun kwetsbaarheid: ze kunnen lijden, sterven en verantwoordelijk worden gehouden — machines niet. Dit is waarom de mens niet inwisselbaar is.", kwestie: 4 },
   { term: "Cognitieve assemblage (Hayles)", def: "Complexe systemen waarin menselijke en niet-menselijke cognitie samenwerken. Bv. een piloot met autopilot: het denken is verdeeld over mens en machine.", kwestie: 4 },
   { term: "Intra-actie (Barad)", def: "Niet inter-actie (twee vooraf bestaande dingen) maar intra-actie: dingen ontstaan pas in hun onderlinge relatie. Materie is actief en producerend.", kwestie: 4 },
@@ -223,7 +373,7 @@ const QUIZ_QUESTIONS = [
   { q: "Barads begrip 'intra-actie' verschilt van 'interactie' omdat:", options: ["Het hetzelfde betekent maar korter is", "Het alleen betrekking heeft op materie, niet op mensen", "Dingen pas ontstaan ín hun onderlinge relatie, niet ervóór", "Het Latours actor-network theory vervangt"], correct: 2, explanation: "Bij inter-actie bestaan twee dingen al los van elkaar en ontmoeten ze elkaar. Bij intra-actie (Barad) ontstaan de dingen pas in en door hun relatie.", kwestie: 4 },
   { q: "Morton gebruikt het begrip 'the mesh' om uit te drukken dat:", options: ["Alles (levend en niet-levend) fundamenteel met elkaar verbonden is", "De natuur een net is dat de mens gevangen houdt", "Wifi-netwerken de natuur bedreigen (hyperobject)", "Mensen gevangen zitten in technologische systemen"], correct: 0, explanation: "The mesh = het netwerk van alle wezens en dingen die fundamenteel verweven zijn. Er is geen 'buiten' de natuur.", kwestie: 4 },
   { q: "Hayles' concept 'unthought' verwijst naar:", options: ["Onbewuste menselijke gedachten volgens Freud", "Het onvermogen van AI om echt te denken", "Vergeten filosofische ideeën die herontdekt moeten worden", "Cognitieve processen in technische systemen zonder bewustzijn"], correct: 3, explanation: "Unthought = cognitie voorbij het menselijke bewustzijn. Technische systemen (algoritmen, sensoren) voeren cognitieve taken uit zonder bewust te zijn. Dreyfus' kritiek gaat juist over iets anders: het onvermogen om belichaamd denken te simuleren.", kwestie: 4 },
-  { q: "Wat is het verschil tussen 'niet-bewuste cognitie' (Hayles) en 'het onbewuste' (Freud)?", options: ["Er is geen verschil, beide verwijzen naar verdrongen gedachten", "Niet-bewuste cognitie verwijst naar technische processen die nooit bewust waren of kunnen zijn", "Het onbewuste is technisch, niet-bewuste cognitie is menselijk", "Niet-bewuste cognitie is Hayles' vertaling van Freuds begrip"], correct: 1, explanation: "Freuds onbewuste gaat over verdrongen menselijke gedachten die in principe bewust gemaakt kunnen worden. Hayles' niet-bewuste cognitie verwijst naar processen in technische systemen die principieel niet-bewust zijn.", kwestie: 4 },
+  { q: "Wat is het verschil tussen 'niet-bewuste cognitie' (Hayles) en 'het onbewuste' uit de psychoanalyse?", options: ["Er is geen verschil, beide verwijzen naar verdrongen gedachten", "Niet-bewuste cognitie verwijst naar technische processen die nooit bewust waren of kunnen zijn", "Het onbewuste is technisch, niet-bewuste cognitie is menselijk", "Niet-bewuste cognitie is een vertaling van het psychoanalytische concept naar technologie"], correct: 1, explanation: "Het psychoanalytische onbewuste gaat over verdrongen menselijke gedachten die in principe via therapie of zelfonderzoek bewust gemaakt kunnen worden. Hayles' niet-bewuste cognitie verwijst naar iets fundamenteel anders: processen in technische systemen (algoritmen, sensoren) die principieel niet-bewust zijn — ze waren nooit bewust en kunnen dat ook nooit worden.", kwestie: 4 },
   { q: "Waarom behouden mensen volgens Hayles morele verantwoordelijkheid in cognitieve assemblages?", options: ["Omdat mensen slimmer zijn dan machines", "Omdat alleen mensen kunnen rekenen en redeneren", "Omdat mensen kwetsbaar zijn: ze kunnen lijden en sterven", "Omdat machines geen cognitieve taken kunnen uitvoeren"], correct: 2, explanation: "Hayles benadrukt kwetsbaarheid: mensen kunnen lijden, sterven en verantwoordelijk gehouden worden. Dit maakt hen niet inwisselbaar met machines, ook al delen ze cognitieve taken.", kwestie: 4 },
   { q: "Mortons 'desoriënterende openheid' betekent dat:", options: ["De natuur ons uitnodigt om open te staan voor nieuwe ervaringen", "We ons vaste referentiepunt verliezen als we beseffen dat alles verbonden is", "Ecologisch denken leidt tot een heldere, overzichtelijke kijk op de wereld", "Openheid een deugd is die we moeten ontwikkelen"], correct: 1, explanation: "Door te beseffen dat alles verbonden is (the mesh), kun je niet meer vanuit een overzichtelijk standpunt naar 'de natuur' kijken. Je zit er middenin — dat is desoriënterend maar ook productief.", kwestie: 4 },
   { q: "Despret bekritiseert het derdepersoonsperspectief in dieronderzoek omdat:", options: ["Onderzoekers dan niet objectief genoeg zijn", "Dieren geen perspectief hebben", "Het derdepersoonsperspectief alleen bij mensen werkt", "Afstand nemen van het dier juist leidt tot vertekening van dierlijk gedrag"], correct: 3, explanation: "Despret stelt dat wetenschappers die dieren bestuderen als objectieve buitenstaanders, hun onderwerp vervormen. Door afstand te nemen mis je de essentie van dierlijk gedrag. Beter: een relatie aangaan.", kwestie: 4 },
@@ -796,8 +946,256 @@ const ALGEMENE_EINDTERMEN = [
 ];
 
 // ============================================================
+// STUDIEPAD & VOORTGANG — Constanten en helpers
+// ============================================================
+
+const EXAM_DATE = new Date("2026-05-13T09:00:00");
+const START_DATE = new Date("2026-03-02T00:00:00");
+
+const STUDIEPAD_PRESETS = [
+  {
+    id: "gespreid",
+    naam: "10 weken gespreid",
+    beschrijving: "Kwesties en domeinen gelijkmatig verdeeld, laatste 2 weken herhaling",
+    icoon: "📅",
+    weken: [
+      { week: 1, label: "K1 deel 1", focus: ["K1"], beschrijving: "Descartes, Sheets-Johnstone" },
+      { week: 2, label: "K1 deel 2 + B1", focus: ["K1", "B1"], beschrijving: "Plessner, De Beauvoir, Fanon + wijsgerige antropologie" },
+      { week: 3, label: "K2 deel 1", focus: ["K2"], beschrijving: "Metaforen, Vroon & Draaisma, Swaab" },
+      { week: 4, label: "K2 deel 2 + D1", focus: ["K2", "D1"], beschrijving: "Dreyfus, 4E-cognitie + kennisleer" },
+      { week: 5, label: "K3 deel 1", focus: ["K3"], beschrijving: "Clark, Kockelkoren" },
+      { week: 6, label: "K3 deel 2 + C1", focus: ["K3", "C1"], beschrijving: "Verbeek, De Mul + ethiek" },
+      { week: 7, label: "K4 deel 1", focus: ["K4"], beschrijving: "Morton, Despret, Haraway" },
+      { week: 8, label: "K4 deel 2 + E1", focus: ["K4", "E1"], beschrijving: "Latour, Hayles, Barad, Harari, Rasch + wetenschapsfilosofie" },
+      { week: 9, label: "Herhaling", focus: ["K1", "K2", "K3", "K4", "B1", "C1", "D1", "E1"], beschrijving: "Alle kwesties, moeilijke examenvragen opnieuw" },
+      { week: 10, label: "Examentraining", focus: ["K1", "K2", "K3", "K4", "B1", "C1", "D1", "E1"], beschrijving: "Alles herhalen, zwakke punten" },
+    ],
+  },
+  {
+    id: "kwestie-voor-kwestie",
+    naam: "Kwestie voor kwestie",
+    beschrijving: "Elke kwestie 2 weken diep, dan domeinen, dan herhaling",
+    icoon: "🎯",
+    weken: [
+      { week: 1, label: "K1 diep — deel 1", focus: ["K1"], beschrijving: "Descartes, Sheets-Johnstone, Plessner" },
+      { week: 2, label: "K1 diep — deel 2", focus: ["K1", "B1"], beschrijving: "De Beauvoir, Fanon + wijsgerige antropologie" },
+      { week: 3, label: "K2 diep — deel 1", focus: ["K2"], beschrijving: "Lakoff & Johnson, Vroon & Draaisma, Swaab, Dreyfus" },
+      { week: 4, label: "K2 diep — deel 2", focus: ["K2", "D1"], beschrijving: "4E-cognitie, extended mind + kennisleer" },
+      { week: 5, label: "K3 diep — deel 1", focus: ["K3"], beschrijving: "Clark, Kockelkoren, Verbeek" },
+      { week: 6, label: "K3 diep — deel 2", focus: ["K3", "C1"], beschrijving: "De Mul + ethiek" },
+      { week: 7, label: "K4 diep — deel 1", focus: ["K4"], beschrijving: "Morton, Despret, Haraway, Latour" },
+      { week: 8, label: "K4 diep — deel 2", focus: ["K4", "E1"], beschrijving: "Hayles, Barad, Harari, Rasch + wetenschapsfilosofie" },
+      { week: 9, label: "Herhaling", focus: ["K1", "K2", "K3", "K4", "B1", "C1", "D1", "E1"], beschrijving: "Alle kwesties doorlopen, moeilijke onderdelen herhalen" },
+      { week: 10, label: "Examentraining", focus: ["K1", "K2", "K3", "K4", "B1", "C1", "D1", "E1"], beschrijving: "Examenvragen oefenen, zwakke punten aanpakken" },
+    ],
+  },
+];
+
+const ALL_FOCUS_IDS = ["K1", "K2", "K3", "K4", "B1", "C1", "D1", "E1"];
+
+function getCurrentWeek(startDate) {
+  const now = new Date();
+  if (now < startDate) return 0;
+  const diff = now - startDate;
+  const week = Math.floor(diff / (7 * 24 * 60 * 60 * 1000)) + 1;
+  return Math.min(week, 10);
+}
+
+function getExamCountdown() {
+  const now = new Date();
+  const diff = EXAM_DATE - now;
+  if (diff <= 0) return { days: 0, hours: 0, total: 0, fraction: 1 };
+  const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+  const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+  const totalSpan = EXAM_DATE - START_DATE;
+  const elapsed = now - START_DATE;
+  const fraction = Math.max(0, Math.min(1, elapsed / totalSpan));
+  return { days, hours, total: diff, fraction };
+}
+
+function focusToKwestieFilter(focusId) {
+  if (focusId.startsWith("K")) return parseInt(focusId.replace("K", ""));
+  return focusId;
+}
+
+function computeOverallProgress(progress) {
+  const totalFlash = FLASHCARDS.length;
+  const seenFlash = (progress.seenCards || []).length;
+  const totalQuiz = QUIZ_QUESTIONS.length;
+  const quizDone = (progress.quizScores || []).length > 0 ? 1 : 0;
+  const totalExam = EXAM_QUESTIONS.length;
+  const examDone = Object.values(progress.examTracker || {}).filter(v => v === "goed" || v === "lastig").length;
+  const totalTekst = PRIMAIRE_TEKSTEN.length;
+  const tekstDone = Object.values(progress.tekstTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
+  const flashPct = totalFlash > 0 ? seenFlash / totalFlash : 0;
+  const quizPct = quizDone;
+  const examPct = totalExam > 0 ? examDone / totalExam : 0;
+  const tekstPct = totalTekst > 0 ? tekstDone / totalTekst : 0;
+  return {
+    flash: { done: seenFlash, total: totalFlash, pct: flashPct },
+    quiz: { done: (progress.quizScores || []).length, pct: quizPct },
+    exam: { done: examDone, total: totalExam, pct: examPct },
+    tekst: { done: tekstDone, total: totalTekst, pct: tekstPct },
+    overall: (flashPct + examPct + tekstPct) / 3,
+  };
+}
+
+function computeKwestieProgress(progress, focusId) {
+  const filter = focusToKwestieFilter(focusId);
+  const flashForK = FLASHCARDS.filter(f => f.kwestie === filter);
+  const seenCards = progress.seenCards || [];
+  const flashSeen = flashForK.filter(f => seenCards.includes(f.term)).length;
+  const quizForK = QUIZ_QUESTIONS.filter(q => q.kwestie === filter);
+  const examForK = EXAM_QUESTIONS.filter(e => e.kwestie === filter);
+  const examTracker = progress.examTracker || {};
+  const examDone = examForK.filter(e => {
+    const key = `${e.year}-${e.nr}`;
+    return examTracker[key] === "goed" || examTracker[key] === "lastig";
+  }).length;
+  const tekstForK = PRIMAIRE_TEKSTEN.filter(t => t.kwestie === filter);
+  const tekstTracker = progress.tekstTracker || {};
+  const tekstDone = tekstForK.filter(t => tekstTracker[t.id] === "begrepen" || tekstTracker[t.id] === "lastig").length;
+  const parts = [];
+  if (flashForK.length > 0) parts.push(flashSeen / flashForK.length);
+  if (examForK.length > 0) parts.push(examDone / examForK.length);
+  if (tekstForK.length > 0) parts.push(tekstDone / tekstForK.length);
+  return {
+    flash: { done: flashSeen, total: flashForK.length },
+    quiz: { total: quizForK.length },
+    exam: { done: examDone, total: examForK.length },
+    tekst: { done: tekstDone, total: tekstForK.length },
+    pct: parts.length > 0 ? parts.reduce((a, b) => a + b, 0) / parts.length : 0,
+  };
+}
+
+function computeStreak(tijdLog) {
+  if (!tijdLog || tijdLog.length === 0) return { current: 0, longest: 0 };
+  const dates = [...new Set(tijdLog.map(e => e.date))].sort().reverse();
+  const today = new Date().toISOString().split("T")[0];
+  let current = 0;
+  let checkDate = today;
+  for (const d of dates) {
+    if (d === checkDate) {
+      current++;
+      const prev = new Date(checkDate);
+      prev.setDate(prev.getDate() - 1);
+      checkDate = prev.toISOString().split("T")[0];
+    } else if (d < checkDate) {
+      break;
+    }
+  }
+  const allDates = [...new Set(tijdLog.map(e => e.date))].sort();
+  let longest = 0;
+  let streak = 0;
+  let expected = null;
+  for (const d of allDates) {
+    if (expected === null || d === expected) {
+      streak++;
+    } else {
+      streak = 1;
+    }
+    longest = Math.max(longest, streak);
+    const next = new Date(d);
+    next.setDate(next.getDate() + 1);
+    expected = next.toISOString().split("T")[0];
+  }
+  return { current, longest };
+}
+
+function getDateRange(start, end) {
+  const dates = [];
+  const d = new Date(start);
+  while (d <= end) {
+    dates.push(d.toISOString().split("T")[0]);
+    d.setDate(d.getDate() + 1);
+  }
+  return dates;
+}
+
+// Leitner spaced repetition: box intervals in days
+const LEITNER_INTERVALS = [0, 1, 3, 7, 14]; // box 1-5
+
+function getLeitnerBox(progress, term) {
+  return (progress.leitnerBoxes || {})[term] || { box: 1, lastReviewed: null };
+}
+
+function isCardDue(progress, term) {
+  const { box, lastReviewed } = getLeitnerBox(progress, term);
+  if (!lastReviewed) return true;
+  const interval = LEITNER_INTERVALS[box - 1] || 0;
+  const due = new Date(lastReviewed);
+  due.setDate(due.getDate() + interval);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  due.setHours(0, 0, 0, 0);
+  return today >= due;
+}
+
+function getDueCards(progress, cards) {
+  return cards.filter(c => isCardDue(progress, c.term));
+}
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function generateDagdoelen(progress) {
+  const studiepad = progress.studiepad;
+  if (!studiepad) return null;
+  const currentWeek = getCurrentWeek(studiepad ? new Date(studiepad.startDate || START_DATE) : START_DATE);
+  if (currentWeek <= 0) return null;
+
+  let weken;
+  if (studiepad.type === "preset") {
+    const preset = STUDIEPAD_PRESETS.find(p => p.id === studiepad.presetId);
+    weken = preset ? preset.weken : [];
+  } else {
+    weken = studiepad.customWeken || [];
+  }
+  const week = weken.find(w => w.week === currentWeek);
+  if (!week) return null;
+
+  const focus = week.focus || [];
+  const focusFilter = (item) => {
+    if (focus.length === 0) return true;
+    return focus.some(f => {
+      if (f.startsWith("K")) return item.kwestie === parseInt(f[1]);
+      return item.kwestie === f;
+    });
+  };
+
+  const relevantCards = FLASHCARDS.filter(focusFilter);
+  const dueCards = getDueCards(progress, relevantCards);
+  const relevantExam = EXAM_QUESTIONS.filter(focusFilter);
+  const examTracker = progress.examTracker || {};
+  const examUndone = relevantExam.filter(eq => !examTracker[`${eq.year}-${eq.nr}`]);
+
+  const doelen = [];
+  if (dueCards.length > 0) doelen.push({ icon: "🔄", text: `${Math.min(15, dueCards.length)} flashcards herhalen`, detail: focus.join(", ") });
+  else if (relevantCards.length > 0) doelen.push({ icon: "🎴", text: `${Math.min(15, relevantCards.length)} flashcards oefenen`, detail: focus.join(", ") });
+  doelen.push({ icon: "❓", text: "1 quiz sessie (15 vragen)", detail: focus.join(", ") });
+  if (examUndone.length > 0) doelen.push({ icon: "🔍", text: `${Math.min(2, examUndone.length)} examenvra${examUndone.length === 1 ? "ag" : "gen"} maken`, detail: focus.join(", ") });
+  return { doelen, weekLabel: week.label, focus };
+}
+
+// ============================================================
 // COMPONENTS
 // ============================================================
+
+function LiaBadge({ text, kwestie }) {
+  const ref = text ? getLiaRef(text, kwestie) : getLiaRef(null, kwestie);
+  if (!ref) return null;
+  return (
+    <span style={{ display: "inline-block", padding: "2px 6px", borderRadius: "4px", fontSize: "10px", fontWeight: 600, background: ref.startsWith("Lia 1") ? "#2D5A8E15" : "#7A2D8E15", color: ref.startsWith("Lia 1") ? "#2D5A8E" : "#7A2D8E", letterSpacing: "0.3px", whiteSpace: "nowrap" }}>
+      {ref}
+    </span>
+  );
+}
 
 function KwestieTag({ kwestie, small }) {
   if (kwestie === 0) {
@@ -818,6 +1216,498 @@ function KwestieTag({ kwestie, small }) {
   );
 }
 
+// --- VOORTGANG VIEW ---
+function VoortgangView({ progress, setProgress }) {
+  const [manualMinutes, setManualMinutes] = useState(15);
+  const [manualLabel, setManualLabel] = useState("");
+
+  const countdown = getExamCountdown();
+  const overall = computeOverallProgress(progress);
+  const streak = computeStreak(progress.tijdLog || []);
+  const dagdoelen = generateDagdoelen(progress);
+  const today = new Date().toISOString().split("T")[0];
+  const tijdLog = progress.tijdLog || [];
+  const todayEntry = tijdLog.find(e => e.date === today);
+  const todayApp = todayEntry ? (todayEntry.appMinutes || 0) : 0;
+  const todayManual = todayEntry ? (todayEntry.manualEntries || []).reduce((s, e) => s + e.minutes, 0) : 0;
+
+  const dateRange = getDateRange(START_DATE, EXAM_DATE);
+  const timeByDate = {};
+  tijdLog.forEach(e => {
+    const total = (e.appMinutes || 0) + (e.manualEntries || []).reduce((s, m) => s + m.minutes, 0);
+    timeByDate[e.date] = total;
+  });
+  const maxTime = Math.max(1, ...Object.values(timeByDate));
+
+  const addManualTime = () => {
+    if (manualMinutes <= 0) return;
+    setProgress(prev => {
+      const log = [...(prev.tijdLog || [])];
+      const idx = log.findIndex(e => e.date === today);
+      if (idx >= 0) {
+        log[idx] = {
+          ...log[idx],
+          manualEntries: [...(log[idx].manualEntries || []), { minutes: manualMinutes, label: manualLabel || "Studie" }],
+        };
+      } else {
+        log.push({ date: today, appMinutes: 0, manualEntries: [{ minutes: manualMinutes, label: manualLabel || "Studie" }] });
+      }
+      return { ...prev, tijdLog: log, lastActiveDate: today };
+    });
+    setManualMinutes(15);
+    setManualLabel("");
+  };
+
+  const ringSize = 120;
+  const ringStroke = 10;
+  const ringRadius = (ringSize - ringStroke) / 2;
+  const ringCircumference = 2 * Math.PI * ringRadius;
+
+  const kwestieItems = [
+    ...KWESTIES.map(k => ({ id: `K${k.id}`, label: `K${k.id}`, color: k.color })),
+    ...DOMEINEN.map(d => ({ id: d.id, label: d.id, color: d.color })),
+  ];
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      {/* Examencountdown ring */}
+      <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
+        <svg width={ringSize} height={ringSize} style={{ transform: "rotate(-90deg)" }}>
+          <circle cx={ringSize / 2} cy={ringSize / 2} r={ringRadius} fill="none" stroke="#f0f0f5" strokeWidth={ringStroke} />
+          <circle cx={ringSize / 2} cy={ringSize / 2} r={ringRadius} fill="none" stroke="#4A90D9" strokeWidth={ringStroke}
+            strokeDasharray={ringCircumference} strokeDashoffset={ringCircumference * (1 - countdown.fraction)} strokeLinecap="round" />
+        </svg>
+        <div style={{ marginTop: "-80px", marginBottom: "40px", fontFamily: "'Source Sans 3', sans-serif" }}>
+          <div style={{ fontSize: "28px", fontWeight: 700, color: "#1a1a2e" }}>{countdown.days}</div>
+          <div style={{ fontSize: "12px", color: "#888" }}>dagen tot examen</div>
+          <div style={{ fontSize: "11px", color: "#aaa" }}>+ {countdown.hours} uur</div>
+        </div>
+      </div>
+
+      {/* Totale voortgang */}
+      <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+          <span style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e" }}>Totale voortgang</span>
+          <span style={{ fontWeight: 700, fontSize: "20px", color: "#4A90D9" }}>{Math.round(overall.overall * 100)}%</span>
+        </div>
+        {[
+          { label: "Flashcards", pct: overall.flash.pct, sub: `${overall.flash.done}/${overall.flash.total}`, color: "#4A90D9" },
+          { label: "Quiz", pct: overall.quiz.pct, sub: `${overall.quiz.done} gemaakt`, color: "#D97A4A" },
+          { label: "Examenvragen", pct: overall.exam.pct, sub: `${overall.exam.done}/${overall.exam.total}`, color: "#4AD97A" },
+          { label: "Teksten", pct: overall.tekst.pct, sub: `${overall.tekst.done}/${overall.tekst.total}`, color: "#B04AD9" },
+        ].map(cat => (
+          <div key={cat.label} style={{ marginBottom: "8px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#666", marginBottom: "3px" }}>
+              <span>{cat.label}</span><span>{cat.sub}</span>
+            </div>
+            <div style={{ height: "6px", background: "#e8e8f0", borderRadius: "3px", overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${Math.round(cat.pct * 100)}%`, background: cat.color, borderRadius: "3px", transition: "width 0.3s" }} />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Per kwestie/domein */}
+      <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
+        <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "12px" }}>Per kwestie / domein</div>
+        {kwestieItems.map(item => {
+          const kp = computeKwestieProgress(progress, item.id);
+          return (
+            <div key={item.id} style={{ marginBottom: "8px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#666", marginBottom: "3px" }}>
+                <span style={{ fontWeight: 600, color: item.color }}>{item.label}</span>
+                <span>{Math.round(kp.pct * 100)}%</span>
+              </div>
+              <div style={{ height: "6px", background: "#e8e8f0", borderRadius: "3px", overflow: "hidden" }}>
+                <div style={{ height: "100%", width: `${Math.round(kp.pct * 100)}%`, background: item.color, borderRadius: "3px", transition: "width 0.3s" }} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Studiestreak */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
+        <div style={{ background: "#fff5f0", borderRadius: "12px", padding: "16px", border: "1px solid #e8e8f0", textAlign: "center" }}>
+          <div style={{ fontSize: "28px", fontWeight: 700, color: "#D97A4A" }}>{streak.current}</div>
+          <div style={{ fontSize: "12px", color: "#888" }}>dagen streak</div>
+        </div>
+        <div style={{ background: "#f0f4ff", borderRadius: "12px", padding: "16px", border: "1px solid #e8e8f0", textAlign: "center" }}>
+          <div style={{ fontSize: "28px", fontWeight: 700, color: "#4A90D9" }}>{streak.longest}</div>
+          <div style={{ fontSize: "12px", color: "#888" }}>langste streak</div>
+        </div>
+      </div>
+
+      {/* Kalender heatmap */}
+      <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
+        <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "12px" }}>Studiekalender</div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(10, 1fr)", gap: "3px" }}>
+          {dateRange.map(d => {
+            const t = timeByDate[d] || 0;
+            const opacity = t > 0 ? Math.max(0.2, Math.min(1, t / maxTime)) : 0;
+            const isToday = d === today;
+            return (
+              <div key={d} title={`${d}: ${t} min`} style={{
+                aspectRatio: "1", borderRadius: "3px",
+                background: t > 0 ? `rgba(74, 144, 217, ${opacity})` : "#e8e8f0",
+                border: isToday ? "2px solid #1a1a2e" : "none",
+                minWidth: 0,
+              }} />
+            );
+          })}
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: "#aaa", marginTop: "6px" }}>
+          <span>2 mrt</span><span>13 mei</span>
+        </div>
+      </div>
+
+      {/* Vandaag */}
+      <div style={{ background: "#f0fff5", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
+        <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "8px" }}>Vandaag</div>
+        <div style={{ fontSize: "13px", color: "#666" }}>
+          App-tijd: <strong>{todayApp} min</strong>
+        </div>
+        {todayEntry && (todayEntry.manualEntries || []).length > 0 && (
+          <div style={{ marginTop: "6px" }}>
+            {(todayEntry.manualEntries || []).map((e, i) => (
+              <div key={i} style={{ fontSize: "12px", color: "#888" }}>{e.minutes} min — {e.label}</div>
+            ))}
+          </div>
+        )}
+        <div style={{ fontSize: "13px", color: "#4AD97A", fontWeight: 700, marginTop: "6px" }}>
+          Totaal: {todayApp + todayManual} min
+        </div>
+      </div>
+
+      {/* Dagdoelen */}
+      {dagdoelen && (
+        <div style={{ background: "#fffdf0", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #f0e8c0" }}>
+          <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "10px" }}>Dagdoel — {dagdoelen.weekLabel}</div>
+          {dagdoelen.doelen.map((d, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: i < dagdoelen.doelen.length - 1 ? "8px" : 0 }}>
+              <span style={{ fontSize: "16px" }}>{d.icon}</span>
+              <div>
+                <div style={{ fontSize: "13px", fontWeight: 600, color: "#333" }}>{d.text}</div>
+                <div style={{ fontSize: "11px", color: "#aaa" }}>{d.detail}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Studietijd toevoegen */}
+      <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", border: "1px solid #e8e8f0" }}>
+        <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "12px" }}>Studietijd toevoegen</div>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", alignItems: "center" }}>
+          <select value={manualMinutes} onChange={e => setManualMinutes(Number(e.target.value))}
+            style={{ padding: "8px 12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "14px", background: "#fff" }}>
+            {[5, 10, 15, 20, 25, 30, 45, 60, 90, 120].map(m => (
+              <option key={m} value={m}>{m} min</option>
+            ))}
+          </select>
+          <input value={manualLabel} onChange={e => setManualLabel(e.target.value)}
+            placeholder="Bijv. Samenvatting K1"
+            style={{ flex: 1, minWidth: "120px", padding: "8px 12px", borderRadius: "8px", border: "1px solid #ddd", fontSize: "14px" }} />
+          <button onClick={addManualTime}
+            style={{ padding: "8px 16px", borderRadius: "8px", border: "none", background: "#4A90D9", color: "#fff", fontWeight: 700, fontSize: "14px", cursor: "pointer" }}>
+            +
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// --- STUDIEPAD VIEW ---
+function StudiepadView({ progress, setProgress, setView }) {
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [customWeken, setCustomWeken] = useState(
+    Array.from({ length: 10 }, (_, i) => ({ week: i + 1, label: `Week ${i + 1}`, focus: [] }))
+  );
+  const [showCustom, setShowCustom] = useState(false);
+
+  const studiepad = progress.studiepad || null;
+  const currentWeek = getCurrentWeek(studiepad ? new Date(studiepad.startDate || START_DATE) : START_DATE);
+  const [expandedWeek, setExpandedWeek] = useState(null);
+
+  useEffect(() => {
+    if (currentWeek > 0 && expandedWeek === null) setExpandedWeek(currentWeek);
+  }, [currentWeek, expandedWeek]);
+
+  const activatePreset = (presetId) => {
+    setProgress(prev => ({
+      ...prev,
+      studiepad: {
+        type: "preset",
+        presetId,
+        startDate: START_DATE.toISOString().split("T")[0],
+        customWeken: null,
+      },
+    }));
+  };
+
+  const activateCustom = () => {
+    setProgress(prev => ({
+      ...prev,
+      studiepad: {
+        type: "custom",
+        presetId: null,
+        startDate: START_DATE.toISOString().split("T")[0],
+        customWeken,
+      },
+    }));
+    setShowCustom(false);
+  };
+
+  const resetPad = () => {
+    setProgress(prev => ({ ...prev, studiepad: null }));
+    setShowConfirm(false);
+    setExpandedWeek(null);
+  };
+
+  const toggleCustomFocus = (weekIdx, focusId) => {
+    setCustomWeken(prev => {
+      const copy = prev.map(w => ({ ...w, focus: [...w.focus] }));
+      const f = copy[weekIdx].focus;
+      if (f.includes(focusId)) {
+        copy[weekIdx].focus = f.filter(x => x !== focusId);
+      } else {
+        copy[weekIdx].focus = [...f, focusId];
+      }
+      return copy;
+    });
+  };
+
+  const getWeken = () => {
+    if (!studiepad) return [];
+    if (studiepad.type === "preset") {
+      const preset = STUDIEPAD_PRESETS.find(p => p.id === studiepad.presetId);
+      return preset ? preset.weken : [];
+    }
+    return studiepad.customWeken || [];
+  };
+
+  // --- Pad kiezer ---
+  if (!studiepad) {
+    if (showCustom) {
+      return (
+        <div style={{ padding: "0 20px 40px" }}>
+          <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
+            <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Eigen pad samenstellen</h2>
+            <p style={{ color: "#888", fontSize: "13px", margin: "8px 0 0" }}>Kies per week welke kwesties en domeinen je wilt behandelen</p>
+          </div>
+          {customWeken.map((w, wi) => (
+            <div key={wi} style={{ background: "#f8f8fc", borderRadius: "10px", padding: "12px 16px", marginBottom: "8px", border: "1px solid #e8e8f0" }}>
+              <div style={{ fontWeight: 700, fontSize: "13px", color: "#1a1a2e", marginBottom: "8px" }}>Week {w.week}</div>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                {ALL_FOCUS_IDS.map(fid => (
+                  <button key={fid} onClick={() => toggleCustomFocus(wi, fid)}
+                    style={{
+                      padding: "4px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: 600, cursor: "pointer",
+                      border: w.focus.includes(fid) ? "2px solid #4A90D9" : "1px solid #ddd",
+                      background: w.focus.includes(fid) ? "#4A90D920" : "#fff",
+                      color: w.focus.includes(fid) ? "#4A90D9" : "#888",
+                    }}>
+                    {fid}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+          <div style={{ display: "flex", gap: "8px", marginTop: "16px" }}>
+            <button onClick={() => setShowCustom(false)}
+              style={{ flex: 1, padding: "12px", borderRadius: "10px", border: "1px solid #ddd", background: "#fff", fontSize: "14px", fontWeight: 600, cursor: "pointer", color: "#666" }}>
+              Terug
+            </button>
+            <button onClick={activateCustom}
+              style={{ flex: 1, padding: "12px", borderRadius: "10px", border: "none", background: "#4A90D9", color: "#fff", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>
+              Activeer pad
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ padding: "0 20px 40px" }}>
+        <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Kies je studiepad</h2>
+          <p style={{ color: "#888", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — hoe wil je studeren?</p>
+        </div>
+        {STUDIEPAD_PRESETS.map(preset => (
+          <button key={preset.id} onClick={() => activatePreset(preset.id)}
+            style={{
+              display: "block", width: "100%", background: "#f8f8fc", border: "2px solid #e8e8f0",
+              borderRadius: "12px", padding: "20px", marginBottom: "12px", cursor: "pointer", textAlign: "left",
+              transition: "border-color 0.2s",
+            }}
+            onMouseOver={e => e.currentTarget.style.borderColor = "#4A90D9"}
+            onMouseOut={e => e.currentTarget.style.borderColor = "#e8e8f0"}
+          >
+            <div style={{ fontSize: "28px", marginBottom: "8px" }}>{preset.icoon}</div>
+            <div style={{ fontWeight: 700, fontSize: "16px", color: "#1a1a2e", marginBottom: "4px" }}>{preset.naam}</div>
+            <div style={{ fontSize: "13px", color: "#888", lineHeight: 1.4 }}>{preset.beschrijving}</div>
+          </button>
+        ))}
+        <button onClick={() => setShowCustom(true)}
+          style={{
+            display: "block", width: "100%", background: "#fff", border: "2px dashed #ddd",
+            borderRadius: "12px", padding: "20px", cursor: "pointer", textAlign: "center",
+            transition: "border-color 0.2s",
+          }}
+          onMouseOver={e => e.currentTarget.style.borderColor = "#4A90D9"}
+          onMouseOut={e => e.currentTarget.style.borderColor = "#ddd"}
+        >
+          <div style={{ fontSize: "28px", marginBottom: "8px" }}>{"✏️"}</div>
+          <div style={{ fontWeight: 700, fontSize: "16px", color: "#1a1a2e" }}>Eigen pad samenstellen</div>
+          <div style={{ fontSize: "13px", color: "#888", marginTop: "4px" }}>Kies zelf per week wat je wilt behandelen</div>
+        </button>
+      </div>
+    );
+  }
+
+  // --- Pad actief: weekoverzicht ---
+  const weken = getWeken();
+
+  return (
+    <div style={{ padding: "0 20px 40px" }}>
+      {/* Tijdlijn */}
+      <div style={{ padding: "20px 0 16px" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "2px", marginBottom: "8px" }}>
+          {weken.map((w) => {
+            const isCurrent = w.week === currentWeek;
+            const isPast = w.week < currentWeek;
+            return (
+              <button key={w.week} onClick={() => setExpandedWeek(expandedWeek === w.week ? null : w.week)}
+                style={{
+                  flex: 1, height: "8px", borderRadius: "4px", border: "none", cursor: "pointer", padding: 0,
+                  background: isCurrent ? "#4A90D9" : isPast ? "#4AD97A" : "#e8e8f0",
+                  opacity: expandedWeek === w.week ? 1 : 0.6,
+                  transition: "opacity 0.2s",
+                }}
+                title={`Week ${w.week}: ${w.label}`}
+              />
+            );
+          })}
+        </div>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: "#aaa" }}>
+          <span>Week 1</span><span>Week 10</span>
+        </div>
+      </div>
+
+      {/* Weekkaarten */}
+      {weken.map((w) => {
+        const isExpanded = expandedWeek === w.week;
+        const isCurrent = w.week === currentWeek;
+        const kp = w.focus.length > 0
+          ? w.focus.reduce((acc, fid) => {
+              const p = computeKwestieProgress(progress, fid);
+              return {
+                flash: { done: acc.flash.done + p.flash.done, total: acc.flash.total + p.flash.total },
+                quiz: { total: acc.quiz.total + p.quiz.total },
+                exam: { done: acc.exam.done + p.exam.done, total: acc.exam.total + p.exam.total },
+                tekst: { done: acc.tekst.done + p.tekst.done, total: acc.tekst.total + p.tekst.total },
+              };
+            }, { flash: { done: 0, total: 0 }, quiz: { total: 0 }, exam: { done: 0, total: 0 }, tekst: { done: 0, total: 0 } })
+          : { flash: { done: 0, total: 0 }, quiz: { total: 0 }, exam: { done: 0, total: 0 }, tekst: { done: 0, total: 0 } };
+
+        const weekTotal = kp.flash.total + kp.exam.total + kp.tekst.total;
+        const weekDone = kp.flash.done + kp.exam.done + kp.tekst.done;
+        const weekPct = weekTotal > 0 ? Math.round((weekDone / weekTotal) * 100) : 0;
+
+        return (
+          <div key={w.week} style={{
+            background: isCurrent ? "#f0f4ff" : "#f8f8fc",
+            border: isCurrent ? "2px solid #4A90D9" : "1px solid #e8e8f0",
+            borderRadius: "12px", marginBottom: "8px", overflow: "hidden",
+          }}>
+            <button onClick={() => setExpandedWeek(isExpanded ? null : w.week)}
+              style={{
+                width: "100%", background: "none", border: "none", cursor: "pointer", padding: "14px 16px",
+                display: "flex", alignItems: "center", justifyContent: "space-between", textAlign: "left",
+              }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <span style={{
+                    background: isCurrent ? "#4A90D9" : "#ddd", color: isCurrent ? "#fff" : "#888",
+                    width: "24px", height: "24px", borderRadius: "50%", display: "flex", alignItems: "center",
+                    justifyContent: "center", fontWeight: 700, fontSize: "12px", flexShrink: 0,
+                  }}>{w.week}</span>
+                  <span style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e" }}>{w.label}</span>
+                  {isCurrent && <span style={{ fontSize: "10px", fontWeight: 700, color: "#4A90D9", background: "#4A90D920", padding: "2px 6px", borderRadius: "4px" }}>NU</span>}
+                </div>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: weekPct >= 100 ? "#4AD97A" : "#888" }}>{weekPct}%</span>
+                <span style={{ fontSize: "14px", color: "#888", transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>{"▼"}</span>
+              </div>
+            </button>
+
+            {isExpanded && (
+              <div style={{ padding: "0 16px 16px", borderTop: "1px solid #e8e8f020" }}>
+                <p style={{ fontSize: "13px", color: "#666", margin: "0 0 12px", lineHeight: 1.4 }}>{w.beschrijving}</p>
+
+                {/* Week progress bar */}
+                <div style={{ height: "6px", background: "#e8e8f0", borderRadius: "3px", overflow: "hidden", marginBottom: "12px" }}>
+                  <div style={{ height: "100%", width: `${weekPct}%`, background: "#4A90D9", borderRadius: "3px", transition: "width 0.3s" }} />
+                </div>
+
+                {/* Checklist items */}
+                {kp.flash.total > 0 && (
+                  <button onClick={() => { setView("flashcards"); }}
+                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
+                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"🎴"} Flashcards: <strong>{kp.flash.done}/{kp.flash.total}</strong> gezien</span>
+                  </button>
+                )}
+                {kp.quiz.total > 0 && (
+                  <button onClick={() => { setView("quiz"); }}
+                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
+                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"❓"} Quiz: doe een quiz</span>
+                  </button>
+                )}
+                {kp.exam.total > 0 && (
+                  <button onClick={() => { setView("exam"); }}
+                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
+                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"🔍"} Examenvragen: <strong>{kp.exam.done}/{kp.exam.total}</strong> gedaan</span>
+                  </button>
+                )}
+                {kp.tekst.total > 0 && (
+                  <button onClick={() => { setView("teksten"); }}
+                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
+                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"📖"} Teksten: <strong>{kp.tekst.done}/{kp.tekst.total}</strong> beoordeeld</span>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* Ander pad kiezen */}
+      {showConfirm ? (
+        <div style={{ background: "#fff5f0", borderRadius: "12px", padding: "16px", border: "1px solid #D97A4A40", marginTop: "16px", textAlign: "center" }}>
+          <p style={{ fontSize: "14px", color: "#1a1a2e", margin: "0 0 12px" }}>Weet je zeker dat je een ander pad wilt kiezen?</p>
+          <div style={{ display: "flex", gap: "8px", justifyContent: "center" }}>
+            <button onClick={() => setShowConfirm(false)}
+              style={{ padding: "8px 20px", borderRadius: "8px", border: "1px solid #ddd", background: "#fff", fontSize: "13px", cursor: "pointer" }}>
+              Annuleren
+            </button>
+            <button onClick={resetPad}
+              style={{ padding: "8px 20px", borderRadius: "8px", border: "none", background: "#D97A4A", color: "#fff", fontSize: "13px", fontWeight: 700, cursor: "pointer" }}>
+              Ander pad kiezen
+            </button>
+          </div>
+        </div>
+      ) : (
+        <button onClick={() => setShowConfirm(true)}
+          style={{ display: "block", width: "100%", padding: "12px", borderRadius: "10px", border: "1px solid #ddd", background: "#fff", fontSize: "13px", color: "#888", cursor: "pointer", marginTop: "16px", textAlign: "center" }}>
+          Ander pad kiezen
+        </button>
+      )}
+    </div>
+  );
+}
+
 function Home({ setView, progress }) {
   const totalFlash = FLASHCARDS.length;
   const seenFlash = (progress.seenCards || []).length;
@@ -826,16 +1716,83 @@ function Home({ setView, progress }) {
   const examDone = Object.values(progress.examTracker || {}).filter(v => v === "goed" || v === "lastig").length;
   const tekstDone = Object.values(progress.tekstTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
 
+  const studiepad = progress.studiepad || null;
+  const currentWeek = getCurrentWeek(studiepad ? new Date(studiepad.startDate || START_DATE) : START_DATE);
+  const countdown = getExamCountdown();
+  const overallProg = computeOverallProgress(progress);
+  const dagdoelen = generateDagdoelen(progress);
+
+  const getWeekLabel = () => {
+    if (!studiepad) return null;
+    let weken;
+    if (studiepad.type === "preset") {
+      const preset = STUDIEPAD_PRESETS.find(p => p.id === studiepad.presetId);
+      weken = preset ? preset.weken : [];
+    } else {
+      weken = studiepad.customWeken || [];
+    }
+    const w = weken.find(w => w.week === currentWeek);
+    return w ? w.label : null;
+  };
+
   return (
     <div style={{ padding: "0 20px 40px" }}>
       <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
         <h1 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "26px", color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>
-          🏛️ Filosofie VWO 2026
+          Filosofie VWO 2026
         </h1>
         <p style={{ color: "#666", fontSize: "14px", margin: "8px 0 0", fontFamily: "'Source Sans 3', sans-serif" }}>
           De vraag naar de mens in relatie tot techniek en wetenschap
         </p>
       </div>
+
+      {/* Deze week banner */}
+      <button onClick={() => setView(studiepad ? "studiepad" : "studiepad")}
+        style={{
+          display: "block", width: "100%", background: "linear-gradient(135deg, #4A90D9 0%, #2D5A8E 100%)",
+          border: "none", borderRadius: "12px", padding: "16px 20px", marginBottom: "16px", cursor: "pointer",
+          textAlign: "left", color: "#fff",
+        }}>
+        {studiepad ? (
+          <>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: "11px", opacity: 0.8, marginBottom: "4px" }}>Week {currentWeek} van 10</div>
+                <div style={{ fontSize: "16px", fontWeight: 700 }}>{getWeekLabel() || "Studiepad"}</div>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <div style={{ fontSize: "22px", fontWeight: 700 }}>{countdown.days}d</div>
+                <div style={{ fontSize: "11px", opacity: 0.8 }}>tot examen</div>
+              </div>
+            </div>
+            <div style={{ height: "4px", background: "rgba(255,255,255,0.3)", borderRadius: "2px", marginTop: "10px", overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${Math.round(overallProg.overall * 100)}%`, background: "#fff", borderRadius: "2px" }} />
+            </div>
+          </>
+        ) : (
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div>
+              <div style={{ fontSize: "16px", fontWeight: 700 }}>Stel je studiepad in</div>
+              <div style={{ fontSize: "12px", opacity: 0.8, marginTop: "4px" }}>{countdown.days} dagen tot het examen</div>
+            </div>
+            <span style={{ fontSize: "20px" }}>{"→"}</span>
+          </div>
+        )}
+      </button>
+
+      {/* Dagdoelen */}
+      {dagdoelen && (
+        <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", padding: "14px 16px", marginBottom: "16px" }}>
+          <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "8px" }}>Dagdoel — {dagdoelen.weekLabel}</div>
+          {dagdoelen.doelen.map((d, i) => (
+            <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: i < dagdoelen.doelen.length - 1 ? "6px" : 0 }}>
+              <span style={{ fontSize: "14px" }}>{d.icon}</span>
+              <span style={{ fontSize: "13px", color: "#333" }}>{d.text}</span>
+              <span style={{ fontSize: "10px", color: "#aaa", marginLeft: "auto" }}>{d.detail}</span>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "24px" }}>
         {[
@@ -845,6 +1802,7 @@ function Home({ setView, progress }) {
           { icon: "📖", label: "Primaire teksten", sub: tekstDone > 0 ? `${tekstDone}/${PRIMAIRE_TEKSTEN.length} beoordeeld` : `${PRIMAIRE_TEKSTEN.length} teksten`, view: "teksten", bg: "#f5f0ff" },
           { icon: "👤", label: "Filosofen", sub: `${FILOSOFEN.length} denkers`, view: "filosofen", bg: "#faf0ff" },
           { icon: "🔬", label: "Begripsanalyse", sub: "ET 2 — oefenen", view: "begripsanalyse", bg: "#fff0f5" },
+          { icon: "📊", label: "Voortgang", sub: `${Math.round(overallProg.overall * 100)}% totaal`, view: "voortgang", bg: "#f0fff0" },
         ].map(item => (
           <button key={item.view} onClick={() => setView(item.view)} style={{
             background: item.bg, border: "1px solid #e8e8f0", borderRadius: "12px", padding: "20px 16px",
@@ -895,33 +1853,86 @@ function Home({ setView, progress }) {
 // --- FLASHCARDS ---
 function Flashcards({ progress, setProgress }) {
   const [filter, setFilter] = useState(null);
+  const [mode, setMode] = useState("alle"); // "alle", "mix", "herhalen"
   const [idx, setIdx] = useState(0);
   const [flipped, setFlipped] = useState(false);
+  const [sessionCards, setSessionCards] = useState(null);
+  const SESSION_SIZE = 15;
 
-  const cards = filter === null ? FLASHCARDS : FLASHCARDS.filter(c => c.kwestie === filter);
+  const baseCards = filter === null ? FLASHCARDS : FLASHCARDS.filter(c => c.kwestie === filter);
 
-  const markSeen = useCallback((i) => {
-    const card = cards[i];
+  const initSession = useCallback((cards, m) => {
+    let pool;
+    if (m === "mix") pool = shuffleArray(FLASHCARDS);
+    else if (m === "herhalen") pool = getDueCards(progress, cards);
+    else pool = cards;
+    setSessionCards(pool.slice(0, SESSION_SIZE));
+    setIdx(0);
+    setFlipped(false);
+  }, [progress]);
+
+  useEffect(() => {
+    initSession(baseCards, mode);
+  }, [filter, mode]);
+
+  const cards = sessionCards || baseCards.slice(0, SESSION_SIZE);
+  const totalPool = mode === "mix" ? FLASHCARDS.length : mode === "herhalen" ? getDueCards(progress, baseCards).length : baseCards.length;
+
+  const loadMore = () => {
+    let pool;
+    if (mode === "mix") pool = shuffleArray(FLASHCARDS);
+    else if (mode === "herhalen") pool = getDueCards(progress, baseCards);
+    else pool = baseCards;
+    const offset = cards.length;
+    const next = pool.slice(offset, offset + SESSION_SIZE);
+    if (next.length > 0) {
+      setSessionCards([...cards, ...next]);
+    }
+  };
+
+  const markLeitner = useCallback((card, rating) => {
     if (!card) return;
-    const key = card.term;
+    const term = card.term;
+    const today = new Date().toISOString().split("T")[0];
     setProgress(prev => {
+      const boxes = { ...(prev.leitnerBoxes || {}) };
+      const current = boxes[term] || { box: 1, lastReviewed: null };
+      if (rating === "goed") {
+        boxes[term] = { box: Math.min(current.box + 1, 5), lastReviewed: today };
+      } else {
+        boxes[term] = { box: 1, lastReviewed: today };
+      }
       const seen = prev.seenCards || [];
-      if (!seen.includes(key)) return { ...prev, seenCards: [...seen, key] };
-      return prev;
+      const newSeen = seen.includes(term) ? seen : [...seen, term];
+      return { ...prev, leitnerBoxes: boxes, seenCards: newSeen };
     });
-  }, [cards, setProgress]);
+  }, [setProgress]);
 
-  const next = () => { setFlipped(false); markSeen(idx); setIdx(i => (i + 1) % cards.length); };
+  const handleRating = (rating) => {
+    markLeitner(cards[idx], rating);
+    setFlipped(false);
+    if (idx + 1 < cards.length) {
+      setIdx(i => i + 1);
+    }
+  };
+
   const prev = () => { setFlipped(false); setIdx(i => (i - 1 + cards.length) % cards.length); };
 
-  if (cards.length === 0) return <p style={{ padding: "40px 20px", textAlign: "center", color: "#888" }}>Geen kaarten voor deze selectie.</p>;
+  if (cards.length === 0) return (
+    <div style={{ padding: "40px 20px", textAlign: "center" }}>
+      <p style={{ color: "#888" }}>{mode === "herhalen" ? "Geen kaarten te herhalen! Alles is bijgewerkt." : "Geen kaarten voor deze selectie."}</p>
+      {mode === "herhalen" && <button onClick={() => setMode("alle")} style={{ marginTop: "12px", padding: "10px 24px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>Alle kaarten</button>}
+    </div>
+  );
 
   const card = cards[idx];
   const kwestieColor = card.kwestie === 0 ? "#666" : (KWESTIES.find(k => k.id === card.kwestie)?.color || DOMEINEN.find(d => d.id === card.kwestie)?.color || "#1a1a2e");
-  const isSeen = (progress.seenCards || []).includes(card.term);
+  const leitner = getLeitnerBox(progress, card.term);
+  const boxColors = ["#ef5350", "#ff9800", "#ffc107", "#8bc34a", "#4caf50"];
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
+      {/* Kwestie filters */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
         {[
           { id: null, label: "Alle" },
@@ -931,19 +1942,47 @@ function Flashcards({ progress, setProgress }) {
         ].map(f => {
           const activeColor = f.id === null ? "#1a1a2e" : f.id === 0 ? "#666" : KWESTIES.find(k => k.id === f.id)?.color || DOMEINEN.find(d => d.id === f.id)?.color || "#1a1a2e";
           return (
-          <button key={String(f.id)} onClick={() => { setFilter(f.id); setIdx(0); setFlipped(false); }} style={{
+          <button key={String(f.id)} onClick={() => { setFilter(f.id); setMode("alle"); }} style={{
             padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
-            background: filter === f.id ? activeColor : "#f0f0f5",
-            color: filter === f.id ? "#fff" : "#666",
+            background: filter === f.id && mode === "alle" ? activeColor : "#f0f0f5",
+            color: filter === f.id && mode === "alle" ? "#fff" : "#666",
           }}>{f.label}</button>
           );
         })}
       </div>
 
-      <div style={{ textAlign: "center", fontSize: "12px", color: "#888", marginBottom: "12px" }}>
-        {idx + 1} / {cards.length} {isSeen && <span style={{ color: "#4AD97A" }}>{"✔"} gezien</span>}
+      {/* Mode buttons */}
+      <div style={{ display: "flex", gap: "6px", marginBottom: "12px" }}>
+        {[
+          { m: "herhalen", label: "Herhalen", icon: "🔄", desc: "Alleen kaarten die je moet herhalen" },
+          { m: "mix", label: "Mix", icon: "🔀", desc: "Alle kwesties door elkaar" },
+        ].map(b => (
+          <button key={b.m} onClick={() => setMode(mode === b.m ? "alle" : b.m)} style={{
+            padding: "6px 12px", borderRadius: "8px", border: mode === b.m ? "2px solid #1a1a2e" : "1px solid #e0e0e8",
+            background: mode === b.m ? "#1a1a2e" : "#fff", color: mode === b.m ? "#fff" : "#555",
+            cursor: "pointer", fontSize: "12px", fontWeight: 600, display: "flex", alignItems: "center", gap: "4px",
+          }}>{b.icon} {b.label}</button>
+        ))}
       </div>
 
+      {/* Progress + Leitner box */}
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
+        <span style={{ fontSize: "12px", color: "#888" }}>
+          {idx + 1} / {cards.length}{totalPool > cards.length ? ` (van ${totalPool})` : ""}
+        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+          <span style={{ fontSize: "10px", color: "#888" }}>Box</span>
+          {[1,2,3,4,5].map(b => (
+            <div key={b} style={{
+              width: "14px", height: "14px", borderRadius: "3px",
+              background: b <= leitner.box ? boxColors[leitner.box - 1] : "#e8e8f0",
+              transition: "background 0.3s",
+            }} />
+          ))}
+        </div>
+      </div>
+
+      {/* Card */}
       <div
         onClick={() => setFlipped(!flipped)}
         style={{
@@ -959,20 +1998,53 @@ function Flashcards({ progress, setProgress }) {
         {!flipped ? (
           <>
             <div style={{ fontSize: "20px", fontWeight: 700, fontFamily: "'Playfair Display', Georgia, serif", lineHeight: 1.3 }}>{card.term}</div>
-            <div style={{ fontSize: "11px", marginTop: "16px", opacity: 0.7 }}>Tik om te draaien</div>
+            <div style={{ marginTop: "12px" }}><LiaBadge text={card.term} kwestie={card.kwestie} /></div>
+            <div style={{ fontSize: "11px", marginTop: "8px", opacity: 0.7 }}>Tik om te draaien</div>
           </>
         ) : (
           <>
             <div style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "1px", opacity: 0.5, marginBottom: "12px" }}>Definitie</div>
             <div style={{ fontSize: "15px", lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif" }}>{card.def}</div>
+            <div style={{ marginTop: "12px" }}><LiaBadge text={card.term} kwestie={card.kwestie} /></div>
           </>
         )}
       </div>
 
-      <div style={{ display: "flex", justifyContent: "center", gap: "16px", marginTop: "20px" }}>
-        <button onClick={prev} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
-        <button onClick={next} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"→"}</button>
-      </div>
+      {/* Rating buttons (shown when flipped) */}
+      {flipped ? (
+        <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "20px" }}>
+          <button onClick={prev} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
+          <button onClick={() => handleRating("lastig")} style={{
+            flex: 1, maxWidth: "140px", padding: "12px 16px", borderRadius: "10px", border: "2px solid #ef5350",
+            background: "#fce4ec", cursor: "pointer", fontSize: "14px", fontWeight: 700, color: "#c62828",
+          }}>Lastig</button>
+          <button onClick={() => handleRating("goed")} style={{
+            flex: 1, maxWidth: "140px", padding: "12px 16px", borderRadius: "10px", border: "2px solid #4caf50",
+            background: "#e8f5e9", cursor: "pointer", fontSize: "14px", fontWeight: 700, color: "#2e7d32",
+          }}>Goed</button>
+        </div>
+      ) : (
+        <div style={{ display: "flex", justifyContent: "center", gap: "16px", marginTop: "20px" }}>
+          <button onClick={prev} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
+          <button onClick={() => { setFlipped(false); setIdx(i => (i + 1) % cards.length); }} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"→"}</button>
+        </div>
+      )}
+
+      {/* Load more */}
+      {idx + 1 >= cards.length && totalPool > cards.length && (
+        <button onClick={loadMore} style={{
+          display: "block", margin: "20px auto 0", padding: "12px 28px",
+          background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px",
+          cursor: "pointer", fontSize: "13px", fontWeight: 600,
+        }}>Nog {Math.min(SESSION_SIZE, totalPool - cards.length)} kaarten laden</button>
+      )}
+
+      {/* Session complete */}
+      {idx + 1 >= cards.length && totalPool <= cards.length && (
+        <p style={{ textAlign: "center", fontSize: "12px", color: "#888", marginTop: "16px" }}>
+          {mode === "herhalen" ? "Alle herhalingskaarten gedaan!" : "Einde van de set."} Beoordeel met Goed/Lastig om spaced repetition te activeren.
+        </p>
+      )}
     </div>
   );
 }
@@ -980,16 +2052,32 @@ function Flashcards({ progress, setProgress }) {
 // --- QUIZ ---
 function Quiz({ progress, setProgress }) {
   const [filter, setFilter] = useState(0);
+  const [mixMode, setMixMode] = useState(false);
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [finished, setFinished] = useState(false);
+  const [sessionQuestions, setSessionQuestions] = useState(null);
+  const SESSION_SIZE = 15;
 
-  const questions = filter === 0 ? QUIZ_QUESTIONS : QUIZ_QUESTIONS.filter(q => q.kwestie === filter);
+  const baseQuestions = filter === 0 ? QUIZ_QUESTIONS : QUIZ_QUESTIONS.filter(q => q.kwestie === filter);
+
+  useEffect(() => {
+    let pool = mixMode ? shuffleArray(QUIZ_QUESTIONS) : baseQuestions;
+    setSessionQuestions(pool.slice(0, SESSION_SIZE));
+    setCurrent(0); setAnswers([]); setFinished(false);
+  }, [filter, mixMode]);
+
+  const questions = sessionQuestions || baseQuestions.slice(0, SESSION_SIZE);
+  const totalPool = mixMode ? QUIZ_QUESTIONS.length : baseQuestions.length;
 
   const selected = answers[current] ?? null;
   const score = answers.filter((a, i) => a === questions[i]?.correct).length;
 
-  const restart = () => { setCurrent(0); setAnswers([]); setFinished(false); };
+  const restart = () => {
+    let pool = mixMode ? shuffleArray(QUIZ_QUESTIONS) : baseQuestions;
+    setSessionQuestions(pool.slice(0, SESSION_SIZE));
+    setCurrent(0); setAnswers([]); setFinished(false);
+  };
 
   const handleAnswer = (optIdx) => {
     if (selected !== null) return;
@@ -1002,7 +2090,6 @@ function Quiz({ progress, setProgress }) {
 
   const nextQ = () => {
     if (current + 1 >= questions.length) {
-      const finalScore = answers.filter((a, i) => a === questions[i]?.correct).length + (selected === questions[current].correct ? (answers[current] == null ? 1 : 0) : 0);
       const finalPct = Math.round(score / questions.length * 100);
       setProgress(prev => ({
         ...prev,
@@ -1027,9 +2114,11 @@ function Quiz({ progress, setProgress }) {
         <p style={{ color: "#888", fontSize: "14px", marginTop: "8px" }}>
           {pct >= 70 ? "Uitstekend! Je beheerst de stof goed." : pct >= 50 ? "Goed op weg! Bestudeer de begrippen die je miste." : "Blijf oefenen — herhaal de flashcards per kwestie."}
         </p>
-        <button onClick={restart} style={{ marginTop: "24px", padding: "12px 32px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: 600 }}>
-          Opnieuw
-        </button>
+        <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "24px" }}>
+          <button onClick={restart} style={{ padding: "12px 32px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: 600 }}>
+            Opnieuw ({SESSION_SIZE} vragen)
+          </button>
+        </div>
       </div>
     );
   }
@@ -1046,18 +2135,30 @@ function Quiz({ progress, setProgress }) {
         ].map(f => {
           const activeColor = f.id === 0 ? "#1a1a2e" : KWESTIES.find(k => k.id === f.id)?.color || DOMEINEN.find(d => d.id === f.id)?.color || "#1a1a2e";
           return (
-          <button key={String(f.id)} onClick={() => { setFilter(f.id); restart(); }} style={{
+          <button key={String(f.id)} onClick={() => { setFilter(f.id); setMixMode(false); }} style={{
             padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
-            background: filter === f.id ? activeColor : "#f0f0f5",
-            color: filter === f.id ? "#fff" : "#666",
+            background: filter === f.id && !mixMode ? activeColor : "#f0f0f5",
+            color: filter === f.id && !mixMode ? "#fff" : "#666",
           }}>{f.label}</button>
           );
         })}
       </div>
 
+      {/* Mix mode */}
+      <div style={{ marginBottom: "12px" }}>
+        <button onClick={() => setMixMode(!mixMode)} style={{
+          padding: "6px 12px", borderRadius: "8px", border: mixMode ? "2px solid #1a1a2e" : "1px solid #e0e0e8",
+          background: mixMode ? "#1a1a2e" : "#fff", color: mixMode ? "#fff" : "#555",
+          cursor: "pointer", fontSize: "12px", fontWeight: 600,
+        }}>🔀 Mix (alle kwesties door elkaar)</button>
+      </div>
+
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-        <span style={{ fontSize: "12px", color: "#888" }}>Vraag {current + 1}/{questions.length}</span>
-        <KwestieTag kwestie={q.kwestie} small />
+        <span style={{ fontSize: "12px", color: "#888" }}>Vraag {current + 1}/{questions.length}{totalPool > questions.length ? ` (van ${totalPool})` : ""}</span>
+        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+          <LiaBadge text={q.q} kwestie={q.kwestie} />
+          <KwestieTag kwestie={q.kwestie} small />
+        </div>
       </div>
 
       <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "20px", marginBottom: "16px" }}>
@@ -1086,11 +2187,22 @@ function Quiz({ progress, setProgress }) {
       </div>
 
       {selected !== null && (
-        <div style={{ marginTop: "16px", padding: "16px", background: selected === q.correct ? "#e8f5e9" : "#fff3e0", borderRadius: "10px", border: `1px solid ${selected === q.correct ? "#a5d6a7" : "#ffcc80"}` }}>
-          <p style={{ fontSize: "13px", color: "#333", margin: 0, lineHeight: 1.5 }}>
-            <strong>{selected === q.correct ? "✔ Correct!" : "✘ Helaas."}</strong> {q.explanation}
-          </p>
-          <div style={{ display: "flex", gap: "8px", marginTop: "12px" }}>
+        <div style={{ marginTop: "16px", borderRadius: "10px", overflow: "hidden", border: `1px solid ${selected === q.correct ? "#a5d6a7" : "#ffcc80"}` }}>
+          <div style={{ padding: "12px 16px", background: selected === q.correct ? "#e8f5e9" : "#fce4ec" }}>
+            <p style={{ fontSize: "14px", color: selected === q.correct ? "#2e7d32" : "#c62828", margin: 0, fontWeight: 700 }}>
+              {selected === q.correct ? "✔ Correct!" : "✘ Helaas."}
+            </p>
+            {selected !== q.correct && (
+              <p style={{ fontSize: "13px", color: "#555", margin: "6px 0 0", lineHeight: 1.5 }}>
+                Het juiste antwoord is: <strong>{q.options[q.correct]}</strong>
+              </p>
+            )}
+          </div>
+          <div style={{ padding: "12px 16px", background: "#f8f8fc" }}>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Waarom?</div>
+            <p style={{ fontSize: "13px", color: "#333", margin: 0, lineHeight: 1.6 }}>{q.explanation}</p>
+          </div>
+          <div style={{ display: "flex", gap: "8px", padding: "12px 16px", background: "#fff" }}>
             {current > 0 && (
               <button onClick={prevQ} style={{ padding: "10px 24px", background: "#fff", color: "#1a1a2e", border: "2px solid #e0e0e8", borderRadius: "6px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>
                 ← Vorige
@@ -1116,6 +2228,9 @@ function Quiz({ progress, setProgress }) {
 function ExamQuestions({ progress, setProgress }) {
   const [openIdx, setOpenIdx] = useState(null);
   const [filter, setFilter] = useState(0);
+  const [alleenLastig, setAlleenLastig] = useState(false);
+  const [ownAnswers, setOwnAnswers] = useState({});
+  const [showModel, setShowModel] = useState({});
 
   const examTracker = progress.examTracker || {};
 
@@ -1130,7 +2245,8 @@ function ExamQuestions({ progress, setProgress }) {
     });
   };
 
-  const questions = filter === 0 ? EXAM_QUESTIONS : EXAM_QUESTIONS.filter(q => q.kwestie === filter);
+  let questions = filter === 0 ? EXAM_QUESTIONS : EXAM_QUESTIONS.filter(q => q.kwestie === filter);
+  if (alleenLastig) questions = questions.filter(q => examTracker[getKey(q)] === "lastig");
 
   const totalDone = Object.values(examTracker).filter(v => v === "goed" || v === "lastig").length;
   const totalGoed = Object.values(examTracker).filter(v => v === "goed").length;
@@ -1156,7 +2272,7 @@ function ExamQuestions({ progress, setProgress }) {
         </div>
       )}
 
-      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "16px" }}>
+      <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "8px" }}>
         {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
           <button key={f.id} onClick={() => { setFilter(f.id); setOpenIdx(null); }} style={{
             padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
@@ -1165,6 +2281,21 @@ function ExamQuestions({ progress, setProgress }) {
           }}>{f.label}</button>
         ))}
       </div>
+
+      {totalLastig > 0 && (
+        <div style={{ marginBottom: "16px" }}>
+          <button onClick={() => { setAlleenLastig(!alleenLastig); setOpenIdx(null); }} style={{
+            padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, cursor: "pointer",
+            border: alleenLastig ? "2px solid #ef5350" : "1px solid #e0e0e8",
+            background: alleenLastig ? "#fce4ec" : "#fff",
+            color: alleenLastig ? "#c62828" : "#555",
+          }}>✗ Alleen lastige ({totalLastig})</button>
+        </div>
+      )}
+
+      {alleenLastig && questions.length === 0 && (
+        <p style={{ textAlign: "center", color: "#888", fontSize: "13px", padding: "20px 0" }}>Geen lastige vragen in deze selectie. Goed bezig!</p>
+      )}
 
       {questions.map((eq, i) => {
         const key = getKey(eq);
@@ -1193,19 +2324,54 @@ function ExamQuestions({ progress, setProgress }) {
                 <span style={{ fontSize: "11px", color: "#888" }}>{eq.points}p</span>
                 <KwestieTag kwestie={eq.kwestie} small />
                 <span style={{ fontSize: "10px", color: "#aaa" }}>{eq.et}</span>
+                <LiaBadge text={eq.question} kwestie={eq.kwestie} />
               </div>
               <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{eq.question}</p>
             </div>
             <span style={{ fontSize: "18px", color: "#ccc", flexShrink: 0, transform: openIdx === i ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>{"▾"}</span>
           </button>
 
-          {/* Model answer */}
+          {/* Generatief oefenen + Model answer */}
           {openIdx === i && (
             <div style={{ padding: "0 16px 16px", borderTop: "1px solid #f0f0f5" }}>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: "#2D8E5A", textTransform: "uppercase", letterSpacing: "0.5px", margin: "12px 0 8px" }}>Modelantwoord</div>
-              <div style={{ fontSize: "13px", color: "#333", lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif", whiteSpace: "pre-wrap" }}>
-                {eq.model}
+              {/* Schrijf je antwoord */}
+              <div style={{ margin: "12px 0 8px" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, color: "#4A90D9", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Schrijf je antwoord ({eq.points}p)</div>
+                <textarea
+                  value={ownAnswers[key] || ""}
+                  onChange={e => setOwnAnswers(prev => ({ ...prev, [key]: e.target.value }))}
+                  placeholder="Formuleer hier je antwoord voordat je het modelantwoord bekijkt..."
+                  style={{
+                    width: "100%", minHeight: "100px", padding: "10px 12px", borderRadius: "8px",
+                    border: "1px solid #ddd", fontSize: "13px", fontFamily: "'Source Sans 3', sans-serif",
+                    lineHeight: 1.5, resize: "vertical", boxSizing: "border-box",
+                  }}
+                />
               </div>
+
+              {/* Toon modelantwoord button / model */}
+              {!showModel[key] ? (
+                <button onClick={() => setShowModel(prev => ({ ...prev, [key]: true }))} style={{
+                  display: "block", width: "100%", padding: "10px", borderRadius: "8px", cursor: "pointer",
+                  border: "1px solid #2D8E5A", background: "#e8f5e9", color: "#2e7d32",
+                  fontSize: "13px", fontWeight: 600, marginTop: "4px",
+                }}>Toon modelantwoord</button>
+              ) : (
+                <div style={{ marginTop: "8px", padding: "12px", background: "#f0faf0", borderRadius: "8px", border: "1px solid #c8e6c9" }}>
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#2D8E5A", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>Modelantwoord</div>
+                  <div style={{ fontSize: "13px", color: "#333", lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif", whiteSpace: "pre-wrap" }}>
+                    {eq.model}
+                  </div>
+                  {(ownAnswers[key] || "").trim().length > 0 && (
+                    <div style={{ marginTop: "10px", padding: "8px 10px", background: "#fff8e1", borderRadius: "6px", border: "1px solid #ffe082" }}>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#f57f17", marginBottom: "4px" }}>Vergelijk</div>
+                      <p style={{ fontSize: "12px", color: "#555", margin: 0, lineHeight: 1.5 }}>
+                        Kijk of je dezelfde kernpunten hebt benoemd. Let op: elk punt uit het model = 1 scorepunt. Mis je een punt? Markeer de vraag als "lastig" en herhaal later.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
@@ -1248,6 +2414,7 @@ function FilosofenView() {
           <KwestieTag kwestie={f.kwestie} small />
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "26px", margin: "12px 0 4px" }}>{f.name}</h2>
           <div style={{ fontSize: "11px", opacity: 0.8 }}>{f.et}</div>
+          {f.lia && <div style={{ fontSize: "11px", opacity: 0.9, marginTop: "4px", background: "rgba(255,255,255,0.2)", display: "inline-block", padding: "2px 8px", borderRadius: "4px" }}>{f.lia}</div>}
         </div>
         <div style={{ padding: "16px", background: "#f8f8fc", borderRadius: "10px", marginBottom: "16px" }}>
           <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 8px", color: "#1a1a2e" }}>Kernpositie</h3>
@@ -1294,6 +2461,7 @@ function FilosofenView() {
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{f.name}</div>
                 <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.et} · {f.begrippen.slice(0, 3).join(", ")}</div>
+                {f.lia && <div style={{ fontSize: "10px", color: "#7A2D8E", marginTop: "2px" }}>{f.lia}</div>}
               </div>
               <KwestieTag kwestie={f.kwestie} small />
             </button>
@@ -1340,9 +2508,12 @@ function KwestieDetail({ id }) {
       ))}
 
       <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "20px 0 8px" }}>{"👤"} Filosofen ({filosofen.length})</h3>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
         {filosofen.map(f => (
-          <span key={f.name} style={{ background: `${k.color}15`, color: k.color, padding: "6px 12px", borderRadius: "6px", fontSize: "13px", fontWeight: 600 }}>{f.name}</span>
+          <div key={f.name} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <span style={{ background: `${k.color}15`, color: k.color, padding: "6px 12px", borderRadius: "6px", fontSize: "13px", fontWeight: 600 }}>{f.name}</span>
+            {f.lia && <span style={{ fontSize: "10px", color: "#888" }}>{f.lia}</span>}
+          </div>
         ))}
       </div>
 
@@ -1563,9 +2734,15 @@ function EindtermenView() {
             <span style={{ background: k.color, color: "#fff", width: "24px", height: "24px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "12px" }}>{k.id}</span>
             <span style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e" }}>{k.title}</span>
           </div>
-          {(SPECIFIEKE_EINDTERMEN[k.id] || []).map(et => (
+          {(SPECIFIEKE_EINDTERMEN[k.id] || []).map(et => {
+            const etLiaMap = { 5: "Lia 1, H1 (p. 5–9)", 6: "Lia 1, H2 (p. 12–15)", 7: "Lia 1, H3 (p. 19–21)", 8: "Lia 1, H4 (p. 25–26)", 9: "Lia 1, H4 (p. 26–27)", 10: "Lia 1, H5 (p. 31–33)", 11: "Lia 1, H6 (p. 36–39)", 12: "Lia 1, H7 (p. 43–45)", 13: "Lia 2, H8–H11", 14: "Lia 2, H8 (p. 2–6)", 15: "Lia 2, H9 (p. 7–12)", 16: "Lia 2, H10 (p. 13–18)", 17: "Lia 2, H11 (p. 19–23)", 18: "Lia 2, H12–H14", 19: "Lia 2, H12 (p. 24–30)", 20: "Lia 2, H12 (p. 28–30)", 21: "Lia 2, H13 (p. 32–37)", 22: "Lia 2, H14 (p. 40–41)", 23: "Lia 2, H14 (p. 41–43)" };
+            const etLia = etLiaMap[et.nr];
+            return (
             <div key={et.nr} style={{ marginBottom: "6px", padding: "12px", background: "#f8f8fc", borderRadius: "8px", border: `1px solid ${k.color}22`, borderLeft: `3px solid ${k.color}` }}>
-              <div style={{ fontSize: "11px", fontWeight: 700, color: k.color }}>ET {et.nr}</div>
+              <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: k.color }}>ET {et.nr}</span>
+                {etLia && <span style={{ fontSize: "10px", fontWeight: 600, color: k.id <= 2 ? "#2D5A8E" : "#7A2D8E", background: k.id <= 2 ? "#2D5A8E15" : "#7A2D8E15", padding: "2px 6px", borderRadius: "4px" }}>{etLia}</span>}
+              </div>
               <p style={{ fontSize: "13px", color: "#333", margin: "4px 0 0", lineHeight: 1.4 }}>{et.text}</p>
               <button onClick={() => toggleUitwerking(`k${k.id}-${et.nr}`)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: k.color, padding: "6px 0 0", fontWeight: 600 }}>
                 {openUitwerking[`k${k.id}-${et.nr}`] ? "Verberg uitwerking \u25B2" : "Toon uitwerking \u25BC"}
@@ -1576,7 +2753,7 @@ function EindtermenView() {
                 </div>
               )}
             </div>
-          ))}
+          ); })}
         </div>
       ))}
     </div>
@@ -1768,9 +2945,10 @@ function PrimaireTexten({ progress, setProgress }) {
               onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
               onMouseOut={e => e.currentTarget.style.boxShadow = ""}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "6px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px", flexWrap: "wrap" }}>
                   <KwestieTag kwestie={pt.kwestie} small />
                   <span style={{ fontSize: "10px", color: "#aaa" }}>{pt.et}</span>
+                  <LiaBadge text={pt.filosoof} kwestie={pt.kwestie} />
                   {status && <span style={{ fontSize: "10px", fontWeight: 600, color: status === "begrepen" ? "#4caf50" : "#ef5350" }}>{status === "begrepen" ? "✔ begrepen" : "✗ lastig"}</span>}
                 </div>
                 <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Playfair Display', Georgia, serif" }}>{pt.filosoof}</div>
@@ -1812,6 +2990,7 @@ function PrimaireTexten({ progress, setProgress }) {
         <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", margin: "12px 0 4px", lineHeight: 1.2 }}>{pt.filosoof}</h2>
         <div style={{ fontSize: "13px", opacity: 0.8 }}>{pt.titel}</div>
         <div style={{ fontSize: "11px", opacity: 0.6, marginTop: "4px" }}>{pt.et}</div>
+        <div style={{ fontSize: "11px", opacity: 0.9, marginTop: "4px", background: "rgba(255,255,255,0.2)", display: "inline-block", padding: "2px 8px", borderRadius: "4px" }}>{getLiaRef(pt.filosoof, pt.kwestie)}</div>
       </div>
 
       <div style={{ padding: "14px 16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0", marginBottom: "20px" }}>
@@ -1914,6 +3093,70 @@ export default function App() {
     }
   }, [progress, loaded]);
 
+  // Automatic time tracking with Page Visibility API
+  useEffect(() => {
+    if (!loaded) return;
+    let startTime = document.visibilityState === "visible" ? Date.now() : null;
+    let accumulated = 0;
+
+    const flush = () => {
+      if (accumulated < 30) return; // minimum 30 seconds
+      const minutes = Math.round(accumulated / 60);
+      if (minutes <= 0) return;
+      const today = new Date().toISOString().split("T")[0];
+      setProgress(prev => {
+        const log = [...(prev.tijdLog || [])];
+        const idx = log.findIndex(e => e.date === today);
+        if (idx >= 0) {
+          log[idx] = { ...log[idx], appMinutes: (log[idx].appMinutes || 0) + minutes };
+        } else {
+          log.push({ date: today, appMinutes: minutes, manualEntries: [] });
+        }
+        return { ...prev, tijdLog: log, lastActiveDate: today };
+      });
+      accumulated = 0;
+    };
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        startTime = Date.now();
+      } else if (startTime) {
+        accumulated += (Date.now() - startTime) / 1000;
+        startTime = null;
+        flush();
+      }
+    };
+
+    const interval = setInterval(() => {
+      if (startTime) {
+        accumulated += (Date.now() - startTime) / 1000;
+        startTime = Date.now();
+      }
+      flush();
+    }, 60000);
+
+    const onBeforeUnload = () => {
+      if (startTime) {
+        accumulated += (Date.now() - startTime) / 1000;
+        startTime = null;
+      }
+      flush();
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("beforeunload", onBeforeUnload);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      clearInterval(interval);
+      if (startTime) {
+        accumulated += (Date.now() - startTime) / 1000;
+      }
+      flush();
+    };
+  }, [loaded, setProgress]);
+
   const viewTitles = {
     home: "Studieapp",
     flashcards: "Flashcards",
@@ -1923,6 +3166,8 @@ export default function App() {
     filosofen: "Filosofen",
     eindtermen: "Eindtermen",
     begripsanalyse: "Begripsanalyse",
+    studiepad: "Studiepad",
+    voortgang: "Voortgang",
   };
 
   const isKwestie = view.startsWith("kwestie-");
@@ -1939,6 +3184,8 @@ export default function App() {
       case "filosofen": return <FilosofenView />;
       case "eindtermen": return <EindtermenView />;
       case "begripsanalyse": return <BegripsanalyseView />;
+      case "studiepad": return <StudiepadView progress={progress} setProgress={setProgress} setView={setView} />;
+      case "voortgang": return <VoortgangView progress={progress} setProgress={setProgress} />;
       default: return <Home setView={setView} progress={progress} />;
     }
   };
@@ -1974,9 +3221,9 @@ export default function App() {
           { icon: "🏠", label: "Home", v: "home" },
           { icon: "🎴", label: "Cards", v: "flashcards" },
           { icon: "❓", label: "Quiz", v: "quiz" },
-          { icon: "🔍", label: "Examen", v: "exam" },
+          { icon: "📅", label: "Studiepad", v: "studiepad" },
           { icon: "📖", label: "Teksten", v: "teksten" },
-          { icon: "👤", label: "Denkers", v: "filosofen" },
+          { icon: "📊", label: "Voortgang", v: "voortgang" },
         ].map(nav => (
           <button key={nav.v} onClick={() => setView(nav.v)} style={{
             background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", padding: "4px 8px",
