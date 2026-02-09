@@ -672,6 +672,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 14,
+    filosoof: "Hayles",
+    titel: "Ongedacht. De kracht van het cognitief onbewuste (2017)",
+    kwestie: 4,
+    et: "ET 20",
+    inleiding: "Katherine Hayles (1943) onderzoekt het handelingsvermogen van niet-levende entiteiten via het begrip 'cognitieve assemblages': complexe systemen waarin menselijke en niet-menselijke cognitie samenwerken. Ze analyseert autonome drones als voorbeeld van technische systemen die steeds meer beslissingsmacht krijgen.",
+    fragmenten: [
+      {
+        label: "Autonome drones en technische cognitie",
+        tekst: "Cognitieve technologie\u00ebn ontwikkelen zich duidelijk in de richting van meer handelingsvermogen en meer autonomie. Soms komt dat omdat ze iets doen wat buiten het bereik van het menselijk mogelijke valt, zoals hoogfrequente handelsalgoritmes die binnen vijf milliseconden iets kopen of verkopen. Misschien zijn de meest controversi\u00eble voorbeelden van technische autonomie wel de autonome drones en robots met de capaciteit om te doden die nu in ontwikkeling zijn.",
+      },
+      {
+        label: "De zwerm: 'overtuigingen', 'wensen' en 'intenties'",
+        tekst: "Software in ontwikkeling stelt een zwerm in staat om zijn afzonderlijke eenheden te co\u00f6rdineren als een of meer voertuigen een aanval moeten uitvoeren. Het model gebruikt een veilingstrategie waarbij elke eenheid reageert op een biedingsverzoek door zijn 'overtuigingen', 'wensen' en 'intenties' te bepalen. De antropomorfe taal is niet zomaar een toevalligheid, want het laat zien dat met het toenemen van de cognitieve capaciteiten van de zwerm, ook zijn vermogen om beslissingen te nemen toeneemt, iets wat traditioneel voorbehouden was aan mensen.",
+      },
+      {
+        label: "Menselijke emotie versus technische cognitie",
+        tekst: "Menselijke en technische cognities interacteren, maar hun cognitieve capaciteiten onderscheiden zich desondanks duidelijk van elkaar. Aan de technische kant zitten berekeningsintensiteit en snelle dataverwerking; aan de menselijke kant emotie, een omvattende wereldhorizon en empathische vermogens om anderen te begrijpen.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg uit wat Hayles bedoelt met 'cognitieve assemblages' en waarom zij stelt dat de mens desondanks verantwoordelijkheid behoudt.",
+        antwoord: "Cognitieve assemblages zijn complexe systemen waarin menselijke en niet-menselijke cognitie samenwerken. Hayles stelt dat cognitie niet per definitie gepaard hoeft te gaan met bewustzijn: ook niet-bewuste wezens (machines, algoritmen) kunnen denken, en denkprocessen worden gedistribueerd over menselijke en niet-menselijke denkers.\n\nToch behoudt de mens verantwoordelijkheid, niet omdat we machines niet kunnen ontwerpen om morele beslissingen te maken, maar omdat machines de kwetsbaarheid missen die mensen wel hebben. We zijn niet meer de enige entiteiten die kunnen handelen, maar wel de enige die verantwoordelijkheid kunnen (en moeten) nemen \u2014 ook voor het handelen van technische maaksels dat buiten onze controle valt.",
+      },
+      {
+        vraag: "Vergelijk Hayles' cognitieve assemblages met Clarks 'natural-born cyborgs' en Latours actor-netwerktheorie.",
+        antwoord: "Alle drie beschrijven een verstrengeling van mens en technologie, maar met verschillende accenten:\n\n1. Clark (natural-born cyborgs): de mens is van nature een wezen dat technologie opneemt in zijn cognitie. De nadruk ligt op hoe techniek een extensie wordt van onze geest (vergelijk de extended mind thesis).\n\n2. Latour (ANT): mens en ding zijn gelijkwaardige actoren in een netwerk. Handelen is verdeeld over het netwerk. De nadruk ligt op symmetrie tussen menselijke en niet-menselijke actoren.\n\n3. Hayles (cognitieve assemblages): denkprocessen zijn gedistribueerd over mens en machine. De nadruk ligt op niet-bewuste cognitie van machines en op het verschil in soort cognitie: technische cognitie (snel, berekenend) versus menselijke cognitie (emotioneel, empathisch).\n\nHet verschil met Clark en Latour is dat Hayles een ethische conclusie trekt: ondanks de distributie van cognitie behoudt de mens een unieke morele verantwoordelijkheid vanwege haar kwetsbaarheid.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
