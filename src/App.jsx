@@ -1187,11 +1187,35 @@ function generateDagdoelen(progress) {
 // COMPONENTS
 // ============================================================
 
+function useToast() {
+  const [toast, setToast] = useState(null);
+  const show = useCallback((message) => {
+    setToast(message);
+    setTimeout(() => setToast(null), 2200);
+  }, []);
+  return { toast, show };
+}
+
+function Toast({ message }) {
+  if (!message) return null;
+  return (
+    <div style={{
+      position: "fixed", bottom: "80px", left: "50%", transform: "translateX(-50%)",
+      background: "#1a1a2e", color: "#fff", padding: "10px 20px", borderRadius: "8px",
+      fontSize: "13px", fontWeight: 600, zIndex: 200, boxShadow: "0 4px 16px rgba(0,0,0,0.15)",
+      animation: "fadeInUp 0.3s ease",
+      maxWidth: "320px", textAlign: "center",
+    }}>
+      {message}
+    </div>
+  );
+}
+
 function LiaBadge({ text, kwestie }) {
   const ref = text ? getLiaRef(text, kwestie) : getLiaRef(null, kwestie);
   if (!ref) return null;
   return (
-    <span style={{ display: "inline-block", padding: "2px 6px", borderRadius: "4px", fontSize: "10px", fontWeight: 600, background: ref.startsWith("Lia 1") ? "#2D5A8E15" : "#7A2D8E15", color: ref.startsWith("Lia 1") ? "#2D5A8E" : "#7A2D8E", letterSpacing: "0.3px", whiteSpace: "nowrap" }}>
+    <span style={{ display: "inline-block", padding: "2px 6px", borderRadius: "4px", fontSize: "11px", fontWeight: 600, background: ref.startsWith("Lia 1") ? "#2D5A8E30" : "#7A2D8E30", color: ref.startsWith("Lia 1") ? "#2D5A8E" : "#7A2D8E", letterSpacing: "0.3px", whiteSpace: "nowrap" }}>
       {ref}
     </span>
   );
@@ -1200,19 +1224,19 @@ function LiaBadge({ text, kwestie }) {
 function KwestieTag({ kwestie, small }) {
   if (kwestie === 0) {
     return (
-      <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: small ? "10px" : "11px", fontWeight: 700, background: "#90909020", color: "#666", letterSpacing: "0.5px" }}>ALG</span>
+      <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: "11px", fontWeight: 700, background: "#90909030", color: "#666", letterSpacing: "0.5px" }}>ALG</span>
     );
   }
   const d = DOMEINEN.find(d => d.id === kwestie);
   if (d) {
     return (
-      <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: small ? "10px" : "11px", fontWeight: 700, background: `${d.color}20`, color: d.color, letterSpacing: "0.5px" }}>{d.id}</span>
+      <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: "11px", fontWeight: 700, background: `${d.color}30`, color: d.color, letterSpacing: "0.5px" }}>{d.id}</span>
     );
   }
   const k = KWESTIES.find(k => k.id === kwestie);
   if (!k) return null;
   return (
-    <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: small ? "10px" : "11px", fontWeight: 700, background: `${k.color}20`, color: k.color, letterSpacing: "0.5px" }}>K{k.id}</span>
+    <span style={{ display: "inline-block", padding: small ? "2px 6px" : "3px 8px", borderRadius: "4px", fontSize: "11px", fontWeight: 700, background: `${k.color}30`, color: k.color, letterSpacing: "0.5px" }}>K{k.id}</span>
   );
 }
 
@@ -1220,6 +1244,7 @@ function KwestieTag({ kwestie, small }) {
 function VoortgangView({ progress, setProgress }) {
   const [manualMinutes, setManualMinutes] = useState(15);
   const [manualLabel, setManualLabel] = useState("");
+  const { toast, show: showToast } = useToast();
 
   const countdown = getExamCountdown();
   const overall = computeOverallProgress(progress);
@@ -1256,6 +1281,7 @@ function VoortgangView({ progress, setProgress }) {
     });
     setManualMinutes(15);
     setManualLabel("");
+    showToast(`${manualMinutes} min toegevoegd`);
   };
 
   const ringSize = 120;
@@ -1272,15 +1298,15 @@ function VoortgangView({ progress, setProgress }) {
     <div style={{ padding: "0 20px 40px" }}>
       {/* Examencountdown ring */}
       <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
-        <svg width={ringSize} height={ringSize} style={{ transform: "rotate(-90deg)" }}>
+        <svg width={ringSize} height={ringSize} style={{ transform: "rotate(-90deg)" }} role="img" aria-label={`${countdown.days} dagen tot examen`}>
           <circle cx={ringSize / 2} cy={ringSize / 2} r={ringRadius} fill="none" stroke="#f0f0f5" strokeWidth={ringStroke} />
           <circle cx={ringSize / 2} cy={ringSize / 2} r={ringRadius} fill="none" stroke="#4A90D9" strokeWidth={ringStroke}
             strokeDasharray={ringCircumference} strokeDashoffset={ringCircumference * (1 - countdown.fraction)} strokeLinecap="round" />
         </svg>
         <div style={{ marginTop: "-80px", marginBottom: "40px", fontFamily: "'Source Sans 3', sans-serif" }}>
           <div style={{ fontSize: "28px", fontWeight: 700, color: "#1a1a2e" }}>{countdown.days}</div>
-          <div style={{ fontSize: "12px", color: "#888" }}>dagen tot examen</div>
-          <div style={{ fontSize: "11px", color: "#aaa" }}>+ {countdown.hours} uur</div>
+          <div style={{ fontSize: "12px", color: "#666" }}>dagen tot examen</div>
+          <div style={{ fontSize: "11px", color: "#666" }}>+ {countdown.hours} uur</div>
         </div>
       </div>
 
@@ -1330,34 +1356,61 @@ function VoortgangView({ progress, setProgress }) {
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
         <div style={{ background: "#fff5f0", borderRadius: "12px", padding: "16px", border: "1px solid #e8e8f0", textAlign: "center" }}>
           <div style={{ fontSize: "28px", fontWeight: 700, color: "#D97A4A" }}>{streak.current}</div>
-          <div style={{ fontSize: "12px", color: "#888" }}>dagen streak</div>
+          <div style={{ fontSize: "12px", color: "#666" }}>dagen streak</div>
         </div>
         <div style={{ background: "#f0f4ff", borderRadius: "12px", padding: "16px", border: "1px solid #e8e8f0", textAlign: "center" }}>
           <div style={{ fontSize: "28px", fontWeight: 700, color: "#4A90D9" }}>{streak.longest}</div>
-          <div style={{ fontSize: "12px", color: "#888" }}>langste streak</div>
+          <div style={{ fontSize: "12px", color: "#666" }}>langste streak</div>
         </div>
       </div>
 
       {/* Kalender heatmap */}
       <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
         <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "12px" }}>Studiekalender</div>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(10, 1fr)", gap: "3px" }}>
-          {dateRange.map(d => {
-            const t = timeByDate[d] || 0;
-            const opacity = t > 0 ? Math.max(0.2, Math.min(1, t / maxTime)) : 0;
-            const isToday = d === today;
-            return (
-              <div key={d} title={`${d}: ${t} min`} style={{
-                aspectRatio: "1", borderRadius: "3px",
-                background: t > 0 ? `rgba(74, 144, 217, ${opacity})` : "#e8e8f0",
-                border: isToday ? "2px solid #1a1a2e" : "none",
-                minWidth: 0,
-              }} />
-            );
-          })}
+        <div style={{ display: "grid", gridTemplateColumns: "auto repeat(7, 1fr)", gap: "3px", alignItems: "center" }}>
+          {["", "Ma", "Di", "Wo", "Do", "Vr", "Za", "Zo"].map(d => (
+            <div key={d} style={{ fontSize: "11px", color: "#666", fontWeight: 600, textAlign: "center", padding: "2px 0" }}>{d}</div>
+          ))}
+          {(() => {
+            const firstDate = new Date(dateRange[0]);
+            const dayOfWeek = firstDate.getDay() === 0 ? 6 : firstDate.getDay() - 1;
+            const paddedDates = [...Array(dayOfWeek).fill(null), ...dateRange];
+            const cells = [];
+            for (let i = 0; i < paddedDates.length; i++) {
+              if (i % 7 === 0) {
+                const weekDate = paddedDates[i] || paddedDates[i + 1];
+                const label = weekDate ? `${new Date(weekDate).getDate()}/${new Date(weekDate).getMonth() + 1}` : "";
+                cells.push(<div key={`wk-${i}`} style={{ fontSize: "9px", color: "#666", textAlign: "right", paddingRight: "4px" }}>{label}</div>);
+              }
+              const d = paddedDates[i];
+              if (!d) {
+                cells.push(<div key={`empty-${i}`} />);
+              } else {
+                const t = timeByDate[d] || 0;
+                const opacity = t > 0 ? Math.max(0.25, Math.min(1, t / maxTime)) : 0;
+                const isToday = d === today;
+                cells.push(
+                  <div key={d} title={`${d}: ${t} min`} style={{
+                    aspectRatio: "1", borderRadius: "3px",
+                    background: t > 0 ? `rgba(74, 144, 217, ${opacity})` : "#e8e8f0",
+                    border: isToday ? "2px solid #1a1a2e" : "none",
+                    minWidth: 0,
+                  }} />
+                );
+              }
+            }
+            return cells;
+          })()}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: "#aaa", marginTop: "6px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#666", marginTop: "8px" }}>
           <span>2 mrt</span><span>13 mei</span>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "6px", justifyContent: "flex-end" }}>
+          <span style={{ fontSize: "11px", color: "#666" }}>Minder</span>
+          {[0, 0.25, 0.5, 0.75, 1].map(o => (
+            <div key={o} style={{ width: "12px", height: "12px", borderRadius: "2px", background: o === 0 ? "#e8e8f0" : `rgba(74, 144, 217, ${o})` }} />
+          ))}
+          <span style={{ fontSize: "11px", color: "#666" }}>Meer</span>
         </div>
       </div>
 
@@ -1370,7 +1423,7 @@ function VoortgangView({ progress, setProgress }) {
         {todayEntry && (todayEntry.manualEntries || []).length > 0 && (
           <div style={{ marginTop: "6px" }}>
             {(todayEntry.manualEntries || []).map((e, i) => (
-              <div key={i} style={{ fontSize: "12px", color: "#888" }}>{e.minutes} min — {e.label}</div>
+              <div key={i} style={{ fontSize: "12px", color: "#666" }}>{e.minutes} min — {e.label}</div>
             ))}
           </div>
         )}
@@ -1388,7 +1441,7 @@ function VoortgangView({ progress, setProgress }) {
               <span style={{ fontSize: "16px" }}>{d.icon}</span>
               <div>
                 <div style={{ fontSize: "13px", fontWeight: 600, color: "#333" }}>{d.text}</div>
-                <div style={{ fontSize: "11px", color: "#aaa" }}>{d.detail}</div>
+                <div style={{ fontSize: "11px", color: "#666" }}>{d.detail}</div>
               </div>
             </div>
           ))}
@@ -1414,6 +1467,7 @@ function VoortgangView({ progress, setProgress }) {
           </button>
         </div>
       </div>
+      <Toast message={toast} />
     </div>
   );
 }
@@ -1494,10 +1548,10 @@ function StudiepadView({ progress, setProgress, setView }) {
         <div style={{ padding: "0 20px 40px" }}>
           <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
             <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Eigen pad samenstellen</h2>
-            <p style={{ color: "#888", fontSize: "13px", margin: "8px 0 0" }}>Kies per week welke kwesties en domeinen je wilt behandelen</p>
+            <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>Kies per week welke kwesties en domeinen je wilt behandelen</p>
           </div>
           {customWeken.map((w, wi) => (
-            <div key={wi} style={{ background: "#f8f8fc", borderRadius: "10px", padding: "12px 16px", marginBottom: "8px", border: "1px solid #e8e8f0" }}>
+            <div key={wi} style={{ background: "#f8f8fc", borderRadius: "12px", padding: "12px 16px", marginBottom: "8px", border: "1px solid #e8e8f0" }}>
               <div style={{ fontWeight: 700, fontSize: "13px", color: "#1a1a2e", marginBottom: "8px" }}>Week {w.week}</div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
                 {ALL_FOCUS_IDS.map(fid => (
@@ -1505,8 +1559,8 @@ function StudiepadView({ progress, setProgress, setView }) {
                     style={{
                       padding: "4px 10px", borderRadius: "6px", fontSize: "12px", fontWeight: 600, cursor: "pointer",
                       border: w.focus.includes(fid) ? "2px solid #4A90D9" : "1px solid #ddd",
-                      background: w.focus.includes(fid) ? "#4A90D920" : "#fff",
-                      color: w.focus.includes(fid) ? "#4A90D9" : "#888",
+                      background: w.focus.includes(fid) ? "#4A90D930" : "#fff",
+                      color: w.focus.includes(fid) ? "#4A90D9" : "#777",
                     }}>
                     {fid}
                   </button>
@@ -1516,11 +1570,11 @@ function StudiepadView({ progress, setProgress, setView }) {
           ))}
           <div style={{ display: "flex", gap: "8px", marginTop: "16px" }}>
             <button onClick={() => setShowCustom(false)}
-              style={{ flex: 1, padding: "12px", borderRadius: "10px", border: "1px solid #ddd", background: "#fff", fontSize: "14px", fontWeight: 600, cursor: "pointer", color: "#666" }}>
+              style={{ flex: 1, padding: "12px", borderRadius: "12px", border: "1px solid #ddd", background: "#fff", fontSize: "14px", fontWeight: 600, cursor: "pointer", color: "#666" }}>
               Terug
             </button>
             <button onClick={activateCustom}
-              style={{ flex: 1, padding: "12px", borderRadius: "10px", border: "none", background: "#4A90D9", color: "#fff", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>
+              style={{ flex: 1, padding: "12px", borderRadius: "12px", border: "none", background: "#4A90D9", color: "#fff", fontSize: "14px", fontWeight: 700, cursor: "pointer" }}>
               Activeer pad
             </button>
           </div>
@@ -1532,7 +1586,7 @@ function StudiepadView({ progress, setProgress, setView }) {
       <div style={{ padding: "0 20px 40px" }}>
         <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Kies je studiepad</h2>
-          <p style={{ color: "#888", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — hoe wil je studeren?</p>
+          <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — hoe wil je studeren?</p>
         </div>
         {STUDIEPAD_PRESETS.map(preset => (
           <button key={preset.id} onClick={() => activatePreset(preset.id)}
@@ -1546,7 +1600,7 @@ function StudiepadView({ progress, setProgress, setView }) {
           >
             <div style={{ fontSize: "28px", marginBottom: "8px" }}>{preset.icoon}</div>
             <div style={{ fontWeight: 700, fontSize: "16px", color: "#1a1a2e", marginBottom: "4px" }}>{preset.naam}</div>
-            <div style={{ fontSize: "13px", color: "#888", lineHeight: 1.4 }}>{preset.beschrijving}</div>
+            <div style={{ fontSize: "13px", color: "#666", lineHeight: 1.4 }}>{preset.beschrijving}</div>
           </button>
         ))}
         <button onClick={() => setShowCustom(true)}
@@ -1560,7 +1614,7 @@ function StudiepadView({ progress, setProgress, setView }) {
         >
           <div style={{ fontSize: "28px", marginBottom: "8px" }}>{"✏️"}</div>
           <div style={{ fontWeight: 700, fontSize: "16px", color: "#1a1a2e" }}>Eigen pad samenstellen</div>
-          <div style={{ fontSize: "13px", color: "#888", marginTop: "4px" }}>Kies zelf per week wat je wilt behandelen</div>
+          <div style={{ fontSize: "13px", color: "#666", marginTop: "4px" }}>Kies zelf per week wat je wilt behandelen</div>
         </button>
       </div>
     );
@@ -1590,7 +1644,7 @@ function StudiepadView({ progress, setProgress, setView }) {
             );
           })}
         </div>
-        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: "#aaa" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", color: "#666" }}>
           <span>Week 1</span><span>Week 10</span>
         </div>
       </div>
@@ -1629,17 +1683,17 @@ function StudiepadView({ progress, setProgress, setView }) {
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                   <span style={{
-                    background: isCurrent ? "#4A90D9" : "#ddd", color: isCurrent ? "#fff" : "#888",
+                    background: isCurrent ? "#4A90D9" : "#ddd", color: isCurrent ? "#fff" : "#777",
                     width: "24px", height: "24px", borderRadius: "50%", display: "flex", alignItems: "center",
                     justifyContent: "center", fontWeight: 700, fontSize: "12px", flexShrink: 0,
                   }}>{w.week}</span>
                   <span style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e" }}>{w.label}</span>
-                  {isCurrent && <span style={{ fontSize: "10px", fontWeight: 700, color: "#4A90D9", background: "#4A90D920", padding: "2px 6px", borderRadius: "4px" }}>NU</span>}
+                  {isCurrent && <span style={{ fontSize: "11px", fontWeight: 700, color: "#4A90D9", background: "#4A90D930", padding: "2px 6px", borderRadius: "4px" }}>NU</span>}
                 </div>
               </div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ fontSize: "12px", fontWeight: 600, color: weekPct >= 100 ? "#4AD97A" : "#888" }}>{weekPct}%</span>
-                <span style={{ fontSize: "14px", color: "#888", transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>{"▼"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 600, color: weekPct >= 100 ? "#4AD97A" : "#777" }}>{weekPct}%</span>
+                <span style={{ fontSize: "14px", color: "#666", transform: isExpanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>{"▼"}</span>
               </div>
             </button>
 
@@ -1700,7 +1754,7 @@ function StudiepadView({ progress, setProgress, setView }) {
         </div>
       ) : (
         <button onClick={() => setShowConfirm(true)}
-          style={{ display: "block", width: "100%", padding: "12px", borderRadius: "10px", border: "1px solid #ddd", background: "#fff", fontSize: "13px", color: "#888", cursor: "pointer", marginTop: "16px", textAlign: "center" }}>
+          style={{ display: "block", width: "100%", padding: "12px", borderRadius: "12px", border: "1px solid #ddd", background: "#fff", fontSize: "13px", color: "#666", cursor: "pointer", marginTop: "16px", textAlign: "center" }}>
           Ander pad kiezen
         </button>
       )}
@@ -1788,7 +1842,7 @@ function Home({ setView, progress }) {
             <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: i < dagdoelen.doelen.length - 1 ? "6px" : 0 }}>
               <span style={{ fontSize: "14px" }}>{d.icon}</span>
               <span style={{ fontSize: "13px", color: "#333" }}>{d.text}</span>
-              <span style={{ fontSize: "10px", color: "#aaa", marginLeft: "auto" }}>{d.detail}</span>
+              <span style={{ fontSize: "11px", color: "#666", marginLeft: "auto" }}>{d.detail}</span>
             </div>
           ))}
         </div>
@@ -1811,9 +1865,9 @@ function Home({ setView, progress }) {
           onMouseOver={e => { e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.08)"; }}
           onMouseOut={e => { e.currentTarget.style.transform = ""; e.currentTarget.style.boxShadow = ""; }}
           >
-            <div style={{ fontSize: "28px", marginBottom: "8px" }}>{item.icon}</div>
+            <div aria-hidden="true" style={{ fontSize: "28px", marginBottom: "8px" }}>{item.icon}</div>
             <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{item.label}</div>
-            <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{item.sub}</div>
+            <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>{item.sub}</div>
           </button>
         ))}
       </div>
@@ -1834,13 +1888,13 @@ function Home({ setView, progress }) {
             <span style={{ background: k.color, color: "#fff", width: "28px", height: "28px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "14px", flexShrink: 0 }}>{k.id}</span>
             <div>
               <div style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{k.title}</div>
-              <div style={{ fontSize: "11px", color: "#888", marginTop: "2px" }}>{k.chapters} · {k.eindtermen}</div>
+              <div style={{ fontSize: "11px", color: "#666", marginTop: "2px" }}>{k.chapters} · {k.eindtermen}</div>
             </div>
           </div>
         </button>
       ))}
 
-      <div style={{ marginTop: "24px", padding: "16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0" }}>
+      <div style={{ marginTop: "24px", padding: "16px", background: "#f8f8fc", borderRadius: "12px", border: "1px solid #e8e8f0" }}>
         <h3 style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px", fontFamily: "'Source Sans 3', sans-serif" }}>📊 Studietip</h3>
         <p style={{ fontSize: "12px", color: "#666", margin: 0, lineHeight: 1.5 }}>
           90% gaat over de syllabus, waarin de bijbehorende eindtermen centraal staan. Focus daar in eerste instantie op. 10% gaat over de globale eindtermen over antropologie, ethiek, kennistheorie en wetenschapsfilosofie.
@@ -1920,7 +1974,7 @@ function Flashcards({ progress, setProgress }) {
 
   if (cards.length === 0) return (
     <div style={{ padding: "40px 20px", textAlign: "center" }}>
-      <p style={{ color: "#888" }}>{mode === "herhalen" ? "Geen kaarten te herhalen! Alles is bijgewerkt." : "Geen kaarten voor deze selectie."}</p>
+      <p style={{ color: "#666" }}>{mode === "herhalen" ? "Geen kaarten te herhalen! Alles is bijgewerkt." : "Geen kaarten voor deze selectie."}</p>
       {mode === "herhalen" && <button onClick={() => setMode("alle")} style={{ marginTop: "12px", padding: "10px 24px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600 }}>Alle kaarten</button>}
     </div>
   );
@@ -1943,7 +1997,7 @@ function Flashcards({ progress, setProgress }) {
           const activeColor = f.id === null ? "#1a1a2e" : f.id === 0 ? "#666" : KWESTIES.find(k => k.id === f.id)?.color || DOMEINEN.find(d => d.id === f.id)?.color || "#1a1a2e";
           return (
           <button key={String(f.id)} onClick={() => { setFilter(f.id); setMode("alle"); }} style={{
-            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            padding: "8px 16px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
             background: filter === f.id && mode === "alle" ? activeColor : "#f0f0f5",
             color: filter === f.id && mode === "alle" ? "#fff" : "#666",
           }}>{f.label}</button>
@@ -1958,7 +2012,7 @@ function Flashcards({ progress, setProgress }) {
           { m: "mix", label: "Mix", icon: "🔀", desc: "Alle kwesties door elkaar" },
         ].map(b => (
           <button key={b.m} onClick={() => setMode(mode === b.m ? "alle" : b.m)} style={{
-            padding: "6px 12px", borderRadius: "8px", border: mode === b.m ? "2px solid #1a1a2e" : "1px solid #e0e0e8",
+            padding: "8px 14px", borderRadius: "8px", border: mode === b.m ? "2px solid #1a1a2e" : "1px solid #e0e0e8",
             background: mode === b.m ? "#1a1a2e" : "#fff", color: mode === b.m ? "#fff" : "#555",
             cursor: "pointer", fontSize: "12px", fontWeight: 600, display: "flex", alignItems: "center", gap: "4px",
           }}>{b.icon} {b.label}</button>
@@ -1967,11 +2021,11 @@ function Flashcards({ progress, setProgress }) {
 
       {/* Progress + Leitner box */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-        <span style={{ fontSize: "12px", color: "#888" }}>
+        <span style={{ fontSize: "12px", color: "#666" }}>
           {idx + 1} / {cards.length}{totalPool > cards.length ? ` (van ${totalPool})` : ""}
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
-          <span style={{ fontSize: "10px", color: "#888" }}>Box</span>
+          <span style={{ fontSize: "11px", color: "#666" }}>Box</span>
           {[1,2,3,4,5].map(b => (
             <div key={b} style={{
               width: "14px", height: "14px", borderRadius: "3px",
@@ -1983,8 +2037,9 @@ function Flashcards({ progress, setProgress }) {
       </div>
 
       {/* Card */}
-      <div
+      <button
         onClick={() => setFlipped(!flipped)}
+        aria-label={flipped ? "Toon term" : "Toon definitie"}
         style={{
           background: flipped ? "#fff" : kwestieColor,
           color: flipped ? "#1a1a2e" : "#fff",
@@ -1993,40 +2048,41 @@ function Flashcards({ progress, setProgress }) {
           cursor: "pointer", transition: "all 0.3s ease",
           border: flipped ? `2px solid ${kwestieColor}` : "2px solid transparent",
           boxShadow: "0 4px 20px rgba(0,0,0,0.1)", textAlign: "center",
+          width: "100%", fontFamily: "inherit",
         }}
       >
         {!flipped ? (
           <>
             <div style={{ fontSize: "20px", fontWeight: 700, fontFamily: "'Playfair Display', Georgia, serif", lineHeight: 1.3 }}>{card.term}</div>
             <div style={{ marginTop: "12px" }}><LiaBadge text={card.term} kwestie={card.kwestie} /></div>
-            <div style={{ fontSize: "11px", marginTop: "8px", opacity: 0.7 }}>Tik om te draaien</div>
+            <div style={{ fontSize: "12px", marginTop: "8px", opacity: 0.7 }}>Tik om te draaien</div>
           </>
         ) : (
           <>
-            <div style={{ fontSize: "11px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "1px", opacity: 0.5, marginBottom: "12px" }}>Definitie</div>
+            <div style={{ fontSize: "12px", fontWeight: 600, textTransform: "uppercase", letterSpacing: "1px", opacity: 0.5, marginBottom: "12px" }}>Definitie</div>
             <div style={{ fontSize: "15px", lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif" }}>{card.def}</div>
             <div style={{ marginTop: "12px" }}><LiaBadge text={card.term} kwestie={card.kwestie} /></div>
           </>
         )}
-      </div>
+      </button>
 
       {/* Rating buttons (shown when flipped) */}
       {flipped ? (
         <div style={{ display: "flex", justifyContent: "center", gap: "12px", marginTop: "20px" }}>
-          <button onClick={prev} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
+          <button onClick={prev} aria-label="Vorige kaart" style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
           <button onClick={() => handleRating("lastig")} style={{
-            flex: 1, maxWidth: "140px", padding: "12px 16px", borderRadius: "10px", border: "2px solid #ef5350",
+            flex: 1, maxWidth: "140px", padding: "12px 16px", borderRadius: "12px", border: "2px solid #ef5350",
             background: "#fce4ec", cursor: "pointer", fontSize: "14px", fontWeight: 700, color: "#c62828",
           }}>Lastig</button>
           <button onClick={() => handleRating("goed")} style={{
-            flex: 1, maxWidth: "140px", padding: "12px 16px", borderRadius: "10px", border: "2px solid #4caf50",
+            flex: 1, maxWidth: "140px", padding: "12px 16px", borderRadius: "12px", border: "2px solid #4caf50",
             background: "#e8f5e9", cursor: "pointer", fontSize: "14px", fontWeight: 700, color: "#2e7d32",
           }}>Goed</button>
         </div>
       ) : (
         <div style={{ display: "flex", justifyContent: "center", gap: "16px", marginTop: "20px" }}>
-          <button onClick={prev} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
-          <button onClick={() => { setFlipped(false); setIdx(i => (i + 1) % cards.length); }} style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"→"}</button>
+          <button onClick={prev} aria-label="Vorige kaart" style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
+          <button onClick={() => { setFlipped(false); setIdx(i => (i + 1) % cards.length); }} aria-label="Volgende kaart" style={{ width: "48px", height: "48px", borderRadius: "50%", border: "2px solid #e0e0e8", background: "#fff", cursor: "pointer", fontSize: "18px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"→"}</button>
         </div>
       )}
 
@@ -2041,7 +2097,7 @@ function Flashcards({ progress, setProgress }) {
 
       {/* Session complete */}
       {idx + 1 >= cards.length && totalPool <= cards.length && (
-        <p style={{ textAlign: "center", fontSize: "12px", color: "#888", marginTop: "16px" }}>
+        <p style={{ textAlign: "center", fontSize: "12px", color: "#666", marginTop: "16px" }}>
           {mode === "herhalen" ? "Alle herhalingskaarten gedaan!" : "Einde van de set."} Beoordeel met Goed/Lastig om spaced repetition te activeren.
         </p>
       )}
@@ -2050,7 +2106,7 @@ function Flashcards({ progress, setProgress }) {
 }
 
 // --- QUIZ ---
-function Quiz({ progress, setProgress }) {
+function Quiz({ progress, setProgress, setView }) {
   const [filter, setFilter] = useState(0);
   const [mixMode, setMixMode] = useState(false);
   const [current, setCurrent] = useState(0);
@@ -2101,24 +2157,109 @@ function Quiz({ progress, setProgress }) {
     }
   };
 
-  if (questions.length === 0) return <p style={{ padding: "40px 20px", textAlign: "center", color: "#888" }}>Geen vragen voor deze selectie.</p>;
+  if (questions.length === 0) return <p style={{ padding: "40px 20px", textAlign: "center", color: "#666" }}>Geen vragen voor deze selectie.</p>;
 
   if (finished) {
     const pct = Math.round(score / questions.length * 100);
+    const wrongQuestions = questions.filter((q, i) => answers[i] !== q.correct);
+    const prevScores = (progress.quizScores || []).filter(s => s.kwestie === filter).slice(-5);
+    const prevBest = prevScores.length > 1 ? Math.max(...prevScores.slice(0, -1).map(s => s.pct)) : null;
+
+    // Group wrong answers by kwestie
+    const wrongByKwestie = {};
+    wrongQuestions.forEach(q => {
+      const k = typeof q.kwestie === "number" ? `K${q.kwestie}` : q.kwestie;
+      if (!wrongByKwestie[k]) wrongByKwestie[k] = [];
+      wrongByKwestie[k].push(q);
+    });
+
     return (
-      <div style={{ padding: "40px 20px", textAlign: "center" }}>
-        <div style={{ fontSize: "48px", marginBottom: "16px" }}>{pct >= 70 ? "🎉" : pct >= 50 ? "💪" : "📚"}</div>
-        <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "24px", color: "#1a1a2e" }}>
-          {score} / {questions.length} correct ({pct}%)
-        </h2>
-        <p style={{ color: "#888", fontSize: "14px", marginTop: "8px" }}>
-          {pct >= 70 ? "Uitstekend! Je beheerst de stof goed." : pct >= 50 ? "Goed op weg! Bestudeer de begrippen die je miste." : "Blijf oefenen — herhaal de flashcards per kwestie."}
-        </p>
-        <div style={{ display: "flex", gap: "8px", justifyContent: "center", marginTop: "24px" }}>
-          <button onClick={restart} style={{ padding: "12px 32px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: 600 }}>
+      <div style={{ padding: "20px 20px 40px" }}>
+        {/* Score header */}
+        <div style={{ textAlign: "center", marginBottom: "24px" }}>
+          <div aria-hidden="true" style={{ fontSize: "48px", marginBottom: "12px" }}>{pct >= 70 ? "🎉" : pct >= 50 ? "💪" : "📚"}</div>
+          <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "24px", color: "#1a1a2e", margin: "0 0 4px" }}>
+            {score} / {questions.length} correct ({pct}%)
+          </h2>
+          <p style={{ color: "#666", fontSize: "14px", margin: 0 }}>
+            {pct >= 70 ? "Uitstekend! Je beheerst de stof goed." : pct >= 50 ? "Goed op weg! Bestudeer de begrippen die je miste." : "Blijf oefenen — herhaal de flashcards per kwestie."}
+          </p>
+          {prevBest !== null && (
+            <p style={{ fontSize: "13px", color: pct > prevBest ? "#2e7d32" : "#666", marginTop: "8px", fontWeight: 600 }}>
+              {pct > prevBest ? `▲ Verbetering! Vorige beste: ${prevBest}%` : pct === prevBest ? `Gelijk aan je beste: ${prevBest}%` : `Vorige beste: ${prevBest}%`}
+            </p>
+          )}
+        </div>
+
+        {/* Score history mini chart */}
+        {prevScores.length > 1 && (
+          <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "10px" }}>Laatste pogingen</div>
+            <div style={{ display: "flex", alignItems: "flex-end", gap: "6px", height: "60px" }}>
+              {prevScores.map((s, i) => (
+                <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "4px" }}>
+                  <span style={{ fontSize: "11px", fontWeight: 600, color: i === prevScores.length - 1 ? "#4A90D9" : "#666" }}>{s.pct}%</span>
+                  <div style={{
+                    width: "100%", borderRadius: "4px 4px 0 0",
+                    height: `${Math.max(8, s.pct * 0.5)}px`,
+                    background: i === prevScores.length - 1 ? "#4A90D9" : "#e0e0e8",
+                    transition: "height 0.3s",
+                  }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Wrong answers breakdown */}
+        {wrongQuestions.length > 0 && (
+          <div style={{ background: "#fff", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "10px" }}>Fout beantwoord ({wrongQuestions.length})</div>
+            {Object.entries(wrongByKwestie).map(([k, qs]) => (
+              <div key={k} style={{ marginBottom: "10px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px" }}>
+                  <KwestieTag kwestie={k.startsWith("K") ? parseInt(k[1]) : k} small />
+                  <span style={{ fontSize: "12px", color: "#666" }}>{qs.length} fout</span>
+                </div>
+                {qs.map((q, i) => (
+                  <div key={i} style={{ fontSize: "13px", color: "#666", padding: "4px 0 4px 20px", borderLeft: "2px solid #ef535040", marginBottom: "4px", lineHeight: 1.4 }}>
+                    {q.q.length > 80 ? q.q.substring(0, 80) + "..." : q.q}
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Action buttons */}
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginBottom: "12px" }}>
+          <button onClick={restart} style={{ flex: 1, padding: "12px 16px", background: "#1a1a2e", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", fontSize: "14px", fontWeight: 600 }}>
             Opnieuw ({SESSION_SIZE} vragen)
           </button>
         </div>
+
+        {/* Follow-up actions */}
+        {wrongQuestions.length > 0 && setView && (
+          <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "14px 16px", border: "1px solid #e8e8f0" }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "8px" }}>Vervolgstappen</div>
+            {Object.keys(wrongByKwestie).map(k => (
+              <button key={k} onClick={() => setView("flashcards")} style={{
+                display: "block", width: "100%", padding: "10px 12px", marginBottom: "6px",
+                background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px",
+                cursor: "pointer", fontSize: "13px", color: "#1a1a2e", textAlign: "left",
+              }}>
+                <span aria-hidden="true">🎴</span> Flashcards herhalen voor <strong>{k}</strong> ({wrongByKwestie[k].length} fout)
+              </button>
+            ))}
+            <button onClick={() => setView("exam")} style={{
+              display: "block", width: "100%", padding: "10px 12px",
+              background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px",
+              cursor: "pointer", fontSize: "13px", color: "#1a1a2e", textAlign: "left",
+            }}>
+              <span aria-hidden="true">🔍</span> Oefen met examenvragen
+            </button>
+          </div>
+        )}
       </div>
     );
   }
@@ -2136,7 +2277,7 @@ function Quiz({ progress, setProgress }) {
           const activeColor = f.id === 0 ? "#1a1a2e" : KWESTIES.find(k => k.id === f.id)?.color || DOMEINEN.find(d => d.id === f.id)?.color || "#1a1a2e";
           return (
           <button key={String(f.id)} onClick={() => { setFilter(f.id); setMixMode(false); }} style={{
-            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            padding: "8px 16px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
             background: filter === f.id && !mixMode ? activeColor : "#f0f0f5",
             color: filter === f.id && !mixMode ? "#fff" : "#666",
           }}>{f.label}</button>
@@ -2147,14 +2288,14 @@ function Quiz({ progress, setProgress }) {
       {/* Mix mode */}
       <div style={{ marginBottom: "12px" }}>
         <button onClick={() => setMixMode(!mixMode)} style={{
-          padding: "6px 12px", borderRadius: "8px", border: mixMode ? "2px solid #1a1a2e" : "1px solid #e0e0e8",
+          padding: "8px 14px", borderRadius: "8px", border: mixMode ? "2px solid #1a1a2e" : "1px solid #e0e0e8",
           background: mixMode ? "#1a1a2e" : "#fff", color: mixMode ? "#fff" : "#555",
           cursor: "pointer", fontSize: "12px", fontWeight: 600,
         }}>🔀 Mix (alle kwesties door elkaar)</button>
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-        <span style={{ fontSize: "12px", color: "#888" }}>Vraag {current + 1}/{questions.length}{totalPool > questions.length ? ` (van ${totalPool})` : ""}</span>
+        <span style={{ fontSize: "12px", color: "#666" }}>Vraag {current + 1}/{questions.length}{totalPool > questions.length ? ` (van ${totalPool})` : ""}</span>
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
           <LiaBadge text={q.q} kwestie={q.kwestie} />
           <KwestieTag kwestie={q.kwestie} small />
@@ -2174,7 +2315,7 @@ function Quiz({ progress, setProgress }) {
           }
           return (
             <button key={i} onClick={() => handleAnswer(i)} style={{
-              padding: "14px 16px", background: bg, border: `2px solid ${border}`, borderRadius: "10px",
+              padding: "14px 16px", background: bg, border: `2px solid ${border}`, borderRadius: "12px",
               cursor: selected !== null ? "default" : "pointer", textAlign: "left", fontSize: "14px", color,
               fontFamily: "'Source Sans 3', sans-serif", transition: "all 0.2s",
               fontWeight: selected !== null && i === q.correct ? 600 : 400,
@@ -2187,13 +2328,13 @@ function Quiz({ progress, setProgress }) {
       </div>
 
       {selected !== null && (
-        <div style={{ marginTop: "16px", borderRadius: "10px", overflow: "hidden", border: `1px solid ${selected === q.correct ? "#a5d6a7" : "#ffcc80"}` }}>
+        <div style={{ marginTop: "16px", borderRadius: "12px", overflow: "hidden", border: `1px solid ${selected === q.correct ? "#a5d6a7" : "#ffcc80"}` }}>
           <div style={{ padding: "12px 16px", background: selected === q.correct ? "#e8f5e9" : "#fce4ec" }}>
             <p style={{ fontSize: "14px", color: selected === q.correct ? "#2e7d32" : "#c62828", margin: 0, fontWeight: 700 }}>
               {selected === q.correct ? "✔ Correct!" : "✘ Helaas."}
             </p>
             {selected !== q.correct && (
-              <p style={{ fontSize: "13px", color: "#555", margin: "6px 0 0", lineHeight: 1.5 }}>
+              <p style={{ fontSize: "13px", color: "#666", margin: "6px 0 0", lineHeight: 1.5 }}>
                 Het juiste antwoord is: <strong>{q.options[q.correct]}</strong>
               </p>
             )}
@@ -2231,6 +2372,7 @@ function ExamQuestions({ progress, setProgress }) {
   const [alleenLastig, setAlleenLastig] = useState(false);
   const [ownAnswers, setOwnAnswers] = useState({});
   const [showModel, setShowModel] = useState({});
+  const { toast, show: showToast } = useToast();
 
   const examTracker = progress.examTracker || {};
 
@@ -2238,11 +2380,14 @@ function ExamQuestions({ progress, setProgress }) {
 
   const setStatus = (eq, status) => {
     const key = getKey(eq);
+    const current = examTracker[key];
+    const newStatus = current === status ? null : status;
     setProgress(prev => {
       const tracker = { ...(prev.examTracker || {}) };
-      tracker[key] = tracker[key] === status ? null : status;
+      tracker[key] = newStatus;
       return { ...prev, examTracker: tracker };
     });
+    if (newStatus) showToast(newStatus === "goed" ? "Gemarkeerd als goed" : "Gemarkeerd als lastig");
   };
 
   let questions = filter === 0 ? EXAM_QUESTIONS : EXAM_QUESTIONS.filter(q => q.kwestie === filter);
@@ -2254,13 +2399,13 @@ function ExamQuestions({ progress, setProgress }) {
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
-      <p style={{ fontSize: "13px", color: "#888", margin: "16px 0" }}>
+      <p style={{ fontSize: "13px", color: "#666", margin: "16px 0" }}>
         Echte examenvragen uit 2024 en 2025 met correctiemodel. Oefen met het formuleren van antwoorden!
       </p>
 
       {totalDone > 0 && (
-        <div style={{ display: "flex", gap: "10px", marginBottom: "16px", padding: "12px 16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0" }}>
-          <div style={{ fontSize: "12px", color: "#888" }}>
+        <div style={{ display: "flex", gap: "10px", marginBottom: "16px", padding: "12px 16px", background: "#f8f8fc", borderRadius: "12px", border: "1px solid #e8e8f0" }}>
+          <div style={{ fontSize: "12px", color: "#666" }}>
             <strong style={{ color: "#1a1a2e" }}>{totalDone}/{EXAM_QUESTIONS.length}</strong> gedaan
           </div>
           <div style={{ fontSize: "12px", color: "#4caf50" }}>
@@ -2275,7 +2420,7 @@ function ExamQuestions({ progress, setProgress }) {
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", marginBottom: "8px" }}>
         {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
           <button key={f.id} onClick={() => { setFilter(f.id); setOpenIdx(null); }} style={{
-            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            padding: "8px 16px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
             background: filter === f.id ? "#1a1a2e" : "#f0f0f5",
             color: filter === f.id ? "#fff" : "#666",
           }}>{f.label}</button>
@@ -2285,7 +2430,7 @@ function ExamQuestions({ progress, setProgress }) {
       {totalLastig > 0 && (
         <div style={{ marginBottom: "16px" }}>
           <button onClick={() => { setAlleenLastig(!alleenLastig); setOpenIdx(null); }} style={{
-            padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, cursor: "pointer",
+            padding: "8px 14px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, cursor: "pointer",
             border: alleenLastig ? "2px solid #ef5350" : "1px solid #e0e0e8",
             background: alleenLastig ? "#fce4ec" : "#fff",
             color: alleenLastig ? "#c62828" : "#555",
@@ -2294,7 +2439,7 @@ function ExamQuestions({ progress, setProgress }) {
       )}
 
       {alleenLastig && questions.length === 0 && (
-        <p style={{ textAlign: "center", color: "#888", fontSize: "13px", padding: "20px 0" }}>Geen lastige vragen in deze selectie. Goed bezig!</p>
+        <p style={{ textAlign: "center", color: "#666", fontSize: "13px", padding: "20px 0" }}>Geen lastige vragen in deze selectie. Goed bezig!</p>
       )}
 
       {questions.map((eq, i) => {
@@ -2303,12 +2448,12 @@ function ExamQuestions({ progress, setProgress }) {
         const borderLeft = status === "goed" ? "4px solid #4caf50" : status === "lastig" ? "4px solid #ef5350" : "4px solid transparent";
 
         return (
-        <div key={i} style={{ marginBottom: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden", borderLeft }}>
+        <div key={i} style={{ marginBottom: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden", borderLeft }}>
           {/* Casus context - always visible */}
           {eq.context && (
             <div style={{ padding: "12px 16px", background: "#f0f0ff", borderBottom: "1px solid #e0e0f0" }}>
-              <div style={{ fontSize: "10px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Casus</div>
-              <p style={{ fontSize: "12px", color: "#555", margin: 0, lineHeight: 1.5, fontStyle: "italic" }}>{eq.context}</p>
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>Casus</div>
+              <p style={{ fontSize: "12px", color: "#666", margin: 0, lineHeight: 1.5, fontStyle: "italic" }}>{eq.context}</p>
             </div>
           )}
 
@@ -2319,16 +2464,16 @@ function ExamQuestions({ progress, setProgress }) {
           }}>
             <div style={{ flex: 1 }}>
               <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "6px", flexWrap: "wrap" }}>
-                <span style={{ fontSize: "11px", fontWeight: 700, color: "#888", background: "#f0f0f5", padding: "2px 8px", borderRadius: "4px" }}>{eq.year}</span>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: "#666", background: "#f0f0f5", padding: "2px 8px", borderRadius: "4px" }}>{eq.year}</span>
                 <span style={{ fontSize: "11px", fontWeight: 600, color: "#1a1a2e" }}>Vr. {eq.nr}</span>
-                <span style={{ fontSize: "11px", color: "#888" }}>{eq.points}p</span>
+                <span style={{ fontSize: "11px", color: "#666" }}>{eq.points}p</span>
                 <KwestieTag kwestie={eq.kwestie} small />
-                <span style={{ fontSize: "10px", color: "#aaa" }}>{eq.et}</span>
+                <span style={{ fontSize: "11px", color: "#666" }}>{eq.et}</span>
                 <LiaBadge text={eq.question} kwestie={eq.kwestie} />
               </div>
               <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{eq.question}</p>
             </div>
-            <span style={{ fontSize: "18px", color: "#ccc", flexShrink: 0, transform: openIdx === i ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>{"▾"}</span>
+            <span style={{ fontSize: "18px", color: "#999", flexShrink: 0, transform: openIdx === i ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>{"▾"}</span>
           </button>
 
           {/* Generatief oefenen + Model answer */}
@@ -2365,7 +2510,7 @@ function ExamQuestions({ progress, setProgress }) {
                   {(ownAnswers[key] || "").trim().length > 0 && (
                     <div style={{ marginTop: "10px", padding: "8px 10px", background: "#fff8e1", borderRadius: "6px", border: "1px solid #ffe082" }}>
                       <div style={{ fontSize: "11px", fontWeight: 700, color: "#f57f17", marginBottom: "4px" }}>Vergelijk</div>
-                      <p style={{ fontSize: "12px", color: "#555", margin: 0, lineHeight: 1.5 }}>
+                      <p style={{ fontSize: "12px", color: "#666", margin: 0, lineHeight: 1.5 }}>
                         Kijk of je dezelfde kernpunten hebt benoemd. Let op: elk punt uit het model = 1 scorepunt. Mis je een punt? Markeer de vraag als "lastig" en herhaal later.
                       </p>
                     </div>
@@ -2381,18 +2526,19 @@ function ExamQuestions({ progress, setProgress }) {
               flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
               border: status === "goed" ? "2px solid #4caf50" : "1px solid #e0e0e8",
               background: status === "goed" ? "#e8f5e9" : "#fff",
-              color: status === "goed" ? "#2e7d32" : "#888",
+              color: status === "goed" ? "#2e7d32" : "#777",
             }}>✔ Goed</button>
             <button onClick={() => setStatus(eq, "lastig")} style={{
               flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
               border: status === "lastig" ? "2px solid #ef5350" : "1px solid #e0e0e8",
               background: status === "lastig" ? "#fce4ec" : "#fff",
-              color: status === "lastig" ? "#c62828" : "#888",
+              color: status === "lastig" ? "#c62828" : "#777",
             }}>✗ Lastig</button>
           </div>
         </div>
         );
       })}
+      <Toast message={toast} />
     </div>
   );
 }
@@ -2409,18 +2555,18 @@ function FilosofenView() {
     const k = KWESTIES.find(k => k.id === f.kwestie);
     return (
       <div style={{ padding: "0 20px 40px" }}>
-        <button onClick={() => setSelected(null)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "14px", color: "#888", padding: "16px 0", fontFamily: "'Source Sans 3', sans-serif" }}>{"←"} Terug</button>
+        <button onClick={() => setSelected(null)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "14px", color: "#666", padding: "16px 0", fontFamily: "'Source Sans 3', sans-serif" }}>{"←"} Terug</button>
         <div style={{ background: k?.color || "#1a1a2e", color: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "20px" }}>
           <KwestieTag kwestie={f.kwestie} small />
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "26px", margin: "12px 0 4px" }}>{f.name}</h2>
           <div style={{ fontSize: "11px", opacity: 0.8 }}>{f.et}</div>
           {f.lia && <div style={{ fontSize: "11px", opacity: 0.9, marginTop: "4px", background: "rgba(255,255,255,0.2)", display: "inline-block", padding: "2px 8px", borderRadius: "4px" }}>{f.lia}</div>}
         </div>
-        <div style={{ padding: "16px", background: "#f8f8fc", borderRadius: "10px", marginBottom: "16px" }}>
+        <div style={{ padding: "16px", background: "#f8f8fc", borderRadius: "12px", marginBottom: "16px" }}>
           <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 8px", color: "#1a1a2e" }}>Kernpositie</h3>
           <p style={{ fontSize: "14px", color: "#333", lineHeight: 1.6, margin: 0, fontFamily: "'Source Sans 3', sans-serif" }}>{f.kern}</p>
         </div>
-        <div style={{ padding: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px" }}>
+        <div style={{ padding: "16px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px" }}>
           <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 10px", color: "#1a1a2e" }}>Kernbegrippen</h3>
           <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
             {f.begrippen.map(b => (
@@ -2437,7 +2583,7 @@ function FilosofenView() {
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
         {[{ id: 0, label: "Alle" }, ...KWESTIES.map(k => ({ id: k.id, label: `K${k.id}` }))].map(f => (
           <button key={f.id} onClick={() => setFilter(f.id)} style={{
-            padding: "6px 14px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
+            padding: "8px 16px", borderRadius: "20px", border: "none", cursor: "pointer", fontSize: "12px", fontWeight: 600,
             background: filter === f.id ? "#1a1a2e" : "#f0f0f5",
             color: filter === f.id ? "#fff" : "#666",
           }}>{f.label}</button>
@@ -2449,7 +2595,7 @@ function FilosofenView() {
           return (
             <button key={f.name} onClick={() => setSelected(f)} style={{
               display: "flex", alignItems: "center", gap: "12px", padding: "14px 16px",
-              background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px",
+              background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px",
               cursor: "pointer", textAlign: "left", transition: "box-shadow 0.2s",
             }}
             onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
@@ -2460,8 +2606,8 @@ function FilosofenView() {
               </div>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{f.name}</div>
-                <div style={{ fontSize: "11px", color: "#888", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.et} · {f.begrippen.slice(0, 3).join(", ")}</div>
-                {f.lia && <div style={{ fontSize: "10px", color: "#7A2D8E", marginTop: "2px" }}>{f.lia}</div>}
+                <div style={{ fontSize: "11px", color: "#666", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.et} · {f.begrippen.slice(0, 3).join(", ")}</div>
+                {f.lia && <div style={{ fontSize: "11px", color: "#7A2D8E", marginTop: "2px" }}>{f.lia}</div>}
               </div>
               <KwestieTag kwestie={f.kwestie} small />
             </button>
@@ -2473,7 +2619,7 @@ function FilosofenView() {
 }
 
 // --- KWESTIE DETAIL ---
-function KwestieDetail({ id }) {
+function KwestieDetail({ id, setView }) {
   const k = KWESTIES.find(k => k.id === id);
   const filosofen = FILOSOFEN.filter(f => f.kwestie === id);
   const begrippen = FLASHCARDS.filter(f => f.kwestie === id);
@@ -2510,27 +2656,27 @@ function KwestieDetail({ id }) {
       <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "20px 0 8px" }}>{"👤"} Filosofen ({filosofen.length})</h3>
       <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
         {filosofen.map(f => (
-          <div key={f.name} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          <button key={f.name} onClick={() => setView && setView("filosofen")} style={{ display: "flex", alignItems: "center", gap: "8px", background: "none", border: "none", cursor: "pointer", padding: "2px 0", textAlign: "left" }}>
             <span style={{ background: `${k.color}15`, color: k.color, padding: "6px 12px", borderRadius: "6px", fontSize: "13px", fontWeight: 600 }}>{f.name}</span>
-            {f.lia && <span style={{ fontSize: "10px", color: "#888" }}>{f.lia}</span>}
-          </div>
+            {f.lia && <span style={{ fontSize: "11px", color: "#666" }}>{f.lia}</span>}
+          </button>
         ))}
       </div>
 
       <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "20px 0 8px" }}>{"🎴"} Begrippen ({begrippen.length})</h3>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+      <button onClick={() => setView && setView("flashcards")} style={{ display: "flex", flexWrap: "wrap", gap: "4px", background: "none", border: "none", cursor: "pointer", padding: 0 }}>
         {begrippen.map(b => (
-          <span key={b.term} style={{ background: "#f0f0f5", color: "#555", padding: "4px 10px", borderRadius: "4px", fontSize: "11px" }}>{b.term}</span>
+          <span key={b.term} style={{ background: "#f0f0f5", color: "#666", padding: "4px 10px", borderRadius: "4px", fontSize: "11px" }}>{b.term}</span>
         ))}
-      </div>
+      </button>
 
       {examQ.length > 0 && (
         <>
           <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "20px 0 8px" }}>{"🔍"} Examenvragen ({examQ.length})</h3>
           {examQ.map((eq, i) => (
-            <div key={i} style={{ marginBottom: "6px", padding: "10px 12px", background: "#fff5f0", borderRadius: "8px", fontSize: "13px", color: "#333" }}>
+            <button key={i} onClick={() => setView && setView("exam")} style={{ display: "block", width: "100%", marginBottom: "6px", padding: "10px 12px", background: "#fff5f0", borderRadius: "8px", fontSize: "13px", color: "#333", border: "none", cursor: "pointer", textAlign: "left" }}>
               <span style={{ fontWeight: 600 }}>{eq.year} vr.{eq.nr}</span> ({eq.points}p) — {eq.question.substring(0, 80)}...
-            </div>
+            </button>
           ))}
         </>
       )}
@@ -2727,7 +2873,7 @@ function EindtermenView() {
       ))}
 
       <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: "28px 0 12px" }}>Specifieke eindtermen per kwestie</h2>
-      <p style={{ fontSize: "12px", color: "#888", marginBottom: "16px" }}>90% van het examen. De syllabus met bijbehorende eindtermen.</p>
+      <p style={{ fontSize: "12px", color: "#666", marginBottom: "16px" }}>90% van het examen. De syllabus met bijbehorende eindtermen.</p>
       {KWESTIES.map(k => (
         <div key={k.id} style={{ marginBottom: "20px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>
@@ -2741,7 +2887,7 @@ function EindtermenView() {
             <div key={et.nr} style={{ marginBottom: "6px", padding: "12px", background: "#f8f8fc", borderRadius: "8px", border: `1px solid ${k.color}22`, borderLeft: `3px solid ${k.color}` }}>
               <div style={{ display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" }}>
                 <span style={{ fontSize: "11px", fontWeight: 700, color: k.color }}>ET {et.nr}</span>
-                {etLia && <span style={{ fontSize: "10px", fontWeight: 600, color: k.id <= 2 ? "#2D5A8E" : "#7A2D8E", background: k.id <= 2 ? "#2D5A8E15" : "#7A2D8E15", padding: "2px 6px", borderRadius: "4px" }}>{etLia}</span>}
+                {etLia && <span style={{ fontSize: "11px", fontWeight: 600, color: k.id <= 2 ? "#2D5A8E" : "#7A2D8E", background: k.id <= 2 ? "#2D5A8E30" : "#7A2D8E30", padding: "2px 6px", borderRadius: "4px" }}>{etLia}</span>}
               </div>
               <p style={{ fontSize: "13px", color: "#333", margin: "4px 0 0", lineHeight: 1.4 }}>{et.text}</p>
               <button onClick={() => toggleUitwerking(`k${k.id}-${et.nr}`)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: k.color, padding: "6px 0 0", fontWeight: 600 }}>
@@ -2792,7 +2938,7 @@ function BegripsanalyseView() {
       </div>
 
       <div style={{
-        padding: "14px 16px", background: "#f8f8fc", borderRadius: "10px",
+        padding: "14px 16px", background: "#f8f8fc", borderRadius: "12px",
         border: `1px solid ${tabColors[selectedBegrip]}22`, marginBottom: "16px",
       }}>
         <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: 0 }}>{begrip.intro}</p>
@@ -2807,7 +2953,7 @@ function BegripsanalyseView() {
         const imKey = `${selectedBegrip}-${i}-im`;
         return (
           <div key={i} style={{
-            padding: "14px 16px", background: "#fff", borderRadius: "10px",
+            padding: "14px 16px", background: "#fff", borderRadius: "12px",
             border: `1px solid ${tabColors[selectedBegrip]}22`,
             borderLeft: `3px solid ${tabColors[selectedBegrip]}`,
             marginBottom: "10px", boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
@@ -2870,7 +3016,7 @@ function BegripsanalyseView() {
 
       <div style={{
         marginTop: "20px", padding: "16px", background: "#f0f4ff",
-        borderRadius: "10px", border: "1px solid #d0d8f0",
+        borderRadius: "12px", border: "1px solid #d0d8f0",
       }}>
         <h4 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "15px", color: "#1a1a2e", margin: "0 0 8px" }}>
           Vergelijking
@@ -2888,15 +3034,19 @@ function PrimaireTexten({ progress, setProgress }) {
   const [selectedTekst, setSelectedTekst] = useState(null);
   const [openFragments, setOpenFragments] = useState({});
   const [openVragen, setOpenVragen] = useState({});
+  const { toast, show: showToast } = useToast();
 
   const tekstTracker = progress.tekstTracker || {};
 
   const setTekstStatus = (id, status) => {
+    const current = tekstTracker[id];
+    const newStatus = current === status ? null : status;
     setProgress(prev => {
       const tracker = { ...(prev.tekstTracker || {}) };
-      tracker[id] = tracker[id] === status ? null : status;
+      tracker[id] = newStatus;
       return { ...prev, tekstTracker: tracker };
     });
+    if (newStatus) showToast(newStatus === "begrepen" ? "Gemarkeerd als begrepen" : "Gemarkeerd als lastig");
   };
 
   const toggleFragment = (idx) => {
@@ -2914,13 +3064,13 @@ function PrimaireTexten({ progress, setProgress }) {
   if (selectedTekst === null) {
     return (
       <div style={{ padding: "0 20px 40px" }}>
-        <p style={{ fontSize: "13px", color: "#888", margin: "16px 0" }}>
+        <p style={{ fontSize: "13px", color: "#666", margin: "16px 0" }}>
           Originele tekstfragmenten uit de syllabus met oefenvragen en modelantwoorden.
         </p>
 
         {totalDone > 0 && (
-          <div style={{ display: "flex", gap: "10px", marginBottom: "16px", padding: "12px 16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0" }}>
-            <div style={{ fontSize: "12px", color: "#888" }}>
+          <div style={{ display: "flex", gap: "10px", marginBottom: "16px", padding: "12px 16px", background: "#f8f8fc", borderRadius: "12px", border: "1px solid #e8e8f0" }}>
+            <div style={{ fontSize: "12px", color: "#666" }}>
               <strong style={{ color: "#1a1a2e" }}>{totalDone}/{PRIMAIRE_TEKSTEN.length}</strong> beoordeeld
             </div>
             <div style={{ fontSize: "12px", color: "#4caf50" }}>
@@ -2938,7 +3088,7 @@ function PrimaireTexten({ progress, setProgress }) {
           const borderColor = status === "begrepen" ? "#4caf50" : status === "lastig" ? "#ef5350" : (k?.color || "#1a1a2e");
           return (
             <div key={pt.id} style={{ marginBottom: "10px", background: "#fff", border: "1px solid #e8e8f0", borderLeft: `4px solid ${borderColor}`, borderRadius: "8px", overflow: "hidden" }}>
-              <button onClick={() => { setSelectedTekst(pt.id); setOpenFragments({}); setOpenVragen({}); }} style={{
+              <button onClick={() => { setSelectedTekst(pt.id); setOpenFragments({ 0: true }); setOpenVragen({}); }} style={{
                 display: "block", width: "100%", background: "transparent", border: "none", padding: "16px",
                 cursor: "pointer", textAlign: "left", transition: "box-shadow 0.2s",
               }}
@@ -2947,31 +3097,32 @@ function PrimaireTexten({ progress, setProgress }) {
               >
                 <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "6px", flexWrap: "wrap" }}>
                   <KwestieTag kwestie={pt.kwestie} small />
-                  <span style={{ fontSize: "10px", color: "#aaa" }}>{pt.et}</span>
+                  <span style={{ fontSize: "11px", color: "#666" }}>{pt.et}</span>
                   <LiaBadge text={pt.filosoof} kwestie={pt.kwestie} />
-                  {status && <span style={{ fontSize: "10px", fontWeight: 600, color: status === "begrepen" ? "#4caf50" : "#ef5350" }}>{status === "begrepen" ? "✔ begrepen" : "✗ lastig"}</span>}
+                  {status && <span style={{ fontSize: "11px", fontWeight: 600, color: status === "begrepen" ? "#4caf50" : "#ef5350" }}>{status === "begrepen" ? "✔ begrepen" : "✗ lastig"}</span>}
                 </div>
                 <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Playfair Display', Georgia, serif" }}>{pt.filosoof}</div>
-                <div style={{ fontSize: "12px", color: "#888", marginTop: "4px" }}>{pt.titel}</div>
-                <div style={{ fontSize: "11px", color: "#aaa", marginTop: "6px" }}>{pt.fragmenten.length} fragmenten · {pt.vragen.length} vragen</div>
+                <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>{pt.titel}</div>
+                <div style={{ fontSize: "11px", color: "#666", marginTop: "6px" }}>{pt.fragmenten.length} fragmenten · {pt.vragen.length} vragen</div>
               </button>
               <div style={{ display: "flex", gap: "8px", padding: "10px 16px", borderTop: "1px solid #f0f0f5", background: "#fafafe" }}>
                 <button onClick={() => setTekstStatus(pt.id, "begrepen")} style={{
                   flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
                   border: status === "begrepen" ? "2px solid #4caf50" : "1px solid #e0e0e8",
                   background: status === "begrepen" ? "#e8f5e9" : "#fff",
-                  color: status === "begrepen" ? "#2e7d32" : "#888",
+                  color: status === "begrepen" ? "#2e7d32" : "#777",
                 }}>✔ Begrepen</button>
                 <button onClick={() => setTekstStatus(pt.id, "lastig")} style={{
                   flex: 1, padding: "8px", borderRadius: "6px", cursor: "pointer", fontSize: "12px", fontWeight: 600,
                   border: status === "lastig" ? "2px solid #ef5350" : "1px solid #e0e0e8",
                   background: status === "lastig" ? "#fce4ec" : "#fff",
-                  color: status === "lastig" ? "#c62828" : "#888",
+                  color: status === "lastig" ? "#c62828" : "#777",
                 }}>✗ Lastig</button>
               </div>
             </div>
           );
         })}
+        <Toast message={toast} />
       </div>
     );
   }
@@ -2983,7 +3134,7 @@ function PrimaireTexten({ progress, setProgress }) {
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
-      <button onClick={() => setSelectedTekst(null)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "14px", color: "#888", padding: "16px 0", fontFamily: "'Source Sans 3', sans-serif" }}>{"←"} Terug naar overzicht</button>
+      <button onClick={() => setSelectedTekst(null)} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "14px", color: "#666", padding: "16px 0", fontFamily: "'Source Sans 3', sans-serif" }}>{"←"} Terug naar overzicht</button>
 
       <div style={{ background: k?.color || "#1a1a2e", color: "#fff", borderRadius: "16px", padding: "24px", marginBottom: "20px" }}>
         <KwestieTag kwestie={pt.kwestie} small />
@@ -2993,13 +3144,13 @@ function PrimaireTexten({ progress, setProgress }) {
         <div style={{ fontSize: "11px", opacity: 0.9, marginTop: "4px", background: "rgba(255,255,255,0.2)", display: "inline-block", padding: "2px 8px", borderRadius: "4px" }}>{getLiaRef(pt.filosoof, pt.kwestie)}</div>
       </div>
 
-      <div style={{ padding: "14px 16px", background: "#f8f8fc", borderRadius: "10px", border: "1px solid #e8e8f0", marginBottom: "20px" }}>
-        <p style={{ fontSize: "13px", color: "#555", margin: 0, lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif" }}>{pt.inleiding}</p>
+      <div style={{ padding: "14px 16px", background: "#f8f8fc", borderRadius: "12px", border: "1px solid #e8e8f0", marginBottom: "20px" }}>
+        <p style={{ fontSize: "13px", color: "#666", margin: 0, lineHeight: 1.6, fontFamily: "'Source Sans 3', sans-serif" }}>{pt.inleiding}</p>
       </div>
 
       <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 12px" }}>Tekstfragmenten</h3>
       {pt.fragmenten.map((frag, i) => (
-        <div key={i} style={{ marginBottom: "10px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden" }}>
+        <div key={i} style={{ marginBottom: "10px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden" }}>
           <button onClick={() => toggleFragment(i)} style={{
             width: "100%", padding: "14px 16px", background: "transparent", border: "none", cursor: "pointer",
             textAlign: "left", display: "flex", justifyContent: "space-between", alignItems: "center",
@@ -3007,7 +3158,7 @@ function PrimaireTexten({ progress, setProgress }) {
             <span style={{ fontWeight: 600, fontSize: "13px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>
               {i + 1}. {frag.label}
             </span>
-            <span style={{ fontSize: "16px", color: "#ccc", transform: openFragments[i] ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>{"▾"}</span>
+            <span style={{ fontSize: "16px", color: "#999", transform: openFragments[i] ? "rotate(180deg)" : "", transition: "transform 0.2s" }}>{"▾"}</span>
           </button>
           {openFragments[i] && (
             <div style={{ padding: "0 16px 16px" }}>
@@ -3021,15 +3172,15 @@ function PrimaireTexten({ progress, setProgress }) {
 
       <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "24px 0 12px" }}>Oefenvragen</h3>
       {pt.vragen.map((v, i) => (
-        <div key={i} style={{ marginBottom: "12px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "10px", overflow: "hidden" }}>
+        <div key={i} style={{ marginBottom: "12px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden" }}>
           <div style={{ padding: "16px", background: "#f0f4ff" }}>
-            <div style={{ fontSize: "10px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Vraag {i + 1}</div>
+            <div style={{ fontSize: "11px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Vraag {i + 1}</div>
             <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{v.vraag}</p>
           </div>
           <div style={{ padding: "12px 16px", borderTop: "1px solid #e8e8f0" }}>
             <button onClick={() => toggleVraag(i)} style={{
               width: "100%", padding: "10px 0", background: "transparent", border: "none", cursor: "pointer",
-              textAlign: "left", fontSize: "13px", fontWeight: 600, color: openVragen[i] ? "#2D8E5A" : "#888",
+              textAlign: "left", fontSize: "13px", fontWeight: 600, color: openVragen[i] ? "#2D8E5A" : "#777",
               fontFamily: "'Source Sans 3', sans-serif",
             }}>
               {openVragen[i] ? "▾ Verberg antwoordmodel" : "▸ Toon antwoordmodel"}
@@ -3052,15 +3203,16 @@ function PrimaireTexten({ progress, setProgress }) {
           flex: 1, padding: "12px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600,
           border: detailStatus === "begrepen" ? "2px solid #4caf50" : "1px solid #e0e0e8",
           background: detailStatus === "begrepen" ? "#e8f5e9" : "#fff",
-          color: detailStatus === "begrepen" ? "#2e7d32" : "#888",
+          color: detailStatus === "begrepen" ? "#2e7d32" : "#777",
         }}>✔ Begrepen</button>
         <button onClick={() => setTekstStatus(pt.id, "lastig")} style={{
           flex: 1, padding: "12px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600,
           border: detailStatus === "lastig" ? "2px solid #ef5350" : "1px solid #e0e0e8",
           background: detailStatus === "lastig" ? "#fce4ec" : "#fff",
-          color: detailStatus === "lastig" ? "#c62828" : "#888",
+          color: detailStatus === "lastig" ? "#c62828" : "#777",
         }}>✗ Lastig</button>
       </div>
+      <Toast message={toast} />
     </div>
   );
 }
@@ -3071,8 +3223,24 @@ function PrimaireTexten({ progress, setProgress }) {
 
 export default function App() {
   const [view, setView] = useState("home");
+  const [viewHistory, setViewHistory] = useState([]);
   const [progress, setProgress] = useState({ seenCards: [], quizScores: [] });
   const [loaded, setLoaded] = useState(false);
+
+  const navigateTo = useCallback((newView) => {
+    setViewHistory(prev => [...prev, view]);
+    setView(newView);
+  }, [view]);
+
+  const goBack = useCallback(() => {
+    setViewHistory(prev => {
+      if (prev.length === 0) { setView("home"); return []; }
+      const copy = [...prev];
+      const last = copy.pop();
+      setView(last);
+      return copy;
+    });
+  }, []);
 
   useEffect(() => {
     try {
@@ -3175,43 +3343,55 @@ export default function App() {
   const title = isKwestie ? `Kwestie ${kwestieId}` : (viewTitles[view] || "Studieapp");
 
   const renderView = () => {
-    if (isKwestie) return <KwestieDetail id={kwestieId} />;
+    if (isKwestie) return <KwestieDetail id={kwestieId} setView={navigateTo} />;
     switch (view) {
       case "flashcards": return <Flashcards progress={progress} setProgress={setProgress} />;
-      case "quiz": return <Quiz progress={progress} setProgress={setProgress} />;
+      case "quiz": return <Quiz progress={progress} setProgress={setProgress} setView={navigateTo} />;
       case "exam": return <ExamQuestions progress={progress} setProgress={setProgress} />;
       case "teksten": return <PrimaireTexten progress={progress} setProgress={setProgress} />;
       case "filosofen": return <FilosofenView />;
       case "eindtermen": return <EindtermenView />;
       case "begripsanalyse": return <BegripsanalyseView />;
-      case "studiepad": return <StudiepadView progress={progress} setProgress={setProgress} setView={setView} />;
+      case "studiepad": return <StudiepadView progress={progress} setProgress={setProgress} setView={navigateTo} />;
       case "voortgang": return <VoortgangView progress={progress} setProgress={setProgress} />;
-      default: return <Home setView={setView} progress={progress} />;
+      default: return <Home setView={navigateTo} progress={progress} />;
     }
   };
 
   return (
     <div style={{ maxWidth: "520px", margin: "0 auto", minHeight: "100vh", background: "#fff", fontFamily: "'Source Sans 3', -apple-system, sans-serif" }}>
-      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+      <style>{`
+        *:focus-visible {
+          outline: 2px solid #4A90D9;
+          outline-offset: 2px;
+        }
+        button:focus:not(:focus-visible) {
+          outline: none;
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+          to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+      `}</style>
 
-      <div style={{
+      <header style={{
         position: "sticky", top: 0, zIndex: 100,
         background: "rgba(255,255,255,0.95)", backdropFilter: "blur(10px)",
         borderBottom: "1px solid #f0f0f5", padding: "12px 20px",
         display: "flex", alignItems: "center", gap: "12px",
       }}>
         {view !== "home" && (
-          <button onClick={() => setView("home")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "18px", color: "#888", padding: "4px" }}>{"←"}</button>
+          <button onClick={goBack} aria-label="Terug" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "18px", color: "#666", padding: "10px", margin: "-6px", minWidth: "44px", minHeight: "44px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
         )}
         <span style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{title}</span>
         <div style={{ marginLeft: "auto" }}>
-          <button onClick={() => setView("eindtermen")} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "11px", color: "#888", textDecoration: "underline" }}>ET</button>
+          <button onClick={() => navigateTo("eindtermen")} aria-label="Eindtermen" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#666", textDecoration: "underline", padding: "10px", margin: "-6px", minWidth: "44px", minHeight: "44px", display: "flex", alignItems: "center", justifyContent: "center" }}>ET</button>
         </div>
-      </div>
+      </header>
 
       {renderView()}
 
-      <div style={{
+      <nav aria-label="Hoofdnavigatie" style={{
         position: "fixed", bottom: 0, left: 0, right: 0,
         background: "rgba(255,255,255,0.97)", backdropFilter: "blur(10px)",
         borderTop: "1px solid #f0f0f5", display: "flex", justifyContent: "space-around",
@@ -3224,16 +3404,20 @@ export default function App() {
           { icon: "📅", label: "Studiepad", v: "studiepad" },
           { icon: "📖", label: "Teksten", v: "teksten" },
           { icon: "📊", label: "Voortgang", v: "voortgang" },
-        ].map(nav => (
-          <button key={nav.v} onClick={() => setView(nav.v)} style={{
-            background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", padding: "4px 8px",
-            opacity: view === nav.v ? 1 : 0.5, transition: "opacity 0.2s",
+        ].map(nav => {
+          const isActive = view === nav.v || (nav.v === "home" && view === "home");
+          return (
+          <button key={nav.v} onClick={() => navigateTo(nav.v)} aria-current={isActive ? "page" : undefined} aria-label={nav.label} style={{
+            background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", padding: "8px 12px",
+            opacity: isActive ? 1 : 0.5, transition: "opacity 0.2s", position: "relative", minWidth: "48px", minHeight: "48px",
           }}>
-            <span style={{ fontSize: "20px" }}>{nav.icon}</span>
-            <span style={{ fontSize: "10px", fontWeight: 600, color: "#1a1a2e" }}>{nav.label}</span>
+            <span aria-hidden="true" style={{ fontSize: "20px" }}>{nav.icon}</span>
+            <span style={{ fontSize: "11px", fontWeight: 700, color: "#1a1a2e" }}>{nav.label}</span>
+            {isActive && <div style={{ position: "absolute", bottom: "-2px", width: "20px", height: "3px", borderRadius: "2px", background: "#4A90D9" }} />}
           </button>
-        ))}
-      </div>
+          );
+        })}
+      </nav>
 
       <div style={{ height: "70px" }} />
     </div>
