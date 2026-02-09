@@ -576,6 +576,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 11,
+    filosoof: "Morton",
+    titel: "Het ecologische denken (2012)",
+    kwestie: 4,
+    et: "ET 19",
+    inleiding: "Timothy Morton (1968) stelt dat we geen scherpe grens tussen mensen en andere levende wezens kunnen trekken. Hij introduceert het begrip 'mesh' om de onderlinge verbondenheid van alle levende en niet-levende dingen te beschrijven. Dit ecologische denken dwingt ons onszelf niet langer als afgescheiden van de natuur te zien.",
+    fragmenten: [
+      {
+        label: "De mesh: onderlinge verbondenheid",
+        tekst: "Het weer verdwijnt naar de achtergrond omdat we steeds meer merken dat we onderdeel zijn van een 'mesh'. De meeste woorden die ik heb overwogen om onderlinge afhankelijkheid te beschrijven, deden te veel denken aan internet-achtige netwerken. 'Mesh' is kort, in elk geval korter dan 'de onderlinge verbondenheid van alle levende en niet-levende dingen'. 'Mesh' kan zowel verwijzen naar de mazen in een netwerk als naar de bedrading. Het heeft iets stevigs en iets verfijnds.",
+      },
+      {
+        label: "Darwin en de boom des levens",
+        tekst: "Elke levensvorm is letterlijk familie: we stammen genetisch van alle andere levensvormen af. Darwin stelt zich een boom voor met eindeloze vertakkingen. Dat is een ander beeld dan dat van een mesh. Een mesh heeft geen duidelijk startpunt en 'clusters' van 'ondergeschikte groepen' zijn allesbehalve lineair. Elk knooppunt van het netwerk is zowel het centrum als de hoek van een knooppuntenstelsel; er is dus geen absoluut centrum of absolute hoek.",
+      },
+      {
+        label: "Verlies van de achtergrond",
+        tekst: "De ecologische crisis maakt ons bewust van hoe afhankelijk alles van elkaar is. Dit geeft het nare gevoel dat er letterlijk geen wereld meer is. 'Wereld' betekent locatie, een achtergrond waartegen onze handelingen betekenisvol worden. Maar als alles in beginsel belangrijk kan zijn, zijn we verloren. Groots denken betekent de betekenisloosheid en de desori\u00ebnterende openheid van ecologisch denken onder ogen te zien. Onderlinge verbondenheid is niet knus en gezellig.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg uit wat Morton bedoelt met het begrip 'mesh' en waarom hij dit verkiest boven het beeld van een boom of netwerk.",
+        antwoord: "De mesh is Mortons begrip voor de onderlinge verbondenheid van alle levende en niet-levende dingen. Hij verkiest dit boven het beeld van een boom (Darwin) omdat een boom een startpunt en hiërarchie suggereert, terwijl de mesh geen centrum of beginpunt heeft. Elk knooppunt is tegelijk centrum en hoek. Het verschilt ook van een netwerk omdat het zowel de mazen (openingen) als de bedrading (verbindingen) omvat. De mesh benadrukt dat er geen achtergrond is waartegen levende wezens zich bevinden — alles is met alles verbonden en alles is in beginsel even belangrijk.",
+      },
+      {
+        vraag: "Morton stelt dat ecologisch denken betekent dat we 'de grond onder onze voeten verliezen'. Vergelijk dit met Plessners excentrische positionaliteit.",
+        antwoord: "Zowel Morton als Plessner beschrijven een fundamentele onzekerheid in het menselijk bestaan. Plessner stelt dat de mens door haar excentrische positionaliteit geen vast fundament heeft — ze staat altijd buiten zichzelf en zoekt vergeefs naar een absoluut rustpunt (wet van de utopische standplaats).\n\nMorton radicaliseert dit: door het ecologische denken verliezen we niet alleen ons zelfstandige 'ik', maar ook de wereld als achtergrond. In de mesh is er geen onafhankelijk referentiepunt meer. Het verschil is dat Plessner dit als structureel kenmerk van de mens ziet, terwijl Morton het verbindt met een ecologisch bewustzijn dat ons dwingt voorbij menselijke grenzen te denken — de mesh omvat immers alle levende en niet-levende wezens.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
