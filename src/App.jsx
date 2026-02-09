@@ -704,6 +704,38 @@ const PRIMAIRE_TEKSTEN = [
       },
     ],
   },
+  {
+    id: 15,
+    filosoof: "Rasch",
+    titel: "Frictie: ethiek in tijden van data\u00efsme (2020)",
+    kwestie: 4,
+    et: "ET 21",
+    inleiding: "Miriam Rasch (1978) bekritiseert het data\u00efsme: het geloof dat alles van de mens te vangen is in data. Ze introduceert het begrip 'het else' \u2014 dat wat ontsnapt aan dataficatie \u2014 en pleit voor frictie als verzet tegen de alomtegenwoordige automatisering.",
+    fragmenten: [
+      {
+        label: "De data-selfie: vervreemding",
+        tekst: "Ik kijk naar mijn data-selfie, geschoten uit categorie\u00ebn die willekeurig lijken. Kermis, knoop, fotorolletje. Ik herken mezelf alleen als ik door m'n wimpers tuur. Het is een portret als in een spiegelpaleis, hier versplinterd in duizend stukjes, daar verwrongen in een grijns, elders weer teruggebracht tot mijn meest sneue en g\u00eanante online-activiteiten. De ontmoeting wekt vooral vervreemding. Ben ik dat? Ja, misschien wel, maar ik ben toch zeker ook m\u00e9\u00e9r dan dat?",
+      },
+      {
+        label: "Het else: wat ontsnapt aan data",
+        tekst: "Het else heeft iets te maken met het niet-kwantificeerbare surplus van data, de speelruimte tussen ik en 'ik', de spanning die de twee op afstand van elkaar houdt, als de boog van een gewelf. Het else is het andere, dus nooit precies dat ene. Het else is z\u00e9lf oncategoriseerbaar. Al ontstaat het uit een gat, een gebrek of onzekerheid, die openheid maakt het tot een positief concept. Hoe meer else, hoe meer ruimte. Het else is geen gebrek, maar een opgave.",
+      },
+      {
+        label: "Er kiert licht: de kier tussen data en wereld",
+        tekst: "'Er kiert licht tussen een ding en een woord voor een ding,' schrijft Slob. Wat het gat tussen ding en woord voor een ding oplevert, is ruimte voor interpretatie en discussie, voor po\u00ebzie en voor zelfonderzoek. Iets dergelijks lijken we bij data\u00efstische profielen of statistische analyses helemaal niet te verwachten. Toch is het vreemd dat er nooit discussies losbranden over de interpretatie van cijfers, zoals dat wel met woorden gebeurt.",
+      },
+    ],
+    vragen: [
+      {
+        vraag: "Leg uit wat Rasch bedoelt met 'het else' en waarom ze dit een 'positief concept' noemt ondanks dat het ontstaat uit een gat of gebrek.",
+        antwoord: "Het else is het niet-kwantificeerbare surplus: dat wat overblijft wanneer je als mens in data wordt gevangen. Het is de spanning tussen wie je bent (ik) en wie data zeggen dat je bent ('ik'). Het else is oncategoriseerbaar \u2014 het is het andere, het vreemde, het spontane.\n\nRasch noemt het positief omdat het openheid cre\u00ebert: het gat tussen data en werkelijkheid is geen probleem dat opgelost moet worden, maar ruimte voor vrijheid, interpretatie en zelfonderzoek. 'Hoe meer else, hoe meer ruimte.' De vervreemding die je data-selfie oproept, zet iets in beweging: het nodigt uit tot reflectie op wie je werkelijk bent voorbij wat data over je zeggen. Het else is dus geen gebrek maar een opgave \u2014 een oproep om de speelruimte tussen data en werkelijkheid actief te vergroten.",
+      },
+      {
+        vraag: "Vergelijk Raschs kritiek op het data\u00efsme met Plessners wet van de utopische standplaats. In hoeverre is het 'else' vergelijkbaar met de onbepaaldheid van de mens bij Plessner?",
+        antwoord: "Plessner stelt met de wet van de utopische standplaats dat de mens altijd op zoek is naar een fundament, een absoluut rustpunt, maar dit nooit kan vinden. De mens is wezenlijk onbepaald en kan niet definitief vastgelegd worden.\n\nRaschs else lijkt hier sterk op: data proberen de mens vast te leggen in profielen en categorie\u00ebn, maar er blijft altijd iets over dat ontsnapt \u2014 het else. Net als Plessners onbepaaldheid is het else geen tijdelijk tekort dat met meer data opgelost kan worden, maar een structureel kenmerk van het menselijk bestaan.\n\nHet verschil is dat Plessner de onbepaaldheid beschrijft als filosofisch-antropologisch gegeven (de excentrische positionaliteit maakt vaste zelfkennis onmogelijk), terwijl Rasch het else situeert in de concrete context van dataficatie en digitale technologie. Rasch maakt de onbepaaldheid politiek: het else is verzet tegen het data\u00efsme en een oproep tot frictie.",
+      },
+    ],
+  },
 ];
 
 const ALGEMENE_EINDTERMEN = [
