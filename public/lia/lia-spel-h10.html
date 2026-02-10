@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 10: Verbeek</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#0e0608; --bg-card:#1a100e; --bg-hover:#281a16;
+    --text:#d0b8b0; --text-bright:#f4dada; --text-dim:#886050;
+    --accent:#c05050; --accent-glow:#f07070; --accent-dim:#803030;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848; --silver:#7890c0; --violet:#9070d0;
+    --danger:#e06070; --success:#60c080;
+    --border:#382018;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(192,80,80,.08),rgba(192,80,80,.02));border:1px solid rgba(192,80,80,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(192,80,80,.06);border:1px solid rgba(192,80,80,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* SCRIPT CARDS */
+  .script-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:20px 0;}
+  @media(max-width:600px){.script-grid{grid-template-columns:1fr;}}
+  .script-card{border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:all .4s;background:var(--bg-card);position:relative;overflow:hidden;min-height:120px;}
+  .script-card:hover{border-color:var(--accent-dim);background:var(--bg-hover);}
+  .script-card.revealed{cursor:default;border-color:rgba(192,80,80,.3);}
+  .script-card .sc-icon{font-size:32px;margin-bottom:8px;}
+  .script-card .sc-name{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--text-bright);margin-bottom:6px;}
+  .script-card .sc-surface{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);line-height:1.5;}
+  .script-card .sc-script{font-family:'Inter',sans-serif;font-size:13px;color:var(--accent-glow);line-height:1.5;max-height:0;overflow:hidden;transition:max-height .5s;margin-top:0;}
+  .script-card.revealed .sc-script{max-height:200px;margin-top:10px;}
+  .script-card .sc-reveal-label{position:absolute;top:8px;right:10px;font-family:'Inter',sans-serif;font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--accent);opacity:0;transition:opacity .3s;}
+  .script-card.revealed .sc-reveal-label{opacity:1;}
+
+  /* ECHO CASUS */
+  .echo-stage{border:1px solid var(--border);border-radius:12px;padding:20px;margin:14px 0;background:var(--bg-card);transition:all .4s;}
+  .echo-stage.active{border-color:rgba(192,80,80,.3);background:rgba(192,80,80,.03);}
+  .echo-stage .es-num{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+  .echo-stage .es-title{font-size:18px;color:var(--text-bright);margin-bottom:8px;}
+  .echo-stage .es-text{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;}
+
+  /* ETHICS ARENA */
+  .ethics-panel{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0;}
+  @media(max-width:700px){.ethics-panel{grid-template-columns:1fr;}}
+  .ethic-card{border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .3s;background:var(--bg-card);text-align:center;}
+  .ethic-card:hover{border-color:var(--accent-dim);transform:translateY(-2px);}
+  .ethic-card.selected{border-color:var(--accent);background:rgba(192,80,80,.08);}
+  .ethic-card .ec-icon{font-size:28px;margin-bottom:8px;}
+  .ethic-card .ec-name{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text-bright);margin-bottom:4px;}
+  .ethic-card .ec-desc{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);line-height:1.5;}
+  .ethics-response{border:1px solid rgba(192,80,80,.2);border-radius:12px;padding:20px;margin-top:16px;background:rgba(192,80,80,.03);font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.7;display:none;}
+  .ethics-response.visible{display:block;}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H10</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.06);border-color:rgba(123,104,238,.1);color:#4a3da0;">H1–H4</span>
+      <span class="nb-chapter-link" style="background:rgba(80,184,216,.06);border-color:rgba(80,184,216,.1);color:#28708a;">H5–H6</span>
+      <span class="nb-chapter-link" style="background:rgba(208,136,72,.06);border-color:rgba(208,136,72,.1);color:#885028;">H7 4E</span>
+      <span class="nb-chapter-link" style="background:rgba(120,144,192,.06);border-color:rgba(120,144,192,.1);color:#405878;">H8 Clark</span>
+      <span class="nb-chapter-link" style="background:rgba(144,112,208,.06);border-color:rgba(144,112,208,.1);color:#583898;">H9 Kockelkoren</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Neutraal — Waardegeladen':50,'Instrumenteel — Bemiddelend':50,'Bepaald — Vrij':50,'Plicht — Gevolgen':50},
+  flags:{},scriptsRevealed:0,echoStage:0,ethicsAnswered:0};
+const totalPassages=22;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'De cafetaria',
+  text:`
+    <div class="ambient-text">Hoofdstuk 10 — Verbeek over technologie als morele vormgever</div>
+    <p>Lia trof Sam in een rustig hoekje van de cafetaria. Hij staarde naar zijn koffiebeker, zijn gebruikelijke energie leek gedempt.</p>
+    <p><em>"Alles goed?"</em> vroeg Lia voorzichtig.</p>
+    <p>Sam zuchtte. <em>"Ik moet kiezen, Lia."</em> Zijn blik was ernstig. <em>"Voor het BCI-implantaat. Het is nu definitief — ik kom in aanmerking. Maar er zit een addertje onder het gras."</em></p>`,
+  choices:[{text:'"Wat dan?"',next:'sams_dilemma'}]
+},
+sams_dilemma:{
+  title:'Sams dilemma',
+  text:`
+    <p><em>"De bandbreedte,"</em> legde Sam uit. <em>"Ze kunnen het optimaliseren voor <strong>grofmotorische aansturing</strong> — denk aan een exoskelet, de droom van weer kunnen lopen. Óf ze richten het op het herwinnen van <strong>fijne motoriek</strong> in mijn handen — zelfstandig kunnen schrijven, eten, dingen vastpakken."</em></p>
+    <p><em>"Niet allebei tegelijk optimaal."</em></p>
+    <p>Lia voelde de zwaarte van zijn dilemma. <em>"Dat is een onmogelijke keuze."</em></p>
+    <p><em>"En het erge is,"</em> zei Sam bitter, <em>"de manier waarop ze het presenteren. 'Zelfstandig lopen' klinkt zo groots, zo als het ultieme doel. Het voelt alsof de technologie zelf me al die kant op duwt."</em></p>
+    <p class="thought">Het is alsof de BCI niet alleen een oplossing biedt, maar ook het probleem opnieuw definieert — en de keuze al voor Sam structureert.</p>`,
+  onEnter:()=>{R('Sams BCI-dilemma: de technologie structureert de keuze al vóórdat Sam kiest. Lopen klinkt "beter" dan fijne motoriek — maar is dat echt zo?');},
+  choices:[{text:'"Alsof het apparaat zelf al een moraal heeft"',next:'verbeek_intro'}]
+},
+verbeek_intro:{
+  title:'Peter-Paul Verbeek',
+  text:`
+    <p><em>"Dat doet me denken aan het symposium vandaag,"</em> zei Lia. <em>"Over een filosoof, Peter-Paul Verbeek, die betoogt dat technologie <strong>nooit zomaar een neutraal instrument</strong> is."</em></p>
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 10</div>
+      <p><strong>Technologie als morele vormgever</strong></p>
+      <p><span class="dim">Peter-Paul Verbeek — techniekfilosoof, groeide op op een boerderij</span></p>
+      <p>Technologie bemiddelt actief onze relatie met de wereld en transformeert ons moreel oordeelsvermogen en handelen.</p>
+    </div>
+    <p>Verbeek verwerpt het idee van <strong>waardevrijheid</strong> — de notie dat technologie neutraal zou zijn. Technologie is fundamenteel <em>waardegebonden</em>.</p>`,
+  onEnter:()=>{T('Technologische bemiddeling','Verbeeks kernbegrip: technologie staat niet passief tussen ons en de wereld, maar geeft actief vorm aan onze waarneming, ons handelen en onze waarden.'); T('Waardevrijheid','Het (door Verbeek verworpen) idee dat technologie en wetenschap neutraal en vrij van morele lading zouden zijn.');adj('Neutraal — Waardegeladen',12);},
+  choices:[{text:'Hoe bemiddelt technologie?',next:'bemiddeling_uitleg'}]
+},
+bemiddeling_uitleg:{
+  title:'Twee vormen van bemiddeling',
+  text:`
+    <p>Verbeek onderscheidt twee manieren waarop technologie bemiddelt:</p>
+    <div class="definition-box">
+      <span class="term">1. Bemiddeling van Waarneming</span>
+      Technologie bepaalt wat we (kunnen) zien en hoe het aan ons verschijnt. Een echografie toont de foetus als zichtbaar wezen; een dashboard toont snelheid als getal. De werkelijkheid wordt 'vertaald'.
+    </div>
+    <div class="definition-box">
+      <span class="term">2. Bemiddeling van Handelen (Scripts)</span>
+      Technologie structureert onze handelingsmogelijkheden en schrijft 'scripts' voor. Een verkeersdrempel 'dwingt' tot langzamer rijden. Een social media app stuurt richting snel liken en delen.
+    </div>
+    <p>Deze dubbele bemiddeling — van <em>zien</em> en <em>doen</em> — is inherent <strong>moreel geladen</strong>.</p>`,
+  onEnter:()=>{T('Bemiddeling van waarneming','Technologie bepaalt wat we zien en hoe de werkelijkheid aan ons verschijnt — ze vertaalt en filtert.'); T('Bemiddeling van handelen (scripts)','Technologie structureert onze handelingsmogelijkheden — maakt bepaald gedrag makkelijker of moeilijker.');adj('Instrumenteel — Bemiddelend',15);},
+  choices:[{text:'Ontdek verborgen scripts',next:'script_game'}]
+},
+
+/* ===== MINIGAME 1: SCRIPT DETECTOR ===== */
+script_game:{
+  title:'Script Detector',
+  text:`
+    <p>Elke technologie heeft verborgen 'scripts' — morele aanwijzingen ingebouwd in het ontwerp. Klik op een technologie om het script te onthullen.</p>
+    <div class="script-grid" id="script-grid"></div>
+    <div id="script-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>
+    <div id="script-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initScriptGame,500);}
+},
+
+script_done:{
+  title:'Scripts overal',
+  text:`
+    <p>Lia keek met andere ogen naar de technologie om haar heen. <em>Overal scripts. Overal aanwijzingen die ons gedrag sturen.</em></p>
+    <p class="thought">De BCI-opties die Sam krijgt — lopen óf grijpen — zijn zelf al een script. De technologie definieert het probleem en structureert de oplossing.</p>
+    <div class="contrast-box" style="background:rgba(144,112,208,.05);border:1px solid rgba(144,112,208,.15);">
+      <span class="cb-label" style="color:var(--violet);">Kockelkoren (H9) — Zintuiglijke transformatie</span>
+      Technologie transformeert hoe we <em>waarnemen</em>. Decentrering en recentrering.
+    </div>
+    <div class="contrast-box" style="background:rgba(192,80,80,.05);border:1px solid rgba(192,80,80,.15);">
+      <span class="cb-label" style="color:var(--accent);">Verbeek (H10) — Morele vormgeving</span>
+      Technologie transformeert ook hoe we <em>handelen en oordelen</em>. Scripts en waardegebondenheid.
+    </div>`,
+  onEnter:()=>{R('Technologie bevat verborgen scripts die ons gedrag sturen — van verkeersdrempels tot BCI-opties.');adj('Neutraal — Waardegeladen',10);},
+  choices:[{text:'De casus van de echoscopie',next:'echo_intro'}]
+},
+
+/* ===== ECHOSCOPIE CASUS ===== */
+echo_intro:{
+  title:'De echoscopie',
+  text:`
+    <p>Verbeek illustreert zijn theorie met de casus van <strong>prenatale echoscopie</strong> — een technologie die ons moreel landschap fundamenteel heeft veranderd.</p>
+    <p><em>"Vóór de echo,"</em> vertelde de spreker, <em>"was de zwangerschap een grotendeels onzichtbaar proces. Na de echo werd de foetus een zichtbaar wezen met een eigen status."</em></p>
+    <p>Loop mee door drie fasen van morele transformatie:</p>
+    <div id="echo-stages"></div>
+    <div id="echo-progress" style="font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>`,
+  onEnter:()=>{setTimeout(initEchoGame,500);}
+},
+
+echo_done:{
+  title:'De echo als morele actor',
+  text:`
+    <p>Lia begreep het nu. De echoscopie is geen neutraal venster — het is een <strong>actieve morele actor</strong>.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Kernargument</div>
+      <p>De technologie creëert een nieuw <strong>'is'</strong> (een zichtbaar feit over de foetus) dat onvermijdelijk leidt tot een nieuwe <strong>'ought'</strong> (de plicht om een keuze te maken). Ouders worden geconfronteerd met een verantwoordelijkheid die <em>voorheen niet bestond</em>.</p>
+    </div>
+    <p class="thought">Net als bij Sam: de BCI creëert de keuze 'lopen of grijpen' — een moreel dilemma dat zonder die technologie niet zou bestaan.</p>`,
+  onEnter:()=>{T('Echoscopie als morele actor','De prenatale echo vertaalt de foetus tot zichtbaar wezen, creëert nieuwe keuzes en verantwoordelijkheden die voorheen niet bestonden.'); R('Technologie creëert een nieuw "is" dat leidt tot een nieuw "ought" — ze dwingt tot ethische reflectie.');adj('Instrumenteel — Bemiddelend',10);},
+  choices:[{text:'Ethische kaders',next:'ethiek_intro'}]
+},
+
+/* ===== ETHISCHE KADERS ===== */
+ethiek_intro:{
+  title:'Drie ethische theorieën',
+  text:`
+    <p>De morele dilemma's die technologie oproept, vragen om <strong>ethische kaders</strong>. Drie belangrijke theorieën bieden houvast:</p>
+    <div class="definition-box">
+      <span class="term">Ethiek vs. Moraal</span>
+      <strong>Moraal</strong> = het geheel van heersende waarden en normen in een samenleving.<br>
+      <strong>Ethiek</strong> = de systematische, filosofische reflectie op de moraal.
+    </div>
+    <div class="definition-box">
+      <span class="term">Waarden vs. Normen</span>
+      <strong>Waarden</strong> = abstracte idealen (gezondheid, autonomie, rechtvaardigheid).<br>
+      <strong>Normen</strong> = concrete gedragsregels die uit waarden voortvloeien.
+    </div>`,
+  onEnter:()=>{T('Moraal','Het geheel van heersende waarden en normen in een samenleving.'); T('Ethiek','De systematische filosofische reflectie op de moraal — nadenken over wat goed handelen is.'); T('Waarden','Abstracte idealen zoals gezondheid, autonomie, rechtvaardigheid.'); T('Normen','Concrete gedragsregels die voortvloeien uit waarden.');},
+  choices:[{text:'Bekijk de drie theorieën',next:'drie_ethieken'}]
+},
+
+drie_ethieken:{
+  title:'Plicht, Gevolgen, Deugd',
+  text:`
+    <div class="definition-box">
+      <span class="term">Plichtethiek (Kant)</span>
+      Focust op <strong>principes en plichten</strong>. Respecteer de persoon als doel op zich. Is de keuze <em>universaliseerbaar</em>? Worden rechten gerespecteerd?
+    </div>
+    <div class="definition-box">
+      <span class="term">Utilisme / Gevolgenethiek (Bentham, Mill)</span>
+      Kijkt naar de <strong>gevolgen</strong>: welke keuze maximaliseert het geluk of welzijn voor de meeste betrokkenen?
+    </div>
+    <div class="definition-box">
+      <span class="term">Deugdethiek (Aristoteles)</span>
+      Vraagt naar het <strong>karakter</strong> van de handelende persoon: welke keuze getuigt van deugd — wijsheid, moed, mededogen? Hoe beïnvloedt technologie ons vermogen om <em>een goed leven</em> te leiden?
+    </div>`,
+  onEnter:()=>{T('Plichtethiek (Kant)','Ethiek gebaseerd op universele principes en plichten. Respecteer de mens als doel op zich, nooit alleen als middel.'); T('Utilisme (Bentham, Mill)','Gevolgenethiek: de juiste handeling is die welke het meeste geluk/welzijn oplevert voor het grootste aantal betrokkenen.'); T('Deugdethiek (Aristoteles)','Ethiek gericht op karakter en deugden (wijsheid, moed, mededogen) als weg naar een goed leven.');},
+  choices:[{text:'Pas toe op Sams dilemma',next:'ethics_arena'}]
+},
+
+/* ===== MINIGAME 3: ETHICS ARENA ===== */
+ethics_arena:{
+  title:'Ethics Arena',
+  text:`
+    <p>Sam moet kiezen: <strong>exoskelet (lopen)</strong> of <strong>fijne motoriek (handen)</strong>. Bekijk zijn dilemma door drie ethische lenzen. Klik op een kader:</p>
+    <div class="ethics-panel">
+      <div class="ethic-card" id="ethic-kant" onclick="showEthic('kant')">
+        <div class="ec-icon">⚖️</div>
+        <div class="ec-name">Plichtethiek</div>
+        <div class="ec-desc">Kant: principes & rechten</div>
+      </div>
+      <div class="ethic-card" id="ethic-util" onclick="showEthic('util')">
+        <div class="ec-icon">📊</div>
+        <div class="ec-name">Utilisme</div>
+        <div class="ec-desc">Bentham/Mill: gevolgen & welzijn</div>
+      </div>
+      <div class="ethic-card" id="ethic-deugd" onclick="showEthic('deugd')">
+        <div class="ec-icon">🌿</div>
+        <div class="ec-name">Deugdethiek</div>
+        <div class="ec-desc">Aristoteles: karakter & goed leven</div>
+      </div>
+    </div>
+    <div class="ethics-response" id="ethic-response"></div>
+    <div id="ethics-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{state.ethicsAnswered=0;}
+},
+
+ethics_done:{
+  title:'Drie lenzen, één dilemma',
+  text:`
+    <p>Lia zag hoe elk ethisch kader het dilemma anders belicht:</p>
+    <div class="philosophy-box">
+      <div class="box-title">Samenvatting</div>
+      <p><strong>Plichtethiek:</strong> Respecteer Sams autonomie — hij moet zelf kiezen, vrij van druk.<br>
+      <strong>Utilisme:</strong> Welke keuze levert het meeste dagelijkse welzijn op?<br>
+      <strong>Deugdethiek:</strong> Welke keuze past bij Sams waarden en karakter?</p>
+    </div>
+    <p>Geen eenvoudig antwoord. Maar de drie kaders helpen om het dilemma <em>systematisch</em> te doordenken.</p>`,
+  onEnter:()=>{R('Drie ethische kaders op Sams dilemma: plichtethiek (autonomie), utilisme (welzijn), deugdethiek (goed leven). Elk belicht iets anders.');adj('Plicht — Gevolgen',5);},
+  choices:[{text:'Vrijheid volgens Verbeek',next:'vrijheid'}]
+},
+
+vrijheid:{
+  title:'Vrijheid als bewust verhouden',
+  text:`
+    <p>Betekent dit alles dat we <strong>gedetermineerd</strong> zijn door technologie? Nee, zegt Verbeek.</p>
+    <div class="definition-box">
+      <span class="term">Vrijheid als Zich Bewust Verhouden</span>
+      Vrijheid is niet de afwezigheid van invloed, maar het <strong>vermogen en de opgave</strong> om je bewust tot de technologische bemiddeling te verhouden: invloeden herkennen, evalueren en er actief vorm aan geven.
+    </div>
+    <p>Lia herkende dit in haar eigen situatie. Ze was niet vrij <em>van</em> technologie — de rolstoel, de BCI, de revalidatie-apparatuur. Maar ze kon kiezen hoe ze zich ertoe <em>verhield</em>.</p>`,
+  onEnter:()=>{T('Vrijheid als bewust verhouden','Verbeeks vrijheidsbegrip: niet vrij van technologische invloed, maar het vermogen om je bewust tot die invloed te verhouden — herkennen, evalueren, vormgeven.');adj('Bepaald — Vrij',12);},
+  choices:[
+    {text:'Sam is vrij — hij kan de script herkennen',next:'keuze_vrij'},
+    {text:'Sam is bepaald — de technologie structureert al',next:'keuze_bepaald'},
+    {text:'Beide — vrijheid zit in het bewust verhouden',next:'keuze_bewust'}
+  ]
+},
+
+keuze_vrij:{
+  title:'Vrij',
+  text:`
+    <p class="thought">Sam is vrij. Hij kan het script van de technologie herkennen — "lopen is beter" — en daar bewust afstand van nemen. Zijn keuze voor fijne motoriek zou net zo waardevol zijn. Het feit dat hij het script doorziet, maakt hem vrij.</p>`,
+  onEnter:()=>{adj('Bepaald — Vrij',10);R('Neigt naar vrijheid: Sam kan het script doorzien en bewust een eigen keuze maken.');},
+  choices:[{text:'Naar moraal van ontwerp',next:'moraal_ontwerp'}]
+},
+
+keuze_bepaald:{
+  title:'Bepaald',
+  text:`
+    <p class="thought">De technologie structureert Sams keuze al voordat hij bewust nadenkt. "Lopen" wordt als default gepresenteerd, als het "echte" herstel. Hoe vrij kun je zijn als het framework al is bepaald? Misschien is Verbeeks vrijheidsbegrip te optimistisch.</p>`,
+  onEnter:()=>{adj('Bepaald — Vrij',-10);R('Neigt naar bepaaldheid: de technologie structureert de keuze al vóór bewuste reflectie.');},
+  choices:[{text:'Naar moraal van ontwerp',next:'moraal_ontwerp'}]
+},
+
+keuze_bewust:{
+  title:'Bewust verhouden',
+  text:`
+    <p class="thought">Sam is niet vrij ván de technologische invloed, maar hij kan zich er bewust toe verhouden. Het herkennen van het script — "lopen wordt als waardevoller gepresenteerd" — is zelf al een daad van vrijheid. Geen absolute vrijheid, maar een actieve houding.</p>`,
+  onEnter:()=>{adj('Bepaald — Vrij',5);R('Vrijheid is geen afwezigheid van invloed, maar het bewust herkennen en evalueren van technologische scripts.');},
+  choices:[{text:'Naar moraal van ontwerp',next:'moraal_ontwerp'}]
+},
+
+moraal_ontwerp:{
+  title:'De moraal van ontwerp',
+  text:`
+    <p>Omdat technologie onze moraal bemiddelt, dragen <strong>ontwerpers een grote ethische verantwoordelijkheid</strong>.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Moraal van ontwerp</div>
+      <p>Het ontwerpen van technologie is <em>'ontwerpen van moraal'</em>: ontwerpers bouwen specifieke waarden in. De BCI-engineers die Sams implantaat maken, ontwerpen niet alleen technologie — ze ontwerpen de <strong>morele keuzeruimte</strong> waarin Sam zich bevindt.</p>
+    </div>
+    <div class="definition-box">
+      <span class="term">Intrinsieke vs. instrumentele waarde</span>
+      <strong>Intrinsiek</strong> = waardevol om zichzelf (bv. menselijke waardigheid).<br>
+      <strong>Instrumenteel</strong> = waardevol als middel tot iets anders (bv. geld).
+    </div>`,
+  onEnter:()=>{T('Moraal van ontwerp','Ontwerpen van technologie is ontwerpen van moraal — ontwerpers bouwen waarden in die gebruikers sturen.'); T('Intrinsieke waarde','Iets dat waardevol is om zichzelf, niet als middel tot iets anders.'); T('Instrumentele waarde','Iets dat waardevol is als middel om iets anders te bereiken.');adj('Neutraal — Waardegeladen',10);},
+  choices:[{text:'Lia reflecteert',next:'lia_reflectie'}]
+},
+
+lia_reflectie:{
+  title:'Lia en de BCI-keuze',
+  text:`
+    <p>Lia keek naar Sam. <em>"Dus als je straks kiest..."</em></p>
+    <p>Sam knikte. <em>"Dan kies ik niet alleen een technische optie. Ik navigeer een moreel landschap dat door de technologie zelf is gecreëerd. En ik moet me daar bewust toe verhouden."</em></p>
+    <div class="max-moment">Max lag op Lia's schoot, zich totaal niet bewust van morele scripts, technologische bemiddeling of ethische kaders. Voor Max was de wereld eenvoudig: warm, koud, honger, slaap.</div>
+    <p class="thought">Misschien is dat het verschil. Wij mensen kunnen de bemiddeling herkennen. We kunnen nadenken over de waarden die in onze technologie zijn ingebouwd. Dat is onze vrijheid — en onze verantwoordelijkheid.</p>`,
+  onEnter:()=>{R('De BCI-keuze is een navigatie door een moreel landschap dat de technologie zelf heeft gecreëerd.');},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 10 — Kernbegrippen</div>
+      <p><strong>Technologische bemiddeling</strong> — Technologie geeft actief vorm aan waarneming en handelen<br>
+      <strong>Bemiddeling van waarneming</strong> — Technologie bepaalt wat we zien<br>
+      <strong>Scripts</strong> — Ingebouwde gedragsvoorschriften in technologie<br>
+      <strong>Waardevrijheid</strong> — Het verworpen idee dat technologie neutraal is<br>
+      <strong>Moraal vs. ethiek</strong> — Heersende waarden vs. reflectie daarop<br>
+      <strong>Plichtethiek, utilisme, deugdethiek</strong> — Drie ethische kaders<br>
+      <strong>Vrijheid als bewust verhouden</strong> — Invloeden herkennen en evalueren<br>
+      <strong>Moraal van ontwerp</strong> — Ontwerpen is waarden inbouwen</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 10 — Wordt vervolgd in H11: Jos de Mul — De toekomstige mens</p>`,
+  onEnter:()=>{R('Hoofdstuk 10 afgerond. Technologie is nooit neutraal — ze is een morele vormgever. Vrijheid ligt in het bewust verhouden tot die vormgeving.');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== SCRIPT DETECTOR GAME ===== */
+const scripts=[
+  {icon:'🚗',name:'Verkeersdrempel',surface:'Een bult in de weg',script:'Script: "RIJ LANGZAMER!" — De waarde veiligheid is ingebouwd in asfalt. De drempel dwingt gedrag af zonder woorden.',axis:'Neutraal — Waardegeladen',delta:5},
+  {icon:'📱',name:'Social Media App',surface:'Een platform om te delen',script:'Script: "LIKE, DEEL, SCROLL DOOR!" — De interface stuurt naar snel, oppervlakkig contact. Engagement-waarden zijn ingebouwd in het ontwerp.',axis:'Instrumenteel — Bemiddelend',delta:5},
+  {icon:'🏧',name:'Zelfscankassa',surface:'Zelf je boodschappen scannen',script:'Script: "WEES EFFICIËNT, DOE HET ZELF!" — De waarden efficiëntie en zelfbediening zijn ingebouwd. Menselijk contact wordt overbodig gemaakt.',axis:'Neutraal — Waardegeladen',delta:5},
+  {icon:'🧠',name:'Sams BCI-opties',surface:'Twee technische opties',script:'Script: "LOPEN IS HET ULTIEME DOEL!" — De presentatie stuurt al richting exoskelet. De waarde "mobiliteit > fijne motoriek" is ingebouwd in het aanbod.',axis:'Instrumenteel — Bemiddelend',delta:5},
+  {icon:'💊',name:'Prenatale echoscopie',surface:'Een medische scan',script:'Script: "KIJK, KIES, BESLIS!" — De echo transformeert de foetus tot zichtbaar wezen en dwingt ouders tot morele keuzes die voorheen niet bestonden.',axis:'Neutraal — Waardegeladen',delta:5}
+];
+
+function initScriptGame(){
+  const grid=document.getElementById('script-grid');
+  grid.innerHTML='';
+  scripts.forEach((s,i)=>{
+    const card=document.createElement('div');
+    card.className='script-card';
+    card.id='sc-'+i;
+    card.innerHTML=`<div class="sc-reveal-label">Script onthuld</div><div class="sc-icon">${s.icon}</div><div class="sc-name">${s.name}</div><div class="sc-surface">${s.surface}</div><div class="sc-script">${s.script}</div>`;
+    card.onclick=()=>revealScript(i);
+    grid.appendChild(card);
+  });
+  updateScriptCounter();
+}
+
+function revealScript(i){
+  const card=document.getElementById('sc-'+i);
+  if(card.classList.contains('revealed'))return;
+  card.classList.add('revealed');
+  state.scriptsRevealed++;
+  adj(scripts[i].axis,scripts[i].delta);
+  updateScriptCounter();
+  if(state.scriptsRevealed>=5){
+    setTimeout(()=>{
+      document.getElementById('script-result').innerHTML='<div class="philosophy-box"><div class="box-title">Alle scripts onthuld</div><p>Technologie is nooit neutraal — overal zitten morele scripts verborgen die ons gedrag sturen.</p></div><button class="continue-btn" onclick="go(\'script_done\')">Verder</button>';
+    },600);
+  }
+}
+
+function updateScriptCounter(){
+  document.getElementById('script-counter').textContent=state.scriptsRevealed+' / 5 scripts onthuld';
+}
+
+/* ===== ECHOSCOPIE GAME ===== */
+const echoStages=[
+  {num:'Fase 1',title:'Hoe de echo de foetus presenteert',text:'De technologie <em>vertaalt</em> de foetus. Het zichtbare beeld versterkt de emotionele band (een waarde), maar de medische metingen maken de foetus tegelijk tot een <em>potentiële patiënt</em> — wat andere waarden (gezondheid, perfectie) activeert.<br><br><strong>Bemiddeling van waarneming:</strong> de echo bepaalt hoe de foetus aan ons verschijnt.'},
+  {num:'Fase 2',title:'Creatie van keuze en verantwoordelijkheid',text:'De technologie creëert een nieuw <strong>"is"</strong> (een zichtbaar feit) dat onvermijdelijk leidt tot een nieuwe <strong>"ought"</strong> (de plicht om te kiezen). Ouders worden geconfronteerd met een verantwoordelijkheid die <em>voorheen niet bestond</em>.<br><br><strong>Van feit naar morele plicht:</strong> de echo dwingt tot ethische reflectie.'},
+  {num:'Fase 3',title:'De positie van beslisser',text:'De technologie plaatst ouders in de positie van <em>beslisser</em> over leven en kwaliteit. Verschillende waarden kunnen botsen: de <strong>intrinsieke waarde van leven</strong> versus de wens om <strong>lijden te voorkomen</strong>.<br><br><strong>Morele ambivalentie:</strong> de echo maakt de keuze mogelijk én onmogelijk zwaar.'}
+];
+
+function initEchoGame(){
+  const container=document.getElementById('echo-stages');
+  container.innerHTML='';
+  echoStages.forEach((s,i)=>{
+    const stage=document.createElement('div');
+    stage.className='echo-stage'+(i===0?' active':'');
+    stage.id='echo-s-'+i;
+    stage.innerHTML=`<div class="es-num">${s.num}</div><div class="es-title">${s.title}</div><div class="es-text">${i===0?s.text:'<span style="color:var(--text-dim);font-style:italic;">Klik om te onthullen...</span>'}</div>`;
+    stage.onclick=()=>advanceEcho(i);
+    container.appendChild(stage);
+  });
+  document.getElementById('echo-progress').textContent='Fase 1 van 3';
+}
+
+function advanceEcho(i){
+  if(i!==state.echoStage)return;
+  const stage=document.getElementById('echo-s-'+i);
+  stage.classList.add('active');
+  stage.querySelector('.es-text').innerHTML=echoStages[i].text;
+  state.echoStage++;
+  document.getElementById('echo-progress').textContent='Fase '+Math.min(state.echoStage+1,3)+' van 3';
+  if(state.echoStage>=3){
+    const next=state.echoStage;
+    document.getElementById('echo-progress').innerHTML='<button class="continue-btn" onclick="go(\'echo_done\')" style="margin-top:8px;">Verder</button>';
+    adj('Instrumenteel — Bemiddelend',8);
+  } else {
+    const nextStage=document.getElementById('echo-s-'+state.echoStage);
+    nextStage.querySelector('.es-text').innerHTML='<span style="color:var(--accent-glow);cursor:pointer;">Klik om te onthullen...</span>';
+  }
+}
+
+/* ===== ETHICS ARENA GAME ===== */
+const ethicsData={
+  kant:{
+    title:'Plichtethiek op Sams dilemma',
+    text:'<strong>Kant zou vragen:</strong> Wordt Sam als <em>doel op zich</em> behandeld, of als middel? Worden zijn rechten en autonomie gerespecteerd?<br><br>De medische presentatie die "lopen" als default neerzet, behandelt Sam potentieel als middel — passend in een standaard revalidatienarratief — in plaats van als autonoom individu met eigen waarden.<br><br><em>Conclusie:</em> Sam moet volledige, onbevooroordeelde informatie krijgen. Zijn autonome keuze — ongeacht de richting — moet worden gerespecteerd als universeel principe.'
+  },
+  util:{
+    title:'Utilisme op Sams dilemma',
+    text:'<strong>Bentham/Mill zou vragen:</strong> Welke keuze maximaliseert Sams <em>dagelijkse welzijn</em>?<br><br>Lopen is spectaculair, maar fijne motoriek biedt misschien meer dagelijkse autonomie: zelfstandig eten, schrijven, werken. Het utilisme dwingt tot een nuchtere analyse van consequenties, voorbij de emotionele aantrekkingskracht van "weer kunnen lopen".<br><br><em>Conclusie:</em> De optie met de meeste concrete welzijnswinst verdient de voorkeur — en dat is niet automatisch de meest dramatische optie.'
+  },
+  deugd:{
+    title:'Deugdethiek op Sams dilemma',
+    text:'<strong>Aristoteles zou vragen:</strong> Welke keuze past bij Sams <em>karakter</em> en zijn visie op een goed leven?<br><br>Wat voor mens wil Sam zijn? Een wetenschapper die onderzoek doet (fijne motoriek)? Of iemand die fysiek onafhankelijk wil zijn (lopen)? De deugdethiek vraagt niet naar regels of gevolgen, maar naar wie Sam <em>wil worden</em>.<br><br><em>Conclusie:</em> De juiste keuze is die welke bijdraagt aan Sams bloei als persoon — zijn <em>eudaimonia</em>.'
+  }
+};
+
+function showEthic(type){
+  const resp=document.getElementById('ethic-response');
+  const data=ethicsData[type];
+  document.querySelectorAll('.ethic-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('ethic-'+type).classList.add('selected');
+  resp.innerHTML='<strong>'+data.title+'</strong><br><br>'+data.text;
+  resp.classList.add('visible');
+  if(!state.flags['ethic_'+type]){
+    state.flags['ethic_'+type]=true;
+    state.ethicsAnswered++;
+    adj('Plicht — Gevolgen',type==='kant'?-8:type==='util'?8:0);
+  }
+  if(state.ethicsAnswered>=3){
+    document.getElementById('ethics-result').innerHTML='<button class="continue-btn" onclick="go(\'ethics_done\')">Verder — alle drie bekeken</button>';
+  }
+}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

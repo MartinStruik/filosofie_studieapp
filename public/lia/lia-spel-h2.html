@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 2: Sheets-Johnstone</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0b0f;
+    --bg-card: #11121a;
+    --bg-hover: #191a28;
+    --text: #c8c5d0;
+    --text-bright: #eae8f0;
+    --text-dim: #6e6b7a;
+    --accent: #5ea8a0;
+    --accent-glow: #7ecec4;
+    --accent-dim: #3a706a;
+    --warm: #e8a87c;
+    --warm-dim: #a06840;
+    --purple: #7b68ee;
+    --purple-dim: #4a3da0;
+    --danger: #e06070;
+    --success: #60c080;
+    --border: #252535;
+    --body-color: #d4a574;
+    --body-dim: #7a5a3a;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  #game-container { display:flex; min-height:100vh; }
+
+  #story-panel {
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:40px 20px;
+    position:relative;
+    overflow-y:auto;
+    max-height:100vh;
+  }
+
+  #passage-wrapper {
+    max-width:680px;
+    width:100%;
+    opacity:0;
+    transform:translateY(12px);
+    transition:opacity 0.6s ease, transform 0.6s ease;
+  }
+  #passage-wrapper.visible { opacity:1; transform:translateY(0); }
+
+  #notebook-panel {
+    width:340px;
+    background:var(--bg-card);
+    border-left:1px solid var(--border);
+    padding:30px 24px;
+    overflow-y:auto;
+    max-height:100vh;
+    transition:transform 0.3s ease;
+  }
+
+  #notebook-toggle {
+    display:none;
+    position:fixed; top:16px; right:16px; z-index:100;
+    background:var(--accent-dim); color:var(--text-bright);
+    border:none; border-radius:8px; padding:8px 16px;
+    font-family:'Inter',sans-serif; font-size:13px; cursor:pointer;
+  }
+
+  @media (max-width:900px) {
+    #notebook-panel { position:fixed; right:0; top:0; height:100vh; z-index:99; transform:translateX(100%); }
+    #notebook-panel.open { transform:translateX(0); }
+    #notebook-toggle { display:block; }
+  }
+
+  /* TYPOGRAPHY */
+  .passage-title {
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+    letter-spacing:3px; text-transform:uppercase;
+    color:var(--accent); margin-bottom:24px; opacity:0.7;
+  }
+  .passage-text p { margin-bottom:18px; }
+  .passage-text em { color:var(--warm); font-style:italic; }
+  .passage-text strong { color:var(--text-bright); font-weight:600; }
+  .highlight { color:var(--accent-glow); font-weight:600; }
+  .dim { color:var(--text-dim); }
+
+  .thought {
+    font-style:italic; color:var(--warm);
+    border-left:2px solid var(--warm-dim);
+    padding-left:16px; margin:20px 0;
+  }
+
+  .philosophy-box {
+    background:linear-gradient(135deg, rgba(94,168,160,0.08), rgba(94,168,160,0.02));
+    border:1px solid rgba(94,168,160,0.2);
+    border-radius:12px; padding:20px 24px; margin:24px 0;
+  }
+  .philosophy-box .box-title {
+    font-family:'Inter',sans-serif; font-size:12px; font-weight:600;
+    letter-spacing:2px; text-transform:uppercase;
+    color:var(--accent); margin-bottom:12px;
+  }
+
+  .descartes-contrast {
+    background:linear-gradient(135deg, rgba(123,104,238,0.06), rgba(123,104,238,0.02));
+    border:1px solid rgba(123,104,238,0.15);
+    border-radius:10px; padding:16px 20px; margin:16px 0; font-size:16px;
+  }
+  .descartes-contrast .dc-label {
+    font-family:'Inter',sans-serif; font-weight:600;
+    color:var(--purple); font-size:12px; letter-spacing:1px;
+    text-transform:uppercase; display:block; margin-bottom:4px;
+  }
+
+  .definition-box {
+    background:rgba(94,168,160,0.06);
+    border:1px solid rgba(94,168,160,0.15);
+    border-radius:10px; padding:16px 20px; margin:16px 0; font-size:17px;
+  }
+  .definition-box .term {
+    font-family:'Inter',sans-serif; font-weight:600;
+    color:var(--accent-glow); font-size:14px; display:block; margin-bottom:6px;
+  }
+
+  /* CHOICES */
+  .choices { margin-top:32px; display:flex; flex-direction:column; gap:10px; }
+
+  .choice-btn {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:10px; padding:14px 20px; color:var(--text);
+    font-family:'Crimson Text',Georgia,serif; font-size:18px;
+    text-align:left; cursor:pointer; transition:all 0.25s ease; line-height:1.5;
+  }
+  .choice-btn:hover {
+    background:var(--bg-hover); border-color:var(--accent-dim);
+    color:var(--text-bright); transform:translateX(4px);
+  }
+  .choice-btn .choice-icon {
+    color:var(--accent); margin-right:8px;
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+  }
+
+  .continue-btn {
+    display:inline-block; margin-top:28px; background:transparent;
+    border:1px solid var(--border); border-radius:8px;
+    padding:10px 28px; color:var(--text-dim);
+    font-family:'Inter',sans-serif; font-size:14px;
+    cursor:pointer; transition:all 0.25s ease; letter-spacing:0.5px;
+  }
+  .continue-btn:hover { border-color:var(--accent-dim); color:var(--accent); }
+
+  /* AMBIENT */
+  .ambient-text {
+    font-family:'Inter',sans-serif; font-size:12px; color:var(--text-dim);
+    opacity:0.5; text-align:center; margin-bottom:30px; letter-spacing:1px;
+  }
+  .scene-break { text-align:center; margin:30px 0; color:var(--text-dim); opacity:0.3; letter-spacing:8px; }
+
+  .max-moment {
+    background:rgba(232,168,124,0.04); border-radius:12px;
+    padding:16px 20px; margin:16px 0;
+    border:1px solid rgba(232,168,124,0.1);
+    font-size:17px; color:var(--text-dim);
+  }
+  .max-moment::before { content:'🐈'; margin-right:8px; }
+
+  /* PROGRESS */
+  #progress-bar {
+    position:fixed; top:0; left:0; height:3px;
+    background:linear-gradient(90deg, var(--accent-dim), var(--accent));
+    transition:width 0.6s ease; z-index:200;
+  }
+
+  /* ===== BALL MINIGAME ===== */
+  #ball-game {
+    text-align:center; padding:30px; margin:20px 0;
+    border:1px solid var(--border); border-radius:14px;
+    background:rgba(0,0,0,0.3); position:relative;
+  }
+  #ball-visual { font-size:56px; margin:16px 0; user-select:none; }
+
+  .mode-tabs {
+    display:flex; gap:8px; justify-content:center; margin-bottom:20px;
+  }
+  .mode-tab {
+    font-family:'Inter',sans-serif; font-size:13px; padding:8px 20px;
+    border-radius:20px; cursor:pointer; transition:all 0.2s;
+    border:1px solid var(--border); background:transparent; color:var(--text-dim);
+  }
+  .mode-tab.active { background:var(--accent-dim); color:var(--text-bright); border-color:var(--accent-dim); }
+  .mode-tab:hover { border-color:var(--accent-dim); }
+
+  .cmd-btn {
+    background:var(--purple-dim); color:var(--text-bright); border:none;
+    border-radius:8px; padding:10px 22px; margin:4px;
+    font-family:'Inter',sans-serif; font-size:14px; cursor:pointer; transition:all 0.2s;
+  }
+  .cmd-btn:hover { background:var(--purple); }
+  .cmd-btn:disabled { opacity:0.3; cursor:default; }
+
+  .feel-zone {
+    display:flex; flex-direction:column; gap:8px; align-items:center;
+  }
+  .feel-btn {
+    background:rgba(94,168,160,0.1); color:var(--accent-glow);
+    border:1px solid rgba(94,168,160,0.2); border-radius:24px;
+    padding:10px 28px; font-family:'Crimson Text',serif; font-size:17px;
+    cursor:pointer; transition:all 0.3s; font-style:italic; width:260px;
+  }
+  .feel-btn:hover { background:rgba(94,168,160,0.2); transform:scale(1.02); }
+  .feel-btn.activated {
+    background:rgba(94,168,160,0.25); border-color:var(--accent);
+    box-shadow:0 0 12px rgba(94,168,160,0.15);
+  }
+
+  #ball-feedback {
+    min-height:24px; margin-top:14px; font-style:italic;
+    color:var(--text-dim); font-size:16px; transition:all 0.3s;
+  }
+
+  /* ===== FLASHBACK ===== */
+  .flashback-container {
+    background:linear-gradient(180deg, rgba(212,165,116,0.06), transparent);
+    border:1px solid rgba(212,165,116,0.12); border-radius:14px;
+    padding:30px; margin:20px 0; text-align:center;
+    min-height:200px; position:relative; overflow:hidden;
+  }
+  .flash-line {
+    font-size:20px; color:var(--body-color); opacity:0;
+    margin:12px 0; transition:opacity 0.8s ease;
+    font-style:italic;
+  }
+  .flash-line.visible { opacity:1; }
+  .flash-line.dim-flash { color:var(--body-dim); font-size:16px; }
+
+  /* ===== EPOCHÉ EXERCISE ===== */
+  .assumption-card {
+    background:var(--bg-card); border:1px solid var(--border);
+    border-radius:10px; padding:14px 18px; margin:8px 0;
+    display:flex; justify-content:space-between; align-items:center;
+    transition:all 0.5s ease;
+  }
+  .assumption-card.bracketed {
+    border-color:var(--accent-dim); opacity:0.3;
+    text-decoration:line-through;
+  }
+  .bracket-btn {
+    background:rgba(94,168,160,0.12); color:var(--accent);
+    border:1px solid rgba(94,168,160,0.25); border-radius:6px;
+    padding:4px 14px; font-family:'Inter',sans-serif; font-size:12px;
+    cursor:pointer; transition:all 0.2s; white-space:nowrap;
+  }
+  .bracket-btn:hover { background:rgba(94,168,160,0.22); }
+
+  /* ===== BODY MAP ===== */
+  .body-map {
+    display:grid; grid-template-columns:1fr 1fr; gap:10px;
+    margin:16px 0;
+  }
+  .body-zone {
+    border:1px solid var(--border); border-radius:10px;
+    padding:14px; text-align:center; font-family:'Inter',sans-serif;
+    font-size:13px; transition:all 0.3s; cursor:default;
+  }
+  .body-zone .zone-icon { font-size:28px; display:block; margin-bottom:6px; }
+  .body-zone .zone-label { color:var(--text-dim); }
+  .body-zone .zone-status { font-size:11px; margin-top:4px; font-weight:600; letter-spacing:0.5px; }
+  .zone-intact { border-color:rgba(94,168,160,0.3); }
+  .zone-intact .zone-status { color:var(--accent); }
+  .zone-damaged { border-color:rgba(224,96,112,0.3); background:rgba(224,96,112,0.03); }
+  .zone-damaged .zone-status { color:var(--danger); }
+  .zone-partial { border-color:rgba(232,168,124,0.3); background:rgba(232,168,124,0.03); }
+  .zone-partial .zone-status { color:var(--warm); }
+
+  /* NOTEBOOK */
+  .nb-title {
+    font-family:'Inter',sans-serif; font-size:13px; font-weight:600;
+    letter-spacing:2px; text-transform:uppercase; color:var(--warm);
+    margin-bottom:20px; display:flex; align-items:center; gap:8px;
+  }
+  .nb-section { margin-bottom:24px; }
+  .nb-section-title {
+    font-family:'Inter',sans-serif; font-size:11px; font-weight:600;
+    letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--text-dim); margin-bottom:8px;
+  }
+  .nb-item {
+    font-size:15px; line-height:1.5; padding:8px 0;
+    border-bottom:1px solid rgba(255,255,255,0.04);
+    opacity:0; animation:fadeInNote 0.5s ease forwards;
+  }
+  @keyframes fadeInNote { to { opacity:1; } }
+  .nb-item .nb-term { color:var(--accent-glow); font-weight:600; font-size:14px; font-family:'Inter',sans-serif; display:block; }
+  .nb-item .nb-def { color:var(--text-dim); font-size:14px; }
+
+  .nb-compass {
+    background:rgba(94,168,160,0.06); border:1px solid rgba(94,168,160,0.15);
+    border-radius:10px; padding:14px; margin-top:12px;
+  }
+  .compass-bar {
+    display:flex; align-items:center; margin:6px 0;
+    font-family:'Inter',sans-serif; font-size:11px; gap:8px;
+  }
+  .compass-bar .bar-label { width:90px; color:var(--text-dim); text-align:right; flex-shrink:0; }
+  .compass-bar .bar-track { flex:1; height:4px; background:var(--border); border-radius:2px; position:relative; }
+  .compass-bar .bar-dot {
+    position:absolute; top:-4px; width:12px; height:12px;
+    background:var(--accent); border-radius:50%; transition:left 0.5s ease;
+  }
+  .compass-bar .bar-label-right { width:90px; color:var(--text-dim); flex-shrink:0; }
+
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:transparent; }
+  ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--accent-dim); }
+</style>
+</head>
+<body>
+
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="toggleNotebook()">📓 Notitieboek</button>
+
+<div id="game-container">
+  <div id="story-panel">
+    <div id="passage-wrapper"></div>
+  </div>
+  <div id="notebook-panel">
+    <div class="nb-title">📓 Lia's Notitieboek</div>
+    <div id="notebook-content">
+      <div class="nb-section">
+        <div class="nb-section-title">Begrippen</div>
+        <div id="nb-terms"><p class="dim" style="font-size:14px;font-family:'Inter',sans-serif;">Nog geen begrippen ontdekt...</p></div>
+      </div>
+      <div class="nb-section">
+        <div class="nb-section-title">Lia's reflecties</div>
+        <div id="nb-reflections"><p class="dim" style="font-size:14px;font-family:'Inter',sans-serif;">Nog geen reflecties...</p></div>
+      </div>
+      <div class="nb-section">
+        <div class="nb-section-title">Filosofisch kompas</div>
+        <div id="nb-compass" class="nb-compass" style="display:none;">
+          <div class="compass-bar">
+            <span class="bar-label">Dualisme</span>
+            <div class="bar-track"><div class="bar-dot" id="compass-dualism" style="left:50%"></div></div>
+            <span class="bar-label-right">Eenheid</span>
+          </div>
+          <div class="compass-bar">
+            <span class="bar-label">Rede</span>
+            <div class="bar-track"><div class="bar-dot" id="compass-epistem" style="left:50%"></div></div>
+            <span class="bar-label-right">Ervaring</span>
+          </div>
+          <div class="compass-bar">
+            <span class="bar-label">Essentie</span>
+            <div class="bar-track"><div class="bar-dot" id="compass-exist" style="left:50%"></div></div>
+            <span class="bar-label-right">Existentie</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ENGINE
+// ============================================================
+const S = {
+  passage:'', history:[], visited:0, totalPassages:26,
+  dualism:50, epistem:50, exist:50,
+  ballMode:'commando', cmdAttempts:0, feelSteps:0,
+  flashStep:0, bracketsDone:0,
+  notebookTerms:[], notebookReflections:[],
+  rubenInsight:''
+};
+
+function go(id){
+  S.history.push(S.passage); S.passage=id; S.visited++;
+  const w=document.getElementById('passage-wrapper');
+  w.classList.remove('visible');
+  setTimeout(()=>{
+    if(passages[id]) w.innerHTML=passages[id]();
+    setTimeout(()=>w.classList.add('visible'),50);
+  },300);
+  document.getElementById('progress-bar').style.width=Math.min(100,(S.visited/S.totalPassages)*100)+'%';
+  document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});
+}
+
+function addTerm(t,d){
+  if(S.notebookTerms.find(x=>x.term===t))return'';
+  S.notebookTerms.push({term:t,definition:d}); renderNB(); return'';
+}
+function addReflection(t){ S.notebookReflections.push(t); renderNB(); }
+function adj(axis,delta){ S[axis]=Math.max(0,Math.min(100,S[axis]+delta)); renderCompass(); }
+
+function renderNB(){
+  const te=document.getElementById('nb-terms'), re=document.getElementById('nb-reflections');
+  if(S.notebookTerms.length) te.innerHTML=S.notebookTerms.map(t=>`<div class="nb-item"><span class="nb-term">${t.term}</span><span class="nb-def">${t.definition}</span></div>`).join('');
+  if(S.notebookReflections.length) re.innerHTML=S.notebookReflections.map(r=>`<div class="nb-item" style="color:var(--warm);font-style:italic;font-size:14px;">"${r}"</div>`).join('');
+}
+function renderCompass(){
+  document.getElementById('nb-compass').style.display='block';
+  document.getElementById('compass-dualism').style.left=S.dualism+'%';
+  document.getElementById('compass-epistem').style.left=S.epistem+'%';
+  document.getElementById('compass-exist').style.left=S.exist+'%';
+}
+function toggleNotebook(){ document.getElementById('notebook-panel').classList.toggle('open'); }
+
+// ============================================================
+// PASSAGES
+// ============================================================
+const passages = {
+
+'start': ()=>`
+  <div style="text-align:center;padding:60px 0;">
+    <div class="ambient-text">Een interactief filosofisch verhaal</div>
+    <h1 style="font-family:'Inter',sans-serif;font-size:32px;font-weight:300;color:var(--text-bright);margin-bottom:8px;letter-spacing:2px;">
+      LIA'S TRANSFORMATIE
+    </h1>
+    <p style="color:var(--accent);font-family:'Inter',sans-serif;font-size:14px;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;">
+      Hoofdstuk 2 — Het Denkende, Bewegende Lichaam
+    </p>
+    <p style="color:var(--purple);font-family:'Inter',sans-serif;font-size:12px;letter-spacing:2px;margin-bottom:40px;">
+      Maxine Sheets-Johnstone &middot; Fenomenologie
+    </p>
+    <p style="max-width:460px;margin:0 auto 30px;font-size:17px;color:var(--text-dim);">
+      Descartes zei dat je een denkend ding bent in een mechanisch lichaam. Maar klopt dat? Vandaag ontdek je dat je lichaam meer weet dan je denkt.
+    </p>
+    <button class="continue-btn" onclick="go('ochtend')" style="font-size:16px;padding:14px 40px;">
+      De volgende ochtend
+    </button>
+  </div>
+`,
+
+'ochtend': ()=>`
+  <div class="ambient-text">Revalidatiecentrum &middot; ochtend &middot; het ruikt naar koffie en desinfectiemiddel</div>
+  <div class="passage-title">De Ochtend Erna</div>
+  <div class="passage-text">
+    <p>De woorden van gisteren zoemen nog na. <em>Cogito, ergo sum.</em> Ik denk, dus ik ben. Descartes zei dat je essentie in het denken ligt. Dat je lichaam een machine is.</p>
+    <p>Maar nu lig je op de behandeltafel in het revalidatiecentrum en er ligt een klein, blauw balletje op de mat naast je. Zo klein. Zo onschuldig.</p>
+    <p>En toch voelt het als een vijand.</p>
+  </div>
+  <button class="continue-btn" onclick="go('ruben-intro')">Fysiotherapie begint</button>
+`,
+
+'ruben-intro': ()=>`
+  <div class="passage-title">Ruben</div>
+  <div class="passage-text">
+    <p>Ruben knielt naast je neer. Hij is anders dan de artsen &mdash; geen witte jas, geen klembord, geen medische termen. Zijn stem is rustig, geduldig.</p>
+    <p>"Goed, Lia. Vandaag gaan we werken met het balletje. Simpel: pak het op."</p>
+    <p>Je kijkt naar het blauwe bolletje op de mat. Je hand hangt erboven. Je brein stuurt het commando.</p>
+  </div>
+  <div class="thought">Pak het op. Strek. Buig. Til. Hoe moeilijk kan het zijn?</div>
+  <button class="continue-btn" onclick="go('bal-minigame')">Probeer het balletje te pakken</button>
+`,
+
+'bal-minigame': ()=>{
+  S.cmdAttempts=0; S.feelSteps=0;
+  return `
+  <div class="passage-title">Het Balletje</div>
+  <div id="ball-game">
+    <div class="mode-tabs">
+      <button class="mode-tab active" id="tab-cmd" onclick="switchMode('commando')">🧠 Commandomodus</button>
+      <button class="mode-tab" id="tab-feel" onclick="switchMode('voelen')">✋ Voelmodus</button>
+    </div>
+
+    <div id="ball-visual">🔵</div>
+
+    <div id="mode-commando">
+      <p style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);margin-bottom:14px;">
+        Stuur commando's naar je hand. Denk, dan doe.
+      </p>
+      <button class="cmd-btn" onclick="cmdAttempt('strek')">STREK</button>
+      <button class="cmd-btn" onclick="cmdAttempt('buig')">BUIG</button>
+      <button class="cmd-btn" onclick="cmdAttempt('sluit')">SLUIT</button>
+      <button class="cmd-btn" onclick="cmdAttempt('til')">TIL</button>
+    </div>
+
+    <div id="mode-voelen" style="display:none;">
+      <p style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);margin-bottom:14px;">
+        Sluit je ogen. Voel. Niet denken &mdash; ervaren.
+      </p>
+      <div class="feel-zone">
+        <button class="feel-btn" id="feel-1" onclick="feelStep(1)">Voel de mat onder je handpalm...</button>
+        <button class="feel-btn" id="feel-2" onclick="feelStep(2)" style="display:none;">Voel de spanning in je onderarm...</button>
+        <button class="feel-btn" id="feel-3" onclick="feelStep(3)" style="display:none;">Voel de warmte in je spieren...</button>
+        <button class="feel-btn" id="feel-4" onclick="feelStep(4)" style="display:none;">Raak het balletje aan &mdash; alleen aanraken...</button>
+      </div>
+    </div>
+
+    <div id="ball-feedback"></div>
+  </div>
+
+  <div id="bal-result" style="display:none;"></div>
+`;
+},
+
+'frustratie': ()=>`
+  <div class="passage-title">Frustratie</div>
+  <div class="passage-text">
+    <p>Een vloek ontsnapt je lippen. Je hand duwde het balletje weg in plaats van het te grijpen. Weer.</p>
+    <p>Meteen flitst het beeld op van de klimwand: je hand die weggleed, de greep die losschoot, het gewicht dat in de leegte viel. Je schudt je hoofd, alsof je de herinnering kunt verjagen.</p>
+    <p>"Ik kan het niet," fluister je.</p>
+  </div>
+  <div class="passage-text">
+    <p>Ruben kijkt je rustig aan. Geen medelijden, geen ongeduld.</p>
+    <p>"Lia, je probeert een <em>gebruiksaanwijzing</em> te schrijven voor je eigen hand. Stap 1: strek. Stap 2: buig. Stap 3: sluit. Maar zo werkt je lichaam niet."</p>
+    <p>Hij leunt naar voren.</p>
+    <p>"<strong>Adem. Laat dat doel even los. Voel alleen wat er is.</strong>"</p>
+  </div>
+  <div class="choices">
+    <button class="choice-btn" onclick="S.rubenInsight='sceptisch'; go('voelen-uitdaging')">
+      <span class="choice-icon">A</span> "Wat er is? Er is niks. Alleen vingers die niet luisteren."
+    </button>
+    <button class="choice-btn" onclick="S.rubenInsight='open'; go('voelen-uitdaging')">
+      <span class="choice-icon">B</span> Met tegenzin gehoorzaam je. Ogen dicht. Proberen te voelen.
+    </button>
+  </div>
+`,
+
+'voelen-uitdaging': ()=>`
+  <div class="passage-title">Voelen</div>
+  <div class="passage-text">
+    ${S.rubenInsight==='sceptisch'?
+      '<p>"Toch wel," zegt Ruben kalm. "Sluit je ogen eens. Voel de mat."</p><p>Met tegenzin gehoorzaam je.</p>':
+      '<p>Je sluit je ogen. De wereld wordt donker. Alleen gevoel blijft over.</p>'}
+    <p>De koelte onder je handpalm. De lichte spanning in je onderarm. Een spoor van warmte in je spieren.</p>
+    <p>"En nu het balletje. <strong>Niet pakken, alleen aanraken.</strong>"</p>
+    <p>Voorzichtig glijden je vingers naar het zachte oppervlak. Textuur. Druk. Heel minimaal, maar <em>echt</em>.</p>
+  </div>
+  <div class="passage-text">
+    <p>Ruben glimlacht. "Precies. <strong>Je hoeft niet altijd te sturen. Je lichaam weet meer dan je denkt.</strong>"</p>
+  </div>
+  <div class="thought">
+    Weten zonder denken. Het was waar. Toen je klom, berekende je nooit je volgende greep. Je lichaam vond de weg vanzelf.
+  </div>
+  <button class="continue-btn" onclick="go('flashback')">Een herinnering dringt zich op...</button>
+`,
+
+'flashback': ()=>{
+  setTimeout(()=>startFlashback(), 400);
+  return `
+  <div class="ambient-text">Herinnering &middot; de klimwand &middot; voor de val</div>
+  <div class="passage-title">Flow</div>
+  <div class="flashback-container" id="flash-box">
+    <div class="flash-line" id="fl-1">De rots onder je vingertoppen</div>
+    <div class="flash-line" id="fl-2">Textuur, warmte, grip</div>
+    <div class="flash-line dim-flash" id="fl-3">je denkt niet</div>
+    <div class="flash-line" id="fl-4">Je lichaam leest de wand</div>
+    <div class="flash-line" id="fl-5">Balans verschuift &mdash; gewicht van links naar rechts</div>
+    <div class="flash-line dim-flash" id="fl-6">geen commando's, geen stappen</div>
+    <div class="flash-line" id="fl-7">Hand reikt &mdash; vingers sluiten &mdash; <em>vanzelf</em></div>
+    <div class="flash-line" id="fl-8">Je bent de beweging</div>
+    <div class="flash-line dim-flash" id="fl-9">geen scheiding tussen wil en doen</div>
+    <div class="flash-line" id="fl-10" style="font-size:22px;color:var(--accent-glow);">
+      Ik <em>was</em> de beweging.
+    </div>
+  </div>
+  <div id="flash-continue" style="display:none;">
+    <div class="thought" style="margin-top:20px;">
+      Dat was het. Geen Descartes daar op die wand. Geen denkend ding dat een machine bestuurde. Alleen een lichaam dat wist.
+    </div>
+    <button class="continue-btn" onclick="go('kapotte-kaart')">Terug in het nu</button>
+  </div>
+`;
+},
+
+'kapotte-kaart': ()=>`
+  <div class="passage-title">De Gescheurde Kaart</div>
+  <div class="passage-text">
+    <p>Je opent je ogen. De revalidatiezaal. Het balletje op de mat. De afstand tussen toen en nu is onoverbrugbaar.</p>
+    <p>Toen je klom, had je een onzichtbare kaart van je lichaam &mdash; een intuïtief weten waar elk lichaamsdeel was, wat het kon, hoe het bewoog. Je hoefde er niet over na te denken.</p>
+    <p>Die kaart is nu gescheurd.</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Lia's Lichaamskaart</div>
+    <div class="body-map">
+      <div class="body-zone zone-intact">
+        <span class="zone-icon">🧠</span>
+        <span class="zone-label">Hoofd & denken</span>
+        <span class="zone-status">INTACT</span>
+      </div>
+      <div class="body-zone zone-partial">
+        <span class="zone-icon">💪</span>
+        <span class="zone-label">Armen & handen</span>
+        <span class="zone-status">DEELS BESCHADIGD</span>
+      </div>
+      <div class="body-zone zone-damaged">
+        <span class="zone-icon">🦵</span>
+        <span class="zone-label">Benen & voeten</span>
+        <span class="zone-status">ZWAAR BESCHADIGD</span>
+      </div>
+      <div class="body-zone zone-partial">
+        <span class="zone-icon">🫁</span>
+        <span class="zone-label">Romp & balans</span>
+        <span class="zone-status">VERZWAKT</span>
+      </div>
+    </div>
+    <p style="font-size:15px;color:var(--text-dim);margin-top:12px;text-align:center;">
+      Niet alleen spierkracht of coördinatie is beschadigd &mdash; het <em>stille weten</em> zelf is aangetast.
+    </p>
+  </div>
+
+  <div class="passage-text">
+    <p>Elke beweging die vroeger vanzelf ging, is nu een moeizame expeditie. Niet omdat je niet kunt <em>denken</em> hoe het moet, maar omdat je lichaam het niet meer <em>weet</em>.</p>
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="addReflection('Het probleem is niet dat ik niet kan denken hoe ik moet bewegen — het is dat mijn lichaam het niet meer weet.'); go('avond-poging')">
+      <span class="choice-icon">A</span> Het probleem zit niet in mijn hoofd &mdash; het zit in het verlies van lichamelijk weten
+    </button>
+    <button class="choice-btn" onclick="addReflection('Misschien is dit bewijs dat Descartes ongelijk had — als mijn lichaam kan weten, is het meer dan een machine.'); adj('dualism',10); go('avond-poging')">
+      <span class="choice-icon">B</span> Als mijn lichaam kon <em>weten</em>, dan was het meer dan Descartes' machine
+    </button>
+  </div>
+`,
+
+'avond-poging': ()=>`
+  <div class="ambient-text">Lia's kamer &middot; avond &middot; stilte</div>
+  <div class="passage-title">Opnieuw Proberen</div>
+  <div class="passage-text">
+    <p>Die avond probeer je het opnieuw. Geen bevelen, geen frustratie. Alleen voelen.</p>
+    <p>De spanning in je schouder. Het gewicht van het dekbed. De warmte van Max tegen je zij.</p>
+    <p>Het is niet veel. Maar het is een begin.</p>
+  </div>
+  <div class="max-moment">
+    Max spint tegen je aan, een zacht, warm anker. Zijn lichaam weet precies hoe het moet liggen, hoe het de warmte moet zoeken. Zonder na te denken.
+  </div>
+  <div class="passage-text">
+    <p>Misschien is je lichaam inderdaad méér dan een machine die opdrachten uitvoert. Precies daarover gaat het symposium morgen.</p>
+  </div>
+  <div class="scene-break">&middot; &middot; &middot;</div>
+  <button class="continue-btn" onclick="go('symposium-intro')">De volgende dag &mdash; het symposium</button>
+`,
+
+'symposium-intro': ()=>`
+  <div class="ambient-text">Collegezaal &middot; middag &middot; het licht is zacht</div>
+  <div class="passage-title">Een Andere Weg</div>
+  <div class="passage-text">
+    <p>De professor begint met een vraag.</p>
+    <p>"Gisteren hoorden jullie Descartes. De mens als denkend ding. Maar stel je eens het volgende voor: je fietst. Je houdt je evenwicht, je stuurt, je reageert op het verkeer. <strong>Denk je daar bewust over na?</strong>"</p>
+    <p>Stilte in de zaal. Iedereen weet het antwoord.</p>
+    <p>"Nee. Je lichaam <em>weet</em> het. Zonder dat je er een gedachte aan wijdt. Vandaag ontmoeten we filosofen die zeggen: dat weten is fundamenteler dan het denken van Descartes."</p>
+  </div>
+
+  <div class="descartes-contrast">
+    <span class="dc-label">Terugblik: Descartes (H1)</span>
+    De mens = <em>denkend ding</em> (res cogitans) in een machine-lichaam (res extensa). Identiteit ligt in het denken. Het lichaam is secundair.
+  </div>
+
+  <div class="passage-text">
+    <p>"Vandaag slaan we een radicaal andere weg in. We gaan niet van het <em>denken</em> naar het lichaam, maar van het <em>lichaam</em> naar het denken."</p>
+  </div>
+
+  <button class="continue-btn" onclick="go('fenomenologie')">De fenomenologie</button>
+`,
+
+'fenomenologie': ()=>`
+  <div class="passage-title">Fenomenologie — Terug naar de Ervaring</div>
+  <div class="passage-text">
+    <p>"De stroming die we vandaag bespreken heet de <strong>fenomenologie</strong>," legt de professor uit. "Het is niet zozeer een theorie als een <em>methode</em>."</p>
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Fenomenologie</span>
+    Een methode om de directe, geleefde ervaring ('de fenomenen zelf') nauwkeurig te <strong>beschrijven</strong>. Het doel is niet verklaren <em>waarom</em> we iets ervaren, maar beschrijven <em>hoe</em> die ervaring gestructureerd is.
+  </div>
+
+  ${addTerm('Fenomenologie','Filosofische methode die de directe, geleefde ervaring nauwkeurig beschrijft — hoe de wereld aan ons verschijnt, voordat we er theorieën over vormen.')}
+
+  <div class="passage-text">
+    <p>"Fenomenologen proberen de vooronderstellingen van zowel de wetenschap als onze alledaagse aannames tijdelijk <em>'tussen haakjes te zetten'</em>. Dit noemen we de <strong>epoché</strong>."</p>
+    <p>"Laten we dat zelf proberen."</p>
+  </div>
+
+  <button class="continue-btn" onclick="go('epoche')">Probeer de epoché</button>
+`,
+
+'epoche': ()=>{
+  S.bracketsDone=0;
+  return `
+  <div class="passage-title">Tussen Haakjes Zetten</div>
+  <div class="philosophy-box">
+    <div class="box-title">Oefening: De Epoché</div>
+    <p style="font-size:15px;color:var(--text-dim);margin-bottom:16px;">
+      Zet je aannames tussen haakjes. Wat blijft er over als je alles weghaalt behalve de pure ervaring?
+    </p>
+
+    <div class="assumption-card" id="as-1">
+      <span>"Mijn lichaam is een <strong>machine</strong> die gerepareerd moet worden"</span>
+      <button class="bracket-btn" onclick="bracket(1,'Een vooroordeel uit het mechanistisch denken. Maar is je lichaam echt een machine?')">[ Tussen haakjes ]</button>
+    </div>
+    <div class="assumption-card" id="as-2">
+      <span>"De wetenschap vertelt me <strong>objectief</strong> wie ik ben"</span>
+      <button class="bracket-btn" onclick="bracket(2,'De wetenschap beschrijft van buitenaf. Maar jij ervaart van binnenuit.')">[ Tussen haakjes ]</button>
+    </div>
+    <div class="assumption-card" id="as-3">
+      <span>"Mijn <strong>denken</strong> is het belangrijkste deel van mij"</span>
+      <button class="bracket-btn" onclick="bracket(3,'Descartes zei dit. Maar is het waar? Was denken het belangrijkste toen je klom?')">[ Tussen haakjes ]</button>
+    </div>
+    <div class="assumption-card" id="as-4">
+      <span>"<strong>Objectieve kennis</strong> is de enige echte kennis"</span>
+      <button class="bracket-btn" onclick="bracket(4,'En de kennis die je lichaam had op de klimwand? Was dat niet echt?')">[ Tussen haakjes ]</button>
+    </div>
+
+    <div id="bracket-feedback" style="min-height:30px;margin-top:12px;font-size:15px;font-style:italic;color:var(--accent);"></div>
+  </div>
+  <div id="epoche-continue" style="display:none;">
+    <div class="passage-text">
+      <p>Nu alle aannames tussen haakjes staan, wat blijft er over?</p>
+      <p><strong>De pure ervaring.</strong> Hoe het voelt om hier te zitten, in dit lichaam, in deze zaal. Geen theorieën, geen verklaringen. Alleen het directe, geleefde moment.</p>
+    </div>
+    <button class="continue-btn" onclick="go('intentionaliteit')">Bewustzijn is altijd bewustzijn van...</button>
+  </div>
+`;
+},
+
+'intentionaliteit': ()=>`
+  <div class="passage-title">Intentionaliteit</div>
+  <div class="passage-text">
+    <p>"Een kernbegrip," vervolgt de professor, "is <strong>intentionaliteit</strong>. Niet 'intentie' in de alledaagse zin, maar iets fundamentelers."</p>
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Intentionaliteit</span>
+    De fundamentele <strong>gerichtheid</strong> van ons bewustzijn. Ons bewustzijn is nooit leeg of op zichzelf staand &mdash; het is altijd bewustzijn <em>van</em> iets. Je ziet <em>een stoel</em>, je hoort <em>muziek</em>, je denkt <em>een gedachte</em>. Het is een openheid naar de wereld, geen gesloten 'innerlijke doos'.
+  </div>
+
+  ${addTerm('Intentionaliteit','De fundamentele gerichtheid van bewustzijn — het is altijd bewustzijn van iets. Geen lege doos, maar openheid naar de wereld.')}
+
+  <div class="passage-text">
+    <p>Je denkt erover na. In het ziekenhuis was je bewustzijn altijd <em>ergens</em> op gericht: op de pijn, op je hand, op Max, op de angst. Het was nooit leeg. Zelfs als je niets deed, was je je bewust <em>van</em> de stilte, <em>van</em> het plafond, <em>van</em> je eigen lichaam.</p>
+  </div>
+
+  <button class="continue-btn" onclick="go('pre-reflectief')">Het bewustzijn dat voorafgaat aan denken</button>
+`,
+
+'pre-reflectief': ()=>`
+  <div class="passage-title">Pre-reflectief Bewustzijn</div>
+  <div class="passage-text">
+    <p>"Nu het belangrijkste concept," zegt de professor. "Fenomenologen onderscheiden twee lagen van bewustzijn."</p>
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Pre-reflectief bewustzijn</span>
+    Het directe, onmiddellijke bewustzijn dat we hebben <strong>voordat</strong> we erover nadenken. Als je fietst, ben je je direct bewust van evenwicht en omgeving, zonder constant te denken "nu stuur ik naar links". Dit is de <em>basis</em> van alle kennis.
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Reflectief bewustzijn</span>
+    Het <strong>nadenkende</strong> bewustzijn — je staat stil bij je ervaring, analyseert, benoemt. Dit is wat Descartes' Cogito beschrijft. Maar volgens fenomenologen is dit <em>secundair</em>.
+  </div>
+
+  ${addTerm('Pre-reflectief bewustzijn','Direct, onmiddellijk bewustzijn vóór het nadenken — zoals het lichamelijk weten bij fietsen of klimmen. De basis van alle kennis.')}
+
+  <div class="passage-text">
+    <p>De professor kijkt de zaal in. "Denk aan een voorbeeld. Als je naar een pen reikt &mdash; <em>weet</em> je lichaam pre-reflectief waar die pen is en hoe je hand moet bewegen. Pas <em>daarna</em> kun je erover nadenken."</p>
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adj('epistem',12); addReflection('Pre-reflectief bewustzijn — dat is precies wat ik miste. Niet het denken, maar het stille weten.'); go('sheets-johnstone')">
+      <span class="choice-icon">A</span> Dát is wat ik kwijt ben &mdash; niet het denken, maar het stille, lichamelijke weten
+    </button>
+    <button class="choice-btn" onclick="adj('epistem',5); go('sheets-johnstone')">
+      <span class="choice-icon">B</span> Interessant, maar is dit niet gewoon een ander woord voor 'automatisme' of 'reflexen'?
+    </button>
+    <button class="choice-btn" onclick="adj('dualism',10); adj('epistem',8); go('sheets-johnstone')">
+      <span class="choice-icon">C</span> Dit ondermijnt Descartes: als kennis begint in het lichaam, niet in het denken, is de mens geen 'denkend ding'
+    </button>
+  </div>
+`,
+
+'sheets-johnstone': ()=>`
+  <div class="passage-title">Maxine Sheets-Johnstone</div>
+  <div class="passage-text">
+    <p>Op het scherm verschijnt een foto van een oudere vrouw met levendige ogen. Maxine Sheets-Johnstone, geboren in 1930. Ooit danseres.</p>
+    <p>"Sheets-Johnstone past de fenomenologische methode toe op iets specifieks," zegt de professor. "De ervaring van het <strong>bewegende lichaam</strong>."</p>
+    <p>Ze citeert:</p>
+  </div>
+
+  <div class="thought" style="font-size:18px;text-align:center;border:none;padding:20px;color:var(--accent-glow);">
+    "Fenomenologie gaat over het beschrijven van mens en wereld als mens-temidden-van-de-wereld &mdash; de mens zoals hij zichzelf en de wereld ervaart, helder en scherp, nog voordat enige reflectie plaatsvindt."
+    <div style="font-size:14px;color:var(--text-dim);margin-top:8px;">— Maxine Sheets-Johnstone</div>
+  </div>
+
+  <div class="passage-text">
+    <p>"Haar centrale stelling is dit: onze meest fundamentele gewaarwording van onszelf komt niet voort uit <em>denken</em>, maar uit de <strong>pre-reflectieve ervaring van ons lichaam in beweging</strong>."</p>
+  </div>
+
+  ${addTerm('Sheets-Johnstone','Fenomenoloog en voormalig danseres. Stelling: onze fundamentele zelfervaring komt voort uit de pre-reflectieve gewaarwording van ons bewegende lichaam.')}
+
+  <button class="continue-btn" onclick="go('argument1')">Haar eerste argument</button>
+`,
+
+'argument1': ()=>`
+  <div class="passage-title">Beweging Gaat Vooraf aan Reflectie</div>
+  <div class="passage-text">
+    <p>"Sheets-Johnstone's eerste argument," zegt de professor, "is dat de <strong>gewaarwording van beweging voorafgaat aan reflectie</strong>."</p>
+    <p>"Een danser ervaart de flow en dynamiek direct, vanuit het eerstepersoonsperspectief. Pas <em>daarna</em> kan er gereflecteerd worden. Reflectie is secundair."</p>
+  </div>
+
+  <div class="passage-text">
+    <p>Je denkt onmiddellijk terug aan de flashback. Op de klimwand <em>was</em> je de beweging. Er was geen stap tussen willen en doen, geen commando en uitvoering. Je lichaam wist.</p>
+    <p>En nu, bij het balletje? Nu probeer je het andersom: eerst denken, dan doen. En het werkt niet.</p>
+  </div>
+
+  <div class="descartes-contrast">
+    <span class="dc-label">Contrast met Descartes</span>
+    Descartes: het <em>denken</em> is het fundament → het lichaam voert uit.<br>
+    Sheets-Johnstone: de <em>lichamelijke beweging</em> is het fundament → reflectie komt daarna.
+  </div>
+
+  <button class="continue-btn" onclick="go('lichaamsschema')">Het lichaamsschema</button>
+`,
+
+'lichaamsschema': ()=>`
+  <div class="passage-title">Het Lichaamsschema</div>
+  <div class="passage-text">
+    <p>"Dit impliciete, pre-reflectieve weten van ons lichaam en zijn mogelijkheden in de ruimte," legt de professor uit, "noemen we het <strong>lichaamsschema</strong>."</p>
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Lichaamsschema</span>
+    Ons praktische, pre-reflectieve begrip van hoe we ons lichaam kunnen gebruiken en positioneren in de ruimte. Het structureert onze hele ervaring van 'hier-zijn'. Je hoeft niet na te denken over waar je hand is &mdash; je <em>weet</em> het.
+  </div>
+
+  ${addTerm('Lichaamsschema','Ons praktische, pre-reflectieve begrip van ons lichaam en zijn mogelijkheden in de ruimte — het stille weten hoe je beweegt.')}
+
+  <div class="passage-text">
+    <p>Je voelt een steek van herkenning. <em>Dat</em> ben ik kwijt, denk je. Niet alleen spierkracht of coördinatie, maar dat vanzelfsprekende weten. Mijn kaart van het lichaam is gescheurd. Elke beweging is nu een moeizame expeditie door onbekend terrein.</p>
+    <p>En toch&hellip; toen je je op pure sensatie richtte bij Ruben, was er nog iets. Een fragment, een flard van dat oude weten.</p>
+  </div>
+
+  <div class="thought">Misschien is mijn lichaamsschema niet verdwenen, maar beschadigd. Wachtend tot ik het weer ontdek.</div>
+
+  <button class="continue-btn" onclick="go('bewustzijns-lichaam')">Het bewustzijns-lichaam</button>
+`,
+
+'bewustzijns-lichaam': ()=>`
+  <div class="passage-title">Het Bewustzijns-Lichaam</div>
+  <div class="passage-text">
+    <p>"En hier," zegt de professor met nadruk, "komt Sheets-Johnstone's directe kritiek op Descartes."</p>
+    <p>"Ze gebruikt de term <strong>'bewustzijns-lichaam'</strong> om de fundamentele eenheid van bewustzijn en lichamelijkheid te benadrukken."</p>
+  </div>
+
+  <div class="thought" style="font-size:18px;text-align:center;border:none;padding:20px;color:var(--accent-glow);">
+    "Elk begrip van de mens moet gebaseerd zijn op kennis van zijn bewustzijns-lichaam in levende samenhang met de wereld."
+    <div style="font-size:14px;color:var(--text-dim);margin-top:8px;">— Maxine Sheets-Johnstone</div>
+  </div>
+
+  ${addTerm('Bewustzijns-lichaam','Sheets-Johnstone\'s term voor de fundamentele eenheid van bewustzijn en lichamelijkheid. Directe kritiek op Descartes\' scheiding.')}
+
+  <div class="definition-box">
+    <span class="term">Bewustzijns-lichaam vs. Descartes</span>
+    Voor Descartes zijn geest en lichaam twee <em>aparte</em> substanties. Voor Sheets-Johnstone zijn ze <em>één</em>: we zijn dit ervarende, voelende, bewegende lichaam. Bewustzijn is inherent lichamelijk.
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adj('dualism',15); addReflection('Het bewustzijns-lichaam: ik ben niet een geest IN een lichaam, ik BEN een bewust lichaam.'); go('kant')">
+      <span class="choice-icon">A</span> Dit voelt juist &mdash; ik ben niet een geest <em>in</em> een lichaam, ik <em>ben</em> een bewust lichaam
+    </button>
+    <button class="choice-btn" onclick="adj('dualism',5); go('kant')">
+      <span class="choice-icon">B</span> Maar als geest en lichaam één zijn, waarom voelen ze dan soms zo gescheiden &mdash; juist bij mij?
+    </button>
+    <button class="choice-btn" onclick="adj('dualism',-5); go('kant')">
+      <span class="choice-icon">C</span> Ik ben niet overtuigd &mdash; Descartes' scheiding verklaart beter waarom mijn geest wil maar mijn lichaam niet volgt
+    </button>
+  </div>
+`,
+
+'kant': ()=>`
+  <div class="passage-title">Kant — De Brug</div>
+  <div class="passage-text">
+    <p>De professor maakt een korte zijstap. "De poging van de fenomenologie om rede en ervaring te verbinden herinnert aan <strong>Immanuel Kant</strong>."</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Kants Synthese</div>
+    <p>Kant stelde dat kennis ontstaat door een <strong>synthese</strong>:</p>
+    <p style="margin-top:8px;">
+      &bull; Onze <strong>zintuigen</strong> leveren de inhoud (<em>a posteriori</em>)<br>
+      &bull; Ons <strong>verstand</strong> ordent die inhoud via aangeboren structuren zoals ruimte, tijd en causaliteit (<em>a priori</em>)
+    </p>
+    <p style="margin-top:8px;">Zonder zintuigen geen inhoud, zonder verstand geen structuur. Kennis is geen passieve registratie, maar een <strong>actieve, gestructureerde betrokkenheid</strong> op de wereld.</p>
+    <p style="margin-top:8px;">Wij kennen slechts de <strong>fenomenale wereld</strong> &mdash; de wereld zoals die aan ons verschijnt. Over de <strong>noumenale wereld</strong> (de wereld zoals die objectief is, los van ons) kunnen we geen kennis hebben.</p>
+  </div>
+
+  ${addTerm('Fenomenale wereld (Kant)','De wereld zoals die aan ons verschijnt — het enige dat we kunnen kennen.')}
+  ${addTerm('Noumenale wereld (Kant)','De wereld zoals die objectief is, los van onze kenvermogens — onkenbaar volgens Kant.')}
+
+  <button class="continue-btn" onclick="go('existentie')">Existentie versus essentie</button>
+`,
+
+'existentie': ()=>`
+  <div class="passage-title">Hoe Het Is om Te Zijn</div>
+  <div class="passage-text">
+    <p>"Sheets-Johnstone's tweede grote punt," zegt de professor, "gaat over het verschil tussen <strong>essentie</strong> en <strong>existentie</strong>."</p>
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Essentie (Mensbeeld)</span>
+    Een abstracte definitie van wat de mens <em>is</em>. Bekeken vanuit het derdepersoonsperspectief.
+    Descartes: de mens is een denkend ding.
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Existentie (Bestaan)</span>
+    De concrete, geleefde bestaanservaring — hoe het <em>is</em> om als dit specifieke lichaam in deze specifieke wereld te zijn. Bekeken vanuit het eerstepersoonsperspectief.
+  </div>
+
+  ${addTerm('Essentie','Een abstracte definitie van wat de mens is — derdepersoonsperspectief. Bv. Descartes: "de mens is een denkend ding."')}
+  ${addTerm('Existentie','De concrete, geleefde bestaanservaring — hoe het is om als dit lichaam in deze wereld te zijn. Eerstepersoonsperspectief.')}
+
+  <div class="passage-text">
+    <p>"Fenomenologie kiest voor existentie. Ze beschrijft niet wat de mens <em>is</em> in het algemeen, maar hoe het <em>is</em> om als dit specifieke lichaam in deze specifieke wereld te zijn."</p>
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adj('exist',15); addReflection('Mijn ervaring past in geen enkel abstract mensbeeld. Ik ben geen categorie — ik ben Lia.'); go('implicaties')">
+      <span class="choice-icon">A</span> Mijn ervaring past in geen enkel abstract mensbeeld &mdash; ik ben geen categorie, ik ben Lia
+    </button>
+    <button class="choice-btn" onclick="adj('exist',5); go('implicaties')">
+      <span class="choice-icon">B</span> Maar hebben we niet ook algemene begrippen nodig om onszelf te begrijpen?
+    </button>
+    <button class="choice-btn" onclick="adj('exist',-5); go('implicaties')">
+      <span class="choice-icon">C</span> Dit voelt te subjectief &mdash; hoe weet je dat je persoonlijke ervaring betrouwbaar is?
+    </button>
+  </div>
+`,
+
+'implicaties': ()=>`
+  <div class="passage-title">Wat Betekent Dit?</div>
+  <div class="passage-text">
+    <p>De professor vat samen. "De fenomenologie verwerpt Descartes' scheiding tussen lichaam en geest. Ze ziet de mens als een <strong>fundamentele eenheid</strong>."</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Implicaties</div>
+    <p><strong>Geen scheiding:</strong> De geleefde, lichamelijke en pre-reflectieve bestaanservaring is fundamenteler dan een abstract mensbeeld.</p>
+    <p style="margin-top:10px;"><strong>Voor Lia:</strong> Ervaringen zoals trauma, ziekte of revalidatie betreffen niet slechts een 'mechanisch defect' &mdash; ze raken de <em>gehele</em> geleefde ervaring en het lichaamsschema.</p>
+    <p style="margin-top:10px;"><strong>Voor de geneeskunde:</strong> Een puur mechanistische benadering (het lichaam als machine repareren) mist iets essentieels &mdash; de geleefde ervaring van de patiënt.</p>
+  </div>
+
+  <div class="passage-text">
+    <p>Je denkt aan Ruben. Zijn aanpak &mdash; "voel, niet stuur" &mdash; is fenomenologisch. Hij behandelt je niet als een machine, maar als een <em>bewustzijns-lichaam</em> dat zichzelf opnieuw moet leren kennen.</p>
+  </div>
+
+  <button class="continue-btn" onclick="go('terug-bij-lia')">Terug bij jou</button>
+`,
+
+'terug-bij-lia': ()=>`
+  <div class="ambient-text">Na het symposium &middot; revalidatiecentrum &middot; schemering</div>
+  <div class="passage-title">Twee Benaderingen</div>
+  <div class="passage-text">
+    <p>Je zit in de revalidatiezaal. Het is stil. Het licht is zacht. Je denkt aan twee manieren om naar je situatie te kijken.</p>
+  </div>
+
+  <div class="descartes-contrast">
+    <span class="dc-label">Descartes' benadering</span>
+    Je lichaam is een machine met defecte bedrading. Repareer de machine (BCI als technische brug). Jij &mdash; je geest &mdash; blijft intact. Het probleem is mechanisch.
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Fenomenologische benadering</div>
+    Je bent een bewustzijns-lichaam waarvan het lichaamsschema beschadigd is. De revalidatie gaat niet alleen over mechanisch herstel, maar over het opnieuw leren <em>kennen</em> van je lichaam, het hervinden van het stille weten, het herstellen van de eenheid.
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adj('dualism',12); adj('exist',10); addReflection('Rubens aanpak werkt — voelen, niet sturen. Misschien is de fenomenologie mijn weg.'); go('reflectie-final')">
+      <span class="choice-icon">A</span> De fenomenologische aanpak resoneert &mdash; Rubens "voel, niet stuur" werkt beter dan commando's
+    </button>
+    <button class="choice-btn" onclick="adj('dualism',-5); addReflection('Ik heb allebei nodig — de technische brug én het lichamelijke weten.'); go('reflectie-final')">
+      <span class="choice-icon">B</span> Ik heb <em>allebei</em> nodig &mdash; de BCI als technische brug én de fenomenologische herverbinding
+    </button>
+    <button class="choice-btn" onclick="adj('dualism',-8); addReflection('De fenomenologie is mooi maar soms heb je gewoon techniek nodig om een kapot systeem te repareren.'); go('reflectie-final')">
+      <span class="choice-icon">C</span> De fenomenologie is mooi, maar soms heb je gewoon techniek nodig om een kapot systeem te repareren
+    </button>
+  </div>
+`,
+
+'reflectie-final': ()=>`
+  <div class="passage-title">Het Wordt Avond</div>
+  <div class="passage-text">
+    <p>Die avond probeer je het opnieuw. Niet het balletje &mdash; dat bewaar je voor morgen. Gewoon <em>zijn</em> in je lichaam.</p>
+    <p>Je sluit je ogen en richt je op wat er is. De spanning in je schouder. Het gewicht van het dekbed. De warmte van Max tegen je zij. Het zijn geen commando's, geen stappen. Alleen ervaring.</p>
+  </div>
+
+  <div class="max-moment">
+    Max strekt zich uit en geeuwt. Zijn hele lichaam is pre-reflectief bewustzijn &mdash; hij denkt niet over zijn bewegingen, hij ís ze. Misschien, denk je, is dat dichter bij de waarheid dan Descartes' denkende ding.
+  </div>
+
+  <div class="passage-text">
+    <p>Het is niet veel. Maar het is een begin. Je lichaamsschema is niet verdwenen &mdash; het is beschadigd, en wacht tot jij het opnieuw ontdekt. Niet door te <em>denken</em>, maar door te <em>voelen</em>.</p>
+    <p>Morgen gaat het symposium verder. Een denker die beschrijft hoe je tegelijk <em>in</em> je lichaam kunt zitten en er <em>van buitenaf</em> naar kunt kijken. Die gespletenheid die je soms voelt. De <strong>excentrische positionaliteit</strong> van de mens.</p>
+  </div>
+
+  <button class="continue-btn" onclick="go('afsluiting')">Einde hoofdstuk 2</button>
+`,
+
+'afsluiting': ()=>{
+  let dualTxt = S.dualism>60 ? 'Je neigt sterk naar <strong>eenheid</strong> van geest en lichaam &mdash; het bewustzijns-lichaam.' :
+    S.dualism<40 ? 'Je houdt vast aan een vorm van <strong>dualisme</strong> &mdash; geest en lichaam als apart.' :
+    'Je positie is <strong>genuanceerd</strong> &mdash; je ziet aspecten van beide.';
+  let epTxt = S.epistem>60 ? 'Je waardeert <strong>lichamelijke ervaring</strong> als bron van kennis.' :
+    S.epistem<40 ? 'Je vertrouwt meer op de <strong>rede en het denken</strong>.' :
+    'Je zoekt een <strong>balans</strong> tussen rede en ervaring.';
+  let exTxt = S.exist>60 ? 'Je kiest voor <strong>existentie</strong> &mdash; de concrete, geleefde ervaring.' :
+    S.exist<40 ? 'Je kiest voor <strong>essentie</strong> &mdash; algemene definities en mensbeelden.' :
+    'Je waardeert zowel <strong>essentie als existentie</strong>.';
+
+  return `
+  <div class="ambient-text">Lia's kamer &middot; nacht &middot; Max slaapt</div>
+  <div class="passage-title">Einde Hoofdstuk 2</div>
+  <div class="passage-text">
+    <p>Het moment bleef bij je hangen. Misschien is het lichaam inderdaad méér dan een machine die opdrachten uitvoert. Misschien is het weten van het lichaam &mdash; het stille, pre-reflectieve weten &mdash; fundamenteler dan het denken waar Descartes alles op bouwde.</p>
+    <p>Je schrijft in je notitieboek:</p>
+  </div>
+  <div class="thought" style="font-size:17px;">"Ik was de beweging. Geen scheiding tussen wil en doen. Dat is wat ik kwijt ben, en wat ik terug wil vinden."</div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Jouw Filosofisch Profiel &mdash; Hoofdstuk 2</div>
+    <p>${dualTxt}</p>
+    <p style="margin-top:8px;">${epTxt}</p>
+    <p style="margin-top:8px;">${exTxt}</p>
+  </div>
+
+  <div class="scene-break">&middot; &middot; &middot;</div>
+
+  <div style="text-align:center;margin-top:24px;">
+    <p style="color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;margin-bottom:6px;">Hoofdstuk 2 voltooid</p>
+    <p style="color:var(--accent);font-family:'Inter',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;">
+      Volgende: Plessner &mdash; de excentrische positionaliteit van de mens
+    </p>
+    <button class="continue-btn" style="margin-top:20px;" onclick="go('samenvatting')">Bekijk samenvatting</button>
+  </div>
+`;
+},
+
+'samenvatting': ()=>`
+  <div class="passage-title">Overzicht Hoofdstuk 2</div>
+  <div class="philosophy-box">
+    <div class="box-title">Kernbegrippen</div>
+    ${S.notebookTerms.map(t=>`
+      <div class="definition-box">
+        <span class="term">${t.term}</span>
+        ${t.definition}
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="philosophy-box" style="margin-top:20px;">
+    <div class="box-title">Jouw Reflecties</div>
+    ${S.notebookReflections.map(r=>`
+      <div class="thought" style="margin:10px 0;font-size:16px;">"${r}"</div>
+    `).join('')}
+  </div>
+
+  <div class="philosophy-box" style="margin-top:20px;">
+    <div class="box-title">Leerdoelen &mdash; Check</div>
+    <p style="font-size:15px;line-height:1.8;">
+      ✦ De fenomenologische methode en intentionaliteit<br>
+      ✦ Pre-reflectief bewustzijn als fundament voor kennis<br>
+      ✦ Sheets-Johnstone: zelfervaring komt voort uit het bewegende lichaam<br>
+      ✦ Het lichaamsschema als praktisch, impliciet weten<br>
+      ✦ Het bewustzijns-lichaam als kritiek op Descartes' dualisme<br>
+      ✦ Existentie vs. essentie: concreet bestaan vs. abstract mensbeeld<br>
+      ✦ Kants synthese: zintuiglijke ervaring + structurerend verstand
+    </p>
+  </div>
+
+  <div style="text-align:center;margin-top:30px;">
+    <button class="continue-btn" onclick="go('start')">Opnieuw spelen</button>
+  </div>
+`
+};
+
+// ============================================================
+// BALL MINIGAME
+// ============================================================
+function switchMode(mode){
+  S.ballMode=mode;
+  document.getElementById('mode-commando').style.display=mode==='commando'?'block':'none';
+  document.getElementById('mode-voelen').style.display=mode==='voelen'?'block':'none';
+  document.getElementById('tab-cmd').classList.toggle('active',mode==='commando');
+  document.getElementById('tab-feel').classList.toggle('active',mode==='voelen');
+  document.getElementById('ball-feedback').textContent='';
+}
+
+const cmdFails=[
+  "Je vingers trillen... en duwen het balletje weg.",
+  "Je hand sluit — maar te laat, te zwak. Het balletje rolt opzij.",
+  "Een schokje. Je vingers beroeren het balletje, maar grijpen niet.",
+  "Strek-buig-sluit. De stappen zijn correct. Maar je hand gehoorzaamt niet."
+];
+
+function cmdAttempt(action){
+  S.cmdAttempts++;
+  const fb=document.getElementById('ball-feedback');
+  const vis=document.getElementById('ball-visual');
+  vis.style.transform='translateX('+(Math.random()*10-5)+'px)';
+  setTimeout(()=>vis.style.transform='',200);
+
+  fb.innerHTML='<span style="color:var(--danger);">'+cmdFails[Math.min(S.cmdAttempts-1,cmdFails.length-1)]+'</span>';
+
+  if(S.cmdAttempts>=3){
+    setTimeout(()=>{
+      const r=document.getElementById('bal-result');
+      r.style.display='block';
+      r.innerHTML=`
+        <div class="thought" style="margin-top:16px;">Commando's werken niet. Strek-buig-sluit &mdash; de stappen zijn correct, maar je lichaam vertaalt ze niet. Alsof de taal van je geest niet meer overeenkomt met de taal van je lichaam.</div>
+        <p style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);margin-top:12px;">Tip: probeer de <strong>voelmodus</strong> &mdash; of ga verder naar het verhaal.</p>
+        <button class="continue-btn" onclick="go('frustratie')" style="margin-top:12px;">Geef het op &mdash; ga verder</button>
+      `;
+    },600);
+  }
+}
+
+const feelTexts=[
+  {id:1,response:"Koelte. Gladheid. Je handpalm registreert de mat. Er is iets.", next:2},
+  {id:2,response:"Een lichte spanning. Warmte. Je onderarm leeft nog.", next:3},
+  {id:3,response:"Een spoor van energie, diep in de spier. Niet veel, maar echt.", next:4},
+  {id:4,response:"Textuur. Druk. Je vingertoppen raken het zachte oppervlak van het balletje. Niet grijpen — alleen aanraken.", next:null}
+];
+
+function feelStep(n){
+  S.feelSteps++;
+  const info=feelTexts.find(f=>f.id===n);
+  const btn=document.getElementById('feel-'+n);
+  btn.classList.add('activated');
+  btn.disabled=true;
+  document.getElementById('ball-feedback').innerHTML='<span style="color:var(--accent-glow);">'+info.response+'</span>';
+
+  if(info.next){
+    setTimeout(()=>{ document.getElementById('feel-'+info.next).style.display='block'; },700);
+  } else {
+    setTimeout(()=>{
+      const r=document.getElementById('bal-result');
+      r.style.display='block';
+      r.innerHTML=`
+        <div class="thought" style="margin-top:16px;">Je hebt het balletje aangeraakt. Niet gepakt, niet opgetild. Maar aangeraakt. Door te voelen in plaats van te sturen. Je lichaam weet meer dan je denkt.</div>
+        <button class="continue-btn" onclick="go('voelen-uitdaging')" style="margin-top:12px;">Ruben glimlacht</button>
+      `;
+    },800);
+  }
+}
+
+// ============================================================
+// FLASHBACK
+// ============================================================
+function startFlashback(){
+  const lines=document.querySelectorAll('.flash-line');
+  lines.forEach((el,i)=>{
+    setTimeout(()=>{
+      el.classList.add('visible');
+      if(i===lines.length-1){
+        setTimeout(()=>{
+          document.getElementById('flash-continue').style.display='block';
+        },1200);
+      }
+    }, 600 + i*900);
+  });
+}
+
+// ============================================================
+// EPOCHÉ
+// ============================================================
+function bracket(n,explanation){
+  document.getElementById('as-'+n).classList.add('bracketed');
+  document.getElementById('as-'+n).querySelector('.bracket-btn').disabled=true;
+  document.getElementById('bracket-feedback').textContent=explanation;
+  S.bracketsDone++;
+  if(S.bracketsDone>=4){
+    setTimeout(()=>{
+      document.getElementById('epoche-continue').style.display='block';
+      document.getElementById('bracket-feedback').innerHTML='<span style="color:var(--accent-glow);font-weight:600;">Alle aannames tussen haakjes. Wat blijft er over? De pure ervaring.</span>';
+      addTerm('Epoché','Het fenomenologisch \'tussen haakjes zetten\' van vooroordelen en aannames om terug te keren naar de pure ervaring.');
+    },500);
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', ()=> go('start'));
+</script>
+</body>
+</html>

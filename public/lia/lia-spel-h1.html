@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 1: Descartes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --bg-card: #12121a;
+    --bg-hover: #1a1a28;
+    --text: #c8c5d0;
+    --text-bright: #eae8f0;
+    --text-dim: #6e6b7a;
+    --accent: #7b68ee;
+    --accent-glow: #9d8eff;
+    --accent-dim: #4a3da0;
+    --warm: #e8a87c;
+    --warm-dim: #a06840;
+    --danger: #e06070;
+    --success: #60c080;
+    --border: #2a2a3a;
+    --shadow: rgba(0,0,0,0.5);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 19px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== LAYOUT ===== */
+  #game-container {
+    display: flex;
+    min-height: 100vh;
+  }
+
+  #story-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+    position: relative;
+    overflow-y: auto;
+    max-height: 100vh;
+  }
+
+  #passage-wrapper {
+    max-width: 680px;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  #passage-wrapper.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  #notebook-panel {
+    width: 340px;
+    background: var(--bg-card);
+    border-left: 1px solid var(--border);
+    padding: 30px 24px;
+    overflow-y: auto;
+    max-height: 100vh;
+    transition: transform 0.3s ease;
+  }
+
+  #notebook-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    z-index: 100;
+    background: var(--accent-dim);
+    color: var(--text-bright);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 900px) {
+    #notebook-panel {
+      position: fixed;
+      right: 0;
+      top: 0;
+      height: 100vh;
+      z-index: 99;
+      transform: translateX(100%);
+    }
+    #notebook-panel.open { transform: translateX(0); }
+    #notebook-toggle { display: block; }
+  }
+
+  /* ===== TYPOGRAPHY ===== */
+  .passage-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 24px;
+    opacity: 0.7;
+  }
+
+  .passage-text p {
+    margin-bottom: 18px;
+  }
+
+  .passage-text em {
+    color: var(--warm);
+    font-style: italic;
+  }
+
+  .passage-text strong {
+    color: var(--text-bright);
+    font-weight: 600;
+  }
+
+  .highlight {
+    color: var(--accent-glow);
+    font-weight: 600;
+  }
+
+  .dim { color: var(--text-dim); }
+
+  .thought {
+    font-style: italic;
+    color: var(--warm);
+    border-left: 2px solid var(--warm-dim);
+    padding-left: 16px;
+    margin: 20px 0;
+  }
+
+  .philosophy-box {
+    background: linear-gradient(135deg, rgba(123,104,238,0.08), rgba(123,104,238,0.02));
+    border: 1px solid rgba(123,104,238,0.2);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 24px 0;
+  }
+
+  .philosophy-box .box-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .definition-box {
+    background: rgba(232,168,124,0.06);
+    border: 1px solid rgba(232,168,124,0.15);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 17px;
+  }
+
+  .definition-box .term {
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    color: var(--warm);
+    font-size: 14px;
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  /* ===== CHOICES ===== */
+  .choices {
+    margin-top: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .choice-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 20px;
+    color: var(--text);
+    font-family: 'Crimson Text', Georgia, serif;
+    font-size: 18px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    line-height: 1.5;
+  }
+
+  .choice-btn:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-dim);
+    color: var(--text-bright);
+    transform: translateX(4px);
+  }
+
+  .choice-btn:active {
+    transform: translateX(2px);
+  }
+
+  .choice-btn .choice-icon {
+    color: var(--accent);
+    margin-right: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .continue-btn {
+    display: inline-block;
+    margin-top: 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 28px;
+    color: var(--text-dim);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .continue-btn:hover {
+    border-color: var(--accent-dim);
+    color: var(--accent);
+  }
+
+  /* ===== MINIGAME: HAND ===== */
+  #hand-game {
+    text-align: center;
+    padding: 30px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: rgba(0,0,0,0.3);
+  }
+
+  #hand-visual {
+    font-size: 64px;
+    margin: 20px 0;
+    user-select: none;
+    transition: transform 0.1s;
+  }
+
+  #hand-visual.tremble {
+    animation: tremble 0.15s ease-in-out;
+  }
+
+  @keyframes tremble {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(1.5deg) translateX(2px); }
+    50% { transform: rotate(-1deg) translateX(-1px); }
+    75% { transform: rotate(0.5deg) translateX(1px); }
+    100% { transform: rotate(0deg); }
+  }
+
+  #hand-instruction {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+  }
+
+  #hand-attempts {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 12px;
+  }
+
+  .hand-btn {
+    background: var(--accent-dim);
+    color: var(--text-bright);
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    margin: 4px;
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .hand-btn:hover { background: var(--accent); }
+
+  /* ===== MINIGAME: TWIJFEL ===== */
+  .twijfel-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.4s ease;
+  }
+
+  .twijfel-item.doubted {
+    border-color: var(--danger);
+    opacity: 0.35;
+    text-decoration: line-through;
+  }
+
+  .doubt-btn {
+    background: rgba(224,96,112,0.15);
+    color: var(--danger);
+    border: 1px solid rgba(224,96,112,0.3);
+    border-radius: 6px;
+    padding: 4px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .doubt-btn:hover {
+    background: rgba(224,96,112,0.25);
+  }
+
+  /* ===== NOTEBOOK ===== */
+  .nb-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--warm);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .nb-section {
+    margin-bottom: 24px;
+  }
+
+  .nb-section-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 8px;
+  }
+
+  .nb-item {
+    font-size: 15px;
+    line-height: 1.5;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    opacity: 0;
+    animation: fadeInNote 0.5s ease forwards;
+  }
+
+  @keyframes fadeInNote {
+    to { opacity: 1; }
+  }
+
+  .nb-item .nb-term {
+    color: var(--accent-glow);
+    font-weight: 600;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    display: block;
+  }
+
+  .nb-item .nb-def {
+    color: var(--text-dim);
+    font-size: 14px;
+  }
+
+  .nb-compass {
+    background: rgba(123,104,238,0.06);
+    border: 1px solid rgba(123,104,238,0.15);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 12px;
+  }
+
+  .compass-bar {
+    display: flex;
+    align-items: center;
+    margin: 6px 0;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    gap: 8px;
+  }
+
+  .compass-bar .bar-label {
+    width: 80px;
+    color: var(--text-dim);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .compass-bar .bar-track {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    position: relative;
+  }
+
+  .compass-bar .bar-dot {
+    position: absolute;
+    top: -4px;
+    width: 12px;
+    height: 12px;
+    background: var(--accent);
+    border-radius: 50%;
+    transition: left 0.5s ease;
+  }
+
+  .compass-bar .bar-label-right {
+    width: 80px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  /* ===== AMBIENT ===== */
+  .ambient-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 12px;
+    color: var(--text-dim);
+    opacity: 0.5;
+    text-align: center;
+    margin-bottom: 30px;
+    letter-spacing: 1px;
+  }
+
+  .scene-break {
+    text-align: center;
+    margin: 30px 0;
+    color: var(--text-dim);
+    opacity: 0.3;
+    letter-spacing: 8px;
+  }
+
+  /* ===== PROGRESS ===== */
+  #progress-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+    transition: width 0.6s ease;
+    z-index: 200;
+  }
+
+  /* ===== MAX THE CAT ===== */
+  .max-moment {
+    background: rgba(232,168,124,0.04);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    border: 1px solid rgba(232,168,124,0.1);
+    font-size: 17px;
+    color: var(--text-dim);
+  }
+
+  .max-moment::before {
+    content: '🐈';
+    margin-right: 8px;
+  }
+
+  /* ===== TYPING EFFECT ===== */
+  .typewriter {
+    overflow: hidden;
+    border-right: 2px solid var(--accent);
+    white-space: nowrap;
+    animation: typing 2.5s steps(30, end), blink-caret 0.6s step-end infinite;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  @keyframes typing {
+    from { max-width: 0; }
+    to { max-width: 100%; }
+  }
+
+  @keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--accent); }
+  }
+
+  /* ===== SCORE / PROFILE BADGE ===== */
+  .profile-badge {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  .badge-dualist { background: rgba(123,104,238,0.15); color: var(--accent-glow); }
+  .badge-materialist { background: rgba(96,192,128,0.15); color: var(--success); }
+  .badge-fenomenoloog { background: rgba(232,168,124,0.15); color: var(--warm); }
+
+  /* ===== SCROLL ===== */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+</style>
+</head>
+<body>
+
+<div id="progress-bar" style="width: 0%"></div>
+<button id="notebook-toggle" onclick="toggleNotebook()">📓 Notitieboek</button>
+
+<div id="game-container">
+  <div id="story-panel">
+    <div id="passage-wrapper"></div>
+  </div>
+  <div id="notebook-panel">
+    <div class="nb-title">📓 Lia's Notitieboek</div>
+    <div id="notebook-content">
+      <div class="nb-section">
+        <div class="nb-section-title">Begrippen</div>
+        <div id="nb-terms"><p class="dim" style="font-size:14px; font-family:'Inter',sans-serif;">Nog geen begrippen ontdekt...</p></div>
+      </div>
+      <div class="nb-section">
+        <div class="nb-section-title">Lia's reflecties</div>
+        <div id="nb-reflections"><p class="dim" style="font-size:14px; font-family:'Inter',sans-serif;">Nog geen reflecties...</p></div>
+      </div>
+      <div class="nb-section">
+        <div class="nb-section-title">Filosofisch kompas</div>
+        <div id="nb-compass" class="nb-compass" style="display:none;">
+          <div class="compass-bar">
+            <span class="bar-label">Dualisme</span>
+            <div class="bar-track"><div class="bar-dot" id="compass-dualism" style="left:50%"></div></div>
+            <span class="bar-label-right">Monisme</span>
+          </div>
+          <div class="compass-bar">
+            <span class="bar-label">Rede</span>
+            <div class="bar-track"><div class="bar-dot" id="compass-epistem" style="left:50%"></div></div>
+            <span class="bar-label-right">Ervaring</span>
+          </div>
+          <div class="compass-bar">
+            <span class="bar-label">Tech-positief</span>
+            <div class="bar-track"><div class="bar-dot" id="compass-tech" style="left:50%"></div></div>
+            <span class="bar-label-right">Tech-kritisch</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// GAME ENGINE
+// ============================================================
+const state = {
+  passage: '',
+  history: [],
+  // Philosophical compass (0-100, 50 = center)
+  dualism: 50,    // 0=dualist, 100=monist
+  epistem: 50,    // 0=rationalist, 100=empiricist
+  tech: 50,       // 0=tech-positive, 100=tech-critical
+  // Story flags
+  handAttempts: 0,
+  askedQuestions: false,
+  feltConnection: false,
+  doubtsCleared: 0,
+  chosenMetaphor: '',
+  notebookTerms: [],
+  notebookReflections: [],
+  totalPassages: 28,
+  visitedPassages: 0
+};
+
+function go(passageId) {
+  state.history.push(state.passage);
+  state.passage = passageId;
+  state.visitedPassages++;
+  renderPassage(passageId);
+  updateProgress();
+  document.getElementById('story-panel').scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderPassage(id) {
+  const wrapper = document.getElementById('passage-wrapper');
+  wrapper.classList.remove('visible');
+  setTimeout(() => {
+    const passage = passages[id];
+    if (passage) {
+      wrapper.innerHTML = passage();
+      setTimeout(() => wrapper.classList.add('visible'), 50);
+    }
+  }, 300);
+}
+
+function updateProgress() {
+  const pct = Math.min(100, (state.visitedPassages / state.totalPassages) * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function addTerm(term, definition) {
+  if (state.notebookTerms.find(t => t.term === term)) return;
+  state.notebookTerms.push({ term, definition });
+  renderNotebook();
+}
+
+function addReflection(text) {
+  state.notebookReflections.push(text);
+  renderNotebook();
+}
+
+function adjustCompass(axis, delta) {
+  state[axis] = Math.max(0, Math.min(100, state[axis] + delta));
+  renderCompass();
+}
+
+function renderNotebook() {
+  const termsEl = document.getElementById('nb-terms');
+  const reflEl = document.getElementById('nb-reflections');
+
+  if (state.notebookTerms.length > 0) {
+    termsEl.innerHTML = state.notebookTerms.map(t =>
+      `<div class="nb-item"><span class="nb-term">${t.term}</span><span class="nb-def">${t.definition}</span></div>`
+    ).join('');
+  }
+  if (state.notebookReflections.length > 0) {
+    reflEl.innerHTML = state.notebookReflections.map(r =>
+      `<div class="nb-item" style="color:var(--warm);font-style:italic;font-size:14px;">"${r}"</div>`
+    ).join('');
+  }
+}
+
+function renderCompass() {
+  document.getElementById('nb-compass').style.display = 'block';
+  document.getElementById('compass-dualism').style.left = state.dualism + '%';
+  document.getElementById('compass-epistem').style.left = state.epistem + '%';
+  document.getElementById('compass-tech').style.left = state.tech + '%';
+}
+
+function toggleNotebook() {
+  document.getElementById('notebook-panel').classList.toggle('open');
+}
+
+// ============================================================
+// PASSAGES
+// ============================================================
+const passages = {
+
+// ---- OPENING ----
+'start': () => `
+  <div style="text-align:center; padding: 60px 0;">
+    <div class="ambient-text">Een interactief filosofisch verhaal</div>
+    <h1 style="font-family:'Inter',sans-serif; font-size:32px; font-weight:300; color:var(--text-bright); margin-bottom:8px; letter-spacing:2px;">
+      LIA'S TRANSFORMATIE
+    </h1>
+    <p style="color:var(--accent); font-family:'Inter',sans-serif; font-size:14px; letter-spacing:4px; text-transform:uppercase; margin-bottom:40px;">
+      Hoofdstuk 1 — Descartes' Dualisme
+    </p>
+    <p style="max-width:440px; margin:0 auto 30px; font-size:17px; color:var(--text-dim);">
+      Je bent Lia. Een jonge vrouw, klimmer, gevallen van een wand. Je lichaam is een vreemd land geworden.
+      Dit is jouw verhaal.
+    </p>
+    <p style="font-size:15px; color:var(--text-dim); margin-bottom: 40px;">
+      In dit spel maak jij Lia's keuzes. De filosofie die je tegenkomt is geen abstracte theorie &mdash;
+      het is gereedschap dat je nodig hebt om je eigen situatie te begrijpen.
+    </p>
+    <button class="continue-btn" onclick="go('ontwaken')" style="font-size:16px; padding: 14px 40px;">
+      Open je ogen
+    </button>
+  </div>
+`,
+
+// ---- ONTWAKEN ----
+'ontwaken': () => `
+  <div class="ambient-text">Ziekenhuiskamer &middot; ochtend &middot; het geluid van apparatuur</div>
+  <div class="passage-title">Het Ontwaken</div>
+  <div class="passage-text">
+    <p>Wit. Overal wit.</p>
+    <p>Je ogen wennen langzaam aan het licht. Het plafond is vlak en uitdrukkingsloos. Ergens piept een apparaat in een rustig ritme. De lucht ruikt naar desinfectiemiddel en iets zoets &mdash; bloemen, misschien, op een nachtkastje dat je nog niet kunt zien.</p>
+    <p>Je probeert je hoofd te draaien. Dat lukt. <em>Dat lukt tenminste nog.</em></p>
+    <p>Dan kijk je omlaag, naar je hand op het witte ziekenhuislaken. Je geeft het commando: <strong>beweeg</strong>.</p>
+    <p>Je vingers trillen. Nauwelijks.</p>
+    <p>Tussen jouw gedachte en de beweging gaapt een kloof die je niet kunt overbruggen.</p>
+  </div>
+  <div class="max-moment">
+    Aan je voeteneind voel je iets warms. Max, je roodbruine kater, ligt daar opgerold en spint. Het enige vertrouwde in deze steriele wereld.
+  </div>
+  <button class="continue-btn" onclick="go('hand-minigame')">Probeer je hand te bewegen</button>
+`,
+
+// ---- HAND MINIGAME ----
+'hand-minigame': () => `
+  <div class="passage-title">De Trillende Hand</div>
+  <div class="passage-text">
+    <p>Je staart naar je hand. Je weet precies wat je wilt: vingers strekken, buigen, sluiten tot een vuist. Je brein stuurt het signaal. Maar ergens onderweg verdwijnt het.</p>
+  </div>
+  <div id="hand-game">
+    <div id="hand-instruction">Klik op de commando's om je hand te bewegen</div>
+    <div id="hand-visual">🤚</div>
+    <div>
+      <button class="hand-btn" onclick="handAttempt('strek')">Strek</button>
+      <button class="hand-btn" onclick="handAttempt('buig')">Buig</button>
+      <button class="hand-btn" onclick="handAttempt('sluit')">Sluit</button>
+    </div>
+    <div id="hand-attempts">Pogingen: 0</div>
+    <div id="hand-result" style="margin-top:16px; min-height:24px; font-style:italic; color:var(--text-dim);"></div>
+  </div>
+  <div id="hand-continue" style="display:none;">
+    <div class="thought">
+      Tussen gedachte en daad gaapt een kloof die je niet kunt overbruggen. Je geest is helder, maar je lichaam weigert te gehoorzamen.
+    </div>
+    <button class="continue-btn" onclick="go('de-vraag')">De vraag dringt zich op...</button>
+  </div>
+`,
+
+// ---- DE VRAAG ----
+'de-vraag': () => `
+  <div class="passage-title">De Vraag</div>
+  <div class="passage-text">
+    <p>Je hand ligt op het laken als een vreemd voorwerp. Je probeert een berichtje te typen op je telefoon, maar zelfs het vasthouden voelt als een uitputtingsslag.</p>
+    <p>En dan schiet de vraag door je hoofd, onuitgenodigd maar onvermijdelijk:</p>
+  </div>
+  <div class="thought" style="font-size:22px; text-align:center; border:none; padding:24px;">
+    "Ben ik mijn lichaam, of <em>heb</em> ik een lichaam?"
+  </div>
+  <div class="passage-text">
+    <p>Het klinkt als een filosofische puzzel. Maar voor jou is het bittere ernst. Je voelt je opgesloten in een lichaam dat niet luistert, terwijl je geest nog helder opdrachten geeft.</p>
+  </div>
+  <div class="choices">
+    <button class="choice-btn" onclick="state.chosenMetaphor='gevangenis'; adjustCompass('dualism',-10); addReflection('Ik voel me opgesloten in mijn lichaam - alsof ik erin gevangen zit.'); go('verhoeven')">
+      <span class="choice-icon">A</span> Ik voel me <em>opgesloten</em> in mijn lichaam &mdash; alsof ik en mijn lichaam twee aparte dingen zijn
+    </button>
+    <button class="choice-btn" onclick="state.chosenMetaphor='beschadigd'; adjustCompass('dualism',10); addReflection('Ik ben beschadigd als geheel - niet mijn lichaam apart, maar ik.'); go('verhoeven')">
+      <span class="choice-icon">B</span> Ik ben niet opgesloten &mdash; ik <em>ben</em> beschadigd, als geheel, lichaam en geest samen
+    </button>
+    <button class="choice-btn" onclick="state.chosenMetaphor='verward'; addReflection('Ik weet niet of ik mijn lichaam ben of heb. De grens is wazig.'); go('verhoeven')">
+      <span class="choice-icon">C</span> Ik weet het eerlijk gezegd niet &mdash; de grens tussen mij en mijn lichaam is wazig
+    </button>
+  </div>
+`,
+
+// ---- VERHOEVEN ----
+'verhoeven': () => {
+  const metText = {
+    'gevangenis': 'Die kloof tussen jou en je lichaam voelt als een muur.',
+    'beschadigd': 'Het voelt alsof alles &mdash; jij &mdash; gewond is. Niet alleen je rug.',
+    'verward': 'Je weet niet meer waar jij ophoudt en je lichaam begint.'
+  };
+  return `
+  <div class="passage-title">Dr. Verhoeven</div>
+  <div class="passage-text">
+    <p>${metText[state.chosenMetaphor] || ''}</p>
+    <p>De deur gaat open. Niet de gebruikelijke arts met medische papieren, maar Dr. Verhoeven, met een tablet in zijn handen en een ongewone blik in zijn ogen.</p>
+    <p>"We hebben een bijzonder aanbod voor je, Lia."</p>
+    <p>Je kijkt op van je gevecht met de telefoon.</p>
+    <p>"Een experimenteel <strong>BCI-programma</strong>," zegt hij, terwijl hij op de rand van je bed gaat zitten. Hij draait het scherm naar je toe. Een illustratie van een menselijk brein, vol oplichtende neurale paden die samenkomen in een kleine, hightech chip.</p>
+  </div>
+  <button class="continue-btn" onclick="go('bci-uitleg')">Luister verder</button>
+`;
+},
+
+// ---- BCI UITLEG ----
+'bci-uitleg': () => `
+  <div class="passage-title">De Digitale Brug</div>
+  <div class="passage-text">
+    <p>"BCI staat voor <strong>Brain-Computer Interface</strong>," legt Verhoeven uit. "Simpel gezegd: de computer leert de signalen van je hersenen te lezen. Jouw wens om te lopen, bijvoorbeeld."</p>
+    <p>Hij wijst op de illustratie. "Die chip vangt dat signaal op. Omdat je een <em>incomplete dwarslaesie</em> hebt, is de zenuwbaan in je rug beschadigd maar niet volledig weg. Het signaal komt verzwakt aan bij je benen. Dit systeem omzeilt die blokkade."</p>
+    <p>Een animatie toont hoe het signaal vanuit het brein de ruggengraat overslaat en via een externe computer direct naar de spieren reist.</p>
+    <p>"Het is een brug, Lia," zegt hij zacht. <em>"Een digitale brug over het beschadigde deel van je rug."</em></p>
+  </div>
+
+  ${addTerm('BCI (Brain-Computer Interface)', 'Technologie die hersensignalen leest en vertaalt naar digitale commando\'s, als een brug over een beschadigde zenuwbaan.') || ''}
+
+  <div class="choices">
+    <button class="choice-btn" onclick="state.askedQuestions=true; go('bci-vragen')">
+      <span class="choice-icon">A</span> Stel vragen: "Wat zijn de risico's? Hoe werkt die chip precies?"
+    </button>
+    <button class="choice-btn" onclick="go('symposium-eis')">
+      <span class="choice-icon">B</span> Luister zwijgend &mdash; het is te veel om te verwerken
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('tech',-10); go('symposium-eis')">
+      <span class="choice-icon">C</span> Voel een sprankje hoop &mdash; een manier om weer te bewegen
+    </button>
+  </div>
+`,
+
+// ---- BCI VRAGEN ----
+'bci-vragen': () => `
+  <div class="passage-title">Vragen</div>
+  <div class="passage-text">
+    <p>"Hoe precies leest die chip mijn gedachten?" vraag je.</p>
+    <p>Verhoeven glimlacht. "De chip leest <em>patronen</em> in je hersenactiviteit. Wanneer jij denkt aan 'loop', ontstaat een specifiek patroon. De computer leert dat patroon herkennen en vertaalt het naar een commando."</p>
+    <p>"Maar dat is toch mijn gedachte die ze lezen?"</p>
+    <p>"In zekere zin. Het systeem leest de <em>neurale correlaat</em> van je gedachte &mdash; het hersenpatroon dat ermee samenvalt. Of dat hetzelfde is als je gedachte zelf&hellip;" Hij haalt zijn schouders op. "Dat is precies het soort vraag dat het symposium behandelt."</p>
+  </div>
+  <button class="continue-btn" onclick="go('symposium-eis')">Symposium?</button>
+`,
+
+// ---- SYMPOSIUM EIS ----
+'symposium-eis': () => `
+  <div class="passage-title">De Voorwaarde</div>
+  <div class="passage-text">
+    <p>Verhoeven maakt het scherm donker en legt de tablet weg. Zijn stem wordt ernstiger.</p>
+    <p>"Maar er is een voorwaarde. Deelnemers moeten ook een universitair symposium volgen: <em>'De Vraag naar de Mens in het Licht van Wetenschap en Technologie'</em>."</p>
+    <p>"Filosofie?" Je fronst. "Waarom?"</p>
+    <p>"Omdat wat we doen fundamentele vragen oproept. De ethische commissie vindt reflectie essentieel voor dit soort ingrijpende trajecten."</p>
+    <p>Hij legt de papieren op je nachtkastje. "Je hebt <strong>twee weken</strong> om te beslissen. De plekken zijn beperkt."</p>
+  </div>
+  <div class="max-moment">
+    Max strekt zich uit aan je voeteneind en miauwt zacht, alsof hij je wil herinneren dat sommige dingen simpeler zijn dan ze lijken.
+  </div>
+  <button class="continue-btn" onclick="go('twijfel-lia')">Twee weken...</button>
+`,
+
+// ---- TWIJFEL LIA ----
+'twijfel-lia': () => `
+  <div class="passage-title">Twee Weken</div>
+  <div class="passage-text">
+    <p>Je staart naar de papieren op je nachtkastje. Een chip in je hoofd. Een brug die je ruggengraat niet meer kan maken.</p>
+    <p>Je voelt je opgesloten in een lichaam dat niet luistert, terwijl je geest nog helder opdrachten geeft.</p>
+    ${state.chosenMetaphor === 'gevangenis' ? '<p>Die twee &mdash; geest en lichaam &mdash; voelen als totaal verschillende dingen. Gescheiden werelden.</p>' : ''}
+    ${state.chosenMetaphor === 'beschadigd' ? '<p>Toch voel je dat de scheiding kunstmatig is. Je bent gewond, als geheel. Niet twee dingen apart.</p>' : ''}
+    ${state.chosenMetaphor === 'verward' ? '<p>Soms lijken ze twee aparte dingen, soms een geheel. Het hangt af van het moment.</p>' : ''}
+    <p>Terwijl je de papieren dichtvouwt, vraag je je af of je nog wel weet wie of wat je bent. Juist die vraag staat centraal in het symposium.</p>
+  </div>
+  <div class="scene-break">&middot; &middot; &middot;</div>
+  <div class="passage-text">
+    <p><em>Twee weken later. Je hebt je ingeschreven. De collegezaal is groot, vol studenten en een paar andere deelnemers uit het BCI-programma. Je bent nerveus.</em></p>
+  </div>
+  <button class="continue-btn" onclick="go('symposium-intro')">Betreed de collegezaal</button>
+`,
+
+// ---- SYMPOSIUM INTRO ----
+'symposium-intro': () => `
+  <div class="ambient-text">Collegezaal &middot; middag &middot; het geroezemoes sterft weg</div>
+  <div class="passage-title">Het Symposium begint</div>
+  <div class="passage-text">
+    <p>De professor neemt het woord. Een warm, kalm stem vult de zaal.</p>
+    <p>"Welkom bij <em>De Vraag naar de Mens in het Licht van Wetenschap en Technologie</em>. We beginnen met een denker die meer dan vierhonderd jaar geleden een vraag stelde die vandaag relevanter is dan ooit."</p>
+    <p>Op het grote scherm verschijnt een portret: een man met donker haar, een mantel, en een doordringende blik.</p>
+    <p>"<strong>René Descartes</strong>. 1596&ndash;1650. Wiskundige, wetenschapper, filosoof. De man die alles durfde te betwijfelen."</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Historische Context</div>
+    <p>In Descartes' tijd won het <em>mechanistische wereldbeeld</em> terrein: de natuur en het lichaam werden steeds meer gezien als complexe machines, verklaarbaar door natuurwetten. Descartes zocht een manier om de unieke positie van de <strong>menselijke geest</strong> veilig te stellen. Hoe kon hij de wetenschappelijke kijk op het lichaam verenigen met het geloof in een vrije, denkende ziel?</p>
+  </div>
+
+  <button class="continue-btn" onclick="go('methodische-twijfel')">Luister verder over Descartes' methode</button>
+`,
+
+// ---- METHODISCHE TWIJFEL ----
+'methodische-twijfel': () => `
+  <div class="passage-title">De Methodische Twijfel</div>
+  <div class="passage-text">
+    <p>"Descartes' methode was radicaal," vervolgt de professor. "Hij besloot <strong>alles</strong> te betwijfelen waaraan ook maar enigszins getwijfeld kon worden. Niet uit wanhoop, maar als methode &mdash; om te ontdekken of er iets onbetwijfelbaar was."</p>
+    <p>"Laten we zijn methode zelf ervaren."</p>
+  </div>
+
+  ${addTerm('Methodische twijfel', 'Descartes\' methode om systematisch alles te betwijfelen om tot onbetwijfelbare kennis te komen.') || ''}
+
+  <div class="philosophy-box">
+    <div class="box-title">Ervaar de twijfel</div>
+    <p style="font-size:15px; color:var(--text-dim); margin-bottom:16px;">Klik op "Betwijfel" om elke zekerheid te ondermijnen. Wat blijft er over?</p>
+
+    <div class="twijfel-item" id="tw-zintuigen">
+      <span>Wat ik <strong>zie en voel</strong> is echt</span>
+      <button class="doubt-btn" onclick="doubtItem('zintuigen')">Betwijfel</button>
+    </div>
+    <div class="twijfel-item" id="tw-lichaam">
+      <span>Mijn <strong>lichaam</strong> bestaat echt</span>
+      <button class="doubt-btn" onclick="doubtItem('lichaam')">Betwijfel</button>
+    </div>
+    <div class="twijfel-item" id="tw-wereld">
+      <span>De <strong>wereld om me heen</strong> is echt</span>
+      <button class="doubt-btn" onclick="doubtItem('wereld')">Betwijfel</button>
+    </div>
+    <div class="twijfel-item" id="tw-wiskunde">
+      <span><strong>Wiskundige waarheden</strong> (2+2=4) zijn zeker</span>
+      <button class="doubt-btn" onclick="doubtItem('wiskunde')">Betwijfel</button>
+    </div>
+    <div class="twijfel-item" id="tw-denken" style="border-color: var(--accent-dim);">
+      <span>Ik <strong>denk</strong> op dit moment</span>
+      <button class="doubt-btn" onclick="doubtItem('denken')" id="doubt-denken-btn">Betwijfel</button>
+    </div>
+
+    <div id="twijfel-result" style="margin-top:16px; min-height:20px;"></div>
+  </div>
+
+  <div id="cogito-continue" style="display:none;">
+    <button class="continue-btn" onclick="go('cogito')">Het keerpunt...</button>
+  </div>
+`,
+
+// ---- COGITO ----
+'cogito': () => `
+  <div class="passage-title">Cogito, Ergo Sum</div>
+  <div class="passage-text">
+    <p>De professor laat een stilte vallen.</p>
+    <p>"Te midden van al deze twijfel ontdekte Descartes één ding dat hij niet kon betwijfelen: <em>het feit dat hij twijfelde</em>. En twijfelen is een vorm van denken."</p>
+  </div>
+
+  <div class="thought" style="font-size:24px; text-align:center; border:none; padding:30px; color:var(--accent-glow);">
+    "Cogito, ergo sum"<br>
+    <span style="font-size:17px; color:var(--text-dim);">Ik denk, dus ik ben</span>
+  </div>
+
+  <div class="passage-text">
+    <p>"Dit was Descartes' onwrikbare fundament," zegt de professor. "Zelfs als een boze demon me bedriegt over alles &mdash; dan moet er nog steeds een <em>ik</em> zijn die bedrogen wordt. Het denken zelf bewijst het bestaan van de denker."</p>
+  </div>
+
+  ${addTerm('Cogito, ergo sum', '"Ik denk, dus ik ben" — Descartes\' onbetwijfelbare fundament. Het feit dat je twijfelt, bewijst dat je bestaat als denkend wezen.') || ''}
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adjustCompass('dualism',-5); addReflection('Het Cogito resoneert — mijn geest is het enige zekere dat ik heb.'); go('cogito-lia')">
+      <span class="choice-icon">A</span> Dit resoneert &mdash; mijn geest is het enige zekere dat ik nog heb
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('epistem',10); addReflection('Slim argument, maar is denken genoeg? Ik voel ook.'); go('cogito-lia')">
+      <span class="choice-icon">B</span> Slim, maar ik <em>voel</em> ook. Is voelen geen bewijs van bestaan?
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('dualism',5); addReflection('Het bewijst dat ik denk, maar niet dat ik alleen maar denken ben.'); go('cogito-lia')">
+      <span class="choice-icon">C</span> Het bewijst dat ik denk, maar niet dat ik <em>alleen maar</em> denken ben
+    </button>
+  </div>
+`,
+
+// ---- COGITO & LIA ----
+'cogito-lia': () => `
+  <div class="passage-title">Herkenning</div>
+  <div class="passage-text">
+    <p>Terwijl de professor doorpraat, voel je een steek van herkenning.</p>
+    <p><em>Cogito, ergo sum.</em> Ik denk, dus ik ben.</p>
+    <p>In je ziekenhuisbed, toen je hand nauwelijks bewoog, was je geest het enige dat nog helemaal werkte. Je kon nadenken, dromen, herinneren. Je kon twijfelen. Terwijl je lichaam een vreemd land was geworden, was je <em>denken</em> intact.</p>
+    <p>Maar tegelijk: was dat genoeg? Is dat alles wat je bent &mdash; een denkend ding in een onwillig lichaam?</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Opmerking</div>
+    <p>Merk op hoe Descartes tot zijn conclusie komt via <strong>introspectie</strong> &mdash; een onderzoek van zijn eigen bewustzijn, vanuit het <em>eerstepersoonsperspectief</em>. Maar vanuit deze persoonlijke zekerheid leidt hij een algemene, objectieve definitie af: <em>de mens is fundamenteel een denkend ding</em>. Een sprong van eerste- naar <strong>derdepersoonsperspectief</strong>.</p>
+  </div>
+
+  ${addTerm('Eerstepersoonsperspectief', 'De wereld bekeken vanuit de eigen, subjectieve ervaring ("hoe ik het beleef").') || ''}
+  ${addTerm('Derdepersoonsperspectief', 'De wereld objectief bekeken, van buitenaf ("wat de mens is").') || ''}
+  ${addTerm('Introspectie', 'Het onderzoeken van je eigen bewustzijn en innerlijke ervaring.') || ''}
+
+  <button class="continue-btn" onclick="go('substantiedualisme')">Twee substanties</button>
+`,
+
+// ---- SUBSTANTIEDUALISME ----
+'substantiedualisme': () => `
+  <div class="passage-title">Twee Werelden</div>
+  <div class="passage-text">
+    <p>"Vanuit het Cogito bouwde Descartes zijn beroemde <strong>substantiedualisme</strong> op," vervolgt de professor. "De mens bestaat fundamenteel uit twee totaal verschillende substanties."</p>
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Res Cogitans — de denkende substantie</span>
+    De geest, het bewustzijn, het 'ik'. Essentieel kenmerk: het denken zelf. Immaterieel &mdash; neemt geen ruimte in, niet onderworpen aan natuurwetten. Hierin plaatste Descartes de vrije wil en de identiteit.
+  </div>
+
+  <div class="definition-box">
+    <span class="term">Res Extensa — de uitgebreide substantie</span>
+    Het lichaam en alle materie. Gekenmerkt door uitgebreidheid (ruimtelijkheid). Het lichaam functioneert als een complexe machine, volledig onderworpen aan de deterministische wetten van de natuur.
+  </div>
+
+  ${addTerm('Substantiedualisme', 'Descartes\' opvatting dat de mens bestaat uit twee fundamenteel verschillende substanties: de denkende geest (res cogitans) en het materiële lichaam (res extensa).') || ''}
+  ${addTerm('Res Cogitans', 'De denkende substantie — de geest, immaterieel, vrij, kenmerk: het denken.') || ''}
+  ${addTerm('Res Extensa', 'De uitgebreide substantie — het lichaam/materie, ruimtelijk, mechanisch, gedetermineerd.') || ''}
+
+  <div class="passage-text" style="margin-top:20px;">
+    <p>De professor tekent twee cirkels op het bord die elkaar nauwelijks raken. "Twee werelden. De ene vrij en denkend, de andere mechanisch en bepaald."</p>
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adjustCompass('dualism',-8); go('dualisme-herkenning')">
+      <span class="choice-icon">A</span> Dit is precies wat ik voel — mijn geest en lichaam zijn twee aparte dingen
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('dualism',8); go('dualisme-herkenning')">
+      <span class="choice-icon">B</span> Dit voelt te simpel — ik ben toch meer dan twee losse stukken?
+    </button>
+    <button class="choice-btn" onclick="go('dualisme-herkenning')">
+      <span class="choice-icon">C</span> Interessant, maar ik zie problemen &mdash; hoe werken die twee samen?
+    </button>
+  </div>
+`,
+
+// ---- DUALISME HERKENNING ----
+'dualisme-herkenning': () => `
+  <div class="passage-title">Spiegeling</div>
+  <div class="passage-text">
+    <p>Je denkt terug aan je hand op het laken. De kloof tussen gedachte en daad. Descartes zou zeggen: je res cogitans stuurt commando's, maar je res extensa gehoorzaamt niet. Het zijn twee verschillende dingen &mdash; en dat verklaart de kloof.</p>
+    ${state.chosenMetaphor === 'gevangenis' ? '<p>Geen wonder dat je je <em>opgesloten</em> voelde. Als Descartes gelijk heeft, zit je letterlijk gevangen: een vrije geest in een kapotte machine.</p>' : ''}
+    ${state.chosenMetaphor === 'beschadigd' ? '<p>Maar jij voelde het anders. Niet twee dingen apart, maar één geheel dat gewond is. Misschien klopt Descartes\' scheiding niet helemaal?</p>' : ''}
+    <p>En de BCI? Die zou een brug slaan &mdash; van je denkende substantie, via technologie, naar je materiële lichaam. Precies de verbinding die ontbreekt.</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Contrastposities</div>
+    <p>Descartes' dualisme staat niet alleen. Er zijn alternatieven:</p>
+    <p><strong>Materialisme:</strong> alles is materie, ook de geest. Er is geen apart 'denkend ding' &mdash; gedachten zijn hersenprocessen.</p>
+    <p><strong>Idealisme:</strong> de werkelijkheid is fundamenteel geestelijk (Plato). De materiële wereld is slechts een schaduw.</p>
+    <p>Descartes' dualisme probeert een middenweg: zowel geest als materie bestaan, maar als totaal verschillende substanties.</p>
+  </div>
+
+  ${addTerm('Materialisme', 'De opvatting dat alles, inclusief de geest, uiteindelijk materie is.') || ''}
+  ${addTerm('Idealisme', 'De opvatting dat de werkelijkheid fundamenteel geestelijk is (zoals bij Plato).') || ''}
+
+  <button class="continue-btn" onclick="go('epistemologie')">De kennisvraag</button>
+`,
+
+// ---- EPISTEMOLOGIE ----
+'epistemologie': () => `
+  <div class="passage-title">Hoe Weten We Wat We Weten?</div>
+  <div class="passage-text">
+    <p>"Descartes' nadruk op het <em>denken</em> als bron van zekere kennis," zegt de professor, "plaatst hem in een belangrijke traditie: het <strong>rationalisme</strong>."</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Epistemologie — de kennisleer</div>
+    <p>Wat is de grondslag van kennis? Twee rivaliserende antwoorden:</p>
+
+    <div class="definition-box">
+      <span class="term">Rationalisme (Descartes)</span>
+      Betrouwbare kennis komt primair uit de <strong>rede</strong> (het verstand), niet uit de onbetrouwbare zintuigen. Kennis verkregen door denken alleen heet <em>a priori</em>. Methode: <strong>deductie</strong> &mdash; van algemene principes naar specifieke conclusies. Als de premissen kloppen, is de conclusie zeker.
+    </div>
+
+    <div class="definition-box">
+      <span class="term">Empirisme (Locke, Hume)</span>
+      Alle echte kennis komt uit <strong>zintuiglijke waarneming</strong> (<em>a posteriori</em>). Methode: <strong>inductie</strong> &mdash; van specifieke waarnemingen naar algemene conclusies. Levert nieuwe inzichten, maar is nooit 100% zeker.
+    </div>
+  </div>
+
+  ${addTerm('Rationalisme', 'Kennis komt primair uit de rede/het verstand (a priori). Descartes is rationalist.') || ''}
+  ${addTerm('Empirisme', 'Kennis komt uit zintuiglijke waarneming (a posteriori). Methode: inductie.') || ''}
+  ${addTerm('A priori', 'Kennis die voorafgaat aan ervaring — puur door het denken verkregen.') || ''}
+  ${addTerm('A posteriori', 'Kennis die voortkomt uit ervaring en waarneming.') || ''}
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adjustCompass('epistem',-10); addReflection('De rede lijkt betrouwbaarder — mijn zintuigen bedriegen me nu voortdurend.'); go('interactieprobleem')">
+      <span class="choice-icon">A</span> Ik snap Descartes — mijn zintuigen bedriegen me nu voortdurend, maar mijn denken is helder
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('epistem',10); addReflection('Zonder mijn lichaamservaring weet ik niets over de wereld.'); go('interactieprobleem')">
+      <span class="choice-icon">B</span> Toch wist mijn lichaam dingen toen ik klom die mijn verstand niet wist &mdash; ervaring is ook kennis
+    </button>
+    <button class="choice-btn" onclick="addReflection('Misschien heb je allebei nodig — denken én ervaren.'); go('interactieprobleem')">
+      <span class="choice-icon">C</span> Misschien heb je allebei nodig &mdash; denken én ervaren vullen elkaar aan
+    </button>
+  </div>
+`,
+
+// ---- INTERACTIEPROBLEEM ----
+'interactieprobleem': () => `
+  <div class="passage-title">Het Probleem</div>
+  <div class="passage-text">
+    <p>De professor leunt naar voren, alsof hij een geheim gaat vertellen.</p>
+    <p>"Maar hier wringt de schoen. Als geest en lichaam zo <em>totaal verschillend</em> zijn &mdash; de een immaterieel, de ander materieel &mdash; hoe kunnen ze dan op elkaar inwerken?"</p>
+    <p>Stilte in de zaal.</p>
+    <p>"Denk er even over na. Als je besluit je hand op te tillen &mdash; hoe bereikt die <em>immateriële</em> gedachte je <em>materiële</em> spieren? Hoe kan iets dat geen ruimte inneemt, een fysiek lichaam in beweging zetten?"</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Het Interactieprobleem</div>
+    <p>Als res cogitans en res extensa fundamenteel verschillende substanties zijn, hoe kunnen ze dan causaal op elkaar inwerken? Dit is het <strong>interactieprobleem</strong> &mdash; de achilleshiel van Descartes' dualisme.</p>
+    <p style="margin-top:12px;">Descartes stelde dat de interactie plaatsvindt via de <strong>pijnappelklier</strong> (epifyse) in het brein. Maar dit lost het probleem niet echt op &mdash; het verplaatst het alleen naar een kleiner orgaan. De vraag <em>hoe</em> iets immaterieels op materie inwerkt, blijft onbeantwoord.</p>
+  </div>
+
+  ${addTerm('Interactieprobleem', 'Het onopgeloste probleem hoe de immateriële geest en het materiële lichaam op elkaar kunnen inwerken in Descartes\' dualisme.') || ''}
+
+  <div class="passage-text">
+    <p>Je denkt aan de BCI. Het is bijna komisch: Descartes zocht 400 jaar geleden al naar een brug tussen geest en lichaam, en nu biedt de technologie er letterlijk een aan. Maar het filosofische probleem blijft hetzelfde.</p>
+  </div>
+
+  <button class="continue-btn" onclick="go('implicaties')">Wat betekent dit allemaal?</button>
+`,
+
+// ---- IMPLICATIES ----
+'implicaties': () => `
+  <div class="passage-title">Gevolgen</div>
+  <div class="passage-text">
+    <p>"Ondanks dit probleem," zegt de professor, "heeft Descartes' dualisme enorme gevolgen gehad."</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Implicaties van het Cartesiaans dualisme</div>
+    <p><strong>Mensbeeld:</strong> De mens is primair een <em>denkend ding</em>. Identiteit ligt in de geest, niet in het lichaam. ${state.chosenMetaphor === 'gevangenis' ? '<span style="color:var(--warm);">(Je herkent dit gevoel.)</span>' : ''}</p>
+    <p style="margin-top:10px;"><strong>Wetenschap:</strong> Het lichaam mag als object bestudeerd worden &mdash; als een machine. Dit legitimeerde de moderne, mechanistische geneeskunde.</p>
+    <p style="margin-top:10px;"><strong>Ethiek:</strong> Descartes plaatste de vrije wil in de res cogitans, buiten de gedetermineerde natuur. Maar het interactieprobleem ondermijnt hoe die wil effectief kan zijn &mdash; wat raakt aan vragen over <em>verantwoordelijkheid</em>.</p>
+    <p style="margin-top:10px;"><strong>Determinisme:</strong> Als het lichaam een machine is, gestuurd door natuurwetten, waar blijft dan de vrijheid? Dit is het spanningsveld tussen <em>vrijheid</em> en <em>determinisme</em>.</p>
+  </div>
+
+  ${addTerm('Determinisme', 'De opvatting dat alles (inclusief menselijk gedrag) volledig bepaald is door oorzaken — er is geen echte vrije wil.') || ''}
+
+  <button class="continue-btn" onclick="go('terug-bij-lia')">Terug bij jou</button>
+`,
+
+// ---- TERUG BIJ LIA ----
+'terug-bij-lia': () => `
+  <div class="ambient-text">Na het symposium &middot; Lia's kamer &middot; avond</div>
+  <div class="passage-title">Het Wordt Persoonlijk</div>
+  <div class="passage-text">
+    <p>Terug op je kamer. Max ligt op je schoot. De papieren van Verhoeven liggen naast de aantekeningen van het symposium.</p>
+    <p>Je begint verbanden te zien.</p>
+    <p>De artsen behandelen je lichaam als een <em>res extensa</em> &mdash; een machine met defecte bedrading die gerepareerd moet worden. De BCI is het ultieme voorbeeld: een technische brug over een mechanisch probleem.</p>
+    <p>Maar waar ben <em>jij</em> in dat plaatje? Ben je de geest die in een kapotte machine woont? Of ben je iets dat niet in Descartes' twee hokjes past?</p>
+  </div>
+
+  <div class="max-moment">
+    Max spint op je schoot. Hij weet niets van substanties of dualisme. Hij is gewoon warm, levend, hier. Soms is dat genoeg.
+  </div>
+
+  <button class="continue-btn" onclick="go('reflectie-keuze')">Reflecteer</button>
+`,
+
+// ---- REFLECTIE KEUZE ----
+'reflectie-keuze': () => `
+  <div class="passage-title">Jouw Positie</div>
+  <div class="passage-text">
+    <p>Het symposium heeft je aan het denken gezet. Descartes' dualisme biedt een bepaalde bril om naar je situatie te kijken. Maar is het de juiste bril?</p>
+    <p><strong>Hoe kijk jij nu naar de relatie tussen je geest en je lichaam?</strong></p>
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adjustCompass('dualism',-15); addReflection('Descartes heeft gelijk: ik ben mijn geest, gevangen in een defect lichaam.'); go('reflectie-bci')">
+      <span class="choice-icon">A</span> <strong>Descartes heeft gelijk.</strong> Ik ben mijn geest, en mijn lichaam is iets dat ik <em>heb</em> &mdash; een instrument dat nu defect is. De BCI repareert het instrument.
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('dualism',15); addReflection('Descartes\' scheiding klopt niet — ik ben mijn lichaam net zoveel als mijn geest.'); go('reflectie-bci')">
+      <span class="choice-icon">B</span> <strong>Descartes' scheiding klopt niet.</strong> Toen ik klom, was ik geen geest die een lichaam bestuurde &mdash; ik <em>was</em> de beweging. Geest en lichaam zijn niet te scheiden.
+    </button>
+    <button class="choice-btn" onclick="addReflection('De waarheid ligt ergens in het midden — soms voel ik de scheiding, soms de eenheid.'); go('reflectie-bci')">
+      <span class="choice-icon">C</span> <strong>Het is genuanceerder.</strong> Soms voel ik de scheiding scherp (als mijn hand niet luistert), soms de eenheid (als ik me herinner hoe ik klom). Misschien hangt het af van de situatie.
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('dualism',5); addReflection('Het interactieprobleem overtuigt me: dualisme is onhoudbaar.'); go('reflectie-bci')">
+      <span class="choice-icon">D</span> <strong>Het interactieprobleem overtuigt me.</strong> Als geest en lichaam zo verschillend zijn, kan de BCI &mdash; die juist op hun verbinding werkt &mdash; niet verklaard worden. Dualisme is onhoudbaar.
+    </button>
+  </div>
+`,
+
+// ---- REFLECTIE BCI ----
+'reflectie-bci': () => `
+  <div class="passage-title">De Chip en Descartes</div>
+  <div class="passage-text">
+    <p>Je pakt de papieren van Verhoeven erbij en bekijkt ze met nieuwe ogen.</p>
+    <p>Door Descartes' lens gezien is de BCI een <em>technologische pijnappelklier</em> &mdash; een brug tussen de denkende geest en het mechanische lichaam. Maar net als bij Descartes' oorspronkelijke oplossing: lost het het echte probleem op, of omzeilt het dat alleen?</p>
+    <p>En als het materialisme gelijk heeft &mdash; als er geen aparte geest <em>is</em> &mdash; dan is de BCI geen brug tussen twee werelden, maar gewoon een reparatie van een kapot netwerk. Zoals het repareren van een kabel.</p>
+  </div>
+
+  <div class="thought">
+    De vraag over de chip is niet alleen medisch. Het is een filosofische keuze: welk mensbeeld accepteer je? Ben je een geest met een lichaam? Een lichaam dat denkt? Of iets dat in geen van beide hokjes past?
+  </div>
+
+  <div class="choices">
+    <button class="choice-btn" onclick="adjustCompass('tech',-8); go('afsluiting')">
+      <span class="choice-icon">A</span> De BCI is hoopgevend &mdash; technologie kan de kloof overbruggen, ongeacht het mensbeeld
+    </button>
+    <button class="choice-btn" onclick="adjustCompass('tech',8); go('afsluiting')">
+      <span class="choice-icon">B</span> Ik wil eerst beter begrijpen wat ik <em>ben</em> voordat ik een chip in mijn hoofd laat zetten
+    </button>
+    <button class="choice-btn" onclick="go('afsluiting')">
+      <span class="choice-icon">C</span> Het een sluit het ander niet uit &mdash; ik kan nadenken én openstaan voor de technologie
+    </button>
+  </div>
+`,
+
+// ---- AFSLUITING ----
+'afsluiting': () => {
+  let profileText = '';
+  if (state.dualism < 35) profileText = 'Je neigt naar het <strong>dualisme</strong>: geest en lichaam als gescheiden werelden.';
+  else if (state.dualism > 65) profileText = 'Je neigt naar het <strong>monisme</strong>: geest en lichaam als onscheidbaar geheel.';
+  else profileText = 'Je positie is <strong>genuanceerd</strong>: je ziet zowel scheiding als eenheid.';
+
+  return `
+  <div class="ambient-text">Lia's kamer &middot; laat &middot; Max spint</div>
+  <div class="passage-title">Einde Hoofdstuk 1</div>
+  <div class="passage-text">
+    <p>Je slaat je notitieboek dicht. De eerste sessie van het symposium zit erop, maar de vragen zijn alleen maar groter geworden.</p>
+    <p>Descartes gaf je een taal om over je situatie na te denken &mdash; de kloof tussen geest en lichaam, het zoeken naar zekerheid, de vraag wie je fundamenteel bent. Maar zijn antwoord &mdash; dat je een denkend ding bent in een mechanisch lichaam &mdash; voelt onvolledig.</p>
+    <p>Morgen gaat het symposium verder. Een filosoof die beweert dat je lichaam <em>meer</em> is dan een machine. Dat het lichaam zelf denkt, voelt, weet. Dat je niet een geest <em>in</em> een lichaam bent, maar een <strong>denkend, bewegend lichaam</strong>.</p>
+  </div>
+
+  <div class="philosophy-box">
+    <div class="box-title">Jouw Filosofisch Profiel — Hoofdstuk 1</div>
+    <p>${profileText}</p>
+    <p style="margin-top:8px;">
+      ${state.epistem < 40 ? 'Je sympathiseert met het <strong>rationalisme</strong>: vertrouwen op de rede.' :
+        state.epistem > 60 ? 'Je sympathiseert met het <strong>empirisme</strong>: vertrouwen op ervaring.' :
+        'Je zoekt een <strong>synthese</strong> tussen rede en ervaring.'}
+    </p>
+  </div>
+
+  <div class="max-moment">
+    Max strekt zich uit, geeuwt, en nestelt zich dichter tegen je aan. In zijn wereld bestaan geen dualismen. Alleen warmte, en jij.
+  </div>
+
+  <div class="scene-break">&middot; &middot; &middot;</div>
+
+  <div style="text-align:center; margin-top:30px;">
+    <p style="color:var(--text-dim); font-family:'Inter',sans-serif; font-size:14px; margin-bottom:6px;">Hoofdstuk 1 voltooid</p>
+    <p style="color:var(--accent); font-family:'Inter',sans-serif; font-size:13px; letter-spacing:2px; text-transform:uppercase;">
+      Volgende: Sheets-Johnstone &mdash; het denkende, bewegende lichaam
+    </p>
+    <button class="continue-btn" style="margin-top:24px;" onclick="go('samenvatting')">Bekijk je notitieboek</button>
+  </div>
+`;
+},
+
+// ---- SAMENVATTING ----
+'samenvatting': () => `
+  <div class="passage-title">Overzicht Hoofdstuk 1</div>
+  <div class="philosophy-box">
+    <div class="box-title">Kernbegrippen</div>
+    ${state.notebookTerms.map(t => `
+      <div class="definition-box">
+        <span class="term">${t.term}</span>
+        ${t.definition}
+      </div>
+    `).join('')}
+  </div>
+
+  <div class="philosophy-box" style="margin-top:20px;">
+    <div class="box-title">Jouw Reflecties</div>
+    ${state.notebookReflections.map(r => `
+      <div class="thought" style="margin:10px 0; font-size:16px;">"${r}"</div>
+    `).join('')}
+  </div>
+
+  <div class="philosophy-box" style="margin-top:20px;">
+    <div class="box-title">Leerdoelen — Check</div>
+    <p style="font-size:15px; line-height:1.8;">
+      ✦ Descartes' zoektocht naar een onbetwijfelbaar fundament<br>
+      ✦ Methodische twijfel → Cogito, ergo sum<br>
+      ✦ Substantiedualisme: res cogitans & res extensa<br>
+      ✦ Dualisme vs. materialisme vs. idealisme<br>
+      ✦ Het interactieprobleem & de pijnappelklier<br>
+      ✦ Implicaties voor mensbeeld, wetenschap en ethiek<br>
+      ✦ Rationalisme vs. empirisme (a priori / a posteriori)
+    </p>
+  </div>
+
+  <div style="text-align:center; margin-top:30px;">
+    <button class="continue-btn" onclick="go('start')">Opnieuw spelen</button>
+  </div>
+`
+};
+
+// ============================================================
+// HAND MINIGAME
+// ============================================================
+const handResponses = [
+  "Niets. Je vingers trillen nauwelijks.",
+  "Een minimale trilling. Meer niet.",
+  "Je wijsvinger beweegt een millimeter. De rest weigert.",
+  "Even een spier die samentrekt. Dan weer stilte.",
+  "Een schokje. Alsof je lichaam het probeert, maar het signaal halverwege verdwijnt."
+];
+
+function handAttempt(action) {
+  state.handAttempts++;
+  const visual = document.getElementById('hand-visual');
+  const result = document.getElementById('hand-result');
+  const attempts = document.getElementById('hand-attempts');
+
+  visual.classList.add('tremble');
+  setTimeout(() => visual.classList.remove('tremble'), 200);
+
+  const idx = Math.min(state.handAttempts - 1, handResponses.length - 1);
+  result.textContent = handResponses[idx];
+  attempts.textContent = `Pogingen: ${state.handAttempts}`;
+
+  if (state.handAttempts >= 4) {
+    setTimeout(() => {
+      document.getElementById('hand-continue').style.display = 'block';
+      document.getElementById('hand-game').style.opacity = '0.4';
+    }, 800);
+  }
+}
+
+// ============================================================
+// TWIJFEL MINIGAME
+// ============================================================
+const doubtExplanations = {
+  'zintuigen': 'Zintuigen kunnen bedriegen: optische illusies, dromen, hallucinaties. Hoe weet je zeker dat wat je nu ziet echt is?',
+  'lichaam': 'In een droom heb je ook een lichaam dat echt lijkt. Misschien droom je nu. Je kunt er niet zeker van zijn.',
+  'wereld': 'Wat als een almachtige boze demon je een complete werkelijkheid voorspiegelt? Je zou het niet merken.',
+  'wiskunde': 'Zelfs wiskunde — wat als de boze demon je misleidt bij elke berekening? Absolute zekerheid is onmogelijk... bijna.',
+  'denken': null // special case
+};
+
+function doubtItem(item) {
+  if (item === 'denken') {
+    document.getElementById('twijfel-result').innerHTML = `
+      <div style="color:var(--accent-glow); font-size:17px; padding:12px; border:1px solid var(--accent-dim); border-radius:8px; margin-top:8px;">
+        <strong>Stop.</strong> Je kunt niet betwijfelen dat je denkt — want betwijfelen <em>is</em> denken. Op het moment dat je twijfelt, denk je. En als je denkt, besta je.<br><br>
+        <span style="font-size:20px;">Cogito, ergo sum.</span>
+      </div>
+    `;
+    document.getElementById('doubt-denken-btn').disabled = true;
+    document.getElementById('doubt-denken-btn').style.opacity = '0.3';
+    document.getElementById('cogito-continue').style.display = 'block';
+    addTerm('Cogito, ergo sum', '"Ik denk, dus ik ben" — het onbetwijfelbare fundament van Descartes.');
+    return;
+  }
+
+  const el = document.getElementById('tw-' + item);
+  el.classList.add('doubted');
+  el.querySelector('.doubt-btn').disabled = true;
+  state.doubtsCleared++;
+
+  document.getElementById('twijfel-result').innerHTML = `
+    <div style="color:var(--danger); font-size:15px; font-style:italic; opacity:0.8;">
+      ${doubtExplanations[item]}
+    </div>
+  `;
+
+  if (state.doubtsCleared >= 4) {
+    setTimeout(() => {
+      const denkItem = document.getElementById('tw-denken');
+      denkItem.style.borderColor = 'var(--accent)';
+      denkItem.style.background = 'rgba(123,104,238,0.08)';
+      document.getElementById('twijfel-result').innerHTML = `
+        <div style="color:var(--accent-glow); font-size:15px; margin-top:8px;">
+          Alles is betwijfeld. Alles... behalve één ding. Durf je het aan?
+        </div>
+      `;
+    }, 600);
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+window.addEventListener('load', () => {
+  go('start');
+});
+</script>
+
+</body>
+</html>

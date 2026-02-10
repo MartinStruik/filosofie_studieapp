@@ -1,0 +1,17 @@
+export const LIA_CHAPTERS = [
+  { id: "h1", label: "H1", title: "Descartes", color: "#7b68ee", kwestie: 1, file: "lia-spel-h1.html" },
+  { id: "h2", label: "H2", title: "Sheets-Johnstone", color: "#5ea8a0", kwestie: 1, file: "lia-spel-h2.html" },
+  { id: "h3", label: "H3", title: "Plessner", color: "#d4a050", kwestie: 1, file: "lia-spel-h3.html" },
+  { id: "h4", label: "H4", title: "De Beauvoir & Fanon", color: "#e07088", kwestie: 1, file: "lia-spel-h4.html" },
+  { id: "h5", label: "H5", title: "Metaforen", color: "#50b8d8", kwestie: 2, file: "lia-spel-h5.html" },
+  { id: "h6", label: "H6", title: "Functionalisme & AI", color: "#50d890", kwestie: 2, file: "lia-spel-h6.html" },
+  { id: "h7", label: "H7", title: "4E-cognitie", color: "#d08848", kwestie: 2, file: "lia-spel-h7.html" },
+  { id: "h8", label: "H8", title: "Natural-Born Cyborg", color: "#7890c0", kwestie: 3, file: "lia-spel-h8.html" },
+  { id: "h9", label: "H9", title: "Kockelkoren", color: "#9070d0", kwestie: 3, file: "lia-spel-h9.html" },
+  { id: "h10", label: "H10", title: "Verbeek", color: "#c05050", kwestie: 3, file: "lia-spel-h10.html" },
+  { id: "h11", label: "H11", title: "Jos de Mul", color: "#6060d0", kwestie: 3, file: "lia-spel-h11.html" },
+  { id: "h12", label: "H12", title: "Morton & Despret", color: "#408860", kwestie: 4, file: "lia-spel-h12.html" },
+  { id: "h13", label: "H13", title: "Latour & Hayles", color: "#5878a8", kwestie: 4, file: "lia-spel-h13.html" },
+  { id: "h14", label: "H14", title: "Barad, Harari & Rasch", color: "#a05088", kwestie: 4, file: "lia-spel-h14.html" },
+  { id: "epiloog", label: "Epiloog", title: "Een nieuw pad klimmen", color: "#c0a050", kwestie: null, file: "lia-spel-epiloog.html" },
+];

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 4: De Beauvoir & Fanon</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:#0b0a0f; --bg-card:#13121a; --bg-hover:#1c1a28;
+    --text:#c8c5d0; --text-bright:#eae8f0; --text-dim:#6e6b7a;
+    --accent:#e07088; --accent-glow:#f0a0b0; --accent-dim:#983050;
+    --warm:#e8a87c; --warm-dim:#a06840;
+    --teal:#5ea8a0; --teal-dim:#3a706a;
+    --purple:#7b68ee; --purple-dim:#4a3da0;
+    --amber:#d4a050; --amber-dim:#8a6830;
+    --danger:#e06070; --success:#60c080;
+    --border:#252535;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+
+  .philosophy-box{background:linear-gradient(135deg,rgba(224,112,136,.08),rgba(224,112,136,.02));border:1px solid rgba(224,112,136,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .contrast-descartes{background:rgba(123,104,238,.05);border:1px solid rgba(123,104,238,.15);}
+  .contrast-descartes .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--purple);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-fenomeno{background:rgba(94,168,160,.05);border:1px solid rgba(94,168,160,.15);}
+  .contrast-fenomeno .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--teal);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-plessner{background:rgba(212,160,80,.05);border:1px solid rgba(212,160,80,.15);}
+  .contrast-plessner .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--amber);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-h4{background:rgba(224,112,136,.05);border:1px solid rgba(224,112,136,.15);}
+  .contrast-h4 .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+
+  .definition-box{background:rgba(224,112,136,.06);border:1px solid rgba(224,112,136,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* LABEL STORM */
+  .label-container{position:relative;min-height:300px;border:1px solid var(--border);border-radius:14px;margin:20px 0;overflow:hidden;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center;}
+  .label-silhouette{width:120px;height:200px;background:rgba(224,112,136,.08);border-radius:60px 60px 30px 30px;position:relative;border:1px solid rgba(224,112,136,.15);}
+  .label-tag{position:absolute;font-family:'Inter',sans-serif;font-size:13px;font-weight:500;padding:6px 14px;border-radius:20px;cursor:pointer;transition:all .3s;user-select:none;white-space:nowrap;z-index:2;}
+  .label-tag.active{background:rgba(224,112,136,.2);color:var(--accent-glow);border:1px solid rgba(224,112,136,.4);}
+  .label-tag.removed{opacity:0;transform:scale(.5);pointer-events:none;}
+  .label-tag.returned{animation:labelReturn .5s ease;background:rgba(224,112,136,.25);color:var(--accent-glow);border:1px solid rgba(224,112,136,.5);}
+  @keyframes labelReturn{0%{opacity:0;transform:scale(.3);}60%{transform:scale(1.15);}100%{opacity:1;transform:scale(1);}}
+  .label-instruction{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;}
+  .label-counter{font-family:'Inter',sans-serif;font-size:12px;color:var(--accent);text-align:center;margin-top:8px;}
+
+  /* MIRROR */
+  .mirror-container{border:1px solid var(--border);border-radius:14px;padding:30px;margin:20px 0;text-align:center;background:rgba(0,0,0,.3);min-height:200px;}
+  .mirror-frame{display:inline-block;border:3px solid rgba(224,112,136,.2);border-radius:50%;width:180px;height:180px;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;background:rgba(224,112,136,.03);transition:all .6s;position:relative;overflow:hidden;}
+  .mirror-text{font-size:18px;color:var(--text-bright);transition:all .4s;padding:10px;text-align:center;}
+  .mirror-label{font-family:'Inter',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-top:12px;}
+  .mirror-btn{border:none;border-radius:8px;padding:10px 20px;margin:6px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;transition:all .25s;background:rgba(224,112,136,.15);color:var(--accent-glow);border:1px solid rgba(224,112,136,.2);}
+  .mirror-btn:hover{background:rgba(224,112,136,.3);}
+  .mirror-btn.active-view{background:rgba(224,112,136,.35);border-color:var(--accent);}
+
+  /* IS/OUGHT BRIDGE */
+  .bridge-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:rgba(0,0,0,.3);}
+  .bridge-columns{display:flex;gap:16px;margin-bottom:16px;}
+  .bridge-col{flex:1;min-height:120px;border:1px dashed var(--border);border-radius:10px;padding:14px;text-align:center;}
+  .bridge-col-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+  .bridge-col.is-col .bridge-col-title{color:var(--teal);}
+  .bridge-col.ought-col .bridge-col-title{color:var(--accent);}
+  .bridge-statement{font-family:'Inter',sans-serif;font-size:14px;padding:10px 16px;margin:6px;border-radius:8px;cursor:grab;transition:all .25s;display:inline-block;user-select:none;}
+  .bridge-statement.unsorted{background:rgba(224,112,136,.1);border:1px solid rgba(224,112,136,.2);color:var(--text);}
+  .bridge-statement.correct{background:rgba(96,192,128,.12);border:1px solid rgba(96,192,128,.3);color:var(--success);}
+  .bridge-statement.wrong{background:rgba(224,96,112,.12);border:1px solid rgba(224,96,112,.3);color:var(--danger);animation:shake .4s ease;}
+  @keyframes shake{0%,100%{transform:translateX(0);}25%{transform:translateX(-6px);}75%{transform:translateX(6px);}}
+  .bridge-pool{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;min-height:50px;}
+  .bridge-result{font-family:'Inter',sans-serif;font-size:14px;color:var(--text-dim);text-align:center;margin-top:12px;}
+
+  /* NOTEBOOK */
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;letter-spacing:.5px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;background:rgba(224,112,136,.08);border:1px solid rgba(224,112,136,.12);color:var(--text-dim);text-decoration:none;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+
+<div id="game-container">
+  <div id="story-panel">
+    <div id="passage-wrapper"></div>
+  </div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H4</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.08);border-color:rgba(123,104,238,.15);color:var(--purple-dim);">H1 Descartes</span>
+      <span class="nb-chapter-link" style="background:rgba(94,168,160,.08);border-color:rgba(94,168,160,.15);color:var(--teal-dim);">H2 Fenomenologie</span>
+      <span class="nb-chapter-link" style="background:rgba(212,160,80,.08);border-color:rgba(212,160,80,.15);color:var(--amber-dim);">H3 Plessner</span>
+    </div>
+    <div class="nb-section">
+      <div class="nb-section-title">Begrippen</div>
+      <div id="terms-list"></div>
+    </div>
+    <div class="nb-section">
+      <div class="nb-section-title">Reflecties</div>
+      <div id="reflections-list"></div>
+    </div>
+    <div class="nb-section">
+      <div class="nb-section-title">Filosofisch Kompas</div>
+      <div class="nb-compass" id="compass"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  passage: 'start',
+  history: [],
+  visitedPassages: 0,
+  terms: [],
+  reflections: [],
+  compass: {
+    'Bepaald — Vrij': 50,
+    'Subject — Object': 50,
+    'Structuur — Individu': 50,
+    'Is — Ought': 50
+  },
+  labelsRemoved: 0,
+  labelsReturned: 0,
+  mirrorView: 'eigen',
+  bridgeScore: 0,
+  flags: {}
+};
+
+const totalPassages = 26;
+
+function T(name, desc) {
+  if (!state.terms.find(t => t.name === name)) {
+    state.terms.push({name, desc});
+    renderNotebook();
+  }
+}
+function R(text) {
+  state.reflections.push(text);
+  renderNotebook();
+}
+function adj(axis, delta) {
+  if (state.compass[axis] !== undefined) {
+    state.compass[axis] = Math.max(0, Math.min(100, state.compass[axis] + delta));
+    renderNotebook();
+  }
+}
+
+const P = {
+
+/* ===== OPENING ===== */
+start: {
+  title: 'De supermarkt',
+  text: `
+    <div class="ambient-text">Hoofdstuk 4 — Wij staan in verhouding tot de ander</div>
+    <p>De echo van gisteren zat nog in Lia's lichaam. Die plotselinge lach die omsloeg in snikken — alsof haar systeem had gecrasht en opnieuw was opgestart.</p>
+    <p>Nu, in de supermarkt, voelde ze zich fragiel, alsof <em>iedereen</em> kon zien dat ze nog niet helemaal samenhangend was.</p>
+    <p>De automatische deuren schoven open. Het felle licht deed zeer na de schemerige gang van het revalidatiecentrum. Geluiden stroomden binnen: piepende kassabanden, gemompel, voetstappen —</p>
+    <p>En toen: een kind. Zes, misschien zeven jaar oud. Het trok zijn moeder aan haar mouw en wees. Onbeschaamd, met die openheid die alleen kinderen hebben.</p>
+    <p class="thought">"Kijk, mam."</p>
+  `,
+  choices: [
+    {text: 'Doorrijden, hoofd hoog', next: 'doorrijden'},
+    {text: 'Het kind aankijken', next: 'aankijken'}
+  ]
+},
+
+doorrijden: {
+  title: 'Hoofd hoog',
+  text: `
+    <p>Lia slikte en reed door, het hoofd hoog, alsof ze de opmerking niet hoorde. Maar vanbinnen brandde het.</p>
+    <p>De moeder trok haar kind weg. <span class="dim">"Niet wijzen, schat."</span> Maar die twee woorden — <em>kijk, mam</em> — bleven hangen als een echo die niet wilde uitsterven.</p>
+    <p class="thought">Ik ben niet onzichtbaar. Ik ben juist te zichtbaar. Maar alleen als… dit. Alleen als de rolstoel.</p>
+  `,
+  onEnter: () => { R('Lia probeert de blik te negeren, maar voelt hoe ze gereduceerd wordt tot een beeld.'); },
+  choices: [
+    {text: 'Verder', next: 'spiegel'}
+  ]
+},
+
+aankijken: {
+  title: 'Oogcontact',
+  text: `
+    <p>Lia stopte en keek het kind aan. Niet boos, niet geforceerd vriendelijk. Gewoon: <em>ik ben hier</em>.</p>
+    <p>Het kind staarde even terug, onzeker nu. Toen glimlachte het verlegen en verstopte zich achter zijn moeder.</p>
+    <p>De moeder keek verontschuldigend. <span class="dim">"Sorry, hij is gewoon nieuwsgierig."</span></p>
+    <p>Lia knikte. Maar van binnen bleef de vraag branden: wat had dat kind gezien? <em>Haar</em>? Of alleen de rolstoel?</p>
+    <p class="thought">Ik was niet boos op hem. Ik was boos op het feit dat ik door zijn ogen naar mezelf keek — en niet meer wist wat ik zag.</p>
+  `,
+  onEnter: () => { R('Lia probeert verbinding te maken, maar merkt hoe de blik van de ander haar zelfbeeld beïnvloedt.'); adj('Subject — Object', -5); },
+  choices: [
+    {text: 'Verder', next: 'spiegel'}
+  ]
+},
+
+spiegel: {
+  title: 'De spiegel',
+  text: `
+    <p>Even later, in de revalidatiezaal. De grote ramen werkten als spiegels in het winterlicht.</p>
+    <p>Lia ving haar eigen reflectie op. Niet Lia de klimmer. Niet Lia de studente. Niet Lia die grapjes maakt met Sam of Max achter haar oren krabt.</p>
+    <p>Wat ze zag was: <em>"dat meisje in de rolstoel"</em>.</p>
+    <p>Het label leek haar vooruit te gaan, nog vóór ze zelf binnenkwam. Alsof het een schaduw was die altijd eerder aankwam dan zij.</p>
+    <div class="scene-break">· · ·</div>
+    <p>Ze dacht aan het aanbod van dr. Verhoeven. De BCI — de chip die haar zou kunnen laten lopen.</p>
+    <p class="thought">Als ik die chip neem, en weer loop… zouden ze me dan gewoon zien als Lia? Of juist als iets vreemds — een halve cyborg? Het voelde alsof mijn keuze niet alleen over mobiliteit ging, maar ook over hoe ik bekeken zou worden.</p>
+  `,
+  choices: [
+    {text: '"Van het ene label in het andere…"', next: 'paradox_label'},
+    {text: '"Misschien maakt het niet uit wat ze denken"', next: 'paradox_vrij'}
+  ]
+},
+
+paradox_label: {
+  title: 'Het label-dilemma',
+  text: `
+    <p>De chip was een paradoxale belofte. Ze zou bevrijd worden van het label <em>'meisje in de rolstoel'</em> — maar zou transformeren in een nieuw, misschien nog fascinerender object: <em>'de cyborg'</em>, het wandelende experiment.</p>
+    <p>De blikken zouden niet verdwijnen, maar <strong>veranderen</strong> — van medelijden naar een kille, technische nieuwsgierigheid.</p>
+    <p class="thought">Ik zou van het ene label in het andere vallen, nog steeds gedefinieerd door wat anderen in mij zien.</p>
+  `,
+  onEnter: () => { R('Lia beseft dat de BCI haar misschien van één label bevrijdt, maar een ander oplegt.'); adj('Subject — Object', -8); },
+  choices: [
+    {text: 'Verder naar Sam', next: 'sam_gesprek'}
+  ]
+},
+
+paradox_vrij: {
+  title: 'Eigen richting',
+  text: `
+    <p>Maar zelfs terwijl ze dat dacht, voelde Lia de twijfel. <em>Maakt het echt niet uit?</em></p>
+    <p>Ze herinnerde zich hoe haar hart kromp in de supermarkt. Hoe haar hele lichaam reageerde op dat ene wijzende vingertje. Het <em>deed</em> ertoe. De blik van de ander was geen abstractie — het was iets dat ze in haar botten voelde.</p>
+    <p class="thought">Ik wil geloven dat ik vrij ben om mijn eigen verhaal te schrijven. Maar die blikken schrijven mee, of ik wil of niet.</p>
+  `,
+  onEnter: () => { R('Lia probeert de blik van de ander te overstijgen, maar merkt dat dit niet zo eenvoudig is.'); adj('Bepaald — Vrij', 8); },
+  choices: [
+    {text: 'Verder naar Sam', next: 'sam_gesprek'}
+  ]
+},
+
+sam_gesprek: {
+  title: 'Het college',
+  text: `
+    <p>'s Middags, naast Sam in de collegezaal. Lia fluisterde:</p>
+    <p class="thought">"Weet je wat het ergste is? Niet de pijn. Niet eens dat ik dingen niet kan. Het is hoe mensen kijken. Alsof ik niet meer mezelf ben."</p>
+    <p>Sam knikte langzaam. <em>"Dat is precies waar de sprekers vandaag over gaan. Over hoe de blik van de ander je identiteit vormt…"</em></p>
+    <p>Lia keek naar het podium. De spreker verscheen. Het onderwerp van vandaag:</p>
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 4</div>
+      <p><strong>Wij staan in verhouding tot de ander</strong></p>
+      <p>Over intersubjectiviteit, objectificatie, en de blik die vormt.</p>
+      <p><span class="dim">Met: Simone de Beauvoir · Frantz Fanon · Immanuel Kant · David Hume</span></p>
+    </div>
+  `,
+  choices: [
+    {text: 'Luister naar de spreker', next: 'intersubjectiviteit'}
+  ]
+},
+
+/* ===== THEORIE: INTERSUBJECTIVITEIT ===== */
+intersubjectiviteit: {
+  title: 'Intersubjectiviteit',
+  text: `
+    <p>De spreker begon: <em>"In de vorige hoofdstukken bespraken we de directe ervaring en onze excentrische positie. Nu voegen we een cruciale laag toe: hoe uw ervaring van uzelf fundamenteel wordt gevormd door uw relatie met andere mensen."</em></p>
+    <div class="definition-box">
+      <span class="term">Intersubjectiviteit</span>
+      Het filosofische idee dat ons begrip van de wereld, onze betekenisgeving en zelfs onze <strong>identiteit</strong> niet puur individueel zijn, maar ontstaan <em>tussen subjecten</em> — in de gedeelde ruimte van taal, cultuur en interactie.
+    </div>
+    <div class="contrast-plessner contrast-box">
+      <span class="cb-label">Plessner (H3) — Medewereld</span>
+      Plessner sprak al over de 'medewereld' — de sociale dimensie van ons bestaan. De existentialisten gaan verder: de expressies, blikken en woorden van anderen <em>vormen</em> actief onze ervaring.
+    </div>
+  `,
+  onEnter: () => { T('Intersubjectiviteit', 'Ons begrip van de wereld en onze identiteit ontstaan tussen subjecten, in gedeelde taal, cultuur en interactie.'); T('Medewereld', 'Plessners term voor de sociale dimensie van ons bestaan — de wereld die we delen met anderen.'); },
+  choices: [
+    {text: 'Hoe vormt de ander mij dan precies?', next: 'expressie_vormt'}
+  ]
+},
+
+expressie_vormt: {
+  title: 'Expressie vormt ervaring',
+  text: `
+    <p><em>"Expressies vormen ervaring,"</em> vervolgde de spreker. <em>"Hoe we praten, hoe we gezien worden, de culturele beelden — we internaliseren ze. Ze kleuren onze zelfbeleving."</em></p>
+    <p>Dit raakt aan twee perspectieven die in spanning staan:</p>
+    <div class="contrast-box contrast-h4">
+      <span class="cb-label">Structuralisme</span>
+      Maatschappelijke structuren (taal, normen, machtsverhoudingen) <em>vormen</em> ons. We zijn producten van het systeem waarin we leven.
+    </div>
+    <div class="contrast-box contrast-h4" style="border-color:rgba(96,192,128,.2);background:rgba(96,192,128,.04);">
+      <span class="cb-label" style="color:var(--success);">Existentialisme</span>
+      We ervaren de druk van structuren, maar hebben ook de <em>vrijheid en verantwoordelijkheid</em> om ons eigen leven vorm te geven. Bewustwording en actie zijn cruciaal.
+    </div>
+    <p>Twee filosofen verkennen deze spanning vanuit de concrete ervaring: <strong>Simone de Beauvoir</strong> en <strong>Frantz Fanon</strong>.</p>
+  `,
+  onEnter: () => { T('Structuralisme', 'De nadruk op hoe maatschappelijke structuren (taal, normen, macht) ons vormen en beperken.'); T('Existentialisme', 'De nadruk op individuele vrijheid, keuze en verantwoordelijkheid — ook binnen beperkende structuren.'); },
+  choices: [
+    {text: 'De Beauvoir', next: 'beauvoir_intro'},
+    {text: 'Fanon', next: 'fanon_intro'}
+  ]
+},
+
+/* ===== DE BEAUVOIR ===== */
+beauvoir_intro: {
+  title: 'Simone de Beauvoir',
+  text: `
+    <p><em>"Simone de Beauvoir,"</em> zei de spreker, <em>"analyseerde hoe de bestaanservaring van vrouwen cultureel wordt gevormd."</em></p>
+    <p>Op het scherm verscheen de beroemde zin:</p>
+    <div class="philosophy-box" style="text-align:center;font-size:22px;">
+      <em>"Je wordt niet als vrouw geboren, maar tot vrouw <strong>gemaakt</strong>."</em>
+      <div style="font-size:14px;margin-top:8px;color:var(--text-dim);">— Simone de Beauvoir, <em>De Tweede Sekse</em> (1949)</div>
+    </div>
+    <p>Verschillen tussen mannen en vrouwen zijn niet primair <strong>biologisch</strong>, maar het resultaat van <em>socialisatie</em> en culturele verwachtingen.</p>
+    <p>Jongens worden aangemoedigd tot actie en autonomie. Meisjes leren vaker zichzelf te zien als <em>object</em> dat bekeken wordt.</p>
+  `,
+  onEnter: () => { T('Simone de Beauvoir', 'Frans filosofe (1908-1986). Analyseerde hoe vrouwelijkheid cultureel wordt geconstrueerd door socialisatie en de blik van de ander.'); },
+  choices: [
+    {text: 'Wat bedoelt ze met objectificatie?', next: 'objectificatie'},
+  ]
+},
+
+objectificatie: {
+  title: 'Objectificatie',
+  text: `
+    <div class="definition-box">
+      <span class="term">Objectificatie</span>
+      Het reduceren van een persoon (<strong>subject</strong>) tot een ding (<strong>object</strong>). De ander wordt niet gezien als een vrij, autonoom wezen met eigen ervaringen, maar als iets dat bekeken, beoordeeld en gebruikt kan worden.
+    </div>
+    <p>De Beauvoir laat zien hoe diepgewortelde culturele scripts onze zelf- en lichaamsbeleving vormen. Het meisje leert haar autonomie deels op te geven en te <em>bestaan voor de ander</em>.</p>
+    <p>Lia voelde iets scherps. <span class="dim">Bestaan voor de ander.</span> Was dat niet precies wat ze voelde in de supermarkt? Niet gezien als subject — als <em>iemand</em> — maar als object: "dat meisje in de rolstoel".</p>
+    <p>De spreker ging verder: <em>"Dit staat haaks op de ethiek van Immanuel Kant…"</em></p>
+    <div class="definition-box">
+      <span class="term">Categorische imperatief (Kant)</span>
+      Behandel een mens <strong>altijd als doel op zich</strong> en nooit louter als middel voor je eigen doeleinden. Objectificatie schendt dit fundamentele ethische principe.
+    </div>
+  `,
+  onEnter: () => { T('Objectificatie', 'Het reduceren van een persoon (subject) tot een ding (object) — gezien, beoordeeld, gebruikt.'); T('Categorische imperatief', 'Kants ethisch principe: behandel een mens altijd als doel op zich, nooit louter als middel.'); },
+  choices: [
+    {text: 'Verder naar Fanon', next: 'fanon_intro'}
+  ]
+},
+
+/* ===== FANON ===== */
+fanon_intro: {
+  title: 'Frantz Fanon',
+  text: `
+    <p><em>"Frantz Fanon,"</em> zei de spreker, <em>"analyseerde de impact van racisme op de bestaanservaring. Hij beschrijft hoe de 'witte blik' de Zwarte mens objectiveert."</em></p>
+    <p>Op het scherm verscheen Fanons tekst:</p>
+    <div class="philosophy-box" style="font-size:18px;">
+      <em>"Hé, een neger!' (...) maar in plaats daarvan werd ik mezelf gewaar als <strong>object</strong> te midden van andere objecten."</em>
+      <div style="font-size:14px;margin-top:8px;color:var(--text-dim);">— Frantz Fanon, <em>Zwarte Huid, Witte Maskers</em> (1952)</div>
+    </div>
+    <p>Fanon beschrijft hoe deze blik het <strong>lichaamsschema</strong> — het pre-reflectieve gevoel van je lichaam in de ruimte (zie H2) — direct verstoort.</p>
+  `,
+  onEnter: () => {
+    T('Frantz Fanon', 'Frans-Martinikaans filosoof (1925-1961). Analyseerde hoe de racistische blik het lichaamsschema verstoort en leidt tot vervreemding.');
+    if (!state.terms.find(t => t.name === 'Objectificatie')) {
+      T('Objectificatie', 'Het reduceren van een persoon (subject) tot een ding (object) — gezien, beoordeeld, gebruikt.');
+    }
+  },
+  choices: [
+    {text: 'Hoe wordt het lichaamsschema verstoord?', next: 'epidermisch'}
+  ]
+},
+
+epidermisch: {
+  title: 'Epidermisch-raciaal schema',
+  text: `
+    <p>De spreker toonde een diagram:</p>
+    <div class="contrast-fenomeno contrast-box">
+      <span class="cb-label">Sheets-Johnstone (H2) — Lichaamsschema</span>
+      Ons normale, pre-reflectieve gevoel van ons lichaam in de ruimte. Praktisch, impliciet, vanzelfsprekend.
+    </div>
+    <p>Fanon beschrijft hoe dit schema onder de racistische blik <strong>instort</strong>:</p>
+    <div class="philosophy-box">
+      <em>"Een gekleurde persoon stuit in de witte wereld op problemen bij het uitwerken van zijn lichaamsschema. (...) Het is kennis in de derde persoon."</em>
+    </div>
+    <p>Dit leidt tot wat Fanon een <em>epidermisch-raciaal schema</em> noemt:</p>
+    <div class="definition-box">
+      <span class="term">Epidermisch-raciaal schema</span>
+      Het lichaam wordt niet meer pre-reflectief ervaren, maar primair door de <strong>lens van ras</strong> — als een racistisch stereotype. Het lichaamsschema 'stortte in elkaar' om plaats te maken voor dit opgelegde schema. Het resultaat: diepe <em>vervreemding</em> van het eigen bestaan.
+    </div>
+  `,
+  onEnter: () => { T('Epidermisch-raciaal schema', 'Fanons term: het lichaamsschema wordt verstoord door de racistische blik en vervangen door een schema dat het lichaam primair door de lens van ras ervaart.'); },
+  choices: [
+    {text: 'Lia herkent iets…', next: 'lia_herkenning'}
+  ]
+},
+
+lia_herkenning: {
+  title: 'Herkenning',
+  text: `
+    <p>Lia voelde een schok van herkenning. Het ging niet over ras — maar het <em>mechanisme</em> was hetzelfde.</p>
+    <p class="thought">Mijn lichaamsschema was al verstoord door het ongeluk. Maar die blikken in de supermarkt… die maakten het erger. Ze legden er een <em>tweede</em> schema overheen: "gehandicapt meisje". Alsof mijn hele zijn gereduceerd werd tot die ene eigenschap.</p>
+    <p>Sam leunde naar haar toe. <em>"Herken je het?"</em></p>
+    <p><em>"Te goed,"</em> fluisterde Lia. <em>"Het is alsof je jezelf niet meer kunt zien zonder de blik van de ander ertussen."</em></p>
+  `,
+  onEnter: () => { R('Lia herkent in Fanons analyse hoe haar eigen lichaamsschema ook verstoord raakt door de blik van anderen.'); },
+  choices: [
+    {text: 'Probeer het label-experiment', next: 'label_game_intro'}
+  ]
+},
+
+/* ===== MINIGAME: LABEL STORM ===== */
+label_game_intro: {
+  title: 'De labels',
+  text: `
+    <p>De spreker stelde een oefening voor: <em>"Stel je voor dat je door een ruimte loopt en labels op je geplakt krijgt. Labels die anderen op je projecteren. Probeer ze te verwijderen."</em></p>
+    <div class="label-container" id="label-arena">
+      <div class="label-silhouette" id="label-silhouette"></div>
+    </div>
+    <div class="label-instruction" id="label-instruction">Klik op de labels om ze te verwijderen</div>
+    <div class="label-counter" id="label-counter"></div>
+    <div id="label-result" style="display:none;"></div>
+  `,
+  onEnter: () => { setTimeout(startLabelGame, 600); }
+},
+
+label_game_done: {
+  title: 'Na de storm',
+  text: `
+    <p>De labels bleven terugkomen. Hoe hard Lia ook probeerde — ze kon ze niet definitief verwijderen.</p>
+    <p class="thought">Dit is wat Fanon en De Beauvoir bedoelen. De labels komen niet van binnenuit. Ze worden opgelegd door de blik van de ander. En ze <em>kleven</em>.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Inzicht</div>
+      <p>Objectificatie is niet iets dat je zomaar kunt 'afspoelen'. De blikken, woorden en verwachtingen van anderen vormen een structuur die zich in je ervaring nestelt. Maar — en dit is cruciaal voor de existentialisten — je bent er niet volledig door <em>gedetermineerd</em>.</p>
+    </div>
+  `,
+  onEnter: () => { T('Socialisatie', 'Het proces waardoor culturele verwachtingen, normen en rollen geïnternaliseerd worden en ons zelfbeeld vormen.'); },
+  choices: [
+    {text: 'Wat zie je in de spiegel?', next: 'mirror_intro'}
+  ]
+},
+
+/* ===== MINIGAME: MIRROR ===== */
+mirror_intro: {
+  title: 'De spiegel',
+  text: `
+    <p>De spreker dimde het licht. <em>"Nu een ander experiment. Stel je voor dat je in een spiegel kijkt. Maar niet alleen door je eigen ogen…"</em></p>
+    <div class="mirror-container" id="mirror-game">
+      <div class="mirror-frame" id="mirror-frame">
+        <div class="mirror-text" id="mirror-text">Lia</div>
+      </div>
+      <div class="mirror-label" id="mirror-label">Eigen blik</div>
+      <div style="margin-top:16px;">
+        <button class="mirror-btn active-view" onclick="mirrorView('eigen')">Eigen ogen</button>
+        <button class="mirror-btn" onclick="mirrorView('kind')">Ogen van het kind</button>
+        <button class="mirror-btn" onclick="mirrorView('arts')">Ogen van de arts</button>
+        <button class="mirror-btn" onclick="mirrorView('sam')">Ogen van Sam</button>
+      </div>
+    </div>
+    <div id="mirror-result" style="margin-top:16px;"></div>
+  `,
+  onEnter: () => { state.flags.mirrorViews = new Set(['eigen']); }
+},
+
+mirror_reflectie: {
+  title: 'Gebroken spiegels',
+  text: `
+    <p>Lia keek naar haar handen terwijl de beelden door haar hoofd gingen.</p>
+    <p class="thought">Ik ben al die blikken tegelijk. De klimmer die Sam ziet, het proefkonijn van de arts, het spectakel voor het kind op straat, en… wie ik voor mezelf ben. Maar wie ís dat eigenlijk, als al die blikken er steeds tussendoor schemeren?</p>
+    <div class="philosophy-box">
+      <div class="box-title">De Beauvoir + Fanon</div>
+      <p>Onze identiteit is geen vast gegeven dat we 'van binnen' bezitten. Ze wordt mede gevormd in de <strong>intersubjectieve ruimte</strong> — in de wisselwerking met de blik, de taal en de verwachtingen van anderen.</p>
+      <p>Dit is niet per se negatief. Maar het wordt problematisch wanneer de blik van de <em>dominante groep</em> iemand reduceert tot een object, een stereotype, een label.</p>
+    </div>
+  `,
+  onEnter: () => { R('De spiegel toont: identiteit ontstaat niet in isolatie, maar in de wisselwerking met de blik van de ander.'); },
+  choices: [
+    {text: 'Verder naar Hume\'s wet', next: 'hume_intro'}
+  ]
+},
+
+/* ===== HUME'S WET: IS/OUGHT ===== */
+hume_intro: {
+  title: 'Is en Ought',
+  text: `
+    <p>De spreker veranderde van toon. <em>"We komen nu bij een cruciaal onderscheid in de ethiek. Let goed op, want dit gaat over hoe stereotypen hun macht krijgen."</em></p>
+    <div class="definition-box">
+      <span class="term">Hume's wet — De kloof tussen 'is' en 'ought'</span>
+      Uit het feit dat iets <strong>is</strong> zoals het is (een feitelijke beschrijving), volgt <em>niet logisch</em> dat het ook zo zou <strong>moeten</strong> zijn (een moreel voorschrift). Descriptief ≠ normatief.
+    </div>
+    <p>De spreker ging verder:</p>
+    <p><em>"Stereotypen worden gepresenteerd als feiten — als beschrijvingen van hoe groepen 'zijn'. Maar vervolgens krijgen ze normatieve kracht: ze rechtvaardigen een bepaalde behandeling."</em></p>
+    <p><em>"'Vrouwen zijn emotioneel' → dus ze horen niet in leidinggevende posities. 'Gehandicapten zijn afhankelijk' → dus we beslissen voor hen. De stap van 'is' naar 'ought' wordt ongezien gemaakt."</em></p>
+  `,
+  onEnter: () => { T('Hume\'s wet (is/ought)', 'De logische kloof tussen feitelijke beschrijvingen (is) en morele voorschriften (ought). Uit hoe iets is, volgt niet hoe het zou moeten zijn.'); },
+  choices: [
+    {text: 'Probeer de is/ought-oefening', next: 'bridge_game'}
+  ]
+},
+
+/* ===== MINIGAME: IS/OUGHT BRIDGE ===== */
+bridge_game: {
+  title: 'Is of ought?',
+  text: `
+    <p>De spreker deelde kaartjes uit. <em>"Sorteer deze uitspraken: is het een feitelijke beschrijving ('is'), of een moreel voorschrift ('ought')? En let op: sommige doen zich voor als het ene, maar zijn eigenlijk het andere."</em></p>
+    <div class="bridge-container" id="bridge-game">
+      <div class="bridge-pool" id="bridge-pool"></div>
+      <div class="bridge-columns">
+        <div class="bridge-col is-col" id="is-col" onclick="bridgeDrop('is')">
+          <div class="bridge-col-title">'Is' — Beschrijving</div>
+          <div id="is-items"></div>
+        </div>
+        <div class="bridge-col ought-col" id="ought-col" onclick="bridgeDrop('ought')">
+          <div class="bridge-col-title">'Ought' — Voorschrift</div>
+          <div id="ought-items"></div>
+        </div>
+      </div>
+      <div class="bridge-result" id="bridge-result"></div>
+    </div>
+  `,
+  onEnter: () => { setTimeout(startBridgeGame, 600); }
+},
+
+bridge_done: {
+  title: 'De verborgen sprong',
+  text: `
+    <p>De spreker knikte. <em>"Ziet u het? Stereotypen worden gepresenteerd als neutrale beschrijvingen — maar ze bevatten altijd al een verborgen normatief oordeel."</em></p>
+    <div class="philosophy-box">
+      <div class="box-title">De Beauvoir + Fanon + Hume</div>
+      <p>De analyses van De Beauvoir en Fanon laten zien hoe de ongeldige stap van <strong>'is'</strong> naar <strong>'ought'</strong> diep ingrijpt in de bestaanservaring. Stereotypen worden als feiten gepresenteerd, maar krijgen normatieve kracht die mensen reduceert en hun vrijheid beperkt.</p>
+    </div>
+    <p>Lia boog zich naar Sam. <em>"Dat is precies wat er in die supermarkt gebeurde. Dat kind zag een feit — een rolstoel. Maar daar zat al een heel verhaal aan vast over wie ik ben en wat ik kan."</em></p>
+  `,
+  onEnter: () => { R('"Is" wordt ongemerkt "ought": een feit (rolstoel) wordt een normatief oordeel (afhankelijk, zielig, anders).'); },
+  choices: [
+    {text: 'Hoe vrij zijn we dan?', next: 'vrijheid_debat'}
+  ]
+},
+
+/* ===== VRIJHEID ===== */
+vrijheid_debat: {
+  title: 'Vrijheid en structuur',
+  text: `
+    <p>Sam stak zijn hand op. <em>"Maar als die structuren zo machtig zijn — socialisatie, blikken, stereotypen — hoe vrij zijn we dan eigenlijk?"</em></p>
+    <p>De spreker glimlachte. <em>"Dat is de centrale spanning. Laat me twee posities schetsen."</em></p>
+    <div class="contrast-box contrast-h4">
+      <span class="cb-label">Structuralistisch perspectief</span>
+      Sociale structuren (taal, normen, machtsrelaties) <strong>vormen</strong> ons zo diepgaand dat echte individuele vrijheid beperkt is. We zijn grotendeels producten van het systeem.
+    </div>
+    <div class="contrast-box contrast-h4" style="border-color:rgba(96,192,128,.2);background:rgba(96,192,128,.04);">
+      <span class="cb-label" style="color:var(--success);">Existentialistisch perspectief</span>
+      Ondanks de druk van structuren behouden we de <strong>vrijheid en verantwoordelijkheid</strong> om ons eigen leven vorm te geven. Bewustwording en actie zijn sleutels tot bevrijding.
+    </div>
+    <p><em>"Zowel De Beauvoir als Fanon zijn existentialisten. Ze erkennen de macht van structuren, maar weigeren het individu volledig gedetermineerd te verklaren."</em></p>
+  `,
+  choices: [
+    {text: 'Structuren vormen ons — vrijheid is beperkt', next: 'keuze_structuur'},
+    {text: 'We kunnen ons bevrijden door bewustwording', next: 'keuze_existentie'},
+    {text: 'Beide zijn nodig om het te begrijpen', next: 'keuze_beide'}
+  ]
+},
+
+keuze_structuur: {
+  title: 'De kracht van structuren',
+  text: `
+    <p>Lia knikte langzaam. De structuren voelden zwaar, bijna overweldigend. De blikken in de supermarkt, de labels, het hele systeem dat haar vooraf ging definiëren —</p>
+    <p class="thought">Misschien is individuele vrijheid een luxe-idee. Je kunt moeilijk 'vrij kiezen' als het hele systeem je al in een hokje heeft geduwd voordat je iets gezegd hebt.</p>
+    <p>Sam keek haar aan. <em>"Maar als je dat gelooft — geef je dan niet precies de controle op die je wilt hebben?"</em></p>
+  `,
+  onEnter: () => { adj('Structuur — Individu', -15); adj('Bepaald — Vrij', -10); R('Lia neigt naar het structuralistische perspectief: structuren zijn machtiger dan individuele vrijheid.'); },
+  choices: [
+    {text: 'Verder', next: 'ethische_les'}
+  ]
+},
+
+keuze_existentie: {
+  title: 'Bevrijding',
+  text: `
+    <p>Lia rechtte haar rug. <em>"Ik weiger om alleen maar een product te zijn van andermans blikken."</em></p>
+    <p class="thought">De Beauvoir en Fanon hadden zelf die keuze gemaakt. Ze hadden de structuren benoemd, ontmaskerd, en daarmee de eerste stap naar vrijheid gezet. Bewustwording ís al een daad van verzet.</p>
+    <p>Sam grinnikte. <em>"Typisch jij. Altijd de klimmer — naar boven, tegen de zwaartekracht in."</em></p>
+  `,
+  onEnter: () => { adj('Structuur — Individu', 15); adj('Bepaald — Vrij', 10); R('Lia kiest voor het existentialistische pad: bewustwording als eerste stap naar bevrijding.'); },
+  choices: [
+    {text: 'Verder', next: 'ethische_les'}
+  ]
+},
+
+keuze_beide: {
+  title: 'De synthese',
+  text: `
+    <p>Lia aarzelde. <em>"Misschien is het geen of-of. Misschien heb je beide nodig."</em></p>
+    <p class="thought">De structuren zijn echt. De blikken vormen je, of je wilt of niet. Maar daarbinnen is er ruimte — soms een spleet, soms een deur — om je eigen weg te vinden. De Beauvoir en Fanon laten allebei zien: je moet eerst begrijpen hoe het systeem werkt, voordat je je kunt bevrijden.</p>
+    <p>Sam knikte. <em>"Structuren begrijpen én toch verantwoordelijkheid nemen. Dat klinkt als de moeilijkste weg."</em></p>
+    <p><em>"De enige eerlijke,"</em> zei Lia.</p>
+  `,
+  onEnter: () => { adj('Structuur — Individu', 3); adj('Bepaald — Vrij', 5); R('Lia kiest de synthese: structuren erkennen én individuele verantwoordelijkheid nemen.'); },
+  choices: [
+    {text: 'Verder', next: 'ethische_les'}
+  ]
+},
+
+ethische_les: {
+  title: 'Ethische verantwoordelijkheid',
+  text: `
+    <p>De spreker sloot af met een directe boodschap:</p>
+    <div class="philosophy-box">
+      <div class="box-title">Ethische implicatie</div>
+      <p>Omdat onze blik en woorden de ervaring van anderen <strong>mede vormgeven</strong>, dragen we een <em>ethische verantwoordelijkheid</em>.</p>
+      <p>Erkenning van de ander als <strong>subject</strong> — niet als object, label of stereotype — is een fundamentele eis. Dit is wat Kant bedoelde met de categorische imperatief, maar nu concreet gemaakt door De Beauvoir en Fanon.</p>
+    </div>
+    <p>Lia keek om zich heen in de zaal. Allemaal gezichten. Allemaal blikken. Allemaal met de macht om te vormen — en de verantwoordelijkheid om dat goed te doen.</p>
+  `,
+  choices: [
+    {text: 'Terugblik: vier lenzen', next: 'vier_lenzen'}
+  ]
+},
+
+/* ===== TERUGBLIK ===== */
+vier_lenzen: {
+  title: 'Vier lenzen',
+  text: `
+    <p>Lia keek naar haar aantekeningen. Vier manieren om naar hetzelfde te kijken:</p>
+    <div class="contrast-descartes contrast-box">
+      <span class="cb-label">Descartes (H1)</span>
+      Lia's probleem is een <em>communicatiestoornis</em> tussen geest en lichaam. De geest wil, het lichaam gehoorzaamt niet. Een mechanisch probleem.
+    </div>
+    <div class="contrast-fenomeno contrast-box">
+      <span class="cb-label">Sheets-Johnstone (H2)</span>
+      Lia's lichaamsschema is verstoord. Haar <em>geleefde ervaring</em> van haar lichaam-in-de-wereld is veranderd. Ze moet opnieuw leren voelen, niet denken.
+    </div>
+    <div class="contrast-plessner contrast-box">
+      <span class="cb-label">Plessner (H3)</span>
+      Lia ervaart de <em>excentrische breuk</em> extra scherp: ze is haar lichaam én bekijkt het van buitenaf. Haar lachen en huilen onthullen deze fundamentele menselijke gespletenheid.
+    </div>
+    <div class="contrast-h4 contrast-box">
+      <span class="cb-label">De Beauvoir & Fanon (H4)</span>
+      Lia's ervaring wordt mede gevormd door de <em>blik van de ander</em>. Labels en stereotypen nestelen zich in haar zelfbeleving. Haar identiteit ontstaat in de intersubjectieve ruimte.
+    </div>
+  `,
+  choices: [
+    {text: 'Wat betekent dit voor de BCI-keuze?', next: 'bci_reflectie'}
+  ]
+},
+
+bci_reflectie: {
+  title: 'De BCI en de blik',
+  text: `
+    <p>Terug in haar kamer dacht Lia aan de BCI. Het aanbod van Verhoeven. Maar nu door een nieuwe lens.</p>
+    <p class="thought">Het gaat niet alleen om mobiliteit. Het gaat om blikken. Als ik die chip neem, wissel ik "meisje in de rolstoel" in voor "het experiment". De blikken veranderen, maar verdwijnen niet. De vraag is: welke blikken kan ik dragen? En: kan ik een manier vinden om mijn eigen verhaal te schrijven, ondanks de blikken?</p>
+    <div class="max-moment">Max sprong op haar schoot en kopte tegen haar kin. Katten hadden geen last van blikken. Ze waren gewoon. Centrisch, zou Plessner zeggen.</div>
+  `,
+  onEnter: () => { R('De BCI-keuze is ook een keuze over blikken: welke objectificatie is Lia bereid te ondergaan?'); },
+  choices: [
+    {text: 'Naar de afsluiting', next: 'afsluiting'}
+  ]
+},
+
+/* ===== AFSLUITING ===== */
+afsluiting: {
+  title: 'Afsluiting',
+  text: `
+    <p>Lia sloot haar notitieboek. De avond viel. Door het raam zag ze mensen lopen — elk met hun eigen verhaal, hun eigen blikken, hun eigen labels.</p>
+    <p class="thought">We vormen elkaar. Elke blik is een daad. Elke keer dat ik iemand zie als méér dan een label, maak ik een keuze. Een existentiële keuze.</p>
+    <div class="scene-break">· · ·</div>
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 4 — Kernbegrippen</div>
+      <p><strong>Intersubjectiviteit</strong> — Identiteit ontstaat tussen subjecten<br>
+      <strong>De Beauvoir</strong> — "Je wordt niet als vrouw geboren, maar tot vrouw gemaakt"<br>
+      <strong>Fanon</strong> — Epidermisch-raciaal schema, de verstoorde lichaamservaring<br>
+      <strong>Objectificatie</strong> — Subject reduceren tot object<br>
+      <strong>Categorische imperatief</strong> — Kant: mens als doel, niet als middel<br>
+      <strong>Hume's wet</strong> — De kloof tussen 'is' en 'ought'<br>
+      <strong>Existentialisme vs. Structuralisme</strong> — Vrijheid binnen structuren</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 4 — Wordt vervolgd in H5: Metaforen en ons mensbeeld</p>
+  `,
+  onEnter: () => { R('Hoofdstuk 4 afgerond. De blik van de ander vormt ons — maar we zijn niet volledig erdoor bepaald.'); }
+}
+
+}; // end passages
+
+/* ===== ENGINE ===== */
+function go(id) {
+  state.history.push(state.passage);
+  state.passage = id;
+  state.visitedPassages++;
+  renderPassage(id);
+  updateProgress();
+  document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderPassage(id) {
+  const p = P[id];
+  if (!p) return;
+  const w = document.getElementById('passage-wrapper');
+  w.classList.remove('visible');
+  setTimeout(() => {
+    let html = `<div class="passage-title">${p.title || ''}</div><div class="passage-text">${p.text}</div>`;
+    if (p.choices && p.choices.length) {
+      html += '<div class="choices">';
+      p.choices.forEach((c,i) => {
+        html += `<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;
+      });
+      html += '</div>';
+    }
+    w.innerHTML = html;
+    setTimeout(() => w.classList.add('visible'), 30);
+    if (p.onEnter) p.onEnter();
+  }, 300);
+}
+
+function updateProgress() {
+  const pct = Math.min(100, Math.round((state.visitedPassages / totalPassages)*100));
+  document.getElementById('progress-bar').style.width = pct + '%';
+}
+
+function renderNotebook() {
+  // terms
+  const tl = document.getElementById('terms-list');
+  tl.innerHTML = state.terms.map(t => `<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  // reflections
+  const rl = document.getElementById('reflections-list');
+  rl.innerHTML = state.reflections.map(r => `<div class="nb-reflection">${r}</div>`).join('');
+  // compass
+  const cl = document.getElementById('compass');
+  cl.innerHTML = Object.entries(state.compass).map(([axis, val]) => {
+    const [left, right] = axis.split(' — ');
+    const pos = val < 50 ? 'left' : 'right';
+    return `<div class="nb-compass-axis">
+      <span class="nb-compass-label">${left}</span>
+      <div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(val,50)}%;width:${Math.abs(val-50)}%;${val<50?'background:var(--accent);':'background:var(--success);'}"></div></div>
+      <span class="nb-compass-label right">${right}</span>
+    </div>`;
+  }).join('');
+}
+
+/* ===== MINIGAME: LABEL STORM ===== */
+const labelData = [
+  {text:'rolstoelmeisje', x:15, y:20},
+  {text:'gehandicapt', x:65, y:15},
+  {text:'patiënt', x:10, y:55},
+  {text:'zielig', x:70, y:50},
+  {text:'dapper', x:20, y:80},
+  {text:'inspirerend', x:60, y:80},
+  {text:'afhankelijk', x:40, y:10},
+  {text:'anders', x:75, y:35}
+];
+let labelTimers = [];
+let labelsClicked = 0;
+let labelsBack = 0;
+
+function startLabelGame() {
+  const arena = document.getElementById('label-arena');
+  labelData.forEach((l, i) => {
+    const tag = document.createElement('div');
+    tag.className = 'label-tag active';
+    tag.id = 'label-' + i;
+    tag.textContent = l.text;
+    tag.style.left = l.x + '%';
+    tag.style.top = l.y + '%';
+    tag.onclick = () => removeLabel(i);
+    arena.appendChild(tag);
+  });
+  updateLabelCounter();
+}
+
+function removeLabel(i) {
+  const tag = document.getElementById('label-' + i);
+  if (!tag || tag.classList.contains('removed')) return;
+  tag.classList.add('removed');
+  tag.classList.remove('active');
+  labelsClicked++;
+  updateLabelCounter();
+
+  // Label returns after 1-3 seconds
+  const delay = 1000 + Math.random() * 2000;
+  const timer = setTimeout(() => {
+    if (labelsBack >= 3 && labelsClicked >= 6) {
+      // end game after enough interaction
+      finishLabelGame();
+      return;
+    }
+    tag.classList.remove('removed');
+    tag.classList.add('returned');
+    tag.classList.add('active');
+    labelsBack++;
+    updateLabelCounter();
+    tag.onclick = () => removeLabel(i);
+    setTimeout(() => tag.classList.remove('returned'), 600);
+  }, delay);
+  labelTimers.push(timer);
+}
+
+function updateLabelCounter() {
+  const el = document.getElementById('label-counter');
+  if (labelsClicked === 0) {
+    el.textContent = '';
+  } else {
+    el.textContent = `Verwijderd: ${labelsClicked} · Teruggekeerd: ${labelsBack}`;
+  }
+}
+
+function finishLabelGame() {
+  labelTimers.forEach(t => clearTimeout(t));
+  const result = document.getElementById('label-result');
+  result.style.display = 'block';
+  result.innerHTML = `
+    <div class="philosophy-box">
+      <div class="box-title">De labels kleven</div>
+      <p>Je verwijderde ${labelsClicked} labels, maar ${labelsBack} kwamen terug. De blik van de ander is niet zomaar af te schudden — labels nestelen zich in je zelfbeleving.</p>
+      <p><em>Dit is wat De Beauvoir en Fanon beschrijven: objectificatie is een structureel proces, geen individueel probleem.</em></p>
+    </div>
+    <button class="continue-btn" onclick="go('label_game_done')">Verder</button>
+  `;
+  state.labelsRemoved = labelsClicked;
+  state.labelsReturned = labelsBack;
+  adj('Subject — Object', -5);
+  T('Labels & stereotypen', 'Door de blik van de ander opgelegde categorieën die zich in de zelfbeleving nestelen en moeilijk te verwijderen zijn.');
+}
+
+/* ===== MINIGAME: MIRROR ===== */
+const mirrorViews = {
+  eigen: { text: 'Lia.\nKlimmer. Studente.\nIemand die zoekt\nnaar wie ze is.', label: 'Eigen blik', color: 'var(--accent-glow)' },
+  kind: { text: 'Een meisje\nin een rolstoel.\nAnders.\nEng? Interessant?', label: 'De blik van het kind', color: 'var(--warm)' },
+  arts: { text: 'Patiënt #4271.\nCervicale laesie C5-C7.\nKandidaat voor BCI-trial.\nGeen compliance-issues.', label: 'De blik van de arts', color: 'var(--teal)' },
+  sam: { text: 'Lia.\nSterker dan ze denkt.\nKoppig. Grappig.\nMijn maatje.', label: 'De blik van Sam', color: 'var(--success)' }
+};
+
+function mirrorView(view) {
+  const data = mirrorViews[view];
+  const frame = document.getElementById('mirror-frame');
+  const text = document.getElementById('mirror-text');
+  const label = document.getElementById('mirror-label');
+
+  frame.style.borderColor = data.color;
+  text.style.color = data.color;
+  text.innerHTML = data.text.replace(/\n/g, '<br>');
+  label.textContent = data.label;
+  label.style.color = data.color;
+
+  // Update active button
+  document.querySelectorAll('.mirror-btn').forEach(b => b.classList.remove('active-view'));
+  event.target.classList.add('active-view');
+
+  if (state.flags.mirrorViews) {
+    state.flags.mirrorViews.add(view);
+    if (state.flags.mirrorViews.size >= 4) {
+      const result = document.getElementById('mirror-result');
+      result.innerHTML = `
+        <div class="philosophy-box">
+          <div class="box-title">Vier blikken, vier Lia's</div>
+          <p>Dezelfde persoon — maar vier verschillende ervaringen. De blik van het kind reduceert Lia tot haar rolstoel. De arts reduceert haar tot een medisch dossier. Sam ziet haar als persoon. En haar eigen blik? Die worstelt met al die beelden tegelijk.</p>
+        </div>
+        <button class="continue-btn" onclick="go('mirror_reflectie')">Ga verder</button>
+      `;
+      adj('Subject — Object', 5);
+    }
+  }
+}
+
+/* ===== MINIGAME: IS/OUGHT BRIDGE ===== */
+const bridgeStatements = [
+  { text: 'Vrouwen zijn gemiddeld kleiner dan mannen', answer: 'is', feedback: 'Feitelijke biologische beschrijving.' },
+  { text: 'Gehandicapten moeten beschermd worden', answer: 'ought', feedback: 'Normatief voorschrift — "moeten" wijst op een ought.' },
+  { text: 'Vrouwen zijn te emotioneel voor leiderschap', answer: 'ought', feedback: 'Lijkt op een feit, maar bevat een verborgen normatief oordeel over geschiktheid.' },
+  { text: 'Sommige mensen zitten in een rolstoel', answer: 'is', feedback: 'Neutrale beschrijving van een situatie.' },
+  { text: 'Mensen in rolstoelen zijn zielig', answer: 'ought', feedback: 'Vermomd als beschrijving, maar is een waardeoordeel dat de is/ought-kloof overbrugt.' },
+  { text: 'Huidskleur varieert per regio', answer: 'is', feedback: 'Feitelijke beschrijving zonder normatieve lading.' },
+  { text: 'Mensen horen bij hun eigen soort te blijven', answer: 'ought', feedback: 'Normatief voorschrift. Uit biologische variatie volgt geen moreel voorschrift.' },
+  { text: 'De mens heeft twee handen', answer: 'is', feedback: 'Biologische beschrijving — hoewel: geldt dit als norm voor wie er maar één heeft?' }
+];
+
+let bridgeSelected = null;
+let bridgeSorted = 0;
+let bridgeItems = [];
+
+function startBridgeGame() {
+  bridgeItems = [...bridgeStatements].sort(() => Math.random() - 0.5);
+  const pool = document.getElementById('bridge-pool');
+  pool.innerHTML = '';
+  bridgeItems.forEach((s, i) => {
+    const el = document.createElement('div');
+    el.className = 'bridge-statement unsorted';
+    el.textContent = s.text;
+    el.id = 'bridge-' + i;
+    el.onclick = () => selectBridgeItem(i);
+    pool.appendChild(el);
+  });
+}
+
+function selectBridgeItem(i) {
+  document.querySelectorAll('.bridge-statement').forEach(el => el.style.outline = 'none');
+  bridgeSelected = i;
+  const el = document.getElementById('bridge-' + i);
+  if (el) el.style.outline = '2px solid var(--accent)';
+}
+
+function bridgeDrop(col) {
+  if (bridgeSelected === null) return;
+  const item = bridgeItems[bridgeSelected];
+  const el = document.getElementById('bridge-' + bridgeSelected);
+  if (!el || !el.classList.contains('unsorted')) { bridgeSelected = null; return; }
+
+  const correct = item.answer === col;
+  el.classList.remove('unsorted');
+  el.classList.add(correct ? 'correct' : 'wrong');
+  el.style.outline = 'none';
+  el.style.cursor = 'default';
+  el.onclick = null;
+
+  if (correct) {
+    state.bridgeScore++;
+    const target = document.getElementById(col + '-items');
+    target.appendChild(el);
+    el.style.fontSize = '12px';
+    el.style.padding = '6px 10px';
+    el.style.margin = '4px';
+  } else {
+    setTimeout(() => {
+      el.classList.remove('wrong');
+      el.classList.add('unsorted');
+      el.onclick = () => selectBridgeItem(bridgeSelected);
+    }, 1200);
+  }
+
+  bridgeSorted++;
+  bridgeSelected = null;
+
+  const result = document.getElementById('bridge-result');
+  result.textContent = item.feedback;
+
+  // Check if all sorted
+  const remaining = document.querySelectorAll('.bridge-statement.unsorted');
+  if (remaining.length === 0) {
+    setTimeout(() => {
+      result.innerHTML = `
+        <div class="philosophy-box">
+          <div class="box-title">Is/Ought voltooid</div>
+          <p>Score: ${state.bridgeScore}/${bridgeStatements.length} in eerste poging correct.</p>
+          <p>De moeilijkste uitspraken zijn die welke zich <em>voordoen</em> als feiten, maar verborgen normen bevatten. Precies zo werken stereotypen.</p>
+        </div>
+        <button class="continue-btn" onclick="go('bridge_done')">Verder</button>
+      `;
+      adj('Is — Ought', state.bridgeScore > 5 ? 10 : -5);
+    }, 800);
+  }
+}
+
+/* ===== INIT ===== */
+renderNotebook();
+renderPassage('start');
+setTimeout(() => document.getElementById('passage-wrapper').classList.add('visible'), 100);
+</script>
+</body>
+</html>

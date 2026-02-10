@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 14: Barad, Harari & Rasch</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#0e060a; --bg-card:#18101a; --bg-hover:#281828;
+    --text:#d0b0c0; --text-bright:#f4d0e4; --text-dim:#885068;
+    --accent:#a05088; --accent-glow:#d070b0; --accent-dim:#603058;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848; --silver:#7890c0; --violet:#9070d0; --red:#c05050; --indigo:#6060d0; --forest:#408860; --steel:#5878a8;
+    --danger:#e06070; --success:#60c080;
+    --border:#381828;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(160,80,136,.08),rgba(160,80,136,.02));border:1px solid rgba(160,80,136,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(160,80,136,.06);border:1px solid rgba(160,80,136,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* INTRA-ACTIE VIS */
+  .intra-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:var(--bg-card);text-align:center;position:relative;}
+  .intra-circles{display:flex;justify-content:center;gap:0;margin:20px 0;position:relative;}
+  .intra-circle{width:140px;height:140px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text-bright);text-align:center;transition:all .6s;line-height:1.3;padding:10px;}
+  .intra-circle.left{background:rgba(160,80,136,.15);border:2px solid rgba(160,80,136,.3);}
+  .intra-circle.right{background:rgba(96,192,128,.15);border:2px solid rgba(96,192,128,.3);margin-left:-30px;}
+  .intra-overlap{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:'Inter',sans-serif;font-size:11px;color:var(--accent-glow);opacity:0;transition:opacity .6s;}
+  .intra-container.merged .intra-circle{width:200px;height:200px;margin-left:-60px;opacity:.7;}
+  .intra-container.merged .intra-overlap{opacity:1;}
+  .intra-label{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);margin-top:12px;}
+  .intra-btn{border:none;border-radius:8px;padding:8px 20px;margin:8px;font-family:'Inter',sans-serif;font-size:12px;cursor:pointer;background:rgba(160,80,136,.15);color:var(--accent-glow);border:1px solid rgba(160,80,136,.2);transition:all .25s;}
+  .intra-btn:hover{background:rgba(160,80,136,.3);}
+  .intra-btn.active{background:rgba(160,80,136,.4);}
+
+  /* DATA SELFIE */
+  .selfie-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:var(--bg-card);}
+  .selfie-item{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.03);font-family:'Inter',sans-serif;font-size:14px;}
+  .selfie-data{color:var(--accent-glow);font-weight:500;}
+  .selfie-else{color:var(--text-dim);font-style:italic;opacity:0;transition:opacity .5s;}
+  .selfie-else.visible{opacity:1;}
+  .selfie-toggle{border:none;background:rgba(160,80,136,.1);color:var(--accent);font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:4px;cursor:pointer;transition:all .25s;}
+  .selfie-toggle:hover{background:rgba(160,80,136,.25);}
+
+  /* FRICTIE SLIDER */
+  .frictie-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:var(--bg-card);}
+  .frictie-label{font-family:'Inter',sans-serif;font-size:14px;color:var(--text-bright);text-align:center;margin-bottom:16px;}
+  .frictie-slider{width:100%;-webkit-appearance:none;height:8px;border-radius:4px;background:linear-gradient(90deg,rgba(160,80,136,.3),rgba(96,192,128,.3));outline:none;margin:12px 0;}
+  .frictie-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:var(--accent);cursor:pointer;box-shadow:0 0 10px rgba(160,80,136,.5);}
+  .frictie-ends{display:flex;justify-content:space-between;font-family:'Inter',sans-serif;font-size:11px;color:var(--text-dim);}
+  .frictie-feedback{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);text-align:center;margin-top:16px;min-height:60px;line-height:1.6;}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H14</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.06);border-color:rgba(123,104,238,.1);color:#4a3da0;">H1–H9</span>
+      <span class="nb-chapter-link" style="background:rgba(192,80,80,.06);border-color:rgba(192,80,80,.1);color:#803030;">H10</span>
+      <span class="nb-chapter-link" style="background:rgba(96,96,208,.06);border-color:rgba(96,96,208,.1);color:#383880;">H11</span>
+      <span class="nb-chapter-link" style="background:rgba(64,136,96,.06);border-color:rgba(64,136,96,.1);color:#285838;">H12</span>
+      <span class="nb-chapter-link" style="background:rgba(88,120,168,.06);border-color:rgba(88,120,168,.1);color:#304868;">H13</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Materie — Betekenis':50,'Mens — Algoritme':50,'Data — Ervaring':50,'Naadloos — Frictie':50},
+  flags:{},selfieRevealed:0};
+const totalPassages=22;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'De BCI-sessie',
+  text:`
+    <div class="ambient-text">Hoofdstuk 14 — Barad, Harari & Rasch over data en 'het else'</div>
+    <p>De BCI-sessie voelde vandaag bijna <em>naadloos</em>. Lia bestuurde de cursor op het scherm door zich bewegingspatronen voor te stellen, en de cursor volgde met verbluffende vloeiendheid.</p>
+    <p>Het was alsof de technologie — de elektroden, de draden, de computer — <em>verdween</em>. Alsof er een directe lijn liep van haar gedachte naar de actie op het scherm.</p>
+    <p>De grens tussen haar innerlijke wereld en de digitale representatie <strong>vervaagde</strong>.</p>`,
+  choices:[{text:'"Jouw neurale data wordt feilloos omgezet"',next:'data_kilte'}]
+},
+data_kilte:{
+  title:'Data',
+  text:`
+    <p>Dr. Kumar bekeek de kleurrijke patronen op het scherm. <em>"De correlatie is bijna één-op-één. Jouw neurale 'data' wordt feilloos omgezet in commando's."</em></p>
+    <p>Hij ging terloops verder: <em>"Uiteindelijk zijn we misschien allemaal fundamenteel informatieverwerkende systemen. Van de code in ons DNA tot de signalen in ons brein."</em></p>
+    <p><strong>Data.</strong> Het woord landde met een onverwachte kilte.</p>
+    <p><em>"Dus mijn gedachten... zijn die gewoon 'data' voor het systeem?"</em></p>`,
+  onEnter:()=>{R('De kilte van het woord "data": mijn gedachten, vertaald naar nullen en enen. Is dat alles wat ik ben?');},
+  choices:[{text:'Barad: intra-actie',next:'barad_intro'}]
+},
+barad_intro:{
+  title:'Karen Barad',
+  text:`
+    <p><strong>Karen Barad</strong> (1956) — natuurkundige en feministisch wetenschapsfilosoof — daagt de scheiding tussen materie en betekenis uit.</p>
+    <div class="definition-box">
+      <span class="term">Intra-actie vs. Interactie</span>
+      <strong>Interactie:</strong> twee aparte dingen die op elkaar inwerken (bal raakt muur).<br>
+      <strong>Intra-actie:</strong> dingen bestaan niet vooraf, maar <em>ontstaan</em> door hun onderlinge relaties. De 'arts', de 'thermometer' en de 'patiënt met koorts' ontstaan tegelijkertijd in de praktijk van koorts meten.
+    </div>`,
+  onEnter:()=>{T('Intra-actie (Barad)','In tegenstelling tot interactie: entiteiten bestaan niet vooraf, maar ontstaan door hun onderlinge relaties in een praktijk.'); T('Karen Barad','Natuurkundige en filosoof die de scheiding tussen materie en betekenis uitdaagt.');},
+  choices:[{text:'Ervaar intra-actie',next:'intra_game'}]
+},
+
+/* ===== MINIGAME 1: INTRA-ACTIE ===== */
+intra_game:{
+  title:'Intra-actie visualisatie',
+  text:`
+    <p>Zie het verschil tussen interactie en intra-actie:</p>
+    <div class="intra-container" id="intra-vis">
+      <div class="intra-circles">
+        <div class="intra-circle left" id="intra-left">Materie<br><small>(het fysieke)</small></div>
+        <div class="intra-circle right" id="intra-right">Betekenis<br><small>(het niet-fysieke)</small></div>
+        <div class="intra-overlap" id="intra-overlap">Verstrengeld<br>Onscheidbaar</div>
+      </div>
+      <div class="intra-label" id="intra-label">Klik: interactie (gescheiden) of intra-actie (verstrengeld)</div>
+      <div>
+        <button class="intra-btn" id="btn-inter" onclick="showInter()">Interactie</button>
+        <button class="intra-btn" id="btn-intra" onclick="showIntra()">Intra-actie</button>
+      </div>
+    </div>
+    <div id="intra-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(()=>{document.getElementById('intra-result').innerHTML='<div style="font-family:Inter,sans-serif;font-size:12px;color:var(--text-dim);text-align:center;">Klik beide knoppen om het verschil te ervaren</div>';},500);}
+},
+
+intra_done:{
+  title:'Materieel-discursief',
+  text:`
+    <p>Barad noemt dit <strong>materieel-discursieve praktijken</strong>: materie en discours (betekenis, taal, meting) zijn fundamenteel verstrengeld.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Barads kernpunt</div>
+      <p>Kennis is nooit een neutrale afspiegeling van de werkelijkheid, maar een <strong>actieve, materiële ingreep</strong>. Wanneer we meten, creëren we een 'snijvlak' dat bepaalde aspecten zichtbaar maakt en andere niet.</p>
+    </div>
+    <p class="thought">De BCI-meting maakt mijn gedachten zichtbaar als data — maar het creëert tegelijk een bepaald beeld van wie ik ben. Het meetinstrument en ik ontstaan samen in de praktijk.</p>`,
+  onEnter:()=>{T('Materieel-discursieve praktijken','Barads concept: materie en betekenis zijn onscheidbaar verstrengeld. Hoe we meten beïnvloedt wat we vinden.');adj('Materie — Betekenis',12);},
+  choices:[{text:'Harari: Dataïsme',next:'dataisme'}]
+},
+
+dataisme:{
+  title:'Dataïsme',
+  text:`
+    <p>Historicus <strong>Yuval Noah Harari</strong> beschrijft een opkomend wereldbeeld: <em>Dataïsme</em>.</p>
+    <div class="definition-box">
+      <span class="term">Dataïsme</span>
+      Het universum bestaat uit <strong>datastromen</strong>. Alles is informatieverwerking. Levende wezens zijn complexe <em>biochemische algoritmes</em>. Bewustzijn en vrije wil zijn mogelijk slechts bijproducten.
+    </div>
+    <p>Een verschuiving: van <strong>theocentrisme</strong> → <strong>humanisme</strong> → <strong>techno-humanisme</strong> → <strong>dataïsme</strong> (het algoritme centraal, de menselijke wil secundair).</p>
+    <p>De gedachte: <em>"het algoritme kent jou beter dan jijzelf."</em></p>`,
+  onEnter:()=>{T('Dataïsme (Harari)','Wereldbeeld waarin alles informatieverwerking is en de mens een biochemisch algoritme. Autoriteit verschuift van mens naar data.'); T('Yuval Noah Harari','Historicus die de verschuiving beschrijft van humanisme naar dataïsme.');adj('Mens — Algoritme',15);},
+  choices:[{text:'Bekijk je data-selfie',next:'selfie_game'}]
+},
+
+/* ===== MINIGAME 2: DATA SELFIE ===== */
+selfie_game:{
+  title:'Jouw data-selfie',
+  text:`
+    <p>Rasch beschrijft de vervreemding bij het bekijken van je eigen dataprofiel. Klik op "else" om te zien wat de data mist:</p>
+    <div class="selfie-container" id="selfie-box">
+      <div id="selfie-items"></div>
+    </div>
+    <div id="selfie-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:8px;"></div>
+    <div id="selfie-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initSelfie,500);}
+},
+
+selfie_done:{
+  title:'Het else',
+  text:`
+    <p>Rasch: <em>"Ik kijk naar mijn data-selfie. Ben ik dat? Ja, misschien wel, maar ik ben toch zeker ook <strong>méér</strong> dan dat?"</em></p>
+    <div class="definition-box">
+      <span class="term">Het Else (Miriam Rasch)</span>
+      Datgene wat fundamenteel ontsnapt aan dataficatie, kwantificering en algoritmische logica. Het andere, het ongrijpbare, de ambiguïteit, de niet-meetbare kwaliteit. <em>"Het else is zélf oncategoriseerbaar."</em>
+    </div>`,
+  onEnter:()=>{T('Het Else (Rasch)','Dat wat ontsnapt aan data: het ongrijpbare, de ambiguïteit, de niet-meetbare kwaliteit van menselijke ervaring.'); T('Miriam Rasch','Nederlandse filosofe die kritisch schrijft over dataficatie en pleit voor het beschermen van "het else".');adj('Data — Ervaring',-12);},
+  choices:[{text:'Frictie als verzet',next:'frictie'}]
+},
+
+frictie:{
+  title:'Frictie',
+  text:`
+    <p>Tegen de reductie tot data pleit Rasch voor het bewust creëren van <strong>frictie</strong>:</p>
+    <div class="philosophy-box">
+      <div class="box-title">Frictie</div>
+      <p>Weerstand, vertraging en ruis die de naadloze datasystemen <strong>verstoort</strong> en ons bewust maakt van wat verloren gaat. <em>"Hoe meer else, hoe meer ruimte. Het else is geen gebrek, maar een opgave."</em></p>
+      <p>In die ruimte, in <em>"die kier van licht"</em>, doet zich iets als <strong>vrijheid</strong> voor.</p>
+    </div>`,
+  onEnter:()=>{T('Frictie (Rasch)','Bewust weerstand creëren tegen naadloze datasystemen — ruimte maken voor het else, het onmeetbare.');},
+  choices:[{text:'Ervaar frictie',next:'frictie_game'}]
+},
+
+/* ===== MINIGAME 3: FRICTIE SLIDER ===== */
+frictie_game:{
+  title:'Frictie-meter',
+  text:`
+    <p>Hoeveel frictie breng jij aan in je digitale leven? Verschuif de slider:</p>
+    <div class="frictie-container">
+      <div class="frictie-label">Van naadloze data tot bewuste frictie</div>
+      <input type="range" class="frictie-slider" id="frictie-val" min="0" max="100" value="50" oninput="updateFrictie()">
+      <div class="frictie-ends"><span>Naadloos — alles gemeten</span><span>Maximale frictie — ruimte voor else</span></div>
+      <div class="frictie-feedback" id="frictie-fb"></div>
+    </div>
+    <div id="frictie-result" style="margin-top:16px;text-align:center;"><button class="continue-btn" onclick="saveFrictie()">Sla je positie op</button></div>`,
+  onEnter:()=>{updateFrictie();}
+},
+
+frictie_done:{
+  title:'Lia op haar kamer',
+  text:`
+    <p>Later die avond spreidde Lia de afdrukken van haar hersenscans uit op bed. Kleurrijke patronen die haar 'zelf' moesten voorstellen.</p>
+    <p>Max sprong op bed en nestelde zich spinnend tegen haar aan.</p>
+    <p><em>"Zie je dit, Max?"</em> fluisterde ze, wijzend naar de prints. <em>"Dit ben ik, zeggen ze."</em></p>
+    <p>Max knipperde loom.</p>
+    <p><em>"Maar er is meer, toch?"</em> Ze aaide zijn zachte vacht. <em>"Dit is niet te reduceren tot een algoritme. Dit is 'het else'."</em></p>
+    <div class="max-moment">Max spinde. Zijn warmte, zijn gewicht, de trilling van zijn lichaam — geen enkel datapunt kon dit vangen. Het else, bij uitstek.</div>
+    <p style="text-align:center;margin-top:20px;font-size:22px;color:var(--accent-glow);font-style:italic;"><em>"We zijn meer dan onze data."</em></p>`,
+  onEnter:()=>{R('"We zijn meer dan onze data." De warmte van Max, de geur van de herfst, de stilte tussen woorden — het else.');},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 14 — Kernbegrippen</div>
+      <p><strong>Intra-actie</strong> — Barad: entiteiten ontstaan door relaties, niet vooraf<br>
+      <strong>Materieel-discursief</strong> — Materie en betekenis zijn verstrengeld<br>
+      <strong>Dataïsme</strong> — Harari: alles is informatieverwerking<br>
+      <strong>De mens als algoritme</strong> — Bewustzijn als bijproduct<br>
+      <strong>Het Else</strong> — Rasch: dat wat ontsnapt aan data<br>
+      <strong>Frictie</strong> — Bewust weerstand tegen naadloze datasystemen<br>
+      <strong>Data-selfie</strong> — De vervreemding van je dataprofiel</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 14 — Wordt vervolgd in de Epiloog: Een nieuw pad klimmen</p>`,
+  onEnter:()=>{R('Hoofdstuk 14 afgerond. De grens tussen fysiek en niet-fysiek vervaagt in data. Maar het else — het onmeetbare — blijft essentieel.');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== INTRA-ACTIE VIS ===== */
+function showInter(){
+  const c=document.getElementById('intra-vis');
+  c.classList.remove('merged');
+  document.getElementById('intra-label').textContent='Interactie: twee gescheiden dingen werken op elkaar in. Ze bestaan al vóór de relatie.';
+  document.getElementById('btn-inter').classList.add('active');
+  document.getElementById('btn-intra').classList.remove('active');
+  if(!state.flags.inter){state.flags.inter=true;checkIntraDone();}
+}
+function showIntra(){
+  const c=document.getElementById('intra-vis');
+  c.classList.add('merged');
+  document.getElementById('intra-label').textContent='Intra-actie: materie en betekenis zijn verstrengeld. Ze ontstaan SAMEN in de praktijk.';
+  document.getElementById('btn-intra').classList.add('active');
+  document.getElementById('btn-inter').classList.remove('active');
+  adj('Materie — Betekenis',8);
+  if(!state.flags.intra){state.flags.intra=true;checkIntraDone();}
+}
+function checkIntraDone(){
+  if(state.flags.inter&&state.flags.intra){
+    setTimeout(()=>{document.getElementById('intra-result').innerHTML='<button class="continue-btn" onclick="go(\'intra_done\')">Verder</button>';},600);
+  }
+}
+
+/* ===== DATA SELFIE ===== */
+const selfieData=[
+  {data:'Stappen vandaag: 247',else:'Het gevoel van de zon op je gezicht tijdens die wandeling'},
+  {data:'Hartslag gemiddeld: 72 bpm',else:'De opwinding toen Sam belde met goed nieuws'},
+  {data:'Schermtijd: 4u 23m',else:'Het diepe gesprek met Sam dat niet werd gemeten'},
+  {data:'Slaap: 6u 48m, kwaliteit: 73%',else:'De droom die je niet meer herinnert maar die je stemming kleurde'},
+  {data:'Locatie: 51.44°N, 5.47°E',else:'Het thuisgevoel dat geen coördinaat kan vangen'}
+];
+
+function initSelfie(){
+  const container=document.getElementById('selfie-items');container.innerHTML='';
+  selfieData.forEach((d,i)=>{
+    const item=document.createElement('div');item.className='selfie-item';
+    item.innerHTML=`<div><div class="selfie-data">${d.data}</div><div class="selfie-else" id="se-${i}">${d.else}</div></div><button class="selfie-toggle" onclick="revealElse(${i})">else?</button>`;
+    container.appendChild(item);
+  });
+  updateSelfieCounter();
+}
+function revealElse(i){
+  const el=document.getElementById('se-'+i);
+  if(el.classList.contains('visible'))return;
+  el.classList.add('visible');
+  state.selfieRevealed++;
+  adj('Data — Ervaring',-5);
+  updateSelfieCounter();
+  if(state.selfieRevealed>=5){
+    setTimeout(()=>{document.getElementById('selfie-result').innerHTML='<div class="philosophy-box"><div class="box-title">Meer dan data</div><p>Achter elk datapunt schuilt een wereld van ervaring die de data niet kan vangen.</p></div><button class="continue-btn" onclick="go(\'selfie_done\')">Verder</button>';},400);
+  }
+}
+function updateSelfieCounter(){document.getElementById('selfie-counter').textContent=state.selfieRevealed+' / 5 else-momenten ontdekt';}
+
+/* ===== FRICTIE SLIDER ===== */
+function updateFrictie(){
+  const v=parseInt(document.getElementById('frictie-val').value);
+  const fb=document.getElementById('frictie-fb');
+  if(v<20)fb.textContent='Volledig naadloos: alles wordt gemeten, geoptimaliseerd, voorspeld. Efficiënt, maar het else verdwijnt.';
+  else if(v<40)fb.textContent='Weinig frictie: je accepteert de meeste data-systemen, maar twijfelt soms. De kier van licht is klein.';
+  else if(v<60)fb.textContent='Balans: je gebruikt data waar het nuttig is, maar beschermt bewust ruimte voor het onmeetbare.';
+  else if(v<80)fb.textContent='Veel frictie: je weigert veel tracking, zoekt stilte, creëert bewust ruimte voor het else.';
+  else fb.textContent='Maximale frictie: je verzet je actief tegen dataficatie. Het else is je hoogste waarde.';
+}
+function saveFrictie(){
+  const v=parseInt(document.getElementById('frictie-val').value);
+  adj('Naadloos — Frictie',v>50?12:-12);
+  R('Frictie-positie: '+(v>60?'Veel frictie — bewust ruimte voor het else':v<40?'Weinig frictie — data als leidraad':'Balans tussen data en ervaring')+'.');
+  go('frictie_done');
+}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

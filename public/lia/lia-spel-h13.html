@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 13: Latour & Hayles</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#060810; --bg-card:#0e1218; --bg-hover:#161e28;
+    --text:#b0bcd0; --text-bright:#d4def4; --text-dim:#506078;
+    --accent:#5878a8; --accent-glow:#7898d0; --accent-dim:#304868;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848; --silver:#7890c0; --violet:#9070d0; --red:#c05050; --indigo:#6060d0; --forest:#408860;
+    --danger:#e06070; --success:#60c080;
+    --border:#182038;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(88,120,168,.08),rgba(88,120,168,.02));border:1px solid rgba(88,120,168,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(88,120,168,.06);border:1px solid rgba(88,120,168,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* NETWORK VIS */
+  .network-container{border:1px solid var(--border);border-radius:14px;margin:20px 0;overflow:hidden;background:#000;position:relative;height:300px;}
+  .network-canvas{width:100%;height:100%;}
+  .network-info{position:absolute;bottom:0;left:0;right:0;padding:14px;background:linear-gradient(transparent,rgba(0,0,0,.9));font-family:'Inter',sans-serif;font-size:13px;color:var(--text);line-height:1.6;}
+
+  /* KEY STEPS */
+  .key-step{border:1px solid var(--border);border-radius:12px;padding:20px;margin:12px 0;background:var(--bg-card);cursor:pointer;transition:all .4s;}
+  .key-step:hover{border-color:var(--accent-dim);}
+  .key-step.active{border-color:rgba(88,120,168,.4);background:rgba(88,120,168,.04);}
+  .key-step .ks-num{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);}
+  .key-step .ks-title{font-size:18px;color:var(--text-bright);margin:6px 0;}
+  .key-step .ks-text{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .5s;}
+  .key-step.active .ks-text{max-height:300px;}
+
+  /* DRONE ANALYSIS */
+  .drone-card{border:1px solid var(--border);border-radius:12px;padding:18px;margin:10px 0;background:var(--bg-card);cursor:pointer;transition:all .3s;}
+  .drone-card:hover{border-color:var(--accent-dim);}
+  .drone-card.revealed{border-color:rgba(88,120,168,.3);background:rgba(88,120,168,.03);}
+  .drone-card .dc-title{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--text-bright);margin-bottom:4px;}
+  .drone-card .dc-text{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);line-height:1.5;max-height:0;overflow:hidden;transition:max-height .4s;}
+  .drone-card.revealed .dc-text{max-height:200px;margin-top:8px;}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H13</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.06);border-color:rgba(123,104,238,.1);color:#4a3da0;">H1–H8</span>
+      <span class="nb-chapter-link" style="background:rgba(144,112,208,.06);border-color:rgba(144,112,208,.1);color:#583898;">H9</span>
+      <span class="nb-chapter-link" style="background:rgba(192,80,80,.06);border-color:rgba(192,80,80,.1);color:#803030;">H10</span>
+      <span class="nb-chapter-link" style="background:rgba(96,96,208,.06);border-color:rgba(96,96,208,.1);color:#383880;">H11</span>
+      <span class="nb-chapter-link" style="background:rgba(64,136,96,.06);border-color:rgba(64,136,96,.1);color:#285838;">H12 Mesh</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Mens — Netwerk':50,'Intentie — Effect':50,'Bewust — Niet-bewust':50,'Autonoom — Gedistribueerd':50},
+  flags:{},keyStep:0,droneRevealed:0};
+const totalPassages=22;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'De stoeptegel',
+  text:`
+    <div class="ambient-text">Hoofdstuk 13 — Latour & Hayles over handelingsvermogen voorbij de mens</div>
+    <p><em>"Krijg nou wat!"</em> Lia zette kracht, maar het rechterwiel van haar rolstoel bleef haken achter een opstaande stoeptegel.</p>
+    <p><em>"Soms lijkt het echt alsof dit ding een eigen wil heeft!"</em></p>
+    <p>Sam lachte. <em>"Volgens die Franse filosoof Latour is dat misschien niet eens zo'n gekke gedachte. Hij zou zeggen dat die stoel, en die stomme stoeptegel, ook 'actoren' zijn."</em></p>
+    <p>Lia keek sceptisch. <em>"Actoren? Een stoeptegel?"</em></p>`,
+  choices:[{text:'Naar de collegezaal',next:'collegezaal'}]
+},
+collegezaal:{
+  title:'De drone',
+  text:`
+    <p>In de collegezaal draaide een 3D-visualisatie van een militaire drone op het scherm.</p>
+    <p>Dr. Verhoeven: <em>"We hebben het over de toenemende autonomie van dit soort systemen."</em></p>
+    <p><em>"Maar kan zoiets echt autonoom handelen?"</em> vroeg Lia. <em>"Het wordt toch geprogrammeerd?"</em></p>
+    <p><em>"Een uitstekende vraag. Maar wat als de programmering zelflerend is? Wat als het systeem reageert op manieren die de programmeurs niet voorzien hadden?"</em></p>
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 13</div>
+      <p><strong>Handelingsvermogen voorbij de mens</strong></p>
+      <p><span class="dim">Bruno Latour — Actor-Netwerktheorie</span></p>
+      <p><span class="dim">Katherine Hayles — Niet-bewuste cognitie</span></p>
+    </div>`,
+  onEnter:()=>{R('De drone: geprogrammeerd, maar zelflerend. Waar stopt het programma en begint autonomie?');},
+  choices:[{text:'Latour: Actor-Netwerktheorie',next:'ant_intro'}]
+},
+ant_intro:{
+  title:'Actor-Netwerktheorie',
+  text:`
+    <div class="definition-box">
+      <span class="term">Actor-Netwerktheorie (ANT) — Bruno Latour</span>
+      Handelingsvermogen (agency) — het vermogen om effect te sorteren, een verschil te maken — is <strong>niet exclusief menselijk</strong>. Een actor is elk element dat een verschil maakt: mens, dier, object, technologie, idee, regel.
+    </div>
+    <p>Kernpunten van ANT:</p>
+    <p><strong>Agency zonder intentie:</strong> Bewustzijn of intentie is niet vereist. Agency ontstaat in de <em>relaties</em>, niet in de actor zelf.</p>
+    <p><strong>Gedistribueerd handelen:</strong> Een handeling is nooit het werk van één actor, maar het resultaat van interacties tussen vele actoren. Autorijden = bestuurder + auto + weg + verkeersregels.</p>`,
+  onEnter:()=>{T('Actor-Netwerktheorie (ANT)','Latours theorie: agency (handelingsvermogen) is niet exclusief menselijk. Alle entiteiten die effect sorteren zijn actoren in een netwerk.'); T('Agency (Latour)','Het vermogen om effect te sorteren — vereist geen bewustzijn of intentie.');adj('Mens — Netwerk',12);adj('Intentie — Effect',12);},
+  choices:[{text:'De Berlijnse sleutel',next:'berlijn_intro'}]
+},
+
+/* ===== MINIGAME 1: BERLIJNSE SLEUTEL ===== */
+berlijn_intro:{
+  title:'De Berlijnse sleutel',
+  text:`
+    <p>In de pauze ontdekte Lia een vreemde sleutel in een vitrine: twee identieke, symmetrische kanten.</p>
+    <p><em>"Latours favoriete voorbeeld,"</em> zei Sam. <em>"Dit ding is zo ontworpen dat je de sleutel alleen uit het slot kunt halen nadat je de deur weer op slot hebt gedraaid."</em></p>
+    <p>Volg de stappen van morele delegatie:</p>
+    <div id="key-steps"></div>
+    <div id="key-progress" style="font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>`,
+  onEnter:()=>{setTimeout(initKeySteps,500);}
+},
+
+berlijn_done:{
+  title:'Gedelegeerde moraal',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Delegatie</div>
+      <p>De morele norm <em>"doe de deur achter je op slot"</em> is <strong>gedelegeerd</strong> aan een materieel object. Latour: handelingsprogramma's bestaan uit <em>"stukken die gegeven worden aan delen van mensen, en stukken die toevertrouwd worden aan delen van niet-mensen."</em></p>
+    </div>
+    <p class="thought">Zoals Verbeeks scripts (H10) — maar Latour gaat verder. Het is niet alleen dat technologie ons stuurt. De sleutel handelt zelf. Hij is een actor in het netwerk.</p>`,
+  onEnter:()=>{T('Delegatie','Het toevertrouwen van een morele norm of handelingsprogramma aan een niet-menselijk object — het object "handelt" namens de ontwerper.'); T('Berlijnse sleutel','Latours voorbeeld van een object dat handelt: de sleutel dwingt de gebruiker de deur af te sluiten.');adj('Autonoom — Gedistribueerd',10);},
+  choices:[{text:'Hayles: niet-bewuste cognitie',next:'hayles_intro'}]
+},
+
+hayles_intro:{
+  title:'Katherine Hayles',
+  text:`
+    <p><strong>Katherine Hayles</strong> (1943) onderzoekt hoe complexe technologieën vormen van <em>niet-bewuste cognitie</em> vertonen.</p>
+    <div class="definition-box">
+      <span class="term">Niet-bewuste cognitie</span>
+      Cognitie breder dan menselijk bewust denken: informatie verwerken, patronen herkennen, leren, keuzes maken — <strong>zonder subjectief bewustzijn</strong>. Komt voor in biologische systemen (autonoom zenuwstelsel) én technische systemen (AI, algoritmes).
+    </div>
+    <div class="definition-box">
+      <span class="term">Cognitieve assemblages</span>
+      Complexe systemen waarin menselijke cognitie en technische niet-bewuste cognitie <strong>samenkomen en interacteren</strong>. Voorbeeld: piloot + vliegtuigsystemen.
+    </div>`,
+  onEnter:()=>{T('Niet-bewuste cognitie (Hayles)','Cognitie zonder subjectief bewustzijn: informatieverwerking, patroonherkenning, leren — in biologische én technische systemen.'); T('Cognitieve assemblages','Systemen waarin menselijke en technische cognitie samenkomen en samenwerken.');adj('Bewust — Niet-bewust',12);},
+  choices:[{text:'Analyseer de drone',next:'drone_game'}]
+},
+
+/* ===== MINIGAME 2: DRONE ANALYSE ===== */
+drone_game:{
+  title:'Drone-analyse',
+  text:`
+    <p>Hayles analyseert autonome drones als voorbeeld van niet-bewuste cognitie. Klik om drie aspecten te verkennen:</p>
+    <div id="drone-list"></div>
+    <div id="drone-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>
+    <div id="drone-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initDrones,500);}
+},
+
+drone_done:{
+  title:'Toenemende autonomie',
+  text:`
+    <p>Hayles: <em>"Cognitieve technologieën ontwikkelen zich duidelijk in de richting van meer handelingsvermogen en meer autonomie."</em></p>
+    <p>De grens tussen menselijke beslissing en machinale 'beslissing' vervaagt. Zelfs ingenieurs gebruiken <strong>antropomorfe taal</strong>: systemen met 'overtuigingen', 'wensen', 'intenties'.</p>
+    <p class="thought">Maar als drones 'beslissen' — wie is er dan verantwoordelijk als het misgaat?</p>`,
+  onEnter:()=>{R('Drones vertonen niet-bewuste cognitie: data verwerken, patronen herkennen, "beslissen". Maar wie is verantwoordelijk?');},
+  choices:[{text:'De vraag van verantwoordelijkheid',next:'verantwoordelijkheid'}]
+},
+
+verantwoordelijkheid:{
+  title:'Menselijke verantwoordelijkheid',
+  text:`
+    <p>Het erkennen van agency bij niet-mensen heft menselijke verantwoordelijkheid <strong>niet op</strong>. Integendeel.</p>
+    <div class="definition-box">
+      <span class="term">Parlement der Dingen (Latour)</span>
+      Een (metaforisch) parlement waarin de effecten op niet-menselijke actoren worden <strong>meegewogen</strong>. Wij moeten namens hen spreken — dat vergroot onze verantwoordelijkheid.
+    </div>
+    <div class="definition-box">
+      <span class="term">Communicatieve ethiek (Habermas)</span>
+      Ethiek gebaseerd op rationele consensus via open, machtsvrije communicatie. Uitdaging: hoe krijgen niet-menselijke 'betrokkenen' (een rivier, een algoritme) een stem?
+    </div>`,
+  onEnter:()=>{T('Parlement der Dingen','Latours metafoor voor een besluitvormingsproces dat de effecten op niet-menselijke actoren meeweegt.'); T('Communicatieve ethiek (Habermas)','Ethiek gebaseerd op consensus via open, machtsvrije dialoog — de uitdaging is: hoe spreken niet-mensen mee?');},
+  choices:[{text:'Hayles over kwetsbaarheid',next:'kwetsbaarheid'}]
+},
+
+kwetsbaarheid:{
+  title:'Menselijke kwetsbaarheid',
+  text:`
+    <p>Hayles stelt dat mensen uniek blijven door <strong>reflectie, moraal en empathie</strong> — juist omdat wij <em>kwetsbaar</em> zijn op manieren die machines niet zijn.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Hayles' argument</div>
+      <p><em>"Deze hybride samenstellingen vereisen menselijke morele beslissingen, omdat machines de kwetsbaarheid missen die mensen wel hebben."</em></p>
+      <p>Machines 'beslissen' op basis van data/regels, maar missen <strong>doorleefde ervaring</strong> en <strong>morele intuïtie</strong>.</p>
+    </div>`,
+  onEnter:()=>{R('Ondanks agency bij niet-mensen blijft menselijke verantwoordelijkheid cruciaal — onze kwetsbaarheid maakt ons moreel.');adj('Bewust — Niet-bewust',-5);},
+  choices:[
+    {text:'Agency bij niet-mensen is reëel en belangrijk',next:'keuze_agency'},
+    {text:'Alleen mensen handelen echt',next:'keuze_mens'},
+    {text:'Het gaat om het netwerk, niet om individuele actoren',next:'keuze_netwerk'}
+  ]
+},
+
+keuze_agency:{
+  title:'Agency is reëel',
+  text:`
+    <p class="thought">De stoeptegel, de sleutel, de drone — ze hebben allemaal effect. Ze maken verschil. Agency hoeft niet bewust te zijn om echt te zijn. Maar de verantwoordelijkheid blijft bij ons.</p>`,
+  onEnter:()=>{adj('Intentie — Effect',10);R('Agency bij niet-mensen is reëel: effect zonder intentie is ook handelen.');},
+  choices:[{text:'Lia reflecteert',next:'lia_reflectie'}]
+},
+keuze_mens:{
+  title:'Alleen mensen',
+  text:`
+    <p class="thought">Latour rekt het begrip 'handelen' te ver op. Een sleutel handelt niet — hij functioneert. Een drone beslist niet — hij berekent. Alleen wezens met bewustzijn en intentie handelen echt. De rest is mechaniek.</p>`,
+  onEnter:()=>{adj('Intentie — Effect',-10);adj('Mens — Netwerk',-10);R('Sceptisch: echt handelen vereist bewustzijn en intentie. Objecten functioneren, ze handelen niet.');},
+  choices:[{text:'Lia reflecteert',next:'lia_reflectie'}]
+},
+keuze_netwerk:{
+  title:'Het netwerk',
+  text:`
+    <p class="thought">Het gaat niet om de individuele actor, maar om het netwerk. De stoeptegel is pas een obstakel in relatie tot mijn rolstoel, op dit specifieke pad. Agency ontstaat in de relaties, niet in de dingen zelf.</p>`,
+  onEnter:()=>{adj('Autonoom — Gedistribueerd',10);R('Agency is relationeel: het ontstaat in het netwerk, niet in individuele actoren.');},
+  choices:[{text:'Lia reflecteert',next:'lia_reflectie'}]
+},
+
+lia_reflectie:{
+  title:'Lia en haar rolstoel',
+  text:`
+    <p>Lia keek naar haar rolstoel. Niet langer een passief hulpmiddel, maar een <em>actor</em> in haar netwerk.</p>
+    <p class="thought">Mijn rolstoel handelt: hij bepaalt waar ik kan komen, hoe snel, welke deuren ik door kan. Hij structureert mijn wereld. En die stoeptegel — die handelt ook, door mij te blokkeren. Ik, de stoel, de tegel, het pad — we zijn allemaal actoren in een netwerk.</p>
+    <div class="contrast-box" style="background:rgba(64,136,96,.05);border:1px solid rgba(64,136,96,.15);">
+      <span class="cb-label" style="color:var(--forest);">Morton (H12) — The Mesh</span>
+      Alles is <em>verweven</em>. De mens is knooppunt in een web van relaties.
+    </div>
+    <div class="contrast-box" style="background:rgba(88,120,168,.05);border:1px solid rgba(88,120,168,.15);">
+      <span class="cb-label" style="color:var(--accent);">Latour (H13) — ANT</span>
+      Niet-menselijke dingen <em>handelen</em>. Ze zijn actoren met agency in netwerken.
+    </div>
+    <div class="max-moment">Max was een meester in ANT, zonder het te weten. Zijn wereld was een netwerk van actoren: de voederbak (die eten verstrekt), de bank (die warmte biedt), de deur (die vrijheid geeft of ontneemt).</div>`,
+  onEnter:()=>{R('Mijn rolstoel als actor: hij bepaalt mijn wereld. Stoeptegel, pad, deur — alles handelt in het netwerk.');},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 13 — Kernbegrippen</div>
+      <p><strong>Actor-Netwerktheorie (ANT)</strong> — Latour: agency bij mensen én niet-mensen<br>
+      <strong>Agency</strong> — Het vermogen effect te sorteren, zonder vereiste van intentie<br>
+      <strong>Delegatie</strong> — Moraal toevertrouwen aan objecten (Berlijnse sleutel)<br>
+      <strong>Gedistribueerd handelen</strong> — Handelen is altijd een netwerk-effect<br>
+      <strong>Niet-bewuste cognitie</strong> — Hayles: cognitie zonder bewustzijn<br>
+      <strong>Cognitieve assemblages</strong> — Mens + machine systemen<br>
+      <strong>Parlement der Dingen</strong> — Niet-mensen een stem geven<br>
+      <strong>Communicatieve ethiek</strong> — Habermas: consensus via dialoog</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 13 — Wordt vervolgd in H14: Barad, Harari & Rasch — Van data tot 'else'</p>`,
+  onEnter:()=>{R('Hoofdstuk 13 afgerond. Niet-menselijke dingen handelen. Maar onze menselijke verantwoordelijkheid wordt daardoor niet minder — juist groter.');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== BERLIJNSE SLEUTEL STEPS ===== */
+const keyData=[
+  {num:'Stap 1',title:'De wens van de verhuurder',text:'De verhuurder wil dat huurders de voordeur altijd afsluiten. Dat is een <strong>morele norm</strong>: "Sluit de deur achter je." Maar mensen vergeten dit. De norm alleen is niet genoeg.'},
+  {num:'Stap 2',title:'Delegatie aan het object',text:'De wens wordt <strong>gedelegeerd</strong> aan de sleutel. Het ontwerp dwingt: je kunt de sleutel alleen uit het slot halen na de deur weer op slot te draaien. De moraal wordt materieel.'},
+  {num:'Stap 3',title:'De sleutel handelt',text:'De sleutel <strong>dwingt</strong> gedrag af: "DOE DE DEUR OP SLOT." Het is geen verzoek maar dwang. Een moreel programma vertaald naar materiële dwang.'},
+  {num:'Stap 4',title:'Gedistribueerde handeling',text:'De handeling "deur afsluiten" is <strong>verdeeld</strong> over huurder, sleutel en slot. Geen enkele actor doet het alleen. Het is een netwerk-effect.'}
+];
+
+function initKeySteps(){
+  const container=document.getElementById('key-steps');container.innerHTML='';
+  keyData.forEach((d,i)=>{
+    const step=document.createElement('div');step.className='key-step'+(i===0?' active':'');step.id='ks-'+i;
+    step.innerHTML=`<div class="ks-num">${d.num}</div><div class="ks-title">${d.title}</div><div class="ks-text">${i===0?d.text:'<span style="color:var(--accent-glow);">Klik om te onthullen...</span>'}</div>`;
+    step.onclick=()=>advanceKey(i);
+    container.appendChild(step);
+  });
+  document.getElementById('key-progress').textContent='Stap 1 van 4';
+}
+function advanceKey(i){
+  if(i!==state.keyStep)return;
+  const step=document.getElementById('ks-'+i);
+  step.classList.add('active');
+  step.querySelector('.ks-text').innerHTML=keyData[i].text;
+  state.keyStep++;
+  document.getElementById('key-progress').textContent='Stap '+Math.min(state.keyStep+1,4)+' van 4';
+  if(state.keyStep>=4){
+    document.getElementById('key-progress').innerHTML='<button class="continue-btn" onclick="go(\'berlijn_done\')" style="margin-top:8px;">Verder</button>';
+    adj('Mens — Netwerk',8);
+  } else {
+    const next=document.getElementById('ks-'+state.keyStep);
+    next.querySelector('.ks-text').innerHTML='<span style="color:var(--accent-glow);cursor:pointer;">Klik om te onthullen...</span>';
+  }
+}
+
+/* ===== DRONE ANALYSIS ===== */
+const droneData=[
+  {title:'Niet-bewuste cognitie',text:'De drone verwerkt data van sensoren, herkent patronen in het terrein, navigeert autonoom en "beslist" binnen geprogrammeerde kaders. Dit is cognitie zonder bewustzijn — maar het is effectief.'},
+  {title:'Cognitieve assemblage',text:'De drone opereert niet alleen: het is een assemblage van de drone + operators + communicatiesystemen + databases + commandostructuur. Menselijke en machinale cognitie werken samen.'},
+  {title:'Toenemende autonomie',text:'Hayles: <em>"Cognitieve technologieën ontwikkelen zich in de richting van meer autonomie."</em> Ingenieurs spreken over systemen met "overtuigingen" en "intenties" — de grens tussen mens en machine vervaagt.'}
+];
+
+function initDrones(){
+  const list=document.getElementById('drone-list');list.innerHTML='';
+  droneData.forEach((d,i)=>{
+    const card=document.createElement('div');card.className='drone-card';card.id='dc-'+i;
+    card.innerHTML=`<div class="dc-title">${d.title}</div><div class="dc-text">${d.text}</div>`;
+    card.onclick=()=>revealDrone(i);
+    list.appendChild(card);
+  });
+  updateDroneCounter();
+}
+function revealDrone(i){
+  const c=document.getElementById('dc-'+i);
+  if(c.classList.contains('revealed'))return;
+  c.classList.add('revealed');state.droneRevealed++;
+  adj('Bewust — Niet-bewust',5);
+  updateDroneCounter();
+  if(state.droneRevealed>=3){
+    setTimeout(()=>{document.getElementById('drone-result').innerHTML='<button class="continue-btn" onclick="go(\'drone_done\')">Verder</button>';},400);
+  }
+}
+function updateDroneCounter(){document.getElementById('drone-counter').textContent=state.droneRevealed+' / 3 aspecten verkend';}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

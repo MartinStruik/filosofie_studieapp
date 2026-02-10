@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 5: Metaforen</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:#0a0b10; --bg-card:#11131c; --bg-hover:#1a1d2c;
+    --text:#c5c8d4; --text-bright:#e8eaf4; --text-dim:#686e82;
+    --accent:#50b8d8; --accent-glow:#80d8f0; --accent-dim:#28708a;
+    --warm:#e8a87c; --warm-dim:#a06840;
+    --teal:#5ea8a0; --teal-dim:#3a706a;
+    --purple:#7b68ee; --purple-dim:#4a3da0;
+    --amber:#d4a050; --amber-dim:#8a6830;
+    --rose:#e07088; --rose-dim:#983050;
+    --danger:#e06070; --success:#60c080;
+    --border:#202535;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+
+  .philosophy-box{background:linear-gradient(135deg,rgba(80,184,216,.08),rgba(80,184,216,.02));border:1px solid rgba(80,184,216,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .contrast-descartes{background:rgba(123,104,238,.05);border:1px solid rgba(123,104,238,.15);}
+  .contrast-descartes .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--purple);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-fenomeno{background:rgba(94,168,160,.05);border:1px solid rgba(94,168,160,.15);}
+  .contrast-fenomeno .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--teal);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-plessner{background:rgba(212,160,80,.05);border:1px solid rgba(212,160,80,.15);}
+  .contrast-plessner .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--amber);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-h4{background:rgba(224,112,136,.05);border:1px solid rgba(224,112,136,.15);}
+  .contrast-h4 .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--rose);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-h5{background:rgba(80,184,216,.05);border:1px solid rgba(80,184,216,.15);}
+  .contrast-h5 .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+
+  .definition-box{background:rgba(80,184,216,.06);border:1px solid rgba(80,184,216,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* METAPHOR DETECTOR */
+  .metaphor-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:20px;margin:10px 0;cursor:pointer;transition:all .3s;}
+  .metaphor-card:hover{border-color:var(--accent-dim);background:var(--bg-hover);}
+  .metaphor-card.revealed{border-color:rgba(80,184,216,.3);background:rgba(80,184,216,.04);}
+  .metaphor-card .quote{font-size:18px;color:var(--text-bright);margin-bottom:10px;}
+  .metaphor-card .analysis{display:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;padding-top:10px;border-top:1px solid var(--border);}
+  .metaphor-card.revealed .analysis{display:block;}
+  .metaphor-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;padding:3px 10px;border-radius:12px;margin:2px;font-weight:500;}
+  .tag-orient{background:rgba(80,184,216,.12);color:var(--accent-glow);}
+  .tag-ontol{background:rgba(212,160,80,.12);color:var(--amber);}
+  .tag-tech{background:rgba(224,112,136,.12);color:var(--rose);}
+
+  /* TIMELINE */
+  .timeline{position:relative;padding:20px 0;margin:20px 0;}
+  .timeline-line{position:absolute;left:20px;top:0;bottom:0;width:2px;background:var(--border);}
+  .timeline-item{position:relative;padding:12px 12px 12px 50px;margin:8px 0;border-radius:10px;cursor:pointer;transition:all .3s;border:1px solid transparent;}
+  .timeline-item:hover{background:var(--bg-hover);border-color:var(--border);}
+  .timeline-item.active{background:rgba(80,184,216,.06);border-color:rgba(80,184,216,.2);}
+  .timeline-dot{position:absolute;left:14px;top:18px;width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:var(--bg);transition:all .3s;}
+  .timeline-item.active .timeline-dot{border-color:var(--accent);background:var(--accent);box-shadow:0 0 10px rgba(80,184,216,.3);}
+  .timeline-era{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--accent);letter-spacing:1px;}
+  .timeline-tech{font-size:16px;color:var(--text-bright);margin:2px 0;}
+  .timeline-meta{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);display:none;}
+  .timeline-item.active .timeline-meta{display:block;margin-top:6px;}
+
+  /* LENS GAME */
+  .lens-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:rgba(0,0,0,.3);}
+  .lens-situation{text-align:center;font-size:18px;color:var(--text-bright);margin-bottom:20px;padding:16px;border-bottom:1px solid var(--border);}
+  .lens-buttons{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
+  .lens-btn{font-family:'Inter',sans-serif;font-size:13px;padding:8px 16px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;transition:all .25s;}
+  .lens-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .lens-btn.active{background:rgba(80,184,216,.15);border-color:var(--accent);color:var(--accent-glow);}
+  .lens-result{min-height:80px;padding:16px;border-radius:10px;border:1px solid var(--border);background:var(--bg-card);font-size:16px;line-height:1.6;transition:all .4s;}
+  .lens-reveals{font-family:'Inter',sans-serif;font-size:13px;margin-top:10px;}
+  .lens-reveals .reveal{display:inline-block;padding:3px 10px;border-radius:12px;margin:3px;font-size:12px;}
+  .lens-reveals .lights{background:rgba(96,192,128,.1);color:var(--success);}
+  .lens-reveals .hides{background:rgba(224,96,112,.1);color:var(--danger);}
+
+  /* NOTEBOOK */
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;letter-spacing:.5px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;text-decoration:none;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+
+<div id="game-container">
+  <div id="story-panel">
+    <div id="passage-wrapper"></div>
+  </div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H5</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.08);border-color:rgba(123,104,238,.15);color:var(--purple-dim);">H1 Descartes</span>
+      <span class="nb-chapter-link" style="background:rgba(94,168,160,.08);border-color:rgba(94,168,160,.15);color:var(--teal-dim);">H2 Fenomenologie</span>
+      <span class="nb-chapter-link" style="background:rgba(212,160,80,.08);border-color:rgba(212,160,80,.15);color:var(--amber-dim);">H3 Plessner</span>
+      <span class="nb-chapter-link" style="background:rgba(224,112,136,.08);border-color:rgba(224,112,136,.15);color:var(--rose-dim);">H4 De Beauvoir & Fanon</span>
+    </div>
+    <div class="nb-section">
+      <div class="nb-section-title">Begrippen</div>
+      <div id="terms-list"></div>
+    </div>
+    <div class="nb-section">
+      <div class="nb-section-title">Reflecties</div>
+      <div id="reflections-list"></div>
+    </div>
+    <div class="nb-section">
+      <div class="nb-section-title">Filosofisch Kompas</div>
+      <div class="nb-compass" id="compass"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const state = {
+  passage:'start', history:[], visitedPassages:0,
+  terms:[], reflections:[],
+  compass: {
+    'Letterlijk — Metaforisch': 50,
+    'Universeel — Historisch': 50,
+    'Objectief — Geconstrueerd': 50,
+    'Machine — Organisme': 50
+  },
+  flags: {}, metaphorsRevealed: 0, timelineVisited: new Set(), lensesUsed: new Set()
+};
+const totalPassages = 24;
+
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P = {
+
+start: {
+  title: 'Bedrading',
+  text: `
+    <div class="ambient-text">Hoofdstuk 5 — Metaforen en ons mensbeeld</div>
+    <p><em>"De bedrading is beschadigd,"</em> had de arts gezegd.</p>
+    <p>Het klonk alsof ze een defect apparaat was. Lia had geknikt, maar vanbinnen kromp ze ineen.</p>
+    <p><strong>Bedrading. Storingen. Reparaties.</strong></p>
+    <p>Het waren woorden die niet over haar gingen — maar toch bleven ze aan haar kleven.</p>
+    <p>Die avond bladerde ze door haar notities. Overal kwam hetzelfde terug: <em>metaforen</em>. Het lichaam als machine. Het brein als computer. Het zenuwstelsel als netwerk.</p>
+    <p>Woorden die de werkelijkheid ordenden, maar die ook bepaalden hoe je jezelf zag.</p>
+  `,
+  choices: [
+    {text: 'Denk terug aan de klimwand', next: 'klimwand_herinnering'}
+  ]
+},
+
+klimwand_herinnering: {
+  title: 'De klimwand',
+  text: `
+    <p>Lia sloot haar ogen en dacht terug aan de klimwand.</p>
+    <p>Was ze toen echt een <em>'denkende geest'</em> die een <em>'lichaam als machine'</em> bestuurde?</p>
+    <p>Nee. Dat voelde volkomen verkeerd.</p>
+    <p>Tijdens het klimmen was ze een <strong>knooppunt in een web</strong>: haar denken zat niet alleen in haar hoofd, maar ook in haar vingertoppen die de textuur van de rots lazen, in de spanning van haar spieren die de balans vonden, in de interactie met de zwaartekracht en het touw.</p>
+    <p>Het hele systeem — klimmer, rots, omgeving — dacht en bewoog als één geheel.</p>
+    <p class="thought">En nu? Nu is dat web verscheurd en voel ik me gereduceerd tot de metafoor van een defect apparaat dat een update nodig heeft.</p>
+  `,
+  choices: [
+    {text: '"Misschien ligt mijn echte keuze in het kiezen van een verhaal"', next: 'verhaal_keuze'}
+  ]
+},
+
+verhaal_keuze: {
+  title: 'Het verhaal kiezen',
+  text: `
+    <p>Ze dacht aan de chip. Zou die haar werkelijk helpen, of zou ze er alleen maar dieper door vastgroeien in het beeld van <em>"project met bedrading en updates"</em>?</p>
+    <p class="thought">Misschien ligt mijn echte beslissing niet alleen in het nemen of weigeren van de chip, maar in het kiezen van een verhaal waarin ik mezelf kan blijven herkennen.</p>
+    <p>De woorden van de arts echoden in haar hoofd. Ze merkte hoe krachtig zulke beelden haar eigen denken vormgaven.</p>
+    <p>Het symposium die middag ging precies hierover: hoe metaforen ons mensbeeld sturen.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 5</div>
+      <p><strong>Metaforen en ons mensbeeld</strong></p>
+      <p><span class="dim">Met: George Lakoff & Mark Johnson · Piet Vroon & Douwe Draaisma</span></p>
+    </div>
+  `,
+  choices: [
+    {text: 'Luister naar de spreker', next: 'metaforen_intro'}
+  ]
+},
+
+metaforen_intro: {
+  title: 'Meer dan stijlfiguren',
+  text: `
+    <p>De spreker begon: <em>"We denken vaak dat metaforen slechts stijlfiguren zijn — versiering van taal. Maar filosofen Lakoff en Johnson laten zien dat ze veel fundamenteler zijn."</em></p>
+    <div class="philosophy-box" style="text-align:center;font-size:20px;">
+      <em>"Het conceptuele systeem waarop ons denken en handelen is gebaseerd, is in wezen <strong>metaforisch</strong> van aard."</em>
+      <div style="font-size:14px;margin-top:8px;color:var(--text-dim);">— Lakoff & Johnson</div>
+    </div>
+    <p>Metaforen structureren ons denken en handelen. Ze bepalen hoe we abstracte concepten begrijpen — en daarmee hoe we naar onszelf en de wereld kijken.</p>
+  `,
+  onEnter: () => { T('Metafoor (Lakoff & Johnson)', 'Niet slechts een stijlfiguur, maar een fundamentele structuur van ons denken. We begrijpen abstracte concepten via concretere, vaak lichamelijke ervaringen.'); },
+  choices: [
+    {text: 'Welke soorten metaforen zijn er?', next: 'twee_typen'}
+  ]
+},
+
+twee_typen: {
+  title: 'Twee typen metaforen',
+  text: `
+    <p>Lakoff en Johnson onderscheiden twee belangrijke typen:</p>
+    <div class="definition-box">
+      <span class="term">1. Oriënterende metaforen</span>
+      Organiseren concepten <strong>ruimtelijk</strong> (boven/beneden, voor/achter) en komen voort uit onze <em>lichamelijke ervaring</em>.<br>
+      <span class="dim">Voorbeelden: 'Gelukkig is BOVEN, droevig is BENEDEN' · 'Meer is BOVEN, minder is BENEDEN' · 'Goed is BOVEN, slecht is BENEDEN'</span>
+    </div>
+    <div class="definition-box">
+      <span class="term">2. Ontologische metaforen</span>
+      Behandelen <strong>abstracte zaken</strong> alsof het concrete dingen zijn. Zo ingesleten dat we ze als letterlijke beschrijvingen ervaren.<br>
+      <span class="dim">Voorbeelden: 'De geest is een MACHINE' · 'De geest is een BREEKBAAR VOORWERP' · 'Ideeën zijn OBJECTEN'</span>
+    </div>
+    <p>Het cruciale inzicht: zelfs abstract denken is geworteld in <strong>concrete, lichamelijke ervaring</strong> (a posteriori kennis). Dit maakt de scherpe scheiding met zuiver rationele a priori kennis problematisch.</p>
+  `,
+  onEnter: () => { T('Oriënterende metafoor', 'Organiseert concepten ruimtelijk (boven/beneden etc.), geworteld in lichamelijke ervaring.'); T('Ontologische metafoor', 'Behandelt abstracte zaken alsof het concrete dingen zijn (bv. "de geest is een machine").'); },
+  choices: [
+    {text: 'Ontdek verborgen metaforen', next: 'metaphor_game'}
+  ]
+},
+
+/* ===== MINIGAME: METAFOOR-DETECTOR ===== */
+metaphor_game: {
+  title: 'Metafoor-detector',
+  text: `
+    <p>De spreker deelde kaartjes uit. <em>"Herken de verborgen metafoor in deze alledaagse uitspraken. Klik om te onthullen."</em></p>
+    <div id="metaphor-cards">
+      <div class="metaphor-card" onclick="revealMetaphor(this,0)">
+        <div class="quote">"Ze is helemaal <strong>kapot</strong> van het nieuws."</div>
+        <div class="analysis">
+          <span class="metaphor-tag tag-ontol">Ontologisch</span><br>
+          De mens als <strong>breekbaar voorwerp</strong>. Belicht kwetsbaarheid, maar suggereert ook dat je 'gerepareerd' kunt worden — alsof emoties een mechanisch defect zijn.
+        </div>
+      </div>
+      <div class="metaphor-card" onclick="revealMetaphor(this,1)">
+        <div class="quote">"Mijn <strong>batterij</strong> is leeg, ik moet <strong>opladen</strong>."</div>
+        <div class="analysis">
+          <span class="metaphor-tag tag-tech">Technologisch</span><br>
+          De mens als <strong>apparaat met batterij</strong>. Maakt energie meetbaar en beheersbaar, maar verhult dat rust meer is dan 'opladen' — het is ook reflectie, verbinding, zingeving.
+        </div>
+      </div>
+      <div class="metaphor-card" onclick="revealMetaphor(this,2)">
+        <div class="quote">"Hij <strong>zakte</strong> weg in een <strong>diepe</strong> depressie."</div>
+        <div class="analysis">
+          <span class="metaphor-tag tag-orient">Oriënterend</span><br>
+          <strong>Droevig is BENEDEN</strong>. Geworteld in lichamelijke ervaring: bij verdriet buigen we voorover, laten we ons hoofd zakken. De ruimtelijke metafoor structureert hoe we depressie begrijpen.
+        </div>
+      </div>
+      <div class="metaphor-card" onclick="revealMetaphor(this,3)">
+        <div class="quote">"De <strong>bedrading</strong> is beschadigd, we moeten het <strong>systeem herstarten</strong>."</div>
+        <div class="analysis">
+          <span class="metaphor-tag tag-tech">Technologisch</span><br>
+          Het lichaam als <strong>machine/computer</strong>. De arts-metafoor over Lia. Belicht het meetbare en repareerbare, maar verhult de geleefde ervaring, de emoties, de identiteit.
+        </div>
+      </div>
+      <div class="metaphor-card" onclick="revealMetaphor(this,4)">
+        <div class="quote">"Ze <strong>straalde</strong> vandaag — een <strong>lichtpuntje</strong> in een donkere tijd."</div>
+        <div class="analysis">
+          <span class="metaphor-tag tag-orient">Oriënterend</span><br>
+          <strong>Goed/blij is LICHT, slecht/droevig is DONKER</strong>. Zo vanzelfsprekend dat we vergeten dat het een metafoor is. Geworteld in de ervaring van dag (veilig, zichtbaar) en nacht (gevaarlijk, onzeker).
+        </div>
+      </div>
+    </div>
+    <div id="metaphor-result" style="margin-top:16px;"></div>
+  `
+},
+
+metaphor_done: {
+  title: 'De onzichtbare structuur',
+  text: `
+    <p>Lia keek verbaasd naar haar aantekeningen. <em>Overal</em> metaforen. In de taal van de arts, in haar eigen dagboek, in hoe ze over de chip dacht.</p>
+    <p class="thought">Het zijn geen onschuldige woorden. Ze bepalen hoe ik denk. "Bedrading herstellen" maakt de chip logisch. "Mijn lichaam herontdekken" maakt revalidatie logisch. De metafoor kiest voor mij, nog voordat ik zelf kies.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Lakoff & Johnson — Kerninzicht</div>
+      <p>Metaforen zijn zo ingesleten dat we ze als <em>letterlijke beschrijvingen</em> ervaren. Maar ze belichten altijd bepaalde aspecten en <strong>verhullen</strong> andere. Dit maakt ze krachtig — en potentieel misleidend.</p>
+    </div>
+  `,
+  onEnter: () => { R('Metaforen zijn onzichtbare structuren die ons denken sturen — ook over onszelf.'); adj('Letterlijk — Metaforisch', 15); },
+  choices: [
+    {text: 'Maar veranderen metaforen door de tijd?', next: 'vroon_draaisma'}
+  ]
+},
+
+/* ===== VROON & DRAAISMA ===== */
+vroon_draaisma: {
+  title: 'Vroon & Draaisma',
+  text: `
+    <p>De spreker wisselde van perspectief. <em>"Lakoff en Johnson benadrukken de lichamelijke basis. Maar psychologen Vroon en Draaisma wijzen op iets anders: de <strong>historische contingentie</strong> van onze metaforen."</em></p>
+    <p><em>"In elk tijdperk dient de dominante technologie als bron voor metaforen over de menselijke geest."</em></p>
+  `,
+  onEnter: () => { T('Vroon & Draaisma', 'Psychologen die lieten zien dat metaforen voor de geest historisch veranderen met de dominante technologie van een tijdperk.'); T('Historische contingentie', 'Het idee dat iets niet noodzakelijk zo is, maar afhankelijk van historische omstandigheden — het had ook anders kunnen zijn.'); },
+  choices: [
+    {text: 'Bekijk de tijdlijn', next: 'timeline_game'}
+  ]
+},
+
+/* ===== MINIGAME: TIJDLIJN ===== */
+timeline_game: {
+  title: 'De tijdmachine der metaforen',
+  text: `
+    <p>Op het scherm verscheen een tijdlijn. <em>"Klik op elk tijdperk om te zien hoe de dominante technologie het beeld van de menselijke geest vormde."</em></p>
+    <div class="timeline" id="timeline">
+      <div class="timeline-line"></div>
+      <div class="timeline-item" onclick="toggleTimeline(this,0)" id="tl-0">
+        <div class="timeline-dot"></div>
+        <div class="timeline-era">Oudheid</div>
+        <div class="timeline-tech">Het wastablet</div>
+        <div class="timeline-meta">De geest als <strong>wastablet</strong> — ervaringen worden 'ingedrukt' in de ziel. Geheugen is een afdruk. Vergeten is 'uitwissen'. De geest is passief en ontvangend.</div>
+      </div>
+      <div class="timeline-item" onclick="toggleTimeline(this,1)" id="tl-1">
+        <div class="timeline-dot"></div>
+        <div class="timeline-era">Middeleeuwen</div>
+        <div class="timeline-tech">Het boek</div>
+        <div class="timeline-meta">De geest als <strong>boek</strong> — kennis wordt 'opgeslagen' in pagina's. De 'index' van herinneringen. God als auteur van het 'boek der natuur'. De geest kan 'gelezen' worden.</div>
+      </div>
+      <div class="timeline-item" onclick="toggleTimeline(this,2)" id="tl-2">
+        <div class="timeline-dot"></div>
+        <div class="timeline-era">17e-18e eeuw</div>
+        <div class="timeline-tech">Het uurwerk</div>
+        <div class="timeline-meta">De geest (en het lichaam) als <strong>uurwerk</strong> — een mechanisme met tandwielen en veren. Precies, voorspelbaar, determinisisch. Descartes' lichaam-als-machine past hier perfect bij.</div>
+      </div>
+      <div class="timeline-item" onclick="toggleTimeline(this,3)" id="tl-3">
+        <div class="timeline-dot"></div>
+        <div class="timeline-era">19e eeuw</div>
+        <div class="timeline-tech">De stoommachine</div>
+        <div class="timeline-meta">De geest als <strong>stoommachine</strong> — met druk, energie, en ontlading. Freuds model van het onbewuste (es, ich, über-ich) als hydraulisch systeem. Emoties als 'stoom' die 'afgeblazen' moet worden.</div>
+      </div>
+      <div class="timeline-item" onclick="toggleTimeline(this,4)" id="tl-4">
+        <div class="timeline-dot"></div>
+        <div class="timeline-era">20e-21e eeuw</div>
+        <div class="timeline-tech">De computer</div>
+        <div class="timeline-meta">De geest als <strong>computer</strong> — denken is 'informatieverwerking', geheugen is 'opslag', leren is 'programmeren'. De dominante metafoor van onze tijd. Basis van het functionalisme en AI-onderzoek.</div>
+      </div>
+    </div>
+    <div id="timeline-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>
+    <div id="timeline-result" style="margin-top:16px;"></div>
+  `
+},
+
+timeline_done: {
+  title: 'Contingentie',
+  text: `
+    <p>Lia staarde naar de tijdlijn. Elk tijdperk met zijn eigen beeld van de mens — bepaald door de technologie van dat moment.</p>
+    <p class="thought">Als we in de 18e eeuw leefden, zou de arts hebben gezegd: "het uurwerk loopt niet meer soepel". Nu zegt hij: "de bedrading is beschadigd". Niet omdat het waar is, maar omdat de <em>computer</em> onze dominante metafoor is.</p>
+    <div class="definition-box">
+      <span class="term">Theoriegeladenheid van waarneming</span>
+      Ons conceptuele kader — gevormd door metaforen — bepaalt mede <strong>wat we zien</strong>. We waarnemen niet neutraal, maar door de lens van onze theorieën en verwachtingen.
+    </div>
+    <div class="definition-box">
+      <span class="term">Constructivisme</span>
+      Kennis is geen passieve afspiegeling van een objectieve werkelijkheid, maar wordt actief <strong>geconstrueerd</strong> door onze taal, concepten, culturele kaders en metaforen.
+    </div>
+  `,
+  onEnter: () => { T('Theoriegeladenheid', 'Ons conceptuele kader (inclusief metaforen) bepaalt mede wat we waarnemen — waarneming is nooit neutraal.'); T('Constructivisme', 'Kennis wordt actief geconstrueerd door taal, concepten en culturele kaders — geen passieve afspiegeling van de werkelijkheid.'); adj('Universeel — Historisch', 15); adj('Objectief — Geconstrueerd', 12); },
+  choices: [
+    {text: 'Maar als alles geconstrueerd is… wat is dan nog waar?', next: 'wisselwerking'}
+  ]
+},
+
+wisselwerking: {
+  title: 'De wisselwerking',
+  text: `
+    <p>Sam stak zijn hand op. <em>"Maar als onze metaforen bepalen wat we zien — hoe komen we dan ooit bij de waarheid?"</em></p>
+    <p>De spreker glimlachte. <em>"Goede vraag. Vroon en Draaisma wijzen op een wisselwerking:"</em></p>
+    <div class="philosophy-box">
+      <div class="box-title">De spiraal</div>
+      <p><strong>Technologie</strong> levert metaforen → die sturen <strong>onderzoek</strong> → dat leidt tot nieuwe <strong>technologie</strong> → die levert nieuwe <strong>metaforen</strong> → …</p>
+      <p class="dim">De computermetafoor stuurt AI-onderzoek, dat weer nieuwe beelden van de geest oplevert, die weer nieuwe metaforen produceren.</p>
+    </div>
+    <p><em>"De conclusie is niet dat alles relatief is,"</em> zei de spreker, <em>"maar dat we ons bewust moeten zijn van de metaforen die we gebruiken. Ze zijn krachtige instrumenten — maar ook blinde vlekken."</em></p>
+  `,
+  choices: [
+    {text: 'De computermetafoor nader bekeken', next: 'computer_metafoor'}
+  ]
+},
+
+computer_metafoor: {
+  title: 'De computermetafoor',
+  text: `
+    <p>De spreker zoomde in op de dominante metafoor van onze tijd:</p>
+    <div class="philosophy-box">
+      <div class="box-title">De computermetafoor</div>
+      <p>Denken = <em>informatieverwerking</em><br>
+      Geheugen = <em>opslag</em><br>
+      Leren = <em>programmeren</em><br>
+      Het brein = <em>hardware</em><br>
+      De geest = <em>software</em></p>
+    </div>
+    <p><em>"Deze metafoor werkt twee kanten op,"</em> legde de spreker uit. <em>"We beschrijven het brein in computertermen én we bouwen computers die denken moeten nabootsen."</em></p>
+    <p>Lia voelde de relevantie scherp. De BCI — de chip van Verhoeven — was letterlijk gebaseerd op dit idee: het brein als computer, de chip als upgrade.</p>
+    <p class="thought">Maar wat als de metafoor niet klopt? Wat als mijn brein geen computer is — en de chip dus geen 'update'?</p>
+  `,
+  onEnter: () => { T('Computermetafoor', 'De dominante metafoor van onze tijd: de geest als software, het brein als hardware. Basis van het functionalisme.'); R('De computermetafoor maakt de BCI logisch — maar verhult mogelijk wat er werkelijk op het spel staat.'); },
+  choices: [
+    {text: 'Probeer de metafoor-lens', next: 'lens_game'}
+  ]
+},
+
+/* ===== MINIGAME: METAFOOR-LENS ===== */
+lens_game: {
+  title: 'De metafoor-lens',
+  text: `
+    <p>De spreker stelde een laatste oefening voor: <em>"Bekijk dezelfde situatie door verschillende metaforische lenzen. Merk op hoe de metafoor bepaalt wat je ziet."</em></p>
+    <div class="lens-container">
+      <div class="lens-situation">Lia's hand trilt. Ze kan de mok niet pakken.</div>
+      <div class="lens-buttons">
+        <button class="lens-btn" onclick="applyLens('machine')">Machine-metafoor</button>
+        <button class="lens-btn" onclick="applyLens('netwerk')">Netwerk-metafoor</button>
+        <button class="lens-btn" onclick="applyLens('tuin')">Tuin-metafoor</button>
+        <button class="lens-btn" onclick="applyLens('verhaal')">Verhaal-metafoor</button>
+      </div>
+      <div class="lens-result" id="lens-result">
+        <span class="dim">Kies een lens om Lia's situatie te bekijken...</span>
+      </div>
+    </div>
+    <div id="lens-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>
+  `
+},
+
+lens_done: {
+  title: 'De macht van het frame',
+  text: `
+    <p>Lia schreef in haar notitieboek:</p>
+    <p class="thought">Elke metafoor vertelt een ander verhaal over mij. De machine-metafoor maakt me repareerbaar. De netwerk-metafoor maakt me verbonden. De tuin-metafoor maakt me groeiend. Het verhaal maakt me de auteur.</p>
+    <p class="thought">Geen van die metaforen is 'de waarheid'. Maar elk stuurt mijn denken, mijn gevoel, mijn keuze over de chip.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Kernles van H5</div>
+      <p>Metaforen zijn geen onschuldige versieringen. Ze <strong>structureren</strong> ons denken, zijn geworteld in <em>lichamelijke ervaring</em> (Lakoff & Johnson) én veranderen met de <em>dominante technologie</em> (Vroon & Draaisma). Ze belichten aspecten van de werkelijkheid, maar verhullen altijd ook iets.</p>
+      <p>De eerste stap naar vrijheid is: <strong>bewustwording</strong> van de metaforen die je denken sturen.</p>
+    </div>
+  `,
+  onEnter: () => { R('De metafoor die je kiest bepaalt wat je ziet — en wat je mist. Bewustwording is de eerste stap.'); adj('Letterlijk — Metaforisch', 10); },
+  choices: [
+    {text: 'Terugblik: vijf lenzen', next: 'vijf_lenzen'}
+  ]
+},
+
+vijf_lenzen: {
+  title: 'Vijf lenzen',
+  text: `
+    <p>Lia bekeek haar groeiende verzameling perspectieven:</p>
+    <div class="contrast-descartes contrast-box">
+      <span class="cb-label">Descartes (H1)</span>
+      De geest als aparte <em>substantie</em>, het lichaam als machine. Een scherpe scheiding.
+    </div>
+    <div class="contrast-fenomeno contrast-box">
+      <span class="cb-label">Sheets-Johnstone (H2)</span>
+      Het <em>bewustzijns-lichaam</em> als eenheid. Ervaring gaat vooraf aan reflectie.
+    </div>
+    <div class="contrast-plessner contrast-box">
+      <span class="cb-label">Plessner (H3)</span>
+      De mens als <em>excentrisch</em> wezen: tegelijk in en buiten zichzelf.
+    </div>
+    <div class="contrast-h4 contrast-box">
+      <span class="cb-label">De Beauvoir & Fanon (H4)</span>
+      Identiteit gevormd door de <em>blik van de ander</em>. Objectificatie en bevrijding.
+    </div>
+    <div class="contrast-h5 contrast-box">
+      <span class="cb-label">Lakoff & Johnson / Vroon & Draaisma (H5)</span>
+      <em>Metaforen</em> structureren ons denken. Ons mensbeeld is geworteld in lichamelijke ervaring én historisch bepaald door technologie.
+    </div>
+  `,
+  choices: [
+    {text: 'Naar de afsluiting', next: 'afsluiting'}
+  ]
+},
+
+afsluiting: {
+  title: 'Afsluiting',
+  text: `
+    <p>Die avond keek Lia naar de regen. Druppels gleden langs het raam als data op een scherm — <em>alweer een metafoor</em>, dacht ze, en glimlachte.</p>
+    <div class="max-moment">Max lag op haar schoot, een warme vacht tegen haar buik. Geen metafoor. Gewoon: warmte, gewicht, spinnen. Soms was het simpelste het meest echt.</div>
+    <p class="thought">Morgen gaat het over de computermetafoor — maar dan serieus. Functionalisme. AI. De vraag of een machine kan denken. En als dat zo is… wat ben ik dan nog?</p>
+    <div class="scene-break">· · ·</div>
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 5 — Kernbegrippen</div>
+      <p><strong>Metafoor</strong> — Structureert ons denken, niet slechts stijlfiguur<br>
+      <strong>Oriënterende metafoor</strong> — Ruimtelijk, lichamelijk geworteld<br>
+      <strong>Ontologische metafoor</strong> — Abstract als concreet ding<br>
+      <strong>Historische contingentie</strong> — Metaforen veranderen met technologie<br>
+      <strong>Computermetafoor</strong> — Dominante metafoor van onze tijd<br>
+      <strong>Constructivisme</strong> — Kennis wordt actief geconstrueerd<br>
+      <strong>Theoriegeladenheid</strong> — Conceptueel kader bepaalt waarneming</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 5 — Wordt vervolgd in H6: Het brein als computer</p>
+  `,
+  onEnter: () => { R('Hoofdstuk 5 afgerond. Metaforen zijn machtig en onzichtbaar — bewustwording is de sleutel.'); }
+}
+
+}; // end passages
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+
+function renderPassage(id){
+  const p=P[id]; if(!p) return;
+  const w=document.getElementById('passage-wrapper');
+  w.classList.remove('visible');
+  setTimeout(()=>{
+    let html=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;
+    if(p.choices&&p.choices.length){
+      html+='<div class="choices">';
+      p.choices.forEach((c,i)=>{html+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});
+      html+='</div>';
+    }
+    w.innerHTML=html;
+    setTimeout(()=>w.classList.add('visible'),30);
+    if(p.onEnter) p.onEnter();
+  },300);
+}
+
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  const cl=document.getElementById('compass');
+  cl.innerHTML=Object.entries(state.compass).map(([axis,val])=>{
+    const [left,right]=axis.split(' — ');
+    return `<div class="nb-compass-axis"><span class="nb-compass-label">${left}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(val,50)}%;width:${Math.abs(val-50)}%;${val<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${right}</span></div>`;
+  }).join('');
+}
+
+/* ===== MINIGAME: METAFOOR DETECTOR ===== */
+function revealMetaphor(card, idx){
+  if(card.classList.contains('revealed')) return;
+  card.classList.add('revealed');
+  state.metaphorsRevealed++;
+  if(state.metaphorsRevealed >= 5){
+    const result=document.getElementById('metaphor-result');
+    result.innerHTML=`<div class="philosophy-box"><div class="box-title">Alle metaforen onthuld!</div><p>Je hebt ${state.metaphorsRevealed} verborgen metaforen gevonden. Merk op: elke metafoor belicht iets én verhult iets. Ze zijn niet 'fout', maar ook niet neutraal.</p></div><button class="continue-btn" onclick="go('metaphor_done')">Verder</button>`;
+    adj('Letterlijk — Metaforisch', 10);
+  }
+}
+
+/* ===== MINIGAME: TIJDLIJN ===== */
+function toggleTimeline(el, idx){
+  const wasActive = el.classList.contains('active');
+  document.querySelectorAll('.timeline-item').forEach(e=>e.classList.remove('active'));
+  if(!wasActive){
+    el.classList.add('active');
+    state.timelineVisited.add(idx);
+  }
+  const counter=document.getElementById('timeline-counter');
+  counter.textContent=`${state.timelineVisited.size}/5 tijdperken bekeken`;
+  if(state.timelineVisited.size >= 5){
+    const result=document.getElementById('timeline-result');
+    if(!result.innerHTML){
+      result.innerHTML=`<div class="philosophy-box"><div class="box-title">Alle tijdperken bekeken</div><p>Van wastablet tot computer — elke technologie produceerde een nieuw beeld van de menselijke geest. Geen van die beelden was 'de waarheid'; elk was een product van zijn tijd.</p></div><button class="continue-btn" onclick="go('timeline_done')">Verder</button>`;
+      adj('Universeel — Historisch', 10);
+    }
+  }
+}
+
+/* ===== MINIGAME: METAFOOR-LENS ===== */
+const lensData = {
+  machine: {
+    text: '<strong>Machine-metafoor:</strong> De bedrading in Lia\'s hand is beschadigd. De signalen van het brein bereiken de motorische eenheden niet meer correct. Diagnose: defecte verbinding. Behandeling: reparatie (BCI als patch).',
+    lights: ['Meetbaarheid', 'Behandelbaarheid', 'Precisie'],
+    hides: ['Geleefde ervaring', 'Emotie', 'Identiteit']
+  },
+  netwerk: {
+    text: '<strong>Netwerk-metafoor:</strong> Lia is een knooppunt in een web van verbindingen — lichaam, omgeving, sociale relaties. Sommige verbindingen zijn verbroken, andere zijn sterker geworden. Het netwerk herorganiseert zich.',
+    lights: ['Verbondenheid', 'Aanpassing', 'Context'],
+    hides: ['Individuele wil', 'Eenzaamheid', 'Specifieke pijn']
+  },
+  tuin: {
+    text: '<strong>Tuin-metafoor:</strong> Lia\'s lichaam is een tuin na een storm. Sommige planten zijn geknakt, maar de wortels leven nog. Met geduld, water en licht kan er opnieuw groei komen. De tuin zal er anders uitzien dan voorheen, maar kan bloeien.',
+    lights: ['Groei', 'Geduld', 'Organisch herstel'],
+    hides: ['Urgentie', 'Technische oplossing', 'Snelheid']
+  },
+  verhaal: {
+    text: '<strong>Verhaal-metafoor:</strong> Lia\'s levensverhaal heeft een plotwending gehad. Ze is nu in het tweede bedrijf — het deel waar de protagonist worstelt en groeit. Ze is geen slachtoffer maar een personage dat haar eigen verhaal schrijft.',
+    lights: ['Eigen regie', 'Betekenis', 'Narratief'],
+    hides: ['Lichamelijke realiteit', 'Onmacht', 'Toeval']
+  }
+};
+
+function applyLens(lens){
+  const d=lensData[lens];
+  document.querySelectorAll('.lens-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  const r=document.getElementById('lens-result');
+  let html=`<p>${d.text}</p><div class="lens-reveals">`;
+  html+=d.lights.map(l=>`<span class="reveal lights">Belicht: ${l}</span>`).join('');
+  html+=d.hides.map(h=>`<span class="reveal hides">Verhult: ${h}</span>`).join('');
+  html+='</div>';
+  r.innerHTML=html;
+  state.lensesUsed.add(lens);
+  const counter=document.getElementById('lens-counter');
+  counter.textContent=`${state.lensesUsed.size}/4 lenzen gebruikt`;
+  if(state.lensesUsed.size>=4){
+    counter.innerHTML+=`<br><button class="continue-btn" style="margin-top:12px;" onclick="go('lens_done')">Verder</button>`;
+    adj('Machine — Organisme', 8);
+  }
+}
+
+/* ===== INIT ===== */
+renderNotebook();
+renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

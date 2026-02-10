@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Epiloog: Een nieuw pad klimmen</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#0e0a06; --bg-card:#1a1410; --bg-hover:#282018;
+    --text:#d0c4a8; --text-bright:#f4e8c8; --text-dim:#887850;
+    --accent:#c0a050; --accent-glow:#e8c870; --accent-dim:#806830;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848; --silver:#7890c0; --violet:#9070d0; --red:#c05050; --indigo:#6060d0; --forest:#408860; --steel:#5878a8; --magenta:#a05088;
+    --danger:#e06070; --success:#60c080;
+    --border:#382810;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(192,160,80,.08),rgba(192,160,80,.02));border:1px solid rgba(192,160,80,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .definition-box{background:rgba(192,160,80,.06);border:1px solid rgba(192,160,80,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* PHILOSOPHER GALLERY */
+  .phil-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:8px;margin:20px 0;}
+  .phil-card{border:1px solid var(--border);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:all .4s;background:var(--bg-card);font-family:'Inter',sans-serif;font-size:11px;}
+  .phil-card:hover{border-color:var(--accent-dim);transform:translateY(-2px);}
+  .phil-card.lit{border-color:rgba(192,160,80,.4);background:rgba(192,160,80,.06);}
+  .phil-icon{font-size:24px;margin-bottom:4px;}
+  .phil-name{color:var(--text-bright);font-weight:600;font-size:11px;}
+  .phil-concept{color:var(--text-dim);font-size:10px;margin-top:2px;max-height:0;overflow:hidden;transition:max-height .4s;line-height:1.4;}
+  .phil-card.lit .phil-concept{max-height:60px;margin-top:4px;}
+
+  /* CLIMB WALL */
+  .climb-container{border:1px solid var(--border);border-radius:14px;margin:20px 0;overflow:hidden;background:linear-gradient(180deg,#1a1408 0%,#0e0a06 100%);position:relative;min-height:300px;padding:20px;}
+  .climb-hold{display:inline-block;width:48px;height:48px;border-radius:50%;margin:6px;cursor:pointer;transition:all .4s;border:2px solid var(--border);background:var(--bg-card);position:relative;text-align:center;line-height:44px;font-size:20px;}
+  .climb-hold:hover{transform:scale(1.1);border-color:var(--accent-dim);}
+  .climb-hold.grabbed{border-color:var(--accent);background:rgba(192,160,80,.15);box-shadow:0 0 12px rgba(192,160,80,.3);}
+  .climb-text{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);text-align:center;margin-top:16px;line-height:1.6;}
+
+  /* THREE BLURS */
+  .blur-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:20px 0;}
+  @media(max-width:600px){.blur-grid{grid-template-columns:1fr;}}
+  .blur-card{border:1px solid var(--border);border-radius:12px;padding:18px;text-align:center;transition:all .3s;background:var(--bg-card);}
+  .blur-card .bc-icon{font-size:32px;margin-bottom:8px;}
+  .blur-card .bc-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--text-bright);margin-bottom:4px;}
+  .blur-card .bc-thinkers{font-family:'Inter',sans-serif;font-size:11px;color:var(--accent);margin-bottom:8px;}
+  .blur-card .bc-desc{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);line-height:1.5;}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — Epiloog</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Alle hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.06);border-color:rgba(123,104,238,.1);color:#4a3da0;">H1 Descartes</span>
+      <span class="nb-chapter-link" style="background:rgba(94,168,160,.06);border-color:rgba(94,168,160,.1);color:#387068;">H2 Fenomenologie</span>
+      <span class="nb-chapter-link" style="background:rgba(212,160,80,.06);border-color:rgba(212,160,80,.1);color:#886830;">H3 Plessner</span>
+      <span class="nb-chapter-link" style="background:rgba(224,112,136,.06);border-color:rgba(224,112,136,.1);color:#903848;">H4 De Beauvoir</span>
+      <span class="nb-chapter-link" style="background:rgba(80,184,216,.06);border-color:rgba(80,184,216,.1);color:#28708a;">H5 Metaforen</span>
+      <span class="nb-chapter-link" style="background:rgba(80,216,144,.06);border-color:rgba(80,216,144,.1);color:#287048;">H6 AI</span>
+      <span class="nb-chapter-link" style="background:rgba(208,136,72,.06);border-color:rgba(208,136,72,.1);color:#885028;">H7 4E</span>
+      <span class="nb-chapter-link" style="background:rgba(120,144,192,.06);border-color:rgba(120,144,192,.1);color:#405878;">H8 Clark</span>
+      <span class="nb-chapter-link" style="background:rgba(144,112,208,.06);border-color:rgba(144,112,208,.1);color:#583898;">H9 Kockelkoren</span>
+      <span class="nb-chapter-link" style="background:rgba(192,80,80,.06);border-color:rgba(192,80,80,.1);color:#803030;">H10 Verbeek</span>
+      <span class="nb-chapter-link" style="background:rgba(96,96,208,.06);border-color:rgba(96,96,208,.1);color:#383880;">H11 De Mul</span>
+      <span class="nb-chapter-link" style="background:rgba(64,136,96,.06);border-color:rgba(64,136,96,.1);color:#285838;">H12 Morton</span>
+      <span class="nb-chapter-link" style="background:rgba(88,120,168,.06);border-color:rgba(88,120,168,.1);color:#304868;">H13 Latour</span>
+      <span class="nb-chapter-link" style="background:rgba(160,80,136,.06);border-color:rgba(160,80,136,.1);color:#603058;">H14 Data</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Zekerheid — Openheid':50,'Individueel — Verweven':50,'Techniek — Ervaring':50,'Antwoord — Vraag':50},
+  flags:{},philsLit:0,holdsGrabbed:0};
+const totalPassages=16;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'Een jaar later',
+  text:`
+    <div class="ambient-text">Epiloog — Een nieuw pad klimmen</div>
+    <p>Een jaar was voorbijgegaan. De scherpe randjes van de herfst hadden plaatsgemaakt voor de belofte van lente, die nu overging in de volle warmte van de zomer.</p>
+    <p>Lia zat op een bankje in het park. Ze kon nu <strong>zonder hulp rechtop zitten</strong>, haar romp sterker dan ze maanden geleden had durven hopen. Met krukken kon ze zelfs korte stukjes lopen.</p>
+    <p>Elke stap een overwinning.</p>`,
+  choices:[{text:'Sam komt aanrijden',next:'sam_bci'}]
+},
+sam_bci:{
+  title:'Sams keuze',
+  text:`
+    <p>Sam kwam aanrijden in zijn rolstoel. Sinds de implantatie van zijn BCI was er een subtiele verandering: een rustiger zelfvertrouwen, alsof de technologie hem had bevrijd van een deel van de constante strijd.</p>
+    <p><em>"En, heb je al een knoop doorgehakt? Over het aanbod voor jouw eigen implantaat?"</em></p>
+    <p>Lia keek op, volgde een vogel richting de bomen.</p>
+    <p>Ze glimlachte. <em>"Ja. Ik heb besloten. <strong>Ik doe het niet.</strong>"</em></p>`,
+  onEnter:()=>{R('Lia kiest: geen BCI-implantaat. Niet tegen technologie, maar een bewuste keuze voor een ander pad.');},
+  choices:[{text:'"Waarom niet?"',next:'lia_keuze'}]
+},
+lia_keuze:{
+  title:'Lia\'s pad',
+  text:`
+    <p><em>"Het is niet omdat ik tegen technologie ben. Ik zie wat het voor jou doet, Sam. Maar na alles wat ik heb meegemaakt en overdacht, voelt een permanent implantaat voor mij, op dit moment, niet als de juiste weg."</em></p>
+    <p>Ze haalde diep adem.</p>
+    <p><em>"Ik heb een andere richting gekozen. <strong>Adaptieve klimsport — paraclimbing.</strong>"</em></p>
+    <p>Een brede glimlach. <em>"Ik zal nooit meer klimmen zoals vroeger. Maar ik kan een <strong>nieuwe manier</strong> van klimmen ontdekken. Een manier die past bij dit lichaam."</em></p>
+    <p><em>"Het is mijn manier om technologie <strong>bewust in te zetten</strong>, om me ertoe te verhouden, zoals Verbeek het noemde."</em></p>`,
+  onEnter:()=>{T('Bewust verhouden (Verbeek)','Technologie niet afwijzen of blind accepteren, maar je er bewust toe verhouden — invloeden herkennen en evalueren.');adj('Techniek — Ervaring',-8);},
+  choices:[{text:'Filosofie studeren',next:'filosofie'}]
+},
+filosofie:{
+  title:'Filosofie',
+  text:`
+    <p><em>"En daarnaast,"</em> voegde Lia toe, <em>"ga ik <strong>filosofie studeren</strong>. Juist om die complexe relatie tussen ons als mens, ons lichaam, en de technologie die ons omringt, beter te begrijpen."</em></p>
+    <p><em>"Niet alleen abstract, maar geworteld in de ervaring — de fenomenologie, de 4E-ideeën, de noodzaak van 'het else'."</em></p>
+    <p>Sam glimlachte warm. <em>"Paraclimbing en filosofie. Dat klinkt precies als jij, Lia. Altijd bezig met hoofd, hart én handen."</em></p>`,
+  onEnter:()=>{R('Paraclimbing + filosofie: het lichaam en het denken samenbrengen. Precies Lia.');},
+  choices:[{text:'Herinner de filosofen',next:'phil_gallery'}]
+},
+
+/* ===== MINIGAME 1: PHILOSOPHER GALLERY ===== */
+phil_gallery:{
+  title:'De filosofen',
+  text:`
+    <p>Terwijl ze krijt op haar handen deed, flitsten de filosofen voorbij — geen losse theorieën meer, maar <strong>lenzen</strong> waardoor ze haar eigen pad scherper zag. Klik om ze te herinneren:</p>
+    <div class="phil-gallery" id="phil-grid"></div>
+    <div id="phil-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:8px;"></div>
+    <div id="phil-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initPhils,500);}
+},
+
+phil_done:{
+  title:'Lenzen',
+  text:`
+    <p class="thought">Geen losse theorieën meer, maar lenzen. Descartes' twijfel, Sheets-Johnstone's flow, Plessners breuk, Fanons blik, Clarks cyborg, Kockelkorens dans, Verbeeks sturing, De Muls toekomst, Mortons web, Latours dingen, Rasch' else.</p>
+    <p>Allemaal manieren om te zien. Allemaal manieren om de vraag te stellen: <em>wat betekent het om mens te zijn?</em></p>`,
+  onEnter:()=>{R('Alle filosofen als lenzen: niet één antwoord, maar veertien manieren om de vraag naar de mens te stellen.');},
+  choices:[{text:'De drie grensvervagingen',next:'grenzen'}]
+},
+
+grenzen:{
+  title:'Drie grensvervagingen',
+  text:`
+    <p>De hedendaagse grensvervagingen maken de zoektocht naar de mens urgent en complex:</p>
+    <div class="blur-grid">
+      <div class="blur-card">
+        <div class="bc-icon">🌿</div>
+        <div class="bc-title">Mens — Dier/Plant</div>
+        <div class="bc-thinkers">Morton, Despret</div>
+        <div class="bc-desc">The mesh: alles is verweven. Agency bij dieren en planten.</div>
+      </div>
+      <div class="blur-card">
+        <div class="bc-icon">⚙️</div>
+        <div class="bc-title">Levend — Niet-levend</div>
+        <div class="bc-thinkers">Latour, Hayles</div>
+        <div class="bc-desc">Dingen handelen. Niet-bewuste cognitie. Gedistribueerde agency.</div>
+      </div>
+      <div class="blur-card">
+        <div class="bc-icon">💾</div>
+        <div class="bc-title">Fysiek — Niet-fysiek</div>
+        <div class="bc-thinkers">Barad, Harari, Rasch</div>
+        <div class="bc-desc">Data en materie verstrengeld. Het else ontsnapt aan dataficatie.</div>
+      </div>
+    </div>`,
+  onEnter:()=>{adj('Individueel — Verweven',10);},
+  choices:[{text:'Staying with the trouble',next:'trouble'}]
+},
+
+trouble:{
+  title:'Staying with the trouble',
+  text:`
+    <div class="definition-box">
+      <span class="term">Staying with the Trouble (Donna Haraway)</span>
+      De complexiteit en ambiguïteit onder ogen zien, zonder te vluchten in simplistische antwoorden of technologische utopieën. Het vraagt om <strong>actieve betrokkenheid</strong> en het bevragen van vanzelfsprekendheden.
+    </div>
+    <p>Plessners <strong>utopische standplaats</strong>: we blijven zoeken naar zekerheid, maar een definitief antwoord ontglipt ons — juist omdat we 'excentrische' wezens zijn die op onszelf kunnen reflecteren.</p>
+    <p>Dat is geen falen. Dat is onze <em>kracht</em>.</p>`,
+  onEnter:()=>{T('Staying with the trouble (Haraway)','De moed om bij de complexiteit te blijven, zonder te vluchten in eenvoudige antwoorden.'); T('Utopische standplaats (Plessner)','De mens zoekt altijd naar een vaste grond, maar een definitief antwoord op "wat is de mens?" blijft onmogelijk.');adj('Antwoord — Vraag',12);},
+  choices:[{text:'De klimwand',next:'climb'}]
+},
+
+/* ===== MINIGAME 2: CLIMB ===== */
+climb:{
+  title:'De klimwand',
+  text:`
+    <p>Lia stond voor de oefenwand. Het aangepaste harnas steunde haar romp. Ze keek naar de grepen — standaard en aangepast.</p>
+    <p>Pak de grepen, één voor één. Elke greep is een filosoof, een inzicht, een stap:</p>
+    <div class="climb-container" id="climb-wall"></div>
+    <div id="climb-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--accent);text-align:center;margin-top:8px;"></div>
+    <div id="climb-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initClimb,500);}
+},
+
+climb_done:{
+  title:'Ze klom verder',
+  text:`
+    <p>Met een diepe ademhaling plaatste Lia haar hand op de volgende greep.</p>
+    <p>Het was anders dan vroeger. Meer kracht uit armen en romp, benen voor balans. Een puzzel, elke beweging opnieuw uitgevonden.</p>
+    <p style="text-align:center;font-size:24px;color:var(--accent-glow);margin:30px 0;"><em>Maar het was klimmen.</em></p>
+    <p>Ze hoorde het aanmoedigende geroep van andere paraklimmers beneden — die community was goud waard. Hier was ze geen patiënt, maar gewoon <strong>Lia, de klimmer</strong>, bezig met haar route.</p>
+    <div class="max-moment">Ergens beneden, in haar tas bij de paraklimmers, lag Max te slapen. Onverstoorbaar. Het perfecte tegengewicht voor al die filosofische zwaarte: warm, zacht, en volkomen onverschillig voor de vraag naar de mens.</div>`,
+  onEnter:()=>{R('Ze klom verder. Anders dan vroeger. Maar het was klimmen. Lia, de klimmer, bezig met haar route.');adj('Zekerheid — Openheid',10);},
+  choices:[{text:'De laatste reflectie',next:'finale'}]
+},
+
+finale:{
+  title:'Verder klimmen',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">De vraag blijft</div>
+      <p>Er is geen definitief antwoord op <em>"wat is de mens?"</em> — maar de vraag stellen is zelf al een daad van vrijheid.</p>
+      <p>Filosofie biedt geen zekerheid, maar <strong>gereedschap</strong>: om te zien, te denken, te voelen, te kiezen.</p>
+      <p>En om verder te klimmen.</p>
+    </div>
+    <p style="text-align:center;margin-top:40px;font-size:26px;color:var(--accent-glow);font-family:'Crimson Text',serif;">
+      <em>Lia plaatste haar hand op de volgende greep.<br>Ze klom verder.</em>
+    </p>
+    <p class="dim" style="text-align:center;margin-top:40px;">— Einde van Lia's Transformatie —</p>
+    <p class="dim" style="text-align:center;margin-top:8px;font-size:14px;">De Vraag naar de Mens in het Licht van Wetenschap en Techniek</p>`,
+  onEnter:()=>{R('De reis is compleet. Geen definitief antwoord, maar veertien lenzen en de moed om bij de vraag te blijven. Ze klom verder.');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== PHILOSOPHER GALLERY ===== */
+const phils=[
+  {icon:'🤔',name:'Descartes',concept:'Twijfel & cogito'},
+  {icon:'🤸',name:'Sheets-Johnstone',concept:'Beweging & kinesthesie'},
+  {icon:'🪞',name:'Plessner',concept:'Excentrische positionaliteit'},
+  {icon:'👁️',name:'De Beauvoir & Fanon',concept:'De blik van de ander'},
+  {icon:'🔮',name:'Vroon & Draaisma',concept:'Metaforen van de geest'},
+  {icon:'🤖',name:'Swaab & Dreyfus',concept:'Functionalisme & AI'},
+  {icon:'🧠',name:'4E-cognitie',concept:'Embodied, extended'},
+  {icon:'🦾',name:'Clark',concept:'Natural-born cyborg'},
+  {icon:'🚂',name:'Kockelkoren',concept:'Decentrering & recentrering'},
+  {icon:'⚖️',name:'Verbeek',concept:'Technologische bemiddeling'},
+  {icon:'🧬',name:'De Mul',concept:'NBIN & toekomstige mens'},
+  {icon:'🌿',name:'Morton & Despret',concept:'The mesh & agency'},
+  {icon:'🔑',name:'Latour & Hayles',concept:'ANT & niet-bewuste cognitie'},
+  {icon:'💾',name:'Barad, Harari & Rasch',concept:'Intra-actie, data & else'}
+];
+
+function initPhils(){
+  const grid=document.getElementById('phil-grid');grid.innerHTML='';
+  phils.forEach((p,i)=>{
+    const card=document.createElement('div');card.className='phil-card';card.id='ph-'+i;
+    card.innerHTML=`<div class="phil-icon">${p.icon}</div><div class="phil-name">${p.name}</div><div class="phil-concept">${p.concept}</div>`;
+    card.onclick=()=>litPhil(i);
+    grid.appendChild(card);
+  });
+  updatePhilCounter();
+}
+function litPhil(i){
+  const c=document.getElementById('ph-'+i);
+  if(c.classList.contains('lit'))return;
+  c.classList.add('lit');state.philsLit++;
+  updatePhilCounter();
+  if(state.philsLit>=14){
+    setTimeout(()=>{document.getElementById('phil-result').innerHTML='<div class="philosophy-box"><div class="box-title">Alle lenzen verzameld</div><p>Veertien perspectieven op de vraag naar de mens. Geen één definitief antwoord, maar een rijke gereedschapskist.</p></div><button class="continue-btn" onclick="go(\'phil_done\')">Verder</button>';},400);
+  }
+}
+function updatePhilCounter(){document.getElementById('phil-counter').textContent=state.philsLit+' / 14 filosofen herinnerd';}
+
+/* ===== CLIMB WALL ===== */
+const holds=[
+  {emoji:'🤔',label:'Twijfel'},{emoji:'🤸',label:'Beweging'},{emoji:'🪞',label:'Breuk'},
+  {emoji:'👁️',label:'Blik'},{emoji:'🔮',label:'Metafoor'},{emoji:'🤖',label:'AI'},
+  {emoji:'🧠',label:'4E'},{emoji:'🦾',label:'Cyborg'},{emoji:'🚂',label:'Trein'},
+  {emoji:'⚖️',label:'Moraal'},{emoji:'🧬',label:'Toekomst'},{emoji:'🌿',label:'Mesh'},
+  {emoji:'🔑',label:'Netwerk'},{emoji:'💾',label:'Data'},{emoji:'☀️',label:'Vrijheid'}
+];
+
+function initClimb(){
+  const wall=document.getElementById('climb-wall');wall.innerHTML='';
+  const text=document.createElement('div');text.className='climb-text';text.id='climb-text';text.textContent='Pak de grepen om te klimmen...';
+  const holdContainer=document.createElement('div');holdContainer.style.textAlign='center';
+  holds.forEach((h,i)=>{
+    const hold=document.createElement('div');hold.className='climb-hold';hold.id='hold-'+i;
+    hold.textContent=h.emoji;hold.title=h.label;
+    hold.onclick=()=>grabHold(i);
+    holdContainer.appendChild(hold);
+  });
+  wall.appendChild(holdContainer);
+  wall.appendChild(text);
+  updateClimbCounter();
+}
+function grabHold(i){
+  const h=document.getElementById('hold-'+i);
+  if(h.classList.contains('grabbed'))return;
+  h.classList.add('grabbed');state.holdsGrabbed++;
+  document.getElementById('climb-text').textContent=holds[i].label+' — greep gevat.';
+  updateClimbCounter();
+  if(state.holdsGrabbed>=15){
+    setTimeout(()=>{
+      document.getElementById('climb-text').innerHTML='<strong>De top bereikt.</strong> Niet door één greep, maar door ze allemaal — stap voor stap.';
+      document.getElementById('climb-result').innerHTML='<button class="continue-btn" onclick="go(\'climb_done\')">Verder</button>';
+    },600);
+  }
+}
+function updateClimbCounter(){document.getElementById('climb-counter').textContent=state.holdsGrabbed+' / 15 grepen gevat';}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 9: Kockelkoren</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#08060e; --bg-card:#100e18; --bg-hover:#1a1628;
+    --text:#c0b8d0; --text-bright:#e4daf4; --text-dim:#685888;
+    --accent:#9070d0; --accent-glow:#b898f0; --accent-dim:#583898;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848; --silver:#7890c0;
+    --danger:#e06070; --success:#60c080;
+    --border:#201838;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(144,112,208,.08),rgba(144,112,208,.02));border:1px solid rgba(144,112,208,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(144,112,208,.06);border:1px solid rgba(144,112,208,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* TRAIN EXPERIENCE */
+  .train-container{border:1px solid var(--border);border-radius:14px;padding:0;margin:20px 0;overflow:hidden;background:#000;min-height:200px;position:relative;}
+  .train-window{width:100%;height:200px;position:relative;overflow:hidden;}
+  .train-landscape{position:absolute;top:0;left:0;width:300%;height:100%;display:flex;align-items:center;transition:transform 0.05s linear;}
+  .train-obj{font-size:48px;position:absolute;transition:all .1s linear;}
+  .train-text{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.9));font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;}
+  .train-controls{padding:16px;text-align:center;background:var(--bg-card);}
+  .train-btn{border:none;border-radius:8px;padding:10px 20px;margin:4px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;transition:all .25s;background:rgba(144,112,208,.15);color:var(--accent-glow);border:1px solid rgba(144,112,208,.2);}
+  .train-btn:hover{background:rgba(144,112,208,.3);}
+  .train-speed{font-family:'Inter',sans-serif;font-size:12px;color:var(--accent);margin:8px 0;}
+
+  /* PHASE CARDS */
+  .phase-card{border:1px solid var(--border);border-radius:12px;padding:20px;margin:12px 0;transition:all .4s;background:var(--bg-card);overflow:hidden;}
+  .phase-card.active{border-color:rgba(144,112,208,.4);background:rgba(144,112,208,.04);}
+  .phase-card .phase-num{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+  .phase-card .phase-title{font-size:18px;color:var(--text-bright);margin-bottom:8px;}
+  .phase-card .phase-detail{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .4s;}
+  .phase-card.active .phase-detail{max-height:300px;}
+
+  /* NORMALIZATION MATCH */
+  .norm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+  .norm-tech,.norm-culture{border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .25s;font-family:'Inter',sans-serif;font-size:14px;min-height:60px;display:flex;align-items:center;justify-content:center;}
+  .norm-tech{background:rgba(144,112,208,.04);color:var(--accent-glow);}
+  .norm-tech:hover{border-color:var(--accent-dim);}
+  .norm-tech.selected{border-color:var(--accent);background:rgba(144,112,208,.12);}
+  .norm-culture{background:rgba(96,192,128,.04);color:var(--success);}
+  .norm-culture:hover{border-color:rgba(96,192,128,.3);}
+  .norm-culture.selected{border-color:var(--success);background:rgba(96,192,128,.12);}
+  .norm-tech.matched,.norm-culture.matched{opacity:.5;cursor:default;border-style:dashed;}
+  @media(max-width:600px){.norm-grid{grid-template-columns:1fr;}}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H9</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.06);border-color:rgba(123,104,238,.1);color:#4a3da0;">H1–H4</span>
+      <span class="nb-chapter-link" style="background:rgba(80,184,216,.06);border-color:rgba(80,184,216,.1);color:#28708a;">H5–H6</span>
+      <span class="nb-chapter-link" style="background:rgba(208,136,72,.06);border-color:rgba(208,136,72,.1);color:#885028;">H7 4E</span>
+      <span class="nb-chapter-link" style="background:rgba(120,144,192,.06);border-color:rgba(120,144,192,.1);color:#405878;">H8 Clark</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Bevestiging — Transformatie':50,'Natuurlijk — Bemiddeld':50,'Stabiel — In flux':50,'Aanpassen — Kritisch':50},
+  flags:{},phaseStep:0,normMatches:0};
+const totalPassages=20;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'Het VR-lab',
+  text:`
+    <div class="ambient-text">Hoofdstuk 9 — Kockelkoren over techniek en zintuiglijke transformatie</div>
+    <p>Het beeld was verbluffend realistisch. Lia stond, virtueel, aan de voet van een kleurrijke klimwand in het VR-lab.</p>
+    <p>Ze zag de grepen, de structuur van de rots, de diepte onder haar. Maar toen ze haar hand — of beter: de avatar van haar hand — naar de eerste greep probeerde te bewegen, ging het mis.</p>
+    <p>De beweging voelde <em>log, onnatuurlijk</em>. Haar ogen zagen een hand die reikte, maar haar lichaam voelde geen spierspanning, geen balansverschuiving. Het visuele en het lichamelijke leken compleet losgekoppeld.</p>
+    <p>Een lichte golf van misselijkheid overviel haar.</p>`,
+  choices:[{text:'"Ik haat dit!"',next:'vr_frustratie'}]
+},
+vr_frustratie:{
+  title:'Ontwrichting',
+  text:`
+    <p><em>"Ik haat dit!"</em> Lia rukte de VR-bril van haar hoofd. De echte wereld voelde plotseling geruststellend solide.</p>
+    <p><em>"Het voelt zo nep. Alsof mijn ogen iets anders zien dan mijn lichaam voelt."</em></p>
+    <p>Dr. Verhoeven knikte. <em>"Wat je voelt is een soort ontwrichting. Je vertrouwde manier van waarnemen — de synesthesie, hoe zicht en lichaamsgevoel samenwerken — wordt door de technologie verstoord. Je bent even je centrum kwijt."</em></p>
+    <p class="thought">Ontwrichting. Je centrum kwijtraken. Dat deed me denken aan het begin — toen ik net in de rolstoel zat.</p>`,
+  onEnter:()=>{R('VR-ervaring: de ontkoppeling tussen zien en voelen als desoriëntatie — vergelijkbaar met de eerste ervaring in de rolstoel.');},
+  choices:[{text:'Herinner de rolstoel',next:'rolstoel_herinnering'}]
+},
+rolstoel_herinnering:{
+  title:'De rolstoel',
+  text:`
+    <p>Lia herinnerde zich levendig hoe vreemd de rolstoel had gevoeld. Hoe ze constant tegen deurposten botste. Hoe de wereld er vanuit een zittende positie totaal anders uitzag.</p>
+    <p><em>"Ik dacht dat ik daar nooit aan zou wennen."</em></p>
+    <p>Ze keek naar de rolstoel naast haar.</p>
+    <p><em>"Maar nu denk ik er meestal niet eens meer over na. Het manoeuvreren gaat bijna automatisch. Het is gewoon… hoe ik beweeg."</em></p>
+    <p>Verhoeven glimlachte. <em>"Precies! Dat proces — van aanvankelijke ontwrichting naar een nieuw evenwicht — dat is precies waar Kockelkoren het over heeft."</em></p>
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 9</div>
+      <p><strong>Kockelkoren over techniek en zintuiglijke transformatie</strong></p>
+      <p><span class="dim">Petran Kockelkoren — bijzonder hoogleraar kunst en technologie</span></p>
+    </div>`,
+  choices:[{text:'Luister naar Kockelkoren',next:'decentrering_intro'}]
+},
+
+decentrering_intro:{
+  title:'Decentrering & Recentrering',
+  text:`
+    <p>Kockelkorens uitgangspunt: onze waarneming is <strong>nooit direct of puur</strong>, maar altijd <em>technisch bemiddeld</em>. Technologie staat niet neutraal tussen ons en de wereld — ze vormt die relatie.</p>
+    <div class="definition-box">
+      <span class="term">Decentrering</span>
+      Wanneer nieuwe technologie onze zintuiglijke ervaring <strong>verstoort</strong>. We raken ons gewone ervaringscentrum kwijt — de vertrouwde synesthesie (samenklank van zintuigen) valt uiteen. Desoriëntatie, onwennigheid, soms fysiek ongemak.
+    </div>
+    <div class="definition-box">
+      <span class="term">Recentrering</span>
+      Het proces waarin we ons <strong>aanpassen</strong> aan de nieuwe technologie. We vinden een nieuw evenwicht, een nieuwe vanzelfsprekendheid. Maar: we keren niet terug naar ons oorspronkelijke centrum — onze waarneming is <em>getransformeerd</em>.
+    </div>`,
+  onEnter:()=>{T('Decentrering','Het proces waarbij nieuwe technologie onze vertrouwde zintuiglijke ervaring verstoort — we raken ons centrum kwijt.'); T('Recentrering','Het proces waarbij we ons aanpassen aan nieuwe technologie en een nieuw ervaringscentrum vinden — maar getransformeerd.'); T('Synesthesie (Kockelkoren)','De vertrouwde samenklank van zintuiglijke ervaringen — hoe zicht, gehoor, tastzin harmonieus samenwerken.');},
+  choices:[{text:'Het trein-voorbeeld',next:'trein_intro'}]
+},
+
+trein_intro:{
+  title:'De eerste treinreis',
+  text:`
+    <p>Kockelkoren analyseert de introductie van de <strong>stoomtrein</strong> als casus.</p>
+    <p><em>"De eerste treinreizigers,"</em> vertelde de spreker, <em>"ervoeren fysieke en mentale klachten. Men sprak van 'treinziektes' — railway spine. Hun vertrouwde synesthesie werd radicaal verbroken."</em></p>
+    <p>Victor Hugo beschreef het:</p>
+    <div class="philosophy-box" style="font-size:18px;">
+      <em>"De bloemen worden strepen… de bomen dansen…"</em>
+    </div>
+    <p>Ervaar het zelf:</p>
+    <div class="train-container" id="train-game">
+      <div class="train-window" id="train-window">
+        <div class="train-landscape" id="train-landscape"></div>
+        <div class="train-text" id="train-text">Je bent een voetganger. De wereld is rustig, overzichtelijk.</div>
+      </div>
+      <div class="train-controls">
+        <button class="train-btn" onclick="trainPhase('walk')">Te voet</button>
+        <button class="train-btn" onclick="trainPhase('train')">Stap in de trein</button>
+        <button class="train-btn" onclick="trainPhase('adapt')" id="train-adapt-btn" style="display:none;">Gewend geraakt</button>
+        <div class="train-speed" id="train-speed"></div>
+      </div>
+    </div>`,
+  onEnter:()=>{initTrain();}
+},
+
+trein_done:{
+  title:'Na de trein',
+  text:`
+    <p>Lia zag het patroon. Precies wat ze met de rolstoel had meegemaakt:</p>
+    <div class="phase-card active">
+      <div class="phase-num">Fase 1 — Oude synesthesie</div>
+      <div class="phase-title">De voetganger</div>
+      <div class="phase-detail" style="max-height:200px;">Harmonische samenklank: je ziet wat je ruikt en hoort. De horizon beweegt mee op het ritme van je tred. Alles klopt.</div>
+    </div>
+    <div class="phase-card active">
+      <div class="phase-num">Fase 2 — Decentrering</div>
+      <div class="phase-title">De eerste treinreis</div>
+      <div class="phase-detail" style="max-height:200px;">Alles valt uiteen. Je ruikt iets anders dan je ziet, hoort ratelen, de horizon glijdt voorbij zonder verband met je lichaam. Misselijkheid, desoriëntatie.</div>
+    </div>
+    <div class="phase-card active">
+      <div class="phase-num">Fase 3 — Recentrering</div>
+      <div class="phase-title">De gewende reiziger</div>
+      <div class="phase-detail" style="max-height:200px;">Na decennia: een <em>nieuwe</em> synesthesie, door inlijving van de trein. <em>"Er had zich een nieuwe synesthesie ingesteld, ditmaal door inlijving van de trein als voortbewegend medium."</em></div>
+    </div>`,
+  onEnter:()=>{R('Decentrering → recentrering: van desoriëntatie naar een nieuwe vanzelfsprekendheid. De waarneming is getransformeerd.');adj('Stabiel — In flux',12);},
+  choices:[{text:'Culturele normaliseringsmachines',next:'normalisering'}]
+},
+
+normalisering:{
+  title:'Normaliseringsmachines',
+  text:`
+    <p>Maar hoe wenden we aan nieuwe technologie? Kockelkoren wijst op een verrassende factor: <strong>cultuur</strong>.</p>
+    <div class="definition-box">
+      <span class="term">Culturele normaliseringsmachines</span>
+      Kunst, theater, kermisattracties en games functioneren als veilige omgevingen om te 'oefenen' met nieuwe zintuiglijke ervaringen. Ze helpen recentrering te bevorderen.
+    </div>
+    <p><em>"Hoewel de kermis en het theater te boek staan als ontsnappingsoorden, werken ze eerder omgekeerd: namelijk als culturele normaliseringsmachines bij uitstek."</em></p>
+    <p>Denk aan panorama-attracties die treinreizen simuleerden op kermissen — ze hielpen mensen <em>wennen</em> aan de snelheid.</p>`,
+  onEnter:()=>{T('Culturele normaliseringsmachines','Cultuuruitingen (kunst, kermis, games) die als veilige oefenruimtes functioneren om te wennen aan nieuwe technologische ervaringen.');},
+  choices:[{text:'Match technologie en cultuur',next:'norm_game'}]
+},
+
+/* ===== MINIGAME: NORMALISERING MATCH ===== */
+norm_game:{
+  title:'Match de normaliseringsmachine',
+  text:`
+    <p>Welke culturele uiting hielp bij het wennen aan welke technologie? Klik een technologie aan, dan de bijbehorende normaliseringsmachine.</p>
+    <div style="display:flex;gap:16px;margin:20px 0;">
+      <div style="flex:1;">
+        <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;text-align:center;">Technologie</div>
+        <div id="norm-techs"></div>
+      </div>
+      <div style="flex:1;">
+        <div style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--success);margin-bottom:8px;text-align:center;">Normaliseringsmachine</div>
+        <div id="norm-cultures"></div>
+      </div>
+    </div>
+    <div id="norm-feedback" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;min-height:20px;margin-top:12px;"></div>
+    <div id="norm-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(startNormGame,500);}
+},
+
+norm_done:{
+  title:'Oefenruimtes',
+  text:`
+    <p>Lia dacht aan haar eigen ervaringen. <em>VR-games. Sciencefictionfilms. Zelfs de revalidatie-oefeningen.</em> Allemaal 'oefenruimtes' die hielpen wennen aan een nieuwe manier van zijn-in-de-wereld.</p>
+    <p class="thought">Het symposium is zelf ook een normaliseringsmachine — het helpt me wennen aan het idee van de BCI door het te bespreken, te verkennen, te verbeelden.</p>`,
+  onEnter:()=>{R('Culturele uitingen (games, films, symposia) zijn normaliseringsmachines die helpen wennen aan nieuwe technologie.');},
+  choices:[{text:'Kockelkorens radicale stelling',next:'radicale_these'}]
+},
+
+radicale_these:{
+  title:'Geen "natuurlijke" zintuiglijkheid',
+  text:`
+    <p>Nu kwam Kockelkorens meest radicale punt:</p>
+    <div class="philosophy-box" style="font-size:18px;text-align:center;">
+      <em>Er bestaat geen 'natuurlijke' of 'oorspronkelijke', techniekvrije zintuiglijkheid.</em>
+    </div>
+    <p>Onze waarneming is <strong>altijd al</strong> technisch gemedieerd en historisch gevormd. Het proces van decentrering en recentrering is de <em>regel</em>, niet de uitzondering.</p>
+    <div class="contrast-box" style="background:rgba(120,144,192,.05);border:1px solid rgba(120,144,192,.15);">
+      <span class="cb-label" style="color:var(--silver);">Clark (H8) — Natural-born cyborg</span>
+      Technologie <em>bevestigt</em> onze vaste natuur als hybride wezens. We zijn altijd al cyborgs.
+    </div>
+    <div class="contrast-box" style="background:rgba(144,112,208,.05);border:1px solid rgba(144,112,208,.15);">
+      <span class="cb-label" style="color:var(--accent);">Kockelkoren (H9)</span>
+      Technologie <em>transformeert</em> onze ervaring continu. Er is geen vaste natuur om te bevestigen — onze ervaren natuur is zelf <strong>in flux</strong> door technologie.
+    </div>`,
+  onEnter:()=>{T('Technische bemiddeling (Kockelkoren)','Onze waarneming is nooit direct of puur, maar altijd technisch bemiddeld — gevormd door de instrumenten en technologieën die we gebruiken.'); T('Geen natuurlijke zintuiglijkheid','Kockelkorens radicale stelling: er is geen oorspronkelijke, techniekvrije waarneming. Onze ervaring is altijd historisch en technisch gevormd.');adj('Bevestiging — Transformatie',15);adj('Natuurlijk — Bemiddeld',15);},
+  choices:[
+    {text:'Clark heeft gelijk — we zijn altijd al cyborgs',next:'keuze_clark'},
+    {text:'Kockelkoren gaat verder — technologie transformeert ons',next:'keuze_kockelkoren'},
+    {text:'Beide hebben een punt',next:'keuze_beide'}
+  ]
+},
+
+keuze_clark:{
+  title:'Clarks antwoord',
+  text:`
+    <p>Lia dacht terug aan Clark. <em>We zijn natural-born cyborgs. Het is onze natuur.</em></p>
+    <p class="thought">Kockelkorens punt is interessant, maar uiteindelijk beschrijft hij hetzelfde als Clark: we passen ons aan. Dat is onze natuur. De decentrering-recentrering cyclus is gewoon hoe wij als cyborgs functioneren.</p>`,
+  onEnter:()=>{adj('Bevestiging — Transformatie',-10);R('Neigt naar Clark: decentrering/recentrering is gewoon hoe onze cyborg-natuur werkt.');},
+  choices:[{text:'Naar Lia\'s reflectie',next:'lia_reflectie'}]
+},
+
+keuze_kockelkoren:{
+  title:'Kockelkorens antwoord',
+  text:`
+    <p>Lia schudde haar hoofd. <em>Clark is te optimistisch. Te glad.</em></p>
+    <p class="thought">Kockelkoren laat zien dat elke technologie ons werkelijk verandert. De trein maakte ons tot andere waarnemers. De smartphone verandert hoe we denken. De BCI zou mijn ervaring van mijn eigen lichaam fundamenteel kunnen transformeren. Dat is meer dan "bevestiging van onze natuur".</p>`,
+  onEnter:()=>{adj('Bevestiging — Transformatie',10);R('Neigt naar Kockelkoren: technologie transformeert ons werkelijk, niet alleen bevestigt.');},
+  choices:[{text:'Naar Lia\'s reflectie',next:'lia_reflectie'}]
+},
+
+keuze_beide:{
+  title:'Synthese',
+  text:`
+    <p>Lia zag de overlap: beiden erkennen dat technologie diep ingrijpt. Het verschil zit in de interpretatie.</p>
+    <p class="thought">Clark zegt: dit is wie we zijn. Kockelkoren zegt: dit verandert wie we zijn. Misschien is het allebei waar: het is onze natuur om te veranderen. Elke decentrering leidt tot een nieuw "wij" — en dat proces ís onze natuur.</p>`,
+  onEnter:()=>{adj('Bevestiging — Transformatie',3);R('Het is onze natuur om te veranderen — Clark en Kockelkoren vullen elkaar aan.');},
+  choices:[{text:'Naar Lia\'s reflectie',next:'lia_reflectie'}]
+},
+
+lia_reflectie:{
+  title:'VR en BCI',
+  text:`
+    <p>Lia dacht terug aan de VR-sessie. De misselijkheid. De desoriëntatie.</p>
+    <p class="thought">Als ik had kunnen wennen aan de rolstoel — aan die compleet nieuwe lichamelijke realiteit — kan ik dan misschien ook wennen aan de BCI? Aan die desoriënterende VR-wereld?</p>
+    <p class="thought">Kockelkoren zou zeggen: ja. Maar de Lia die eruit komt is niet dezelfde als de Lia die erin ging. De technologie transformeert niet alleen mijn kunnen, maar ook mijn waarnemen, mijn ervaren, mijn zijn-in-de-wereld.</p>
+    <div class="max-moment">Max lag op de drempel van het lab, half binnen, half buiten. Een dier dat geen decentrering kende — alleen het eeuwige nu van warmte, geur en slaap.</div>`,
+  onEnter:()=>{R('De BCI-keuze is ook een keuze voor een nieuwe waarneming — een nieuw "zijn-in-de-wereld".');},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 9 — Kernbegrippen</div>
+      <p><strong>Decentrering</strong> — Technologie verstoort vertrouwde zintuiglijke ervaring<br>
+      <strong>Recentrering</strong> — Aanpassing: nieuw evenwicht, getransformeerde waarneming<br>
+      <strong>Synesthesie</strong> — De harmonieuze samenklank van zintuigen<br>
+      <strong>Technische bemiddeling</strong> — Waarneming is altijd technisch gemedieerd<br>
+      <strong>Culturele normaliseringsmachines</strong> — Cultuur helpt wennen aan technologie<br>
+      <strong>Geen natuurlijke zintuiglijkheid</strong> — Er is geen techniekvrije waarneming</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 9 — Wordt vervolgd in H10: Verbeek — Technologie als morele vormgever</p>`,
+  onEnter:()=>{R('Hoofdstuk 9 afgerond. Technologie transformeert onze zintuiglijke ervaring — er is geen weg terug naar het "oorspronkelijke".');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== TRAIN EXPERIENCE ===== */
+let trainInterval=null;
+let trainPos=0;
+const trainObjects=['🌳','🏠','🌸','⛪','🌳','🐄','🌳','🏔️','🌳','🏠','🌸','🌳','🐄','⛪','🌳','🏔️'];
+
+function initTrain(){
+  const landscape=document.getElementById('train-landscape');
+  landscape.innerHTML='';
+  landscape.style.background='linear-gradient(180deg,#2a1848 0%,#483868 40%,#385828 40%,#2a4018 100%)';
+  trainObjects.forEach((obj,i)=>{
+    const el=document.createElement('div');
+    el.className='train-obj';
+    el.textContent=obj;
+    el.style.left=(i*180+50)+'px';
+    el.style.top=(80+Math.random()*60)+'px';
+    landscape.appendChild(el);
+  });
+}
+
+function trainPhase(phase){
+  const landscape=document.getElementById('train-landscape');
+  const text=document.getElementById('train-text');
+  const speed=document.getElementById('train-speed');
+  if(trainInterval)clearInterval(trainInterval);
+
+  if(phase==='walk'){
+    trainPos=0;
+    trainInterval=setInterval(()=>{trainPos-=0.5;landscape.style.transform=`translateX(${trainPos}px)`;},50);
+    text.innerHTML='<strong>Te voet.</strong> Je ziet wat je ruikt en hoort. De horizon deint mee op het ritme van je tred. De bloemen zijn bloemen, de bomen zijn bomen.';
+    speed.textContent='5 km/u — harmonieuze synesthesie';
+    document.getElementById('train-adapt-btn').style.display='none';
+  }
+  else if(phase==='train'){
+    trainInterval=setInterval(()=>{trainPos-=8;landscape.style.transform=`translateX(${trainPos}px)`;},50);
+    text.innerHTML='<strong>In de trein!</strong> <em>Alles valt uiteen.</em> Bloemen worden strepen. Bomen dansen. Je ruikt rook, hoort ratelen, de horizon glijdt voorbij. Misselijkheid. Desoriëntatie. <span style="color:var(--danger);">DECENTRERING.</span>';
+    speed.textContent='80 km/u — synesthesie verbroken!';
+    landscape.style.filter='blur(2px)';
+    setTimeout(()=>{document.getElementById('train-adapt-btn').style.display='inline-block';},3000);
+  }
+  else if(phase==='adapt'){
+    clearInterval(trainInterval);
+    trainInterval=setInterval(()=>{trainPos-=4;landscape.style.transform=`translateX(${trainPos}px)`;},50);
+    landscape.style.filter='none';
+    text.innerHTML='<strong>Gewend.</strong> Een nieuwe manier van kijken. Het landschap glijdt voorbij als een schilderij. De snelheid is normaal geworden. <span style="color:var(--success);">RECENTRERING.</span> Maar je kijkt nu anders dan voorheen.';
+    speed.textContent='80 km/u — nieuwe synesthesie gevormd';
+    setTimeout(()=>{
+      text.innerHTML+='<br><button class="continue-btn" style="margin-top:12px;" onclick="go(\'trein_done\')">Verder</button>';
+      adj('Stabiel — In flux',10);
+    },2000);
+  }
+}
+
+/* ===== NORMALIZATION MATCH ===== */
+const normPairs=[
+  {tech:'Stoomtrein (19e eeuw)',culture:'Panorama-attracties op kermissen',feedback:'Kermisattracties simuleerden treinreizen en hielpen mensen wennen aan de snelheid.'},
+  {tech:'Oorlogsvoering (20e eeuw)',culture:'Oorlogsfilms en literatuur',feedback:'Films en romans hielpen de maatschappij de traumatische ervaring van oorlog te verwerken.'},
+  {tech:'Ruimtevaart',culture:'Sciencefictionfilms',feedback:'SF-films bereidden het publiek voor op het idee van ruimtereizen en buitenaards leven.'},
+  {tech:'AI & robotica (21e eeuw)',culture:'Videogames met AI-personages',feedback:'Games laten spelers interacteren met AI en helpen wennen aan het idee van intelligente machines.'}
+];
+let normSelectedTech=null;
+let normSelectedCulture=null;
+
+function startNormGame(){
+  const techContainer=document.getElementById('norm-techs');
+  const cultureContainer=document.getElementById('norm-cultures');
+  const shuffledCultures=[...normPairs].sort(()=>Math.random()-.5);
+  techContainer.innerHTML='';
+  cultureContainer.innerHTML='';
+  normPairs.forEach((p,i)=>{
+    const t=document.createElement('div');
+    t.className='norm-tech';t.textContent=p.tech;t.id='norm-t-'+i;
+    t.onclick=()=>selectNormTech(i);
+    techContainer.appendChild(t);
+  });
+  shuffledCultures.forEach((p,i)=>{
+    const origIdx=normPairs.indexOf(p);
+    const c=document.createElement('div');
+    c.className='norm-culture';c.textContent=p.culture;c.id='norm-c-'+origIdx;
+    c.onclick=()=>selectNormCulture(origIdx);
+    cultureContainer.appendChild(c);
+  });
+}
+
+function selectNormTech(i){
+  document.querySelectorAll('.norm-tech').forEach(e=>e.classList.remove('selected'));
+  const el=document.getElementById('norm-t-'+i);
+  if(el.classList.contains('matched'))return;
+  el.classList.add('selected');
+  normSelectedTech=i;
+  checkNormMatch();
+}
+function selectNormCulture(i){
+  document.querySelectorAll('.norm-culture').forEach(e=>e.classList.remove('selected'));
+  const el=document.getElementById('norm-c-'+i);
+  if(el.classList.contains('matched'))return;
+  el.classList.add('selected');
+  normSelectedCulture=i;
+  checkNormMatch();
+}
+function checkNormMatch(){
+  if(normSelectedTech===null||normSelectedCulture===null)return;
+  const fb=document.getElementById('norm-feedback');
+  if(normSelectedTech===normSelectedCulture){
+    document.getElementById('norm-t-'+normSelectedTech).classList.add('matched');
+    document.getElementById('norm-c-'+normSelectedCulture).classList.add('matched');
+    fb.innerHTML='<span style="color:var(--success);">Correct! '+normPairs[normSelectedTech].feedback+'</span>';
+    state.normMatches++;
+  } else {
+    fb.innerHTML='<span style="color:var(--danger);">Niet helemaal — probeer opnieuw.</span>';
+  }
+  normSelectedTech=null;normSelectedCulture=null;
+  document.querySelectorAll('.norm-tech,.norm-culture').forEach(e=>e.classList.remove('selected'));
+  if(state.normMatches>=4){
+    document.getElementById('norm-result').innerHTML=`<div class="philosophy-box"><div class="box-title">Alle matches gevonden</div><p>Van kermisattracties tot videogames — cultuur bereidt ons steeds voor op nieuwe technologische ervaringen.</p></div><button class="continue-btn" onclick="go('norm_done')">Verder</button>`;
+  }
+}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

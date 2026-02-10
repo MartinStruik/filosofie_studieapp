@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 6: Functionalisme & AI</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#080a0b; --bg-card:#10131a; --bg-hover:#181d28;
+    --text:#c0c8c8; --text-bright:#e0f0e8; --text-dim:#607070;
+    --accent:#50d890; --accent-glow:#80f0b0; --accent-dim:#287848;
+    --warm:#e8a87c; --warm-dim:#a06840;
+    --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8;
+    --danger:#e06070; --success:#60c080;
+    --border:#1c2830;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+
+  .philosophy-box{background:linear-gradient(135deg,rgba(80,216,144,.08),rgba(80,216,144,.02));border:1px solid rgba(80,216,144,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-descartes{background:rgba(123,104,238,.05);border:1px solid rgba(123,104,238,.15);} .contrast-descartes .cb-label{color:var(--purple);}
+  .contrast-fenomeno{background:rgba(94,168,160,.05);border:1px solid rgba(94,168,160,.15);} .contrast-fenomeno .cb-label{color:var(--teal);}
+  .contrast-plessner{background:rgba(212,160,80,.05);border:1px solid rgba(212,160,80,.15);} .contrast-plessner .cb-label{color:var(--amber);}
+  .contrast-h6{background:rgba(80,216,144,.05);border:1px solid rgba(80,216,144,.15);} .contrast-h6 .cb-label{color:var(--accent);}
+
+  .definition-box{background:rgba(80,216,144,.06);border:1px solid rgba(80,216,144,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* IO MACHINE */
+  .io-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:rgba(0,0,0,.3);font-family:'Inter',sans-serif;}
+  .io-scenario{padding:16px;background:var(--bg-card);border-radius:10px;margin-bottom:16px;border:1px solid var(--border);}
+  .io-scenario .io-label{font-size:11px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+  .io-input{font-size:15px;color:var(--text-bright);margin:4px 0;}
+  .io-options{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+  .io-opt{padding:12px 16px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:14px;transition:all .25s;color:var(--text);}
+  .io-opt:hover{border-color:var(--accent-dim);background:var(--bg-hover);}
+  .io-opt.correct{border-color:var(--success);background:rgba(96,192,128,.08);color:var(--success);}
+  .io-opt.wrong{border-color:var(--danger);background:rgba(224,96,112,.08);color:var(--danger);}
+  .io-feedback{font-size:13px;color:var(--text-dim);margin-top:10px;min-height:20px;}
+  .io-progress{font-size:12px;color:var(--accent);text-align:center;margin-top:12px;}
+
+  /* AI SORT */
+  .sort-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:rgba(0,0,0,.3);}
+  .sort-item{display:inline-block;padding:10px 16px;margin:6px;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-family:'Inter',sans-serif;font-size:13px;color:var(--text);transition:all .25s;user-select:none;}
+  .sort-item:hover{border-color:var(--accent-dim);}
+  .sort-item.selected{outline:2px solid var(--accent);}
+  .sort-item.placed{opacity:.5;cursor:default;}
+  .sort-buckets{display:flex;gap:12px;margin-top:16px;}
+  .sort-bucket{flex:1;min-height:100px;border:1px dashed var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;}
+  .sort-bucket:hover{border-color:var(--accent-dim);}
+  .sort-bucket-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);margin-bottom:8px;text-align:center;}
+  .sort-placed-item{font-family:'Inter',sans-serif;font-size:12px;padding:6px 10px;margin:3px;border-radius:6px;display:inline-block;}
+  .sort-placed-item.correct{background:rgba(96,192,128,.1);color:var(--success);}
+  .sort-placed-item.wrong{background:rgba(224,96,112,.1);color:var(--danger);}
+
+  /* DREYFUS CHALLENGE */
+  .dreyfus-scene{border:1px solid var(--border);border-radius:12px;padding:20px;margin:10px 0;background:var(--bg-card);transition:all .3s;}
+  .dreyfus-scene .scene-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px;}
+  .dreyfus-human{color:var(--success);font-size:16px;}
+  .dreyfus-computer{color:var(--danger);font-size:16px;font-family:'Courier New',monospace;}
+  .dreyfus-explain{font-family:'Inter',sans-serif;font-size:14px;color:var(--text-dim);margin-top:8px;padding-top:8px;border-top:1px solid var(--border);}
+  .dreyfus-tag{display:inline-block;font-family:'Inter',sans-serif;font-size:11px;padding:3px 10px;border-radius:12px;margin:3px;font-weight:500;background:rgba(224,96,112,.1);color:var(--danger);}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;letter-spacing:.5px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H6</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.08);border-color:rgba(123,104,238,.15);color:#4a3da0;">H1 Descartes</span>
+      <span class="nb-chapter-link" style="background:rgba(94,168,160,.08);border-color:rgba(94,168,160,.15);color:#3a706a;">H2 Fenomenologie</span>
+      <span class="nb-chapter-link" style="background:rgba(212,160,80,.08);border-color:rgba(212,160,80,.15);color:#8a6830;">H3 Plessner</span>
+      <span class="nb-chapter-link" style="background:rgba(224,112,136,.08);border-color:rgba(224,112,136,.15);color:#983050;">H4 De Beauvoir & Fanon</span>
+      <span class="nb-chapter-link" style="background:rgba(80,184,216,.08);border-color:rgba(80,184,216,.15);color:#28708a;">H5 Metaforen</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Materieel — Immaterieel':50,'Bepaald — Vrij':50,'Machine — Lichaam':50,'Regels — Ervaring':50},
+  flags:{},ioStep:0,ioScore:0,sortScore:0,dreyfusStep:0};
+const totalPassages=26;
+
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+
+start:{
+  title:'Software en hardware',
+  text:`
+    <div class="ambient-text">Hoofdstuk 6 — Het brein als computer</div>
+    <p>De regen tikte tegen het raam toen Lia haar laptop openklapte. Ze had een artikel aangeklikt over <em>functionalisme</em>: het idee dat de geest niets meer is dan software die draait op het lichaam als hardware.</p>
+    <p>De vergelijking voelde tegelijk logisch en ongemakkelijk.</p>
+    <p>Ze keek naar haar eigen handen. <em>Software en hardware</em>, dacht ze. <em>En mijn systeem loopt vast.</em></p>
+    <p>Ze moest lachen om de bitterheid van de metafoor.</p>`,
+  choices:[{text:'Lees verder',next:'chip_als_patch'}]
+},
+
+chip_als_patch:{
+  title:'De bugfix',
+  text:`
+    <p>Als het brein slechts een programma was, waarom zou ze dan geen update accepteren? De chip zou als een <em>patch</em> kunnen zijn, een snelle bugfix die de fout in haar bedrading omzeilde.</p>
+    <p>Maar terwijl ze het artikel verder las, werd ze onrustig. Was ze dan niet meer dan een machine die je kon repareren, upgraden, vervangen?</p>
+    <p class="thought">Waar bleef dan de klimmer die de rots voelde, die de flow kende, die meer was dan alleen berekeningen en signalen?</p>`,
+  choices:[{text:'Die nacht droomde ze…',next:'droom'}]
+},
+
+droom:{
+  title:'De droom',
+  text:`
+    <p>Die nacht droomde ze dat ze opnieuw op de klimwand stond. Elke greep lichtte op als een algoritme, berekend en geprogrammeerd. Ze bereikte de top, maar zonder vreugde, zonder ademloze spanning.</p>
+    <p>Alleen de koude zekerheid van een <strong>perfect uitgevoerd programma</strong>.</p>
+    <p>Toen ze wakker werd, voelde ze een leegte.</p>
+    <p class="thought">Misschien moet ik juist opletten welke metaforen ik toelaat. Want zodra je jezelf als software ziet, ga je ook in updates denken.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 6</div>
+      <p><strong>Het brein als computer — Functionalisme, AI en kritiek</strong></p>
+      <p><span class="dim">Met: Dick Swaab · Functionalisme · Kunstmatige Intelligentie · Hubert Dreyfus</span></p>
+    </div>`,
+  choices:[{text:'Naar het symposium',next:'swaab'}]
+},
+
+swaab:{
+  title:'Wij zijn ons brein',
+  text:`
+    <p>De spreker begon met een provocerende stelling:</p>
+    <div class="philosophy-box" style="text-align:center;font-size:22px;">
+      <em>"Wij zijn ons brein."</em>
+      <div style="font-size:14px;margin-top:8px;color:var(--text-dim);">— Dick Swaab, neurobioloog</div>
+    </div>
+    <p>Swaab verwoordt een radicale, <strong>materialistische</strong> positie: alles wat we zijn — gedachten, emoties, persoonlijkheid, vrije wil — is het product van onze hersenen.</p>
+    <p>Zijn bewijs: de <em>correlatie</em> tussen mentale toestanden en hersenactiviteit, en het feit dat hersenschade leidt tot specifieke uitval van functies.</p>
+    <p class="dim">Denk aan Phineas Gage, de spoorwegwerker die na hersenschade van verantwoordelijk en sociaal veranderde in impulsief en onbeleefd.</p>`,
+  onEnter:()=>{T('Dick Swaab','Neurobioloog. Stelling: "Wij zijn ons brein" — alles wat we zijn is het product van hersenprocessen (materialisme, reductionisme).'); T('Materialisme','De opvatting dat alles, inclusief de geest, uiteindelijk fysiek/materieel is.');},
+  choices:[{text:'Wat betekent dit voor vrije wil?',next:'determinisme_vraag'}]
+},
+
+determinisme_vraag:{
+  title:'Vrije wil?',
+  text:`
+    <p>Als onze keuzes het resultaat zijn van hersenprocessen — fysieke, chemische reacties — waar blijft dan de <strong>vrije wil</strong>?</p>
+    <p>Swaabs visie neigt sterk naar <em>determinisme</em>: alles is bepaald door voorafgaande oorzaken.</p>
+    <div class="contrast-descartes contrast-box">
+      <span class="cb-label">Descartes (H1)</span>
+      Zou protesteren: de geest is een aparte substantie, niet reduceerbaar tot materie. Vrije wil hoort bij de <em>res cogitans</em>.
+    </div>
+    <div class="contrast-fenomeno contrast-box">
+      <span class="cb-label">Sheets-Johnstone (H2)</span>
+      Zou protesteren: de geleefde, belichaamde ervaring is niet te vangen in hersenscans. Je <em>bent</em> meer dan je brein.
+    </div>`,
+  onEnter:()=>{T('Determinisme','Het idee dat alles, inclusief menselijke keuzes, bepaald wordt door voorafgaande oorzaken.');},
+  choices:[
+    {text:'"Swaab heeft gelijk — we zijn materie"',next:'keuze_swaab_ja'},
+    {text:'"Er is meer dan het brein"',next:'keuze_swaab_nee'}
+  ]
+},
+
+keuze_swaab_ja:{
+  title:'Materialistisch',
+  text:`
+    <p>Lia knikte langzaam. De wetenschap loog niet. Elke emotie, elke gedachte had een neuraal correlaat. Misschien was ze inderdaad haar brein — en was de rest romantiek.</p>
+    <p class="thought">Maar als ik alleen mijn brein ben… waarom voelt het dan zo leeg om dat te geloven?</p>`,
+  onEnter:()=>{adj('Materieel — Immaterieel',-15);adj('Bepaald — Vrij',-10);R('Neigt naar Swaabs materialisme, maar voelt de leegte ervan.');},
+  choices:[{text:'Verder naar functionalisme',next:'functionalisme'}]
+},
+
+keuze_swaab_nee:{
+  title:'Meer dan materie',
+  text:`
+    <p>Lia schudde haar hoofd. De herinnering aan de klimwand — de flow, de eenheid — dat was niet te reduceren tot neuronen die vuurden.</p>
+    <p class="thought">Correlatie is geen identiteit. Dat hersenactiviteit samengaat met ervaring, betekent niet dat ervaring niets meer ís dan hersenactiviteit.</p>`,
+  onEnter:()=>{adj('Materieel — Immaterieel',10);adj('Bepaald — Vrij',8);R('Verwerpt volledige reductie tot het brein — ervaring is meer dan neuronen.');},
+  choices:[{text:'Verder naar functionalisme',next:'functionalisme'}]
+},
+
+functionalisme:{
+  title:'Functionalisme',
+  text:`
+    <div class="definition-box">
+      <span class="term">Functionalisme</span>
+      Mentale toestanden (gedachten, pijn, overtuigingen) worden niet gedefinieerd door het <strong>materiaal</strong> (neuronen), maar door hun <strong>functie</strong> binnen het systeem: welke input leidt tot welke output via welke verwerking.
+    </div>
+    <p>De kernmetafoor: de geest is <em>software</em>, het brein is <em>hardware</em>. Net zoals software op verschillende hardware kan draaien, zou een mentale toestand in principe ook op een <strong>ander substraat</strong> gerealiseerd kunnen worden — bijvoorbeeld een computer.</p>
+    <div class="definition-box">
+      <span class="term">Substraat-onafhankelijkheid</span>
+      Het idee dat mentale functies niet afhankelijk zijn van specifiek biologisch materiaal — ze zouden in principe ook op silicium (een computer) kunnen 'draaien'.
+    </div>`,
+  onEnter:()=>{T('Functionalisme','Mentale toestanden worden gedefinieerd door hun functie (input-verwerking-output), niet door het materiaal. Geest = software, brein = hardware.'); T('Substraat-onafhankelijkheid','Het idee dat mentale functies niet afhankelijk zijn van biologisch materiaal — ze zouden ook op een computer kunnen draaien.');},
+  choices:[{text:'Hoe werkt die "software" dan?',next:'symboolmanipulatie'}]
+},
+
+symboolmanipulatie:{
+  title:'Denken als berekenen',
+  text:`
+    <p>Veel functionalisten vatten denken op als <strong>symboolmanipulatie</strong>: in ons hoofd werken we met interne <em>mentale representaties</em> — codes of symbolen die staan voor dingen in de wereld — die volgens formele, logische regels worden bewerkt.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Het input-verwerking-output model</div>
+      <p><strong>Input</strong> (zintuiglijke info) → <strong>Verwerking</strong> (symboolmanipulatie) → <strong>Output</strong> (gedrag)</p>
+      <p class="dim">Voorbeeld: je ziet een vriend → brein vergelijkt met opgeslagen data → herkenning → glimlach + begroeting</p>
+    </div>
+    <p>Denken is, in deze visie, een vorm van <em>berekenen</em>.</p>`,
+  onEnter:()=>{T('Symboolmanipulatie','Het idee dat denken werkt met interne representaties (symbolen) die volgens logische regels worden verwerkt — denken als berekenen.');},
+  choices:[{text:'Test de denkmachine',next:'io_game'}]
+},
+
+/* ===== MINIGAME: I/O MACHINE ===== */
+io_game:{
+  title:'De denkmachine',
+  text:`
+    <p>De spreker zette een interactief model op. <em>"Als denken berekenen is, dan moeten we het kunnen simuleren. Test de machine."</em></p>
+    <div class="io-container" id="io-game">
+      <div class="io-scenario" id="io-scenario"></div>
+      <div class="io-feedback" id="io-feedback"></div>
+      <div class="io-progress" id="io-progress"></div>
+    </div>`,
+  onEnter:()=>{setTimeout(startIOGame,500);}
+},
+
+io_done:{
+  title:'De grens van de machine',
+  text:`
+    <p>Lia zag het patroon. De machine werkte goed bij eenvoudige, regelgebonden taken. Maar zodra <em>context</em>, <em>ervaring</em> of <em>lichaam</em> nodig waren, faalde hij.</p>
+    <p class="thought">Functioneel denken klopt voor sommige dingen. Maar het mist iets — het mist het lijf, de wereld, het gevoel van wat het <em>is</em> om iets te begrijpen.</p>`,
+  onEnter:()=>{R('De functionele denkmachine werkt voor simpele taken, maar mist context en belichaming.');},
+  choices:[{text:'Verder naar AI',next:'ai_intro'}]
+},
+
+ai_intro:{
+  title:'Kunstmatige Intelligentie',
+  text:`
+    <p><em>"Als denken functioneel en computationeel is,"</em> zei de spreker, <em>"dan moet Kunstmatige Intelligentie mogelijk zijn."</em></p>
+    <p>Er zijn belangrijke onderscheidingen:</p>
+    <div class="definition-box">
+      <span class="term">Zwakke AI vs. Sterke AI (AGI)</span>
+      <strong>Zwakke AI</strong>: gericht op specifieke taken (schaak, beeldherkenning, taalverwerking).<br>
+      <strong>Sterke AI (AGI)</strong>: algemeen, mensachtig denken, mogelijk met bewustzijn.
+    </div>
+    <div class="definition-box">
+      <span class="term">Productsimulatie vs. Processimulatie</span>
+      <strong>Productsimulatie</strong>: bootst alleen het <em>resultaat</em> na (bv. dezelfde schaakzet).<br>
+      <strong>Processimulatie</strong>: probeert het <em>denkproces zelf</em> na te bootsen.
+    </div>`,
+  onEnter:()=>{T('Zwakke AI','AI gericht op specifieke taken (schaken, vertalen, beeldherkenning).'); T('Sterke AI (AGI)','AI gericht op algemeen, mensachtig denken — mogelijk met bewustzijn.'); T('Productsimulatie','AI die hetzelfde resultaat bereikt als een mens, maar via een ander proces.'); T('Processimulatie','AI die het menselijke denkproces zelf probeert na te bootsen.');},
+  choices:[{text:'Sorteer AI-voorbeelden',next:'sort_game'}]
+},
+
+/* ===== MINIGAME: AI SORT ===== */
+sort_game:{
+  title:'AI-classificatie',
+  text:`
+    <p><em>"Classificeer deze voorbeelden. Sleep ze naar de juiste categorie."</em></p>
+    <div class="sort-container" id="sort-game">
+      <div id="sort-pool"></div>
+      <div class="sort-buckets">
+        <div class="sort-bucket" id="bucket-zwak" onclick="sortDrop('zwak')"><div class="sort-bucket-title">Zwakke AI</div><div id="bucket-zwak-items"></div></div>
+        <div class="sort-bucket" id="bucket-sterk" onclick="sortDrop('sterk')"><div class="sort-bucket-title">Sterke AI (AGI)</div><div id="bucket-sterk-items"></div></div>
+      </div>
+      <div id="sort-feedback" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>
+    </div>`,
+  onEnter:()=>{setTimeout(startSortGame,500);}
+},
+
+sort_done:{
+  title:'AI en de mens',
+  text:`
+    <p>De spreker glimlachte. <em>"U ziet: de meeste AI die we kennen is zwakke AI. Sterke AI — een machine die werkelijk begrijpt, voelt, bewust is — blijft een open vraag."</em></p>
+    <p>Lia dacht aan de BCI. <em>Dat is ook zwakke AI. Het verwerkt signalen en zet ze om in beweging. Maar het begrijpt niet wat het betekent om te bewegen.</em></p>`,
+  onEnter:()=>{R('De meeste AI is zwak — specifiek en zonder begrip. Sterke AI (met bewustzijn) blijft speculatief.');},
+  choices:[{text:'Maar klopt het beeld wel? Dreyfus heeft kritiek.',next:'dreyfus_intro'}]
+},
+
+dreyfus_intro:{
+  title:'Hubert Dreyfus',
+  text:`
+    <p>Nu betrad een tegenstem het podium.</p>
+    <p><em>"Filosoof Hubert Dreyfus leverde fundamentele kritiek. Zijn kernpunt: menselijke intelligentie is <strong>onlosmakelijk verbonden</strong> met onze belichaamde ervaring."</em></p>
+    <div class="definition-box">
+      <span class="term">Dreyfus' kernkritiek</span>
+      Ons lichaam is geen willekeurige hardware. De specifieke <strong>materialiteit</strong> ervan vormt actief hoe wij de wereld ervaren en begrijpen. Computers missen dit fundamenteel.
+    </div>
+    <p>Dreyfus beschrijft <strong>drie functies van het lichaam</strong> die computers niet hebben:</p>`,
+  onEnter:()=>{T('Hubert Dreyfus','Filosoof. Kritiek op functionalisme en sterke AI: menselijke intelligentie vereist belichaamde ervaring die computers missen.');},
+  choices:[{text:'Welke drie functies?',next:'drie_functies'}]
+},
+
+drie_functies:{
+  title:'Drie functies van het lichaam',
+  text:`
+    <div class="definition-box">
+      <span class="term">1. Verwachtingen genereren</span>
+      Ons lichaam genereert op basis van eerdere ervaringen voortdurend <strong>verwachtingen</strong> over de wereld. Je ziet een dampende kop koffie en je lichaam 'verwacht' al warmte en gewicht.
+    </div>
+    <div class="definition-box">
+      <span class="term">2. Aandacht sturen</span>
+      Lichamelijke verwachtingen sturen automatisch onze <strong>aandacht</strong>. We filteren onbewust wat relevant is in een situatie — zonder dat bewust te hoeven berekenen.
+    </div>
+    <div class="definition-box">
+      <span class="term">3. Zintuiglijke integratie</span>
+      Het lichaam zorgt voor een feilloze <strong>integratie</strong> van de zintuigen: wat je ziet creëert direct verwachtingen voor wat je zult voelen, ruiken, horen.
+    </div>
+    <p>Veel van deze kennis is <em>stilzwijgende kennis</em> ('tacit knowledge') — het 'weten hoe' dat moeilijk in expliciete regels te vatten is.</p>`,
+  onEnter:()=>{T('Stilzwijgende kennis (tacit knowledge)','Het "weten hoe" dat gebaseerd is op belichaamde ervaring en moeilijk in expliciete computerregels te vatten.');},
+  choices:[{text:'Waar loopt de computer vast?',next:'drie_problemen'}]
+},
+
+drie_problemen:{
+  title:'Drie problemen',
+  text:`
+    <p>Dreyfus noemt drie problemen bij het formaliseren van menselijke kennis voor computers:</p>
+    <div class="definition-box">
+      <span class="term">1. Ordeningsprobleem</span>
+      Hoe structureer je de enorme hoeveelheid impliciete, belichaamde kennis in een geordend systeem?
+    </div>
+    <div class="definition-box">
+      <span class="term">2. Vertalingsprobleem</span>
+      Hoe vertaal je <em>vaardigheden</em> (fietsen, klimmen, iemand troosten) naar expliciete regels die een computer kan volgen?
+    </div>
+    <div class="definition-box">
+      <span class="term">3. Relevantieprobleem</span>
+      Het kernprobleem: hoe bepaalt een computer uit een <strong>oneindige</strong> hoeveelheid data welke feiten relevant zijn in een specifieke context? Mensen doen dit intuïtief op basis van belichaamde 'know-how'.
+    </div>`,
+  onEnter:()=>{T('Relevantieprobleem','Dreyfus\' kernkritiek: hoe bepaalt een computer wat relevant is uit oneindige data? Mensen doen dit intuïtief dankzij belichaamde ervaring.');},
+  choices:[{text:'Zie Dreyfus\' kritiek in actie',next:'dreyfus_game'}]
+},
+
+/* ===== MINIGAME: DREYFUS CHALLENGE ===== */
+dreyfus_game:{
+  title:'De Dreyfus-test',
+  text:`
+    <p><em>"Laten we drie situaties bekijken waarin een mens moeiteloos functioneert — maar een computer vastloopt."</em></p>
+    <div id="dreyfus-scenes"></div>
+    <div id="dreyfus-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(startDreyfusGame,500);}
+},
+
+dreyfus_done:{
+  title:'De grens van het berekenen',
+  text:`
+    <p>Lia zag het scherp. De situaties waarin de computer faalde waren precies de situaties waarin zij als klimmer uitblonk: de onmiddellijke, belichaamde inschatting van <em>wat relevant is</em>.</p>
+    <p class="thought">Een computer kan mijn hersensignalen vertalen naar vingerbewegingen. Maar hij kan niet voelen wat het is om een mok vast te pakken — de warmte, het gewicht, de verwachting. Dreyfus heeft een punt.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Dreyfus' conclusie</div>
+      <p>Computers zullen nooit echt <em>begrijpen</em> zoals mensen, omdat ze de fundamentele, <strong>belichaamde intelligentie</strong> missen. Substraat doet er wél toe.</p>
+    </div>`,
+  onEnter:()=>{R('Dreyfus laat zien dat belichaamde ervaring essentieel is voor begrip — iets wat computers missen.'); adj('Machine — Lichaam',15); adj('Regels — Ervaring',15);},
+  choices:[{text:'Maar er is een tegenwicht…',next:'connectionisme'}]
+},
+
+connectionisme:{
+  title:'Connectionisme',
+  text:`
+    <p>De spreker nuanceerde. <em>"Er is een nieuwere variant van AI die deels tegemoetkomt aan Dreyfus' kritiek."</em></p>
+    <div class="definition-box">
+      <span class="term">Connectionisme (neurale netwerken)</span>
+      Systemen die, geïnspireerd op het brein, niet met expliciete regels werken maar <strong>patronen leren herkennen</strong> uit grote hoeveelheden data. Het leerproces lijkt meer op menselijk leren (processimulatie). Denk aan ChatGPT.
+    </div>
+    <p>Connectionisme komt deels tegemoet aan Dreyfus' kritiek: er zijn geen expliciete regels nodig. <strong>Maar</strong>:</p>
+    <p class="thought">Eén punt blijft relevant: neurale netwerken missen nog steeds een lichaam en geleefde ervaring. Ze verwerken data, maar ze voelen niets.</p>`,
+  onEnter:()=>{T('Connectionisme','AI op basis van neurale netwerken: leert patronen uit data in plaats van expliciete regels. Deels antwoord op Dreyfus, maar mist nog belichaming.');},
+  choices:[{text:'Wat betekent dit voor Lia?',next:'lia_reflectie'}]
+},
+
+lia_reflectie:{
+  title:'Lia\'s reflectie',
+  text:`
+    <p>Na het college zat Lia in de tuin. De BCI op haar lijst voelde anders nu.</p>
+    <p class="thought">De chip is functionalisme in de praktijk: hij neemt input (hersensignalen) en produceert output (vingerbewegingen). Zwakke AI, productsimulatie. Hij bootst het resultaat na, niet het proces.</p>
+    <p class="thought">Maar ik wil niet alleen het resultaat — ik wil het gevoel terug. De warmte van de mok, de textuur van de rots. Dat is wat Dreyfus bedoelt: je kunt de functie kopiëren, maar niet de ervaring.</p>
+    <div class="max-moment">Max krulde zich op op haar schoot. Zijn pootje gleed over de rand van de rolstoel. Instinct, warmte, gewicht — alles wat een computer nooit zou begrijpen.</div>`,
+  onEnter:()=>{R('De BCI is functionalisme in de praktijk — maar kan de functie kopiëren zonder de ervaring te geven.');},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <p>Lia's terugblik op zes perspectieven:</p>
+    <div class="contrast-descartes contrast-box"><span class="cb-label">H1 Descartes</span>Geest en lichaam gescheiden — het lichaam als machine.</div>
+    <div class="contrast-fenomeno contrast-box"><span class="cb-label">H2 Fenomenologie</span>Het bewustzijns-lichaam als eenheid — ervaring als fundament.</div>
+    <div class="contrast-plessner contrast-box"><span class="cb-label">H3 Plessner</span>Excentrische positionaliteit — de menselijke breuk.</div>
+    <div class="contrast-box" style="background:rgba(224,112,136,.05);border:1px solid rgba(224,112,136,.15);"><span class="cb-label" style="color:var(--rose);">H4 De Beauvoir & Fanon</span>De blik van de ander vormt identiteit.</div>
+    <div class="contrast-box" style="background:rgba(80,184,216,.05);border:1px solid rgba(80,184,216,.15);"><span class="cb-label" style="color:var(--cyan);">H5 Metaforen</span>Metaforen structureren ons denken en mensbeeld.</div>
+    <div class="contrast-h6 contrast-box"><span class="cb-label">H6 Functionalisme & AI</span>Het brein als computer — krachtig model, maar <em>belichaamde ervaring</em> ontbreekt.</div>
+    <div class="scene-break">· · ·</div>
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 6 — Kernbegrippen</div>
+      <p><strong>Swaab / Materialisme</strong> — Wij zijn ons brein<br>
+      <strong>Functionalisme</strong> — Geest als software, brein als hardware<br>
+      <strong>Symboolmanipulatie</strong> — Denken als berekenen<br>
+      <strong>Zwakke vs. Sterke AI</strong> — Specifiek vs. algemeen<br>
+      <strong>Product- vs. Processimulatie</strong> — Resultaat vs. denkproces<br>
+      <strong>Dreyfus</strong> — Belichaamde ervaring is essentieel<br>
+      <strong>Relevantieprobleem</strong> — Computers missen intuïtieve relevantie<br>
+      <strong>Connectionisme</strong> — Neurale netwerken, patronen leren</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 6 — Wordt vervolgd in H7: 4E-cognitie</p>`,
+  onEnter:()=>{R('Hoofdstuk 6 afgerond. Het functionele model is krachtig maar beperkt — belichaming doet ertoe.');}
+}
+
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  const cl=document.getElementById('compass');
+  cl.innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return `<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== MINIGAME: I/O MACHINE ===== */
+const ioScenarios=[
+  {input:'Visuele input: rond, rood, 8cm diameter',question:'Wat is het?',options:['Een appel','Een bal','Een tomaat','Onvoldoende data'],correct:3,feedback:'De machine kan niet kiezen — zonder lichamelijke context (geur, gewicht, textuur) zijn er te veel mogelijkheden. Een mens zou het direct weten.'},
+  {input:'Je collega zegt: "Leuke presentatie." Maar zijn gezicht staat strak.',question:'Wat bedoelt hij?',options:['Een compliment','Sarcasme','Onverschilligheid','Fout in het systeem'],correct:1,feedback:'Een mens leest toon, gezichtsuitdrukking en context moeiteloos. De machine ziet alleen de woorden — en mist de ironie.'},
+  {input:'Je loopt door een donker steegje en hoort voetstappen achter je.',question:'Wat doe je?',options:['Doorlopen','Sneller lopen','Data onvoldoende voor berekening','Omdraaien'],correct:2,feedback:'Jij voelt direct spanning, je hartslag stijgt, je lichaam bereidt je voor. De machine mist het gevoel van dreiging — het relevantieprobleem.'}
+];
+
+function startIOGame(){
+  state.ioStep=0;state.ioScore=0;
+  renderIOStep();
+}
+function renderIOStep(){
+  if(state.ioStep>=ioScenarios.length){
+    document.getElementById('io-game').innerHTML=`<div class="philosophy-box"><div class="box-title">Machine-test voltooid</div><p>Score: ${state.ioScore}/${ioScenarios.length}. De machine faalde telkens waar belichaamde ervaring, context of intuïtie nodig was.</p></div><button class="continue-btn" onclick="go('io_done')">Verder</button>`;
+    adj('Machine — Lichaam',8);
+    return;
+  }
+  const s=ioScenarios[state.ioStep];
+  const sc=document.getElementById('io-scenario');
+  sc.innerHTML=`<div class="io-label">Scenario ${state.ioStep+1}</div><div class="io-input">${s.input}</div><div style="font-size:15px;color:var(--accent);margin:8px 0;">${s.question}</div><div class="io-options">${s.options.map((o,i)=>`<div class="io-opt" id="io-opt-${i}" onclick="ioAnswer(${i})">${o}</div>`).join('')}</div>`;
+  document.getElementById('io-feedback').textContent='';
+  document.getElementById('io-progress').textContent=`Vraag ${state.ioStep+1}/${ioScenarios.length}`;
+}
+function ioAnswer(idx){
+  const s=ioScenarios[state.ioStep];
+  const correct=idx===s.correct;
+  document.getElementById('io-opt-'+idx).classList.add(correct?'correct':'wrong');
+  if(!correct) document.getElementById('io-opt-'+s.correct).classList.add('correct');
+  if(correct) state.ioScore++;
+  document.getElementById('io-feedback').innerHTML=s.feedback;
+  document.querySelectorAll('.io-opt').forEach(e=>e.onclick=null);
+  setTimeout(()=>{state.ioStep++;renderIOStep();},3000);
+}
+
+/* ===== MINIGAME: AI SORT ===== */
+const sortItems=[
+  {text:'Schaakcomputer (Deep Blue)',answer:'zwak'},
+  {text:'Zelfrijdende auto',answer:'zwak'},
+  {text:'ChatGPT',answer:'zwak'},
+  {text:'Robot die emoties begrijpt en voelt',answer:'sterk'},
+  {text:'Spamfilter',answer:'zwak'},
+  {text:'AI die zelfbewust is en creatief denkt',answer:'sterk'},
+  {text:'Gezichtsherkenning op je telefoon',answer:'zwak'},
+  {text:'HAL 9000 uit 2001: A Space Odyssey',answer:'sterk'}
+];
+let sortSelected=null;
+
+function startSortGame(){
+  const pool=document.getElementById('sort-pool');
+  pool.innerHTML='';
+  sortItems.forEach((s,i)=>{
+    const el=document.createElement('span');
+    el.className='sort-item';el.textContent=s.text;el.id='sort-'+i;
+    el.onclick=()=>{document.querySelectorAll('.sort-item').forEach(e=>e.classList.remove('selected'));el.classList.add('selected');sortSelected=i;};
+    pool.appendChild(el);
+  });
+}
+function sortDrop(bucket){
+  if(sortSelected===null)return;
+  const item=sortItems[sortSelected];
+  const el=document.getElementById('sort-'+sortSelected);
+  if(el.classList.contains('placed'))return;
+  const correct=item.answer===bucket;
+  el.classList.add('placed');el.classList.remove('selected');el.onclick=null;
+  const target=document.getElementById('bucket-'+bucket+'-items');
+  const pill=document.createElement('span');
+  pill.className='sort-placed-item '+(correct?'correct':'wrong');
+  pill.textContent=item.text;
+  target.appendChild(pill);
+  if(correct)state.sortScore++;
+  const fb=document.getElementById('sort-feedback');
+  fb.textContent=correct?'Correct!':'Niet helemaal — denk aan het onderscheid.';
+  fb.style.color=correct?'var(--success)':'var(--danger)';
+  sortSelected=null;
+  const remaining=document.querySelectorAll('.sort-item:not(.placed)');
+  if(remaining.length===0){
+    setTimeout(()=>{
+      fb.innerHTML=`<div class="philosophy-box"><div class="box-title">Sortering voltooid</div><p>Score: ${state.sortScore}/${sortItems.length}. De meeste bestaande AI is zwak — specifiek en zonder bewustzijn.</p></div><button class="continue-btn" onclick="go('sort_done')">Verder</button>`;
+    },800);
+  }
+}
+
+/* ===== MINIGAME: DREYFUS ===== */
+const dreyfusScenes=[
+  {title:'De koffiekop',human:'Je ziet een dampende kop koffie. Je lichaam verwacht al warmte en gewicht voordat je hand het oor raakt. Je vingers passen zich automatisch aan.',computer:'INPUT: visueel object, cilindrisch, 350ml. QUERY: temperatuur? QUERY: gewicht? QUERY: grijpstrategie? ERROR: onvoldoende sensorische data voor voorspelling...',explain:'Het lichaam genereert verwachtingen uit ervaring. De computer moet alles expliciet berekenen — en mist de intuïtieve integratie.',tag:'Verwachtingen + Integratie'},
+  {title:'Het feest',human:'Je komt op een feest. Binnen een seconde scan je de ruimte: vrienden, sfeer, de beste plek om te staan. Je lichaam voelt de muziek, ruikt het eten, registreert spanning of ontspanning.',computer:'SCAN: 47 personen gedetecteerd. QUERY: relevante personen? PROCESSING... ERROR: geen filter voor "sfeer". QUERY: definitie "gezellig"? ERROR: concept niet formaliseerbaar...',explain:'De mens filtert automatisch wat relevant is. De computer kan niet bepalen wat "belangrijk" is zonder eindeloze regels — het relevantieprobleem.',tag:'Relevantieprobleem'},
+  {title:'Troosten',human:'Je vriendin huilt. Je legt je hand op haar schouder. Je zegt niets. Je weet dat dit het juiste moment is om stil te zijn — niet uit een regel, maar uit ervaring.',computer:'INPUT: persoon, emotionele toestand = verdrietig. QUERY: passende reactie? OPTIES: [troostende woorden], [afleiding bieden], [professionele hulp]. QUERY: optimale keuze? PROCESSING... ERROR: geen algorithm voor "het juiste moment"...',explain:'Stilzwijgende kennis: je weet hoe je moet troosten zonder het in regels te kunnen vatten. Het vertalingsprobleem — vaardigheden zijn niet formaliseerbaar.',tag:'Vertalingsprobleem'}
+];
+
+function startDreyfusGame(){
+  const container=document.getElementById('dreyfus-scenes');
+  container.innerHTML='';
+  dreyfusScenes.forEach((s,i)=>{
+    const div=document.createElement('div');
+    div.className='dreyfus-scene';
+    div.style.cursor='pointer';
+    div.innerHTML=`<div class="scene-title">${s.title}</div><div style="font-size:14px;color:var(--text-dim);">Klik om te vergelijken</div>`;
+    div.onclick=()=>revealDreyfus(div,i);
+    container.appendChild(div);
+  });
+}
+function revealDreyfus(div,i){
+  if(div.dataset.revealed) return;
+  div.dataset.revealed='true';
+  div.style.cursor='default';
+  const s=dreyfusScenes[i];
+  div.innerHTML=`<div class="scene-title">${s.title}</div><div class="dreyfus-human">${s.human}</div><div class="dreyfus-computer">${s.computer}</div><div class="dreyfus-explain">${s.explain} <span class="dreyfus-tag">${s.tag}</span></div>`;
+  state.dreyfusStep++;
+  if(state.dreyfusStep>=3){
+    const result=document.getElementById('dreyfus-result');
+    result.innerHTML=`<div class="philosophy-box"><div class="box-title">Dreyfus' punt bewezen</div><p>In alle drie de gevallen mist de computer wat de mens intuïtief weet: verwachtingen, relevantie, en de vaardigheid om "het juiste" te doen zonder regels.</p></div><button class="continue-btn" onclick="go('dreyfus_done')">Verder</button>`;
+  }
+}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

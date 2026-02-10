@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 8: Natural-Born Cyborg</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#080a10; --bg-card:#0f1218; --bg-hover:#181c28;
+    --text:#b8c0d0; --text-bright:#dce4f4; --text-dim:#586080;
+    --accent:#7890c0; --accent-glow:#a0b8e8; --accent-dim:#405878;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848;
+    --danger:#e06070; --success:#60c080;
+    --border:#1c2030;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(120,144,192,.08),rgba(120,144,192,.02));border:1px solid rgba(120,144,192,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(120,144,192,.06);border:1px solid rgba(120,144,192,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* SPECTRUM SLIDER */
+  .spectrum-container{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:rgba(0,0,0,.3);}
+  .spectrum-item{margin:16px 0;padding:16px;border:1px solid var(--border);border-radius:10px;background:var(--bg-card);}
+  .spectrum-label{font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:10px;}
+  .spectrum-slider{width:100%;-webkit-appearance:none;appearance:none;height:8px;border-radius:4px;background:linear-gradient(90deg,rgba(120,144,192,.15),rgba(120,144,192,.4));outline:none;cursor:pointer;}
+  .spectrum-slider::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--accent-glow);}
+  .spectrum-ends{display:flex;justify-content:space-between;font-family:'Inter',sans-serif;font-size:11px;color:var(--text-dim);margin-top:4px;}
+  .spectrum-value{font-family:'Inter',sans-serif;font-size:12px;color:var(--accent);text-align:center;margin-top:4px;min-height:16px;}
+
+  /* TRANSPARENCY CARDS */
+  .trans-card{border:1px solid var(--border);border-radius:12px;padding:20px;margin:10px 0;cursor:pointer;transition:all .3s;background:var(--bg-card);}
+  .trans-card:hover{border-color:var(--accent-dim);background:var(--bg-hover);}
+  .trans-card.revealed{cursor:default;}
+  .trans-card .trans-tech{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:var(--text-bright);margin-bottom:4px;}
+  .trans-card .trans-question{font-size:15px;color:var(--text-dim);}
+  .trans-card .trans-answer{display:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+  .trans-card.revealed .trans-answer{display:block;}
+  .trans-meter{height:8px;border-radius:4px;margin-top:8px;overflow:hidden;background:rgba(120,144,192,.1);}
+  .trans-meter-fill{height:100%;border-radius:4px;transition:width .6s;background:linear-gradient(90deg,var(--accent-dim),var(--accent));}
+
+  /* BODY SCHEMA EXPERIMENT */
+  .body-exp{border:1px solid var(--border);border-radius:14px;padding:24px;margin:20px 0;background:rgba(0,0,0,.3);text-align:center;}
+  .body-exp-phase{margin:16px 0;font-size:18px;color:var(--text-bright);min-height:60px;transition:all .4s;}
+  .body-exp-visual{width:200px;height:120px;margin:16px auto;border-radius:10px;position:relative;overflow:hidden;border:1px solid var(--border);}
+  .body-hand{position:absolute;font-size:48px;transition:all .8s;left:50%;transform:translateX(-50%);}
+  .body-object{position:absolute;font-size:36px;transition:all .8s;right:20px;}
+  .body-exp-btn{border:none;border-radius:8px;padding:10px 20px;margin:6px;font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;background:rgba(120,144,192,.15);color:var(--accent-glow);border:1px solid rgba(120,144,192,.2);}
+  .body-exp-btn:hover{background:rgba(120,144,192,.3);}
+  .body-pulse{animation:pulse 1s ease infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H8</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.08);border-color:rgba(123,104,238,.15);color:#4a3da0;">H1</span>
+      <span class="nb-chapter-link" style="background:rgba(94,168,160,.08);border-color:rgba(94,168,160,.15);color:#3a706a;">H2</span>
+      <span class="nb-chapter-link" style="background:rgba(212,160,80,.08);border-color:rgba(212,160,80,.15);color:#8a6830;">H3</span>
+      <span class="nb-chapter-link" style="background:rgba(224,112,136,.08);border-color:rgba(224,112,136,.15);color:#983050;">H4</span>
+      <span class="nb-chapter-link" style="background:rgba(80,184,216,.08);border-color:rgba(80,184,216,.15);color:#28708a;">H5</span>
+      <span class="nb-chapter-link" style="background:rgba(80,216,144,.08);border-color:rgba(80,216,144,.15);color:#287848;">H6</span>
+      <span class="nb-chapter-link" style="background:rgba(208,136,72,.08);border-color:rgba(208,136,72,.15);color:#885028;">H7</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Natuur — Techniek':50,'Stabiel — Plastisch':50,'Tool — Extensie':50,'Optimisme — Kritiek':50},
+  flags:{},transRevealed:0,spectrumDone:false};
+const totalPassages=22;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'Het verlengstuk',
+  text:`
+    <div class="ambient-text">Hoofdstuk 8 — De Natural-Born Cyborg</div>
+    <p>Lia zat op de bank, haar smartphone achteloos in haar hand. Ze wisselde berichten uit met vrienden, zocht snel iets op — het ging vanzelf, zonder nadenken.</p>
+    <p>De telefoon voelde als een <em>natuurlijk verlengstuk</em> van haar hand, van haar gedachten.</p>
+    <p>Maar toen ze dacht aan de BCI-cap in het lab, de koele elektroden op haar huid, het gevoel van een externe machine die haar meest intieme signalen probeerde te lezen — voelde dat nog steeds… <strong>anders</strong>. Vreemd. Niet zo naadloos geïntegreerd.</p>`,
+  choices:[{text:'Tom en Sam komen binnen',next:'tom_sam'}]
+},
+
+tom_sam:{
+  title:'Groot nieuws',
+  text:`
+    <p>Haar broer Tom zat op de grond, volledig opgaand in een VR-game. Headset op, controllers in zijn handen, zijn lichaam reagerend op een wereld die alleen hij kon zien. Voor hem leek die technologie volledig <em>transparant</em>.</p>
+    <p>Toen ging de deurbel. Sam. Zijn ogen straalden een nerveuze opwinding uit.</p>
+    <p><em>"Ik heb nieuws. Groot nieuws. Ze hebben me geselecteerd."</em></p>
+    <p><em>"Geselecteerd?"</em></p>
+    <p><em>"Voor de permanente BCI-implantatie."</em></p>
+    <p>Lia slikte. Een <strong>implantaat</strong>. Geen externe cap meer, maar technologie <em>in zijn hoofd</em>, permanent verbonden.</p>`,
+  choices:[{text:'"Dat is… heftig"',next:'debat_thuis'}]
+},
+
+debat_thuis:{
+  title:'Het keukendebat',
+  text:`
+    <p><em>"Heftig, maar geweldig!"</em> zei Sam feller. <em>"Dit is een kans! Een kans om die beperkingen te doorbreken!"</em></p>
+    <p><em>"Maar Sam,"</em> wierp Lia tegen, <em>"een chip in je hoofd… dat is toch iets anders dan een bril of een hoorapparaat?"</em></p>
+    <p>Tom mengde zich: <em>"Is dat zo? Mensen krijgen toch al jaren pacemakers, kunstheupen? We stoppen altijd al technologie in ons lichaam."</em></p>
+    <p><em>"Maar dit is een directe link met je denken, je hersenen. Verandert dat niet wie je fundamenteel bent?"</em></p>
+    <p>Sam schudde zijn hoofd. <em>"Misschien is dat juist wie we zijn? Weet je nog, die filosoof Clark? Die zei dat we <strong>'natural-born cyborgs'</strong> zijn. Dat het onze natuur is om samen te smelten met onze tools."</em></p>
+    <p>De term hing in de lucht. <em>Natuurlijke cyborgs.</em></p>`,
+  choices:[
+    {text:'"Misschien heeft Clark gelijk"',next:'clark_open'},
+    {text:'"Ik weet het niet — dit voelt anders"',next:'clark_twijfel'}
+  ]
+},
+
+clark_open:{
+  title:'Open voor Clark',
+  text:`
+    <p>Lia dacht aan haar smartphone. Aan hoe vanzelfsprekend het voelde. Misschien was Sam's chip gewoon de volgende stap.</p>
+    <p class="thought">We hebben altijd al tools gebruikt. Taal, schrift, gereedschap — allemaal uitbreidingen van onszelf. Waarom zou een chip anders zijn?</p>`,
+  onEnter:()=>{adj('Natuur — Techniek',-8);adj('Optimisme — Kritiek',-10);R('Lia staat open voor Clarks idee: technologie is onze natuur.');},
+  choices:[{text:'Naar het symposium',next:'clark_these'}]
+},
+
+clark_twijfel:{
+  title:'Twijfel',
+  text:`
+    <p>Lia keek naar Sam, naar zijn vastberadenheid. Maar iets knaagde.</p>
+    <p class="thought">Een smartphone pak je weg. Een bril zet je af. Maar een chip in je hoofd — dat is permanent. Dat is niet meer 'samenwerken met een tool'. Dat is iets fundamenteel anders… toch?</p>`,
+  onEnter:()=>{adj('Natuur — Techniek',8);adj('Optimisme — Kritiek',10);R('Lia twijfelt: een permanent implantaat voelt als iets fundamenteel anders dan een smartphone.');},
+  choices:[{text:'Naar het symposium',next:'clark_these'}]
+},
+
+clark_these:{
+  title:'Andy Clark',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 8</div>
+      <p><strong>De Natural-Born Cyborg</strong></p>
+      <p><span class="dim">Andy Clark (1957)</span></p>
+    </div>
+    <p>De centrale vraag: <em>Verandert het wezen van de mens door de omgang met techniek?</em></p>
+    <p>Clarks antwoord is prikkelend:</p>
+    <div class="philosophy-box" style="text-align:center;font-size:20px;">
+      <em>"Nee, want het is ons wezen om met techniek om te gaan en ermee te versmelten. Wij zijn <strong>natural-born cyborgs</strong>."</em>
+    </div>
+    <p>De mens is van nature een <strong>hybride wezen</strong>: een fundamentele versmelting van biologie en technologie. Taal, schrift, de eerste gereedschappen — dit waren vroege cognitieve technologieën die ons denken uitbreidden.</p>`,
+  onEnter:()=>{T('Andy Clark','Filosoof (1957). Stelling: de mens is een "natural-born cyborg" — het is onze natuur om met technologie te versmelten.'); T('Natural-born cyborg','Clarks term: de mens is van nature een hybride wezen dat biologie en technologie versmeldt.');},
+  choices:[{text:'Argument 1: het brein als grensvervager',next:'argument1'}]
+},
+
+argument1:{
+  title:'Het brein als grensvervager',
+  text:`
+    <p><em>"Ons brein,"</em> legde de spreker uit, <em>"is evolutionair geoptimaliseerd om de omgeving als externe hulpbron te gebruiken."</em></p>
+    <p>Denk aan hoe we een som op papier uitrekenen in plaats van alles in ons hoofd te doen. Dit is geen trucje, maar een <strong>fundamentele eigenschap</strong>.</p>
+    <div class="definition-box">
+      <span class="term">Het brein als grensvervager</span>
+      Ons brein is plastisch en ontworpen om flexibel samen te werken met externe structuren. Ons vermogen tot complex denken is juist mogelijk <em>dankzij</em> dit vermogen tot externalisatie.
+    </div>
+    <div class="contrast-box" style="background:rgba(208,136,72,.05);border:1px solid rgba(208,136,72,.15);">
+      <span class="cb-label" style="color:var(--copper);">4E-cognitie (H7)</span>
+      Dit sluit direct aan bij Extended Mind: het brein stopt niet bij de schedel, maar werkt samen met tools in de omgeving.
+    </div>`,
+  onEnter:()=>{T('Hersenplasticiteit','Het vermogen van het brein om zich aan te passen, nieuwe verbindingen te leggen en flexibel samen te werken met externe structuren.');},
+  choices:[{text:'Argument 2: het lichaamsschema is plastisch',next:'argument2'}]
+},
+
+argument2:{
+  title:'Plastisch lichaamsschema',
+  text:`
+    <p><em>"Ons tweede argument gaat over het lichaam zelf."</em></p>
+    <p>Neurowetenschapper Ramachandran toonde aan dat ons lichaamsschema verrassend <strong>plastisch</strong> is:</p>
+    <div class="definition-box">
+      <span class="term">Het verlengde-neus experiment</span>
+      Geblinddoekte proefpersonen voelden hun neus 'langer worden' als er synchroon op hun neus en hun vinger (die de neus van iemand anders aanraakte) werd getikt. Het brein paste het lichaamsbeeld aan — zelfs tegen beter weten in.
+    </div>
+    <div class="definition-box">
+      <span class="term">Het bureaublad-experiment</span>
+      Mensen voelden pijn als er op een bureaublad werd geslagen, terwijl hun eigen hand eronder lag en synchroon werd aangeraakt. Het bureaublad werd tijdelijk 'deel van hun lichaam'.
+    </div>
+    <p>Clark: <em>"Ons gevoel van lichamelijke aanwezigheid en van lichamelijke grenzen is niet vastgelegd en onveranderlijk. Het is voortdurend in opbouw, vatbaar voor plotse invloeden van trucs en nieuwe technologieën."</em></p>`,
+  onEnter:()=>{T('Ramachandran-experimenten','Tonen aan dat het lichaamsschema plastisch is — het brein past lichamelijke grenzen aan op basis van sensorische input.');},
+  choices:[{text:'Ervaar het zelf',next:'body_game'}]
+},
+
+/* ===== MINIGAME: BODY SCHEMA ===== */
+body_game:{
+  title:'Lichaamsschema-experiment',
+  text:`
+    <p>Stel je voor: je hand ligt op een tafel. Een rubberen hand ligt ernaast. Beide worden synchroon aangeraakt…</p>
+    <div class="body-exp" id="body-exp">
+      <div class="body-exp-visual" id="body-visual">
+        <div class="body-hand" id="real-hand" style="top:60px;left:25%;">🤚</div>
+        <div class="body-hand" id="rubber-hand" style="top:60px;left:65%;">🖐️</div>
+        <div id="touch-indicator" style="position:absolute;top:10px;left:50%;transform:translateX(-50%);font-family:'Inter',sans-serif;font-size:12px;color:var(--accent);opacity:0;transition:opacity .3s;">tik… tik… tik…</div>
+      </div>
+      <div class="body-exp-phase" id="body-phase">Fase 1: Beide handen worden synchroon aangeraakt</div>
+      <div style="margin-top:12px;">
+        <button class="body-exp-btn" id="body-btn" onclick="nextBodyPhase()">Volgende fase</button>
+      </div>
+    </div>
+    <div id="body-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{state.flags.bodyPhase=0;setTimeout(()=>{document.getElementById('touch-indicator').style.opacity='1';document.getElementById('touch-indicator').classList.add('body-pulse');},500);}
+},
+
+body_done:{
+  title:'Grenzen zijn vloeibaar',
+  text:`
+    <p>Lia keek naar haar handen. De grens tussen 'mij' en 'niet-mij' was minder vast dan ze dacht.</p>
+    <p class="thought">Als mijn brein een bureaublad als 'mij' kan ervaren na een paar tikken — dan is het niet zo gek dat Sam zijn rolstoel als deel van zichzelf voelt. Of dat een BCI na verloop van tijd zou kunnen voelen als… gewoon een deel van mij.</p>
+    <div class="contrast-box" style="background:rgba(212,160,80,.05);border:1px solid rgba(212,160,80,.15);">
+      <span class="cb-label" style="color:var(--amber);">Plessner (H3) — Natuurlijke kunstmatigheid</span>
+      Het is onze natuur om 'kunstmatig' te zijn — om onszelf vorm te geven met cultuur en techniek. Clark voegt hieraan toe: ons lichaam is <em>ontworpen</em> om die techniek naadloos te integreren.
+    </div>`,
+  onEnter:()=>{R('Het lichaamsschema is plastisch — de grens tussen "mij" en "niet-mij" is vloeibaar.'); adj('Stabiel — Plastisch',15);},
+  choices:[{text:'De cyborg-paradox',next:'cyborg_paradox'}]
+},
+
+cyborg_paradox:{
+  title:'De cyborg-paradox',
+  text:`
+    <p>De spreker introduceerde een paradox:</p>
+    <div class="definition-box">
+      <span class="term">De cyborg-paradox</span>
+      De meest succesvolle 'cyborg'-technologieën zijn juist degene die we het minst als 'technologie' ervaren. Wanneer technologie succesvol is geïncorporeerd, wordt ze <strong>transparant</strong>: je kijkt <em>door</em> je bril, niet <em>naar</em> je bril. De technologie wordt pas weer zichtbaar als ze faalt.
+    </div>
+    <p>Lia dacht aan Tom in zijn VR-headset. Aan haar eigen smartphone. Aan Sams rolstoel.</p>
+    <p class="thought">De beste technologie is onzichtbare technologie. Maar als ze onzichtbaar is… hoe weet je dan nog wat "jij" bent en wat "technologie"?</p>`,
+  onEnter:()=>{T('Cyborg-paradox','De meest succesvolle technologieën worden transparant — we merken ze niet meer op. Ze worden pas zichtbaar als ze falen.');},
+  choices:[{text:'Test de transparantie',next:'trans_game'}]
+},
+
+/* ===== MINIGAME: TRANSPARANTIE ===== */
+trans_game:{
+  title:'Transparantie-test',
+  text:`
+    <p>Hoe transparant zijn deze technologieën? Klik om te onthullen.</p>
+    <div id="trans-cards">
+      <div class="trans-card" onclick="revealTrans(this,0)">
+        <div class="trans-tech">Leesbril</div>
+        <div class="trans-question">Wanneer merk je deze technologie op?</div>
+        <div class="trans-answer">
+          <div class="trans-meter"><div class="trans-meter-fill" style="width:90%;"></div></div>
+          <p style="margin-top:8px;"><strong>Zeer transparant.</strong> Je kijkt door de bril, niet naar de bril. Je merkt hem pas als hij vies is, kwijt, of kapot. Perfecte cyborg-integratie.</p>
+        </div>
+      </div>
+      <div class="trans-card" onclick="revealTrans(this,1)">
+        <div class="trans-tech">Smartphone</div>
+        <div class="trans-question">Tool of deel van jezelf?</div>
+        <div class="trans-answer">
+          <div class="trans-meter"><div class="trans-meter-fill" style="width:75%;"></div></div>
+          <p style="margin-top:8px;"><strong>Grotendeels transparant.</strong> Je denkt niet na over hoe je swipt of typt. Maar je bent je bewust van het scherm als object. Wordt steeds transparanter.</p>
+        </div>
+      </div>
+      <div class="trans-card" onclick="revealTrans(this,2)">
+        <div class="trans-tech">Sam's rolstoel</div>
+        <div class="trans-question">Extern hulpmiddel of deel van Sam?</div>
+        <div class="trans-answer">
+          <div class="trans-meter"><div class="trans-meter-fill" style="width:85%;"></div></div>
+          <p style="margin-top:8px;"><strong>Zeer transparant.</strong> Sam schrikt als iemand tegen zijn wiel stoot — alsof ze hém raken. De rolstoel is opgenomen in zijn lichaamsschema. Bijna onzichtbaar.</p>
+        </div>
+      </div>
+      <div class="trans-card" onclick="revealTrans(this,3)">
+        <div class="trans-tech">Lia's BCI-cap</div>
+        <div class="trans-question">Technologie of deel van Lia?</div>
+        <div class="trans-answer">
+          <div class="trans-meter"><div class="trans-meter-fill" style="width:25%;"></div></div>
+          <p style="margin-top:8px;"><strong>Nog niet transparant.</strong> Lia voelt de koele elektroden, merkt de vertraging, ervaart het als 'extern'. Maar Clark zou zeggen: geef het tijd. Transparantie groeit.</p>
+        </div>
+      </div>
+      <div class="trans-card" onclick="revealTrans(this,4)">
+        <div class="trans-tech">Sam's toekomstige BCI-implantaat</div>
+        <div class="trans-question">Waar eindigt Sam, waar begint de chip?</div>
+        <div class="trans-answer">
+          <div class="trans-meter"><div class="trans-meter-fill" style="width:60%;"></div></div>
+          <p style="margin-top:8px;"><strong>Potentieel zeer transparant.</strong> Een permanent implantaat kan dezelfde transparantie bereiken als een bril of kunstheup. Sam zou de chip niet meer 'voelen' — hij zou er doorheen leven.</p>
+        </div>
+      </div>
+    </div>
+    <div id="trans-result" style="margin-top:16px;"></div>`,
+},
+
+trans_done:{
+  title:'Transparantie en identiteit',
+  text:`
+    <p>De spreker concludeerde: <em>"Hoe transparanter de technologie, hoe dieper de integratie. Maar dit roept een fundamentele vraag op: als technologie onzichtbaar wordt, vervaagt dan ook de grens tussen mens en machine?"</em></p>
+    <p>Clark ziet dit niet als probleem, maar als <strong>bevestiging</strong> van onze natuur.</p>`,
+  onEnter:()=>{R('Transparantie is het kenmerk van diepe integratie — maar vervaagt ook de grens mens/machine.'); adj('Tool — Extensie',12);},
+  choices:[{text:'Dynamische apparaten',next:'dynamisch'}]
+},
+
+dynamisch:{
+  title:'Dynamische apparaten',
+  text:`
+    <p>Clark voorziet een volgende stap:</p>
+    <div class="definition-box">
+      <span class="term">Dynamische apparaten</span>
+      Technologieën die niet alleen door ons <strong>gebruikt</strong> worden, maar ook <em>over ons leren</em> en zich aanpassen. Denk aan smartphones die je gewoonten leren, adaptieve software, AI-assistenten.
+    </div>
+    <p>Clark: <em>"Het belangrijke potentieel van informatie-apparaten die, terwijl ze gebruikt worden, actief trachten te leren over de gebruiker en hoe zich beter op haar af te stemmen."</em></p>
+    <div class="definition-box">
+      <span class="term">Cognitieve symbiose</span>
+      Een wederzijdse aanpassing tussen brein/lichaam en lerende technologie. Beide partijen beïnvloeden elkaar. <em>"De combinatie van hersenen die leren over technologieën, met technologieën die 'leren' over individuele hersenen, zet de toon voor een cognitieve symbiose."</em>
+    </div>`,
+  onEnter:()=>{T('Dynamische apparaten','Technologieën die over de gebruiker leren en zich aanpassen — niet passieve tools maar actieve partners.'); T('Cognitieve symbiose','Wederzijdse aanpassing tussen brein/lichaam en lerende technologie — beiden beïnvloeden elkaar.');},
+  choices:[{text:'Probeer het cyborgspectrum',next:'spectrum_game'}]
+},
+
+/* ===== MINIGAME: CYBORG SPECTRUM ===== */
+spectrum_game:{
+  title:'Het cyborgspectrum',
+  text:`
+    <p>Waar op het spectrum van 'extern hulpmiddel' tot 'deel van jezelf' plaats je deze technologieën? Verschuif de sliders.</p>
+    <div class="spectrum-container" id="spectrum-game">
+      <div class="spectrum-item"><div class="spectrum-label">Een hamer</div><input type="range" class="spectrum-slider" min="0" max="100" value="50" oninput="updateSpectrum(this,'hamer')"><div class="spectrum-ends"><span>Extern hulpmiddel</span><span>Deel van mij</span></div><div class="spectrum-value" id="sv-hamer"></div></div>
+      <div class="spectrum-item"><div class="spectrum-label">Je moedertaal</div><input type="range" class="spectrum-slider" min="0" max="100" value="50" oninput="updateSpectrum(this,'taal')"><div class="spectrum-ends"><span>Extern hulpmiddel</span><span>Deel van mij</span></div><div class="spectrum-value" id="sv-taal"></div></div>
+      <div class="spectrum-item"><div class="spectrum-label">Je smartphone</div><input type="range" class="spectrum-slider" min="0" max="100" value="50" oninput="updateSpectrum(this,'phone')"><div class="spectrum-ends"><span>Extern hulpmiddel</span><span>Deel van mij</span></div><div class="spectrum-value" id="sv-phone"></div></div>
+      <div class="spectrum-item"><div class="spectrum-label">Een BCI-implantaat</div><input type="range" class="spectrum-slider" min="0" max="100" value="50" oninput="updateSpectrum(this,'bci')"><div class="spectrum-ends"><span>Extern hulpmiddel</span><span>Deel van mij</span></div><div class="spectrum-value" id="sv-bci"></div></div>
+    </div>
+    <div id="spectrum-result" style="margin-top:16px;text-align:center;"></div>`,
+  onEnter:()=>{state.flags.spectrumMoves=0;}
+},
+
+spectrum_done:{
+  title:'Altijd al cyborgs',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Clarks conclusie</div>
+      <p>Technologie verandert ons wezen <strong>niet</strong> fundamenteel, omdat het juist onze diepste natuur is om ons met technologie te verbinden.</p>
+      <p>Nieuwe technologieën zoals BCIs zijn geen radicale breuk, maar een <em>logische voortzetting</em> en bevestiging van onze aangeboren cyborg-aard.</p>
+    </div>
+    <p>Lia keek naar Sam. Naar zijn vastberadenheid. Naar de glimp van de technologische toekomst die hij wilde omarmen.</p>
+    <p class="thought">Was dit diepe samensmelten met technologie slechts een vervulling van onze natuur? Of was het een transformatie naar iets onbekends? Clark zou zeggen: het eerste. Maar Lia voelde dat het antwoord niet zo simpel was.</p>`,
+  onEnter:()=>{R('Clark: technologie verandert ons niet — het bevestigt onze natuur als hybride wezens. Maar is dat niet te optimistisch?'); adj('Natuur — Techniek',-8);},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 8 — Kernbegrippen</div>
+      <p><strong>Natural-born cyborg</strong> — De mens als natuurlijke hybride van biologie en technologie<br>
+      <strong>Hersenplasticiteit</strong> — Het brein past zich flexibel aan externe structuren aan<br>
+      <strong>Plasticiteit lichaamsschema</strong> — Lichaamsgrenzen zijn vloeibaar (Ramachandran)<br>
+      <strong>Cyborg-paradox</strong> — De beste technologie is onzichtbaar<br>
+      <strong>Transparantie</strong> — Technologie wordt onzichtbaar bij succesvolle integratie<br>
+      <strong>Dynamische apparaten</strong> — Technologie die over ons leert<br>
+      <strong>Cognitieve symbiose</strong> — Wederzijdse aanpassing mens-technologie</p>
+    </div>
+    <div class="max-moment">Max lag op de bank, zijn poot op Lia's telefoon. Een biologisch wezen dat een technologisch apparaat als kussen gebruikte. Misschien was Max ook een cyborg — op zijn eigen manier.</div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 8 — Wordt vervolgd in H9: Kockelkoren — Techniek en zintuiglijke transformatie</p>`,
+  onEnter:()=>{R('Hoofdstuk 8 afgerond. Zijn we altijd al cyborgs geweest — of verandert er toch iets fundamenteels?');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== BODY SCHEMA EXPERIMENT ===== */
+const bodyPhases=[
+  {text:'Fase 1: Beide handen worden synchroon aangeraakt — tik… tik… tik…',realPos:'60px',rubberPos:'60px'},
+  {text:'Fase 2: Na 30 seconden synchrone tikken begint je brein de rubberen hand als "van jou" te ervaren…',realPos:'70px',rubberPos:'50px'},
+  {text:'Fase 3: Je voelt een vreemde verschuiving — alsof je hand "daar" zit, bij de rubberen hand.',realPos:'80px',rubberPos:'40px'},
+  {text:'Fase 4: Iemand slaat plotseling op de rubberen hand — je SCHRIKT. Je lichaam reageert alsof jij geslagen werd!',realPos:'90px',rubberPos:'30px'}
+];
+
+function nextBodyPhase(){
+  const phase=state.flags.bodyPhase||0;
+  if(phase>=bodyPhases.length){
+    document.getElementById('body-result').innerHTML=`
+      <div class="philosophy-box">
+        <div class="box-title">Lichaamsschema is plastisch</div>
+        <p>Je brein "verlegde" de grens van je lichaam naar de rubberen hand. Dit is wat Ramachandran aantoonde en wat Clark als bewijs gebruikt: onze lichaamsgrenzen zijn <strong>niet vast</strong>, maar voortdurend in opbouw.</p>
+        <p>Als dit al werkt met een rubberen hand na 30 seconden — stel je voor wat er gebeurt met een BCI na maanden of jaren.</p>
+      </div>
+      <button class="continue-btn" onclick="go('body_done')">Verder</button>`;
+    return;
+  }
+  const p=bodyPhases[phase];
+  document.getElementById('body-phase').innerHTML=p.text;
+  document.getElementById('real-hand').style.top=p.realPos;
+  document.getElementById('real-hand').style.opacity=phase>1?'0.4':'1';
+  document.getElementById('rubber-hand').style.top=p.rubberPos;
+  if(phase===3){document.getElementById('rubber-hand').style.fontSize='56px';document.getElementById('body-visual').style.borderColor='var(--danger)';setTimeout(()=>{document.getElementById('rubber-hand').style.fontSize='48px';document.getElementById('body-visual').style.borderColor='var(--border)';},500);}
+  state.flags.bodyPhase=phase+1;
+}
+
+/* ===== TRANSPARENCY ===== */
+function revealTrans(card,idx){
+  if(card.classList.contains('revealed'))return;
+  card.classList.add('revealed');
+  state.transRevealed++;
+  if(state.transRevealed>=5){
+    document.getElementById('trans-result').innerHTML=`
+      <div class="philosophy-box"><div class="box-title">Transparantie-spectrum</div><p>Van leesbril (bijna onzichtbaar) tot BCI-cap (nog zeer zichtbaar) — transparantie groeit met tijd en integratie. Clark: dit is het kenmerk van diepe mens-technologie versmelting.</p></div>
+      <button class="continue-btn" onclick="go('trans_done')">Verder</button>`;
+    adj('Tool — Extensie',8);
+  }
+}
+
+/* ===== SPECTRUM ===== */
+const spectrumLabels={
+  0:'Puur extern hulpmiddel',25:'Nuttig maar los van mij',50:'Soms voelt het als deel van mij',75:'Grotendeels deel van mij',100:'Volledig deel van wie ik ben'
+};
+function updateSpectrum(el,id){
+  const v=parseInt(el.value);
+  const keys=Object.keys(spectrumLabels).map(Number).sort((a,b)=>a-b);
+  let label='';
+  for(let i=keys.length-1;i>=0;i--){if(v>=keys[i]){label=spectrumLabels[keys[i]];break;}}
+  document.getElementById('sv-'+id).textContent=label;
+  state.flags.spectrumMoves=(state.flags.spectrumMoves||0)+1;
+  if(state.flags.spectrumMoves>=4&&!state.spectrumDone){
+    state.spectrumDone=true;
+    document.getElementById('spectrum-result').innerHTML=`
+      <div class="philosophy-box"><div class="box-title">Jouw cyborg-spectrum</div><p>Er is geen scherpe grens. Van hamer tot taal tot smartphone tot BCI — het is een <em>continuüm</em>. Clark zou zeggen: elke verschuiving naar rechts is een bevestiging van onze natuur als natural-born cyborgs.</p></div>
+      <button class="continue-btn" onclick="go('spectrum_done')">Verder</button>`;
+    adj('Tool — Extensie',5);adj('Natuur — Techniek',-5);
+  }
+}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

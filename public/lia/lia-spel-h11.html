@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 11: Jos de Mul</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#06060e; --bg-card:#0e1018; --bg-hover:#161a28;
+    --text:#b0b8d0; --text-bright:#d4daf4; --text-dim:#505888;
+    --accent:#6060d0; --accent-glow:#8888f0; --accent-dim:#383880;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848; --silver:#7890c0; --violet:#9070d0; --red:#c05050;
+    --danger:#e06070; --success:#60c080;
+    --border:#181838;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(96,96,208,.08),rgba(96,96,208,.02));border:1px solid rgba(96,96,208,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(96,96,208,.06);border:1px solid rgba(96,96,208,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* SCENARIO CARDS */
+  .scenario-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0;}
+  @media(max-width:700px){.scenario-grid{grid-template-columns:1fr;}}
+  .scenario-card{border:1px solid var(--border);border-radius:14px;padding:24px 18px;cursor:pointer;transition:all .4s;background:var(--bg-card);text-align:center;position:relative;overflow:hidden;}
+  .scenario-card:hover{border-color:var(--accent-dim);transform:translateY(-3px);}
+  .scenario-card.active{border-color:var(--accent);background:rgba(96,96,208,.06);}
+  .scenario-card .sc-icon{font-size:48px;margin-bottom:12px;}
+  .scenario-card .sc-name{font-family:'Inter',sans-serif;font-size:15px;font-weight:600;color:var(--text-bright);margin-bottom:4px;}
+  .scenario-card .sc-sub{font-family:'Inter',sans-serif;font-size:12px;color:var(--accent);margin-bottom:10px;}
+  .scenario-card .sc-desc{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);line-height:1.6;max-height:0;overflow:hidden;transition:max-height .5s;}
+  .scenario-card.active .sc-desc{max-height:300px;}
+
+  /* NBIN EXPLORER */
+  .nbin-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+  @media(max-width:600px){.nbin-grid{grid-template-columns:1fr;}}
+  .nbin-card{border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:all .3s;background:var(--bg-card);text-align:center;}
+  .nbin-card:hover{border-color:var(--accent-dim);}
+  .nbin-card.revealed{border-color:rgba(96,96,208,.3);cursor:default;}
+  .nbin-card .nbin-letter{font-family:'Inter',sans-serif;font-size:32px;font-weight:600;color:var(--accent-glow);}
+  .nbin-card .nbin-name{font-family:'Inter',sans-serif;font-size:14px;color:var(--text-bright);margin:6px 0;}
+  .nbin-card .nbin-detail{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);line-height:1.5;max-height:0;overflow:hidden;transition:max-height .4s;}
+  .nbin-card.revealed .nbin-detail{max-height:200px;margin-top:8px;}
+
+  /* SLIDER VOTE */
+  .vote-item{border:1px solid var(--border);border-radius:12px;padding:18px;margin:12px 0;background:var(--bg-card);}
+  .vote-label{font-family:'Inter',sans-serif;font-size:14px;color:var(--text-bright);margin-bottom:10px;}
+  .vote-slider{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;background:var(--bg);outline:none;margin:8px 0;}
+  .vote-slider::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;}
+  .vote-ends{display:flex;justify-content:space-between;font-family:'Inter',sans-serif;font-size:11px;color:var(--text-dim);}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H11</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.06);border-color:rgba(123,104,238,.1);color:#4a3da0;">H1–H4</span>
+      <span class="nb-chapter-link" style="background:rgba(80,184,216,.06);border-color:rgba(80,184,216,.1);color:#28708a;">H5–H6</span>
+      <span class="nb-chapter-link" style="background:rgba(208,136,72,.06);border-color:rgba(208,136,72,.1);color:#885028;">H7–H8</span>
+      <span class="nb-chapter-link" style="background:rgba(144,112,208,.06);border-color:rgba(144,112,208,.1);color:#583898;">H9 Kockelkoren</span>
+      <span class="nb-chapter-link" style="background:rgba(192,80,80,.06);border-color:rgba(192,80,80,.1);color:#803030;">H10 Verbeek</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Behoud — Transformatie':50,'Humanisme — Posthumanisme':50,'Biologie — Technologie':50,'Gelijkheid — Verbetering':50},
+  flags:{},nbinRevealed:0,scenariosExplored:0};
+const totalPassages=22;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'Op het bankje',
+  text:`
+    <div class="ambient-text">Hoofdstuk 11 — Jos de Mul over de toekomstige mens</div>
+    <p>Sam had zijn beslissing genomen: het BCI-implantaat, met focus op het exoskelet. Maar zijn opwinding had plaatsgemaakt voor een diepere, peinzende laag.</p>
+    <p><em>"Weet je,"</em> zei hij, terwijl hij naar zijn benen keek, <em>"die keuze... het voelt groter dan alleen 'lopen of handen'. Alsof ik een <strong>deur openzet</strong>. Alsof ik een richting insla."</em></p>`,
+  choices:[{text:'"Welke richting?"',next:'richting'}]
+},
+richting:{
+  title:'De richting van verandering',
+  text:`
+    <p><em>"De richting van... verandering,"</em> zei Sam. <em>"Dit implantaat is nu gericht op herstel. Maar denk aan waar deze technologieën naartoe gaan."</em></p>
+    <p><em>"Directe brein-computer interfaces voor iedereen. Koppelingen met AI die ons denken 'versterken'. Misschien genetische aanpassingen via CRISPR om ons 'beter' te maken — slimmer, sterker, langer levend..."</em></p>
+    <p><em>"Worden we dan nog wel 'mens' zoals we nu zijn? Of worden we iets anders?"</em></p>
+    <p>Lia huiverde. <em>"Maar 'verbetering' ten koste van wat, Sam? Verliezen we niet iets essentieels?"</em></p>`,
+  onEnter:()=>{R('Sams BCI opent een groter perspectief: van herstel naar verbetering. Waar eindigt de mens?');},
+  choices:[{text:'Het symposium: Jos de Mul',next:'demul_intro'}]
+},
+demul_intro:{
+  title:'Jos de Mul',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 11</div>
+      <p><strong>De toekomstige mens volgens Jos de Mul</strong></p>
+      <p><span class="dim">Jos de Mul (1956) — filosoof, speculeert over de toekomst van de mens</span></p>
+    </div>
+    <p>Waar Verbeek (H10) zich richt op hoe technologie <em>nu</em> onze moraal vormt, zet De Mul een stap verder. Hij speculeert over hoe technologie onze <strong>menselijke identiteit zelf</strong> kan transformeren.</p>
+    <p>Staan we op het punt de <em>Homo sapiens</em> achter ons te laten?</p>`,
+  choices:[{text:'NBIN-technologieën verkennen',next:'nbin_game'}]
+},
+
+/* ===== MINIGAME 1: NBIN EXPLORER ===== */
+nbin_game:{
+  title:'NBIN-technologieën',
+  text:`
+    <p>De Mul wijst op vier versmeltende technologieën die fundamenteel anders zijn dan eerdere technieken. Klik om te onthullen:</p>
+    <div class="nbin-grid" id="nbin-grid"></div>
+    <div id="nbin-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:8px;"></div>
+    <div id="nbin-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initNBIN,500);}
+},
+
+nbin_done:{
+  title:'Voorbij extern',
+  text:`
+    <p>De Mul stelt dat NBIN-technologieën een <strong>kwalitatief andere impact</strong> hebben dan eerdere technieken.</p>
+    <div class="philosophy-box">
+      <div class="box-title">Het verschil</div>
+      <p>Waar techniek <em>voorheen extern</em> bleef (gereedschap, machines), maken NBIN-technologieën het mogelijk <strong>intern en diep</strong> in te grijpen in onze biologische en cognitieve constitutie.</p>
+    </div>
+    <p>Dit daagt ons <strong>traditionele humanistische zelfbeeld</strong> uit — de mens als autonoom, redelijk individu, duidelijk onderscheiden van dier en machine.</p>`,
+  onEnter:()=>{T('NBIN-technologieën','Nano-, Bio-, Info- en Neuro/Cognotechnologie — vier versmeltende technologiedomeinen die intern ingrijpen in de mens.'); T('Humanisme','Het traditionele zelfbeeld van de mens als autonoom, redelijk individu, onderscheiden van dier en machine.');adj('Humanisme — Posthumanisme',10);},
+  choices:[{text:'Drie scenario\'s voor de toekomst',next:'scenarios_intro'}]
+},
+
+scenarios_intro:{
+  title:'Speculatieve Antropologie',
+  text:`
+    <p>De Mul schetst drie <strong>ideaaltypische scenario's</strong> voor de toekomst van de mens — een 'speculatieve antropologie'.</p>
+    <p>Verken alle drie:</p>
+    <div class="scenario-grid" id="scenario-grid"></div>
+    <div id="scenario-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:8px;"></div>
+    <div id="scenario-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initScenarios,500);}
+},
+
+scenarios_done:{
+  title:'Drie paden',
+  text:`
+    <p>De Mul benadrukt dat deze scenario's zullen <strong>overlappen</strong>. Het gaat niet om een simpele keuze, maar om convergerende ontwikkelingen.</p>
+    <div class="contrast-box" style="background:rgba(192,80,80,.05);border:1px solid rgba(192,80,80,.15);">
+      <span class="cb-label" style="color:var(--red);">Verbeek (H10) — Morele bemiddeling</span>
+      Technologie vormt onze <em>moraal</em> en <em>keuzes</em>.
+    </div>
+    <div class="contrast-box" style="background:rgba(96,96,208,.05);border:1px solid rgba(96,96,208,.15);">
+      <span class="cb-label" style="color:var(--accent);">De Mul (H11) — Identiteitstransformatie</span>
+      Technologie kan onze <em>soort en identiteit</em> fundamenteel transformeren. Nog radicaler dan morele bemiddeling.
+    </div>
+    <p class="thought">Sam is al een voorbode. Zijn BCI begint als herstel, maar waar eindigt het? Wanneer wordt het extrahumanisme?</p>`,
+  onEnter:()=>{R('De drie scenario\'s overlappen: Sams BCI begint als herstel maar kan uitgroeien tot iets fundamenteel anders.');},
+  choices:[{text:'Nietzsche en de herwaardering',next:'nietzsche'}]
+},
+
+nietzsche:{
+  title:'Nietzsche',
+  text:`
+    <p>De radicale transformaties maken de vraag naar <strong>waarden</strong> urgent. Friedrich Nietzsche wordt relevant:</p>
+    <div class="definition-box">
+      <span class="term">Herwaardering van alle waarden</span>
+      Nietzsche voorzag dat traditionele (christelijk-humanistische) waarden hun grondslag zouden verliezen — 'God is dood'. Hij pleitte voor een herwaardering door sterke individuen die <em>voorbij goed en kwaad</em> nieuwe waarden zouden scheppen: de <strong>Übermensch</strong>.
+    </div>
+    <p>Als we de menselijke natuur technologisch gaan herscheppen — welke waarden moeten ons dan leiden? Welke 'nieuwe mens' streven we na?</p>`,
+  onEnter:()=>{T('Herwaardering van waarden (Nietzsche)','Nietzsches oproep om traditionele waarden kritisch te heroverwegen en nieuwe waarden te scheppen — relevant nu technologie de mens kan herscheppen.'); T('Übermensch','Nietzsches ideaal van een mens die voorbij traditionele moraal nieuwe waarden schept.');},
+  choices:[{text:'Het gelijkheidsprobleem',next:'gelijkheid'}]
+},
+
+gelijkheid:{
+  title:'Ongelijkheid en verbetering',
+  text:`
+    <p>De mogelijkheid van technologische mensverbetering confronteert ons met een fundamentele vraag:</p>
+    <div class="philosophy-box">
+      <div class="box-title">Het gelijkheidsprobleem</div>
+      <p>Is ons <strong>egalitaire humanisme</strong> — de overtuiging dat alle mensen gelijk zijn — nog houdbaar wanneer we <em>verschillende graden van technologische verbetering</em> krijgen?</p>
+      <p>Creëert een technologisch verbeterde elite nieuwe waardenhiërarchieën? Ondermijnt dit onze democratische gelijkheidsidealen?</p>
+    </div>`,
+  onEnter:()=>{adj('Gelijkheid — Verbetering',12);R('Technologische verbetering bedreigt het gelijkheidsideaal — wie krijgt toegang?');},
+  choices:[{text:'Hoe sta je tegenover verbetering?',next:'vote_game'}]
+},
+
+/* ===== MINIGAME 3: TOEKOMST VOTE ===== */
+vote_game:{
+  title:'Jouw positie',
+  text:`
+    <p>Waar sta jij? Verschuif de sliders om je positie te bepalen over de toekomst van de mens:</p>
+    <div class="vote-item">
+      <div class="vote-label">Moet de mens zichzelf technologisch verbeteren?</div>
+      <input type="range" class="vote-slider" id="vote-1" min="0" max="100" value="50" oninput="updateVote()">
+      <div class="vote-ends"><span>Nee — behoud de mens</span><span>Ja — omarm verbetering</span></div>
+    </div>
+    <div class="vote-item">
+      <div class="vote-label">Welk scenario spreekt je meest aan (of beangstigt je minst)?</div>
+      <input type="range" class="vote-slider" id="vote-2" min="0" max="100" value="50" oninput="updateVote()">
+      <div class="vote-ends"><span>Extrahumanisme (cyborg)</span><span>Posthumanisme (AI)</span></div>
+    </div>
+    <div class="vote-item">
+      <div class="vote-label">Wie mag beslissen over mensverbetering?</div>
+      <input type="range" class="vote-slider" id="vote-3" min="0" max="100" value="50" oninput="updateVote()">
+      <div class="vote-ends"><span>Het individu</span><span>De samenleving</span></div>
+    </div>
+    <div id="vote-result" style="margin-top:20px;"></div>`,
+  onEnter:()=>{setTimeout(()=>{document.getElementById('vote-result').innerHTML='<button class="continue-btn" onclick="saveVotes()">Sla je positie op</button>';},500);}
+},
+
+vote_done:{
+  title:'Lia reflecteert',
+  text:`
+    <p>Lia dacht aan Sam. Zijn BCI was het begin. Waar zou het eindigen?</p>
+    <p class="thought">Misschien is de vraag niet of we technologisch veranderen — dat doen we al. De echte vraag is: wie beslist welke richting? En welke waarden leiden ons daarbij?</p>
+    <div class="max-moment">Max geeuwde. Evolutie had hem perfect gemaakt voor precies dit: warm liggen, spinnen, af en toe een muis vangen. Geen behoefte aan verbetering. Geen existentiële twijfel.</div>`,
+  onEnter:()=>{R('De vraag is niet óf we veranderen, maar wie beslist en welke waarden ons leiden.');},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 11 — Kernbegrippen</div>
+      <p><strong>NBIN-technologieën</strong> — Nano, Bio, Info, Neuro: intern ingrijpend<br>
+      <strong>Extrahumanisme</strong> — Zwermgeest/cyborg: technologische supplementen<br>
+      <strong>Transhumanisme</strong> — Alien/biotech: biologische transformatie<br>
+      <strong>Posthumanisme</strong> — Zombie/AI: kunstmatige levensvormen<br>
+      <strong>Speculatieve antropologie</strong> — De Muls methode van toekomstdenken<br>
+      <strong>Herwaardering van waarden</strong> — Nietzsche: nieuwe waarden scheppen<br>
+      <strong>Gelijkheidsprobleem</strong> — Technologische verbetering bedreigt gelijkheid</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 11 — Wordt vervolgd in H12: Morton — Ecologisch denken en grensvervaging</p>`,
+  onEnter:()=>{R('Hoofdstuk 11 afgerond. NBIN-technologieën kunnen de menselijke identiteit fundamenteel transformeren. De vraag is: welke waarden leiden ons?');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== NBIN EXPLORER ===== */
+const nbinData=[
+  {letter:'N',name:'Nanotechnologie',detail:'Manipulatie op moleculair niveau. Nanobots die door je bloedbaan reizen, cellen repareren, medicijnen afleveren. Technologie die letterlijk in je lichaam opereert.'},
+  {letter:'B',name:'Biotechnologie',detail:'CRISPR, genetische modificatie, synthetische biologie. Het herschrijven van de biologische blauwdruk van het leven zelf. Van gentherapie tot designer babies.'},
+  {letter:'I',name:'Informatietechnologie',detail:'AI, big data, algoritmes, neurale netwerken. Systemen die leren, analyseren en beslissen. De digitalisering van alles, inclusief het menselijk brein.'},
+  {letter:'N',name:'Neuro/Cognotechnologie',detail:'BCI\'s, neurostimulatie, cognitieve versterking. Directe interfaces tussen brein en machine. Precies wat Sam krijgt — maar dan potentieel voor iedereen.'}
+];
+
+function initNBIN(){
+  const grid=document.getElementById('nbin-grid');
+  grid.innerHTML='';
+  nbinData.forEach((d,i)=>{
+    const card=document.createElement('div');
+    card.className='nbin-card';
+    card.id='nbin-'+i;
+    card.innerHTML=`<div class="nbin-letter">${d.letter}</div><div class="nbin-name">${d.name}</div><div class="nbin-detail">${d.detail}</div>`;
+    card.onclick=()=>revealNBIN(i);
+    grid.appendChild(card);
+  });
+  updateNBINCounter();
+}
+
+function revealNBIN(i){
+  const card=document.getElementById('nbin-'+i);
+  if(card.classList.contains('revealed'))return;
+  card.classList.add('revealed');
+  state.nbinRevealed++;
+  updateNBINCounter();
+  if(state.nbinRevealed>=4){
+    setTimeout(()=>{
+      document.getElementById('nbin-result').innerHTML='<div class="philosophy-box"><div class="box-title">Alle NBIN onthuld</div><p>Deze vier technologiedomeinen <em>versmelten</em> — en maken intern ingrijpen in de mens mogelijk. Dat is fundamenteel anders dan eerdere, externe technologie.</p></div><button class="continue-btn" onclick="go(\'nbin_done\')">Verder</button>';
+    },400);
+  }
+}
+
+function updateNBINCounter(){
+  document.getElementById('nbin-counter').textContent=state.nbinRevealed+' / 4 technologieën onthuld';
+}
+
+/* ===== SCENARIO EXPLORER ===== */
+const scenarioData=[
+  {icon:'🧠',name:'Extrahumanisme',sub:'Zwermgeest / Cyborg',desc:'<strong>Neuro-focus:</strong> Mensverbetering via technologische supplementen (BCI\'s, AI-integratie, netwerken). De biologische basis blijft grotendeels behouden, maar de cognitie wordt radicaal uitgebreid.<br><br><em>Denk aan:</em> Sam met zijn BCI, maar dan voor iedereen. Directe brein-naar-brein communicatie. Een collectief bewustzijn.',axis:'Biologie — Technologie',delta:8},
+  {icon:'🧬',name:'Transhumanisme',sub:'Alien / Biotech',desc:'<strong>Biotech-focus:</strong> Fundamenteel veranderen van het biologische bouwplan via genetische modificatie en synthetische biologie. Dit leidt potentieel <em>voorbij Homo sapiens</em> naar nieuwe biologische soorten.<br><br><em>Denk aan:</em> CRISPR-babies, genetische verbetering, mensen aangepast aan het leven op Mars.',axis:'Biologie — Technologie',delta:-5},
+  {icon:'🤖',name:'Posthumanisme',sub:'Zombie / AI-Robotica',desc:'<strong>Robotica/AI-focus:</strong> Creatie van volledig kunstmatige levensvormen, mogelijk niet-biologisch. Post-biologisch leven: silicium in plaats van koolstof. Intelligenties die de mens kunnen vervangen.<br><br><em>"Zombie"</em> verwijst naar het mogelijke gebrek aan bewustzijn zoals wij dat kennen.',axis:'Humanisme — Posthumanisme',delta:12}
+];
+
+function initScenarios(){
+  const grid=document.getElementById('scenario-grid');
+  grid.innerHTML='';
+  scenarioData.forEach((s,i)=>{
+    const card=document.createElement('div');
+    card.className='scenario-card';
+    card.id='sc-'+i;
+    card.innerHTML=`<div class="sc-icon">${s.icon}</div><div class="sc-name">${s.name}</div><div class="sc-sub">${s.sub}</div><div class="sc-desc">${s.desc}</div>`;
+    card.onclick=()=>exploreScenario(i);
+    grid.appendChild(card);
+  });
+  updateScenarioCounter();
+}
+
+function exploreScenario(i){
+  const card=document.getElementById('sc-'+i);
+  if(card.classList.contains('active'))return;
+  card.classList.add('active');
+  state.scenariosExplored++;
+  adj(scenarioData[i].axis,scenarioData[i].delta);
+  if(!state.flags['sc_'+i]){
+    state.flags['sc_'+i]=true;
+    if(i===0)T('Extrahumanisme','Scenario waarin de mens technologisch wordt uitgebreid (BCI, AI-integratie) maar biologisch grotendeels intact blijft. De radicale cyborg.');
+    if(i===1)T('Transhumanisme','Scenario waarin biotechnologie het menselijk bouwplan fundamenteel verandert — potentieel voorbij Homo sapiens.');
+    if(i===2)T('Posthumanisme','Scenario waarin volledig kunstmatige, niet-biologische levensvormen ontstaan die de mens mogelijk vervangen.');
+  }
+  updateScenarioCounter();
+  if(state.scenariosExplored>=3){
+    setTimeout(()=>{
+      document.getElementById('scenario-result').innerHTML='<button class="continue-btn" onclick="go(\'scenarios_done\')">Verder — alle scenario\'s verkend</button>';
+    },400);
+  }
+}
+
+function updateScenarioCounter(){
+  document.getElementById('scenario-counter').textContent=state.scenariosExplored+' / 3 scenario\'s verkend';
+}
+
+/* ===== VOTE SLIDERS ===== */
+function updateVote(){}
+function saveVotes(){
+  const v1=parseInt(document.getElementById('vote-1').value);
+  const v2=parseInt(document.getElementById('vote-2').value);
+  const v3=parseInt(document.getElementById('vote-3').value);
+  adj('Behoud — Transformatie',v1>50?10:-10);
+  adj('Gelijkheid — Verbetering',v3>50?8:-8);
+  R('Positie: '+(v1>60?'Geneigd naar technologische verbetering':v1<40?'Geneigd naar behoud van de mens':'Ambivalent over verbetering')+'. '+(v2>60?'Posthumanisme-kant':v2<40?'Extrahumanisme-kant':'Midden-scenario')+'. '+(v3>60?'Samenleving beslist':v3<40?'Individu beslist':'Gedeelde verantwoordelijkheid')+'.');
+  go('vote_done');
+}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

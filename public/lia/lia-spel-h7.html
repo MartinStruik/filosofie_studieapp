@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 7: 4E-cognitie</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#0a0908; --bg-card:#141210; --bg-hover:#201c18;
+    --text:#c8c0b8; --text-bright:#f0e8e0; --text-dim:#786858;
+    --accent:#d08848; --accent-glow:#f0a868; --accent-dim:#885028;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890;
+    --danger:#e06070; --success:#60c080;
+    --border:#282018;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(208,136,72,.08),rgba(208,136,72,.02));border:1px solid rgba(208,136,72,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(208,136,72,.06);border:1px solid rgba(208,136,72,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* 4E CARDS */
+  .four-e-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+  .four-e-card{border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:all .3s;background:var(--bg-card);min-height:120px;}
+  .four-e-card:hover{border-color:var(--accent-dim);background:var(--bg-hover);}
+  .four-e-card.explored{border-color:rgba(208,136,72,.3);background:rgba(208,136,72,.04);}
+  .four-e-card .e-letter{font-family:'Inter',sans-serif;font-size:28px;font-weight:600;color:var(--accent);margin-bottom:4px;}
+  .four-e-card .e-name{font-family:'Inter',sans-serif;font-size:14px;font-weight:500;color:var(--text-bright);margin-bottom:6px;}
+  .four-e-card .e-dutch{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);}
+  .four-e-card .e-detail{display:none;font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;margin-top:10px;padding-top:10px;border-top:1px solid var(--border);}
+  .four-e-card.explored .e-detail{display:block;}
+  @media(max-width:600px){.four-e-grid{grid-template-columns:1fr;}}
+
+  /* OTTO & INGA */
+  .oi-container{display:flex;gap:16px;margin:20px 0;}
+  .oi-panel{flex:1;border:1px solid var(--border);border-radius:12px;padding:20px;background:var(--bg-card);min-height:200px;transition:all .4s;}
+  .oi-panel .oi-name{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--accent);margin-bottom:10px;}
+  .oi-panel .oi-step{font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;opacity:0;transition:opacity .4s;margin:6px 0;}
+  .oi-panel .oi-step.visible{opacity:1;}
+  .oi-highlight{background:rgba(208,136,72,.1);border-radius:4px;padding:2px 6px;}
+  @media(max-width:600px){.oi-container{flex-direction:column;}}
+
+  /* EXTENSION TEST */
+  .ext-item{border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin:10px 0;background:var(--bg-card);transition:all .3s;}
+  .ext-item .ext-name{font-family:'Inter',sans-serif;font-size:15px;font-weight:500;color:var(--text-bright);margin-bottom:8px;}
+  .ext-criteria{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;}
+  .ext-crit{font-family:'Inter',sans-serif;font-size:12px;padding:4px 12px;border-radius:16px;cursor:pointer;border:1px solid var(--border);color:var(--text-dim);transition:all .2s;user-select:none;}
+  .ext-crit.checked{background:rgba(208,136,72,.15);border-color:rgba(208,136,72,.3);color:var(--accent-glow);}
+  .ext-verdict{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);margin-top:8px;min-height:20px;}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;letter-spacing:.5px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H7</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.08);border-color:rgba(123,104,238,.15);color:#4a3da0;">H1</span>
+      <span class="nb-chapter-link" style="background:rgba(94,168,160,.08);border-color:rgba(94,168,160,.15);color:#3a706a;">H2</span>
+      <span class="nb-chapter-link" style="background:rgba(212,160,80,.08);border-color:rgba(212,160,80,.15);color:#8a6830;">H3</span>
+      <span class="nb-chapter-link" style="background:rgba(224,112,136,.08);border-color:rgba(224,112,136,.15);color:#983050;">H4</span>
+      <span class="nb-chapter-link" style="background:rgba(80,184,216,.08);border-color:rgba(80,184,216,.15);color:#28708a;">H5</span>
+      <span class="nb-chapter-link" style="background:rgba(80,216,144,.08);border-color:rgba(80,216,144,.15);color:#287848;">H6</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Brein — Lichaam+Wereld':50,'Intern — Extern':50,'Representatie — Actie':50,'Individu — Systeem':50},
+  flags:{},eExplored:new Set(),extTests:{}};
+const totalPassages=22;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'Het BCI-lab',
+  text:`
+    <div class="ambient-text">Hoofdstuk 7 — Denken voorbij de hersenen</div>
+    <p>Tijdens de nabespreking in het BCI-lab wees dr. Kumar op de grafieken. <em>"De signaal-ruisverhouding verbetert. Je brein-output wordt consistenter — mooi werk."</em></p>
+    <p>Lia keek naar de lijnen die als ademhaling over het scherm golfden.</p>
+    <p><em>"Mag ik iets vragen? Is het echt alleen mijn brein dat die 'output' produceert? Of horen mijn hele ervaring en mijn lichaam bij die signalen? Zit denken wel alléén in mijn hoofd?"</em></p>`,
+  choices:[{text:'Kumar antwoordt…',next:'kumar_antwoord'}]
+},
+kumar_antwoord:{
+  title:'Kumar\'s antwoord',
+  text:`
+    <p>Kumar glimlachte alsof hij deze afslag kende.</p>
+    <p><em>"Uitstekende vraag. Het klassieke beeld zet het brein in een kluis — de schedel — als een soort computer. Maar er zijn benaderingen die dat beeld openbreken. Ze laten zien dat cognitie vaak <strong>uitgesmeerd</strong> is: verweven met je lichaam, je omgeving, en de hulpmiddelen die je gebruikt."</em></p>`,
+  choices:[{text:'Sam vertelt iets persoonlijks',next:'sam_telefoon'}]
+},
+sam_telefoon:{
+  title:'Sam\'s geheugen',
+  text:`
+    <p>Sam tikte zijn telefoon aan. <em>"Dit ding werd mijn geheugen omdat mijn hoofd te vol zat met andere dingen. Niet omdat het kapot was, maar omdat het overspoeld was."</em></p>
+    <p><em>"Zonder dit ding functioneer ik niet. Het ís gewoon een deel van mijn geheugen."</em></p>
+    <p>Hij tikte op de armleuning van zijn rolstoel. <em>"En deze stoel… soms schrik ik als iemand ertegen stoot, alsof ze mij raken. Alsof mijn lichaamsschema is uitgebreid en de stoel erin past."</em></p>
+    <p>Lia keek naar zijn handen op de wielen. <em>"Dus denken zit niet netjes opgeborgen in je schedel. Het gebruikt je lichaam, het grijpt dingen in de omgeving, het loopt via tools… en het ontstaat in doen."</em></p>`,
+  onEnter:()=>{R('Sam ervaart zijn telefoon als deel van zijn geheugen en zijn rolstoel als deel van zijn lichaam.');},
+  choices:[{text:'De vier E\'s',next:'symposium_intro'}]
+},
+symposium_intro:{
+  title:'4E-cognitie',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Symposium — Hoofdstuk 7</div>
+      <p><strong>Denken voorbij de hersenen: het 4E-cognitiemodel</strong></p>
+      <p>Cognitie is niet beperkt tot het brein, maar fundamenteel verbonden met ons <strong>Lichaam</strong>, onze <strong>Omgeving</strong>, onze <strong>Hulpmiddelen</strong> en onze <strong>Acties</strong>.</p>
+    </div>
+    <p>De 4E-denkers verwerpen het idee van cognitie als abstracte, 'ontlichaamde' symboolmanipulatie (H6). Ze benadrukken dat het functionalisme moeite heeft met:</p>
+    <p>— de rol van lichaam en interactie<br>
+    — de subjectieve kwaliteit van ervaring (<em>qualia</em>)<br>
+    — de contextafhankelijkheid van gedrag</p>`,
+  onEnter:()=>{T('4E-cognitie','Cognitiemodel dat stelt dat denken Embodied (belichaamd), Embedded (ingebed), Extended (uitgebreid) en Enactive (enactief) is.'); T('Qualia','De subjectieve, kwalitatieve ervaring — hoe het voelt om iets te ervaren (bv. de "roodheid" van rood).');},
+  choices:[{text:'Verken de vier E\'s',next:'four_e_explore'}]
+},
+
+/* ===== 4E EXPLORER ===== */
+four_e_explore:{
+  title:'De vier E\'s',
+  text:`
+    <p>Klik op elke kaart om de vier dimensies van cognitie te verkennen.</p>
+    <div class="four-e-grid">
+      <div class="four-e-card" id="card-embodied" onclick="exploreE('embodied')">
+        <div class="e-letter">E¹</div>
+        <div class="e-name">Embodied</div>
+        <div class="e-dutch">Belichaamd</div>
+        <div class="e-detail">Cognitie wordt gevormd door het type lichaam dat we hebben. Ons denken is niet abstract maar <strong>lichamelijk geworteld</strong>. Concepten zijn gebaseerd op lichamelijke metaforen (H5). Denken gebeurt ook <em>door</em> het lichaam: beweging, houding, gebaren zijn geen uitvoer van gedachten, maar deel van het denkproces.<br><br><em>Lia's klimervaring: haar denken zat in haar vingertoppen, haar spieren, haar balans.</em></div>
+      </div>
+      <div class="four-e-card" id="card-embedded" onclick="exploreE('embedded')">
+        <div class="e-letter">E²</div>
+        <div class="e-name">Embedded</div>
+        <div class="e-dutch">Ingebed</div>
+        <div class="e-detail">Cognitie vindt altijd plaats <strong>binnen een omgeving</strong> en maakt daar actief gebruik van. We 'offloaden' mentale taken naar de omgeving: notities, lijsten, digitale tools. De omgeving ondersteunt ons denken van buitenaf — maar blijft <em>extern</em>.<br><br><em>Lia's vader tekent schema's om na te denken — de omgeving ondersteunt zijn denkproces.</em></div>
+      </div>
+      <div class="four-e-card" id="card-extended" onclick="exploreE('extended')">
+        <div class="e-letter">E³</div>
+        <div class="e-name">Extended</div>
+        <div class="e-dutch">Uitgebreid</div>
+        <div class="e-detail">De grenzen van de geest reiken <strong>voorbij huid en schedel</strong>. Externe objecten kunnen letterlijk deel worden van ons cognitieve systeem — niet alleen ondersteuning, maar <em>onderdeel</em> van het denken zelf. (Clark & Chalmers)<br><br><em>Sam: "Mijn telefoon ís mijn geheugen. Zonder functioneer ik niet."</em></div>
+      </div>
+      <div class="four-e-card" id="card-enactive" onclick="exploreE('enactive')">
+        <div class="e-letter">E⁴</div>
+        <div class="e-name">Enactive</div>
+        <div class="e-dutch">Enactief</div>
+        <div class="e-detail">Cognitie is geen intern representeren, maar <strong>actief handelen</strong> in de wereld. Weten is 'weten hoe' — een vaardigheid die ontstaat in actie. Perceptie is geen passief ontvangen maar actieve exploratie via sensomotorische kennis.<br><br><em>Lia als klimmer: ze 'zag' routes omdat haar lichaam wist hoe het moest bewegen.</em></div>
+      </div>
+    </div>
+    <div id="four-e-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>
+    <div id="four-e-result" style="margin-top:16px;"></div>`,
+},
+
+four_e_done:{
+  title:'Vier dimensies',
+  text:`
+    <p>Lia schreef vier woorden in haar notitieboek: <strong>Embodied. Embedded. Extended. Enactive.</strong></p>
+    <p class="thought">Samen ondermijnen ze de scheiding tussen geest, lichaam en wereld. Denken is geen intern proces dat toevallig in een lichaam zit — het is geweven in alles wat ik ben en doe.</p>`,
+  onEnter:()=>{R('De vier E\'s ondermijnen de scheiding tussen geest, lichaam en wereld.');},
+  choices:[{text:'Verder naar het Otto & Inga experiment',next:'otto_inga_intro'}]
+},
+
+/* ===== OTTO & INGA ===== */
+otto_inga_intro:{
+  title:'Otto & Inga',
+  text:`
+    <p>De spreker ging dieper in op de <strong>Extended Mind</strong>-hypothese:</p>
+    <p><em>"Clark en Chalmers vragen: waar eindigt de geest? Ze beantwoorden dit met een gedachtenexperiment."</em></p>
+    <p>Twee personages willen naar het Museum of Modern Art in New York:</p>
+    <div class="oi-container" id="oi-game">
+      <div class="oi-panel" id="oi-inga"><div class="oi-name">Inga</div></div>
+      <div class="oi-panel" id="oi-otto"><div class="oi-name">Otto (heeft Alzheimer)</div></div>
+    </div>
+    <div id="oi-controls" style="text-align:center;margin-top:12px;">
+      <button class="continue-btn" onclick="nextOIStep()">Volgende stap</button>
+    </div>
+    <div id="oi-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{state.flags.oiStep=0;setTimeout(()=>nextOIStep(),300);}
+},
+
+otto_inga_done:{
+  title:'De grens doorbroken',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Clark & Chalmers — Conclusie</div>
+      <p><em>"Indien een deel van de wereld functioneert als een proces dat we als deel van het cognitief proces zouden erkennen wanneer het in het hoofd volbracht zou worden, dan is dat deel van de wereld deel van het cognitief proces."</em></p>
+      <p>Otto's notitieboekje is <strong>deel van zijn geest</strong>. "In deze gevallen zit de overtuiging gewoonweg niet in het hoofd."</p>
+    </div>
+    <p>Lia keek naar haar telefoon. Naar haar notitieboek. Naar de BCI-cap op het bureau.</p>
+    <p class="thought">Als een notitieboekje deel kan zijn van je geest… dan is de BCI niet zoiets vreemds. Het is gewoon de volgende stap in wat mensen altijd al deden: hun geest uitbreiden met tools.</p>`,
+  onEnter:()=>{T('Extended Mind (Clark & Chalmers)','De hypothese dat de geest zich kan uitstrekken voorbij huid en schedel — externe objecten kunnen letterlijk deel worden van ons cognitieve systeem.'); T('Cognitieve extensie','Een extern object dat functioneel dezelfde rol speelt als een intern cognitief proces en zo deel wordt van de geest.'); R('Als een notitieboek deel kan zijn van je geest, dan is de BCI misschien de volgende logische stap.'); adj('Intern — Extern',15);},
+  choices:[{text:'Test: wat telt als cognitieve extensie?',next:'extension_test'}]
+},
+
+/* ===== EXTENSION TEST ===== */
+extension_test:{
+  title:'Cognitieve extensie-test',
+  text:`
+    <p>Clark & Chalmers stellen vier criteria voor een echte cognitieve extensie. Beoordeel deze tools:</p>
+    <p class="dim" style="font-size:15px;margin-bottom:16px;">Klik de criteria aan die volgens jou van toepassing zijn. Bij 4/4 is het een cognitieve extensie.</p>
+    <div id="ext-items"></div>
+    <div id="ext-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(startExtTest,500);}
+},
+
+ext_done:{
+  title:'De grens vervaagt',
+  text:`
+    <p>Lia bekeek de resultaten. Sommige tools zijn overduidelijk extensies van de geest. Andere zijn het net niet — ze ondersteunen, maar zijn niet geïntegreerd.</p>
+    <p class="thought">Het verschil tussen embedded en extended is subtiel maar cruciaal. Embedded: de omgeving helpt mee. Extended: de omgeving ís onderdeel van je denken.</p>
+    <div class="definition-box">
+      <span class="term">Embedded vs. Extended</span>
+      <strong>Embedded</strong>: de omgeving ondersteunt cognitie van buitenaf (je checkt een spiekbriefje).<br>
+      <strong>Extended</strong>: het externe object is functioneel onderdeel van je cognitieve systeem (Otto's notitieboek ís zijn geheugen).
+    </div>`,
+  onEnter:()=>{R('Het verschil embedded/extended: ondersteuning van buitenaf vs. deel van het systeem.');adj('Intern — Extern',8);},
+  choices:[{text:'Verder naar Enactive',next:'enactive_deep'}]
+},
+
+enactive_deep:{
+  title:'Enactive cognitie',
+  text:`
+    <p>De spreker ging dieper in op de vierde E:</p>
+    <div class="definition-box">
+      <span class="term">Enactive cognition — Perceptie als actieve vaardigheid</span>
+      Zien is geen passief ontvangen van een beeld, maar een <strong>actieve exploratie</strong> via beweging en aandacht. Deze exploratie wordt geleid door onze impliciete kennis van <em>sensomotorische contingenties</em>: hoe sensorische input verandert door onze acties.
+    </div>
+    <p><em>"Denk aan het rijden in een Porsche,"</em> zei de spreker. <em>"Het 'gevoel' van de Porsche komt niet uit het beeld of geluid alleen. Het komt uit je kennis van de interactiemogelijkheden: hoe het stuur reageert, hoe de versnelling voelt, hoe de weg onder je trilt."</em></p>
+    <p>Lia dacht aan de klimwand. <em>Ik "zag" routes omdat mijn lichaam wist hoe het moest bewegen. Het zien was geen passief registreren — het was een actieve vaardigheid.</em></p>`,
+  onEnter:()=>{T('Enactive cognitie','Cognitie ontstaat uit actief, belichaamd handelen in de wereld. Perceptie is een vaardigheid gebaseerd op sensomotorische kennis.'); T('Sensomotorische contingenties','De impliciete kennis van hoe sensorische input verandert door onze acties — de basis van perceptie als vaardigheid.'); adj('Representatie — Actie',15);},
+  choices:[{text:'Wat betekent dit voor de BCI?',next:'bci_4e'}]
+},
+
+bci_4e:{
+  title:'De BCI door 4E-ogen',
+  text:`
+    <p>Later, alleen in de tuin. Lentezon op haar gezicht, koude wind op haar polsen.</p>
+    <p class="thought">Als 4E klopt, dan is de vraag niet of ik nog mezelf ben met die chip. Maar welke versie van mezelf ik wil worden.</p>
+    <p>Sam rolde naast haar. <em>"Elke uitbreiding verandert ook het geheel een beetje. Je denkt anders met pen dan met toetsenbord, anders met kaart dan met GPS."</em></p>
+    <p>Lia kneep haar ogen dicht. Het voelde tegelijk bevrijdend en beangstigend.</p>
+    <p class="thought">Als denken niet alleen in mijn hoofd zit, dan is mijn keuze geen ja/nee tegen 'hersenen met chip', maar een keuze voor welke configuratie van lichaam-wereld-hulpmiddel ik wil worden. Niet: ben ik nog mezelf? Maar: welke versie van mezelf ontstaat hier?</p>`,
+  onEnter:()=>{R('De BCI-vraag verschuift: niet "ben ik nog mezelf?" maar "welke versie van mezelf wil ik worden?"'); adj('Individu — Systeem',10);},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 7 — Kernbegrippen</div>
+      <p><strong>4E-cognitie</strong> — Denken is Embodied, Embedded, Extended, Enactive<br>
+      <strong>Embodied</strong> — Lichaam vormt en structureert denken<br>
+      <strong>Embedded</strong> — Cognitie ingebed in en ondersteund door omgeving<br>
+      <strong>Extended Mind</strong> — Geest reikt voorbij schedel (Clark & Chalmers)<br>
+      <strong>Enactive</strong> — Cognitie als actief handelen, perceptie als vaardigheid<br>
+      <strong>Sensomotorische contingenties</strong> — Kennis van interactiemogelijkheden<br>
+      <strong>Cognitieve extensie</strong> — Extern object als deel van de geest<br>
+      <strong>Offloading</strong> — Mentale taken uitbesteden aan de omgeving</p>
+    </div>
+    <div class="max-moment">Max krulde zich op naast de rolstoel — niet op Lia's schoot, maar precies zo dat ze zijn warmte voelde zonder dat hij in de weg zat. Embedded kat.</div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 7 — Wordt vervolgd in H8: Clark — Natural-Born Cyborgs</p>`,
+  onEnter:()=>{R('Hoofdstuk 7 afgerond. Denken is uitgesmeerd over lichaam, omgeving en tools — de BCI past in dit beeld.');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== 4E EXPLORER ===== */
+function exploreE(e){
+  const card=document.getElementById('card-'+e);
+  if(card.classList.contains('explored'))return;
+  card.classList.add('explored');
+  state.eExplored.add(e);
+  const names={embodied:'Embodied Cognition',embedded:'Embedded Cognition',extended:'Extended Cognition',enactive:'Enactive Cognition'};
+  const descs={embodied:'Cognitie wordt gevormd door het type lichaam dat we hebben — denken is lichamelijk geworteld.',embedded:'Cognitie vindt plaats binnen een omgeving en maakt daar actief gebruik van (offloading).',extended:'De grenzen van de geest reiken voorbij huid en schedel — externe objecten worden deel van het denken.',enactive:'Cognitie ontstaat uit actief handelen in de wereld — weten is "weten hoe" via sensomotorische vaardigheid.'};
+  T(names[e],descs[e]);
+  const counter=document.getElementById('four-e-counter');
+  counter.textContent=`${state.eExplored.size}/4 E's verkend`;
+  if(state.eExplored.size>=4){
+    document.getElementById('four-e-result').innerHTML=`<div class="philosophy-box"><div class="box-title">Alle vier de E's verkend</div><p>Samen vormen ze een radicaal alternatief voor het brein-centrische model: denken is niet beperkt tot de schedel, maar uitgesmeerd over lichaam, omgeving, tools en acties.</p></div><button class="continue-btn" onclick="go('four_e_done')">Verder</button>`;
+    adj('Brein — Lichaam+Wereld',15);
+  }
+}
+
+/* ===== OTTO & INGA ===== */
+const oiSteps=[
+  {inga:'Inga wil naar het museum.',otto:'Otto wil naar het museum.'},
+  {inga:'Ze denkt na… en <span class="oi-highlight">herinnert zich</span> uit haar biologisch geheugen: "Het is op 53rd Street."',otto:'Hij denkt na… maar kan het zich niet herinneren. Hij pakt zijn <span class="oi-highlight">notitieboekje</span> en slaat het op: "53rd Street."'},
+  {inga:'De informatie was <em>intern opgeslagen</em>, altijd beschikbaar, direct toegankelijk.',otto:'De informatie was <em>extern opgeslagen</em>, altijd beschikbaar, direct toegankelijk, automatisch vertrouwd.'},
+  {inga:'Inga geloofde al dat het museum op 53rd Street was — vóór ze eraan dacht.',otto:'Otto geloofde al dat het museum op 53rd Street was — vóór hij het notitieboekje opensloeg.'}
+];
+
+function nextOIStep(){
+  const step=state.flags.oiStep||0;
+  if(step>=oiSteps.length){
+    document.getElementById('oi-controls').style.display='none';
+    document.getElementById('oi-result').innerHTML=`
+      <div class="philosophy-box">
+        <div class="box-title">De cruciale claim</div>
+        <p>Functioneel speelt Otto's notitieboekje <strong>exact dezelfde rol</strong> als Inga's interne geheugen. Het verschil is alleen de <em>locatie</em> (intern vs. extern), niet de <em>functie</em>.</p>
+        <p>Conclusie: Otto's notitieboekje is <strong>deel van zijn cognitieve systeem</strong>. Deel van zijn geest.</p>
+      </div>
+      <button class="continue-btn" onclick="go('otto_inga_done')">Verder</button>`;
+    return;
+  }
+  const s=oiSteps[step];
+  const ingaPanel=document.getElementById('oi-inga');
+  const ottoPanel=document.getElementById('oi-otto');
+  const ingaStep=document.createElement('div');ingaStep.className='oi-step';ingaStep.innerHTML=s.inga;ingaPanel.appendChild(ingaStep);
+  const ottoStep=document.createElement('div');ottoStep.className='oi-step';ottoStep.innerHTML=s.otto;ottoPanel.appendChild(ottoStep);
+  setTimeout(()=>{ingaStep.classList.add('visible');ottoStep.classList.add('visible');},50);
+  state.flags.oiStep=step+1;
+}
+
+/* ===== EXTENSION TEST ===== */
+const extItems=[
+  {name:'Sam\'s smartphone (agenda, herinneringen)',criteria:[true,true,true,true],verdict:'Cognitieve extensie — voldoet aan alle criteria. Sam functioneert niet zonder.'},
+  {name:'Google Maps tijdens een reis',criteria:[true,true,false,false],verdict:'Embedded, niet extended — je vertrouwt het niet automatisch en hebt het niet altijd bij je.'},
+  {name:'Lia\'s BCI-chip',criteria:[true,true,true,true],verdict:'Cognitieve extensie — permanent, betrouwbaar, direct toegankelijk, automatisch geïntegreerd.'},
+  {name:'Een bibliotheekboek',criteria:[false,false,false,false],verdict:'Geen extensie — niet constant beschikbaar, niet direct toegankelijk, niet automatisch vertrouwd.'}
+];
+const critLabels=['Constant beschikbaar','Betrouwbaar','Direct toegankelijk','Automatisch vertrouwd'];
+
+function startExtTest(){
+  const container=document.getElementById('ext-items');
+  container.innerHTML='';
+  extItems.forEach((item,i)=>{
+    state.extTests[i]=new Set();
+    let html=`<div class="ext-item" id="ext-${i}"><div class="ext-name">${item.name}</div><div class="ext-criteria">`;
+    critLabels.forEach((c,j)=>{
+      html+=`<span class="ext-crit" id="ext-${i}-${j}" onclick="toggleCrit(${i},${j})">${c}</span>`;
+    });
+    html+=`</div><div class="ext-verdict" id="ext-verdict-${i}"></div></div>`;
+    container.innerHTML+=html;
+  });
+}
+
+function toggleCrit(item,crit){
+  const el=document.getElementById(`ext-${item}-${crit}`);
+  const s=state.extTests[item];
+  if(s.has(crit)){s.delete(crit);el.classList.remove('checked');}
+  else{s.add(crit);el.classList.add('checked');}
+  // Check if 4 criteria selected
+  if(s.size===4){
+    document.getElementById(`ext-verdict-${item}`).innerHTML=`<span style="color:var(--${extItems[item].criteria.every((c,j)=>c===s.has(j))?'success':'danger'});">${extItems[item].verdict}</span>`;
+  } else {
+    document.getElementById(`ext-verdict-${item}`).textContent=`${s.size}/4 criteria geselecteerd`;
+  }
+  // Check all items done
+  const allDone=extItems.every((_,i)=>state.extTests[i].size===4);
+  if(allDone){
+    const result=document.getElementById('ext-result');
+    if(!result.innerHTML) result.innerHTML=`<button class="continue-btn" onclick="go('ext_done')">Verder</button>`;
+  }
+}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>

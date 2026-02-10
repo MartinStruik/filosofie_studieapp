@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 3: Plessner</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --bg:#0b0a0f; --bg-card:#13121a; --bg-hover:#1c1a28;
+    --text:#c8c5d0; --text-bright:#eae8f0; --text-dim:#6e6b7a;
+    --accent:#d4a050; --accent-glow:#f0c878; --accent-dim:#8a6830;
+    --warm:#e8a87c; --warm-dim:#a06840;
+    --teal:#5ea8a0; --teal-dim:#3a706a;
+    --purple:#7b68ee; --purple-dim:#4a3da0;
+    --danger:#e06070; --success:#60c080;
+    --border:#252535;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--warm);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--warm);border-left:2px solid var(--warm-dim);padding-left:16px;margin:20px 0;}
+
+  .philosophy-box{background:linear-gradient(135deg,rgba(212,160,80,.08),rgba(212,160,80,.02));border:1px solid rgba(212,160,80,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .contrast-descartes{background:rgba(123,104,238,.05);border:1px solid rgba(123,104,238,.15);}
+  .contrast-descartes .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--purple);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-fenomeno{background:rgba(94,168,160,.05);border:1px solid rgba(94,168,160,.15);}
+  .contrast-fenomeno .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--teal);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .contrast-plessner{background:rgba(212,160,80,.05);border:1px solid rgba(212,160,80,.15);}
+  .contrast-plessner .cb-label{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent);font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+
+  .definition-box{background:rgba(212,160,80,.06);border:1px solid rgba(212,160,80,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .scene-break{text-align:center;margin:30px 0;color:var(--text-dim);opacity:.3;letter-spacing:8px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* STORM (lachen/wenen) */
+  .storm-container{border:1px solid var(--border);border-radius:14px;padding:30px;margin:20px 0;text-align:center;background:rgba(0,0,0,.3);min-height:180px;position:relative;overflow:hidden;transition:all .6s;}
+  .storm-container.storm-laugh{background:rgba(212,160,80,.06);border-color:rgba(212,160,80,.3);}
+  .storm-container.storm-cry{background:rgba(224,96,112,.06);border-color:rgba(224,96,112,.3);}
+  .storm-container.storm-calm{background:rgba(94,168,160,.04);border-color:rgba(94,168,160,.2);}
+  .storm-text{font-size:18px;margin:10px 0;transition:all .4s;}
+  .storm-emoji{font-size:48px;margin:12px 0;transition:all .3s;}
+  .storm-btn{border:none;border-radius:8px;padding:10px 24px;margin:6px;font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .2s;}
+  .storm-btn:disabled{opacity:.3;cursor:default;}
+  .storm-btn-stop{background:rgba(212,160,80,.2);color:var(--accent-glow);}
+  .storm-btn-stop:hover{background:rgba(212,160,80,.35);}
+
+  /* CENTRISCH/EXCENTRISCH */
+  .perspective-card{border:1px solid var(--border);border-radius:12px;padding:20px;margin:12px 0;cursor:pointer;transition:all .3s;}
+  .perspective-card:hover{border-color:var(--accent-dim);background:var(--bg-hover);}
+  .perspective-card.selected{border-color:var(--accent);background:rgba(212,160,80,.06);}
+  .pc-title{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;margin-bottom:6px;}
+  .pc-icon{font-size:32px;float:left;margin-right:14px;}
+
+  /* LAWS */
+  .law-card{border:1px solid rgba(212,160,80,.2);border-radius:12px;padding:20px;margin:14px 0;background:rgba(212,160,80,.03);cursor:pointer;transition:all .3s;}
+  .law-card:hover{background:rgba(212,160,80,.07);}
+  .law-card .law-num{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:2px;text-transform:uppercase;}
+  .law-card .law-title{font-size:20px;font-weight:600;color:var(--text-bright);margin:4px 0;}
+  .law-card .law-paradox{font-style:italic;color:var(--accent-glow);font-size:16px;}
+  .law-expanded{display:none;margin-top:12px;padding-top:12px;border-top:1px solid rgba(212,160,80,.12);font-size:17px;line-height:1.6;}
+
+  /* NOTEBOOK */
+  .nb-title{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--warm);margin-bottom:20px;display:flex;align-items:center;gap:8px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);margin-bottom:8px;}
+  .nb-item{font-size:15px;line-height:1.5;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);opacity:0;animation:fadeIn .5s ease forwards;}
+  @keyframes fadeIn{to{opacity:1;}}
+  .nb-item .nb-term{color:var(--accent-glow);font-weight:600;font-size:14px;font-family:'Inter',sans-serif;display:block;}
+  .nb-item .nb-def{color:var(--text-dim);font-size:14px;}
+  .nb-compass{background:rgba(212,160,80,.06);border:1px solid rgba(212,160,80,.15);border-radius:10px;padding:14px;margin-top:12px;}
+  .compass-bar{display:flex;align-items:center;margin:6px 0;font-family:'Inter',sans-serif;font-size:11px;gap:8px;}
+  .compass-bar .bar-label{width:95px;color:var(--text-dim);text-align:right;flex-shrink:0;}
+  .compass-bar .bar-track{flex:1;height:4px;background:var(--border);border-radius:2px;position:relative;}
+  .compass-bar .bar-dot{position:absolute;top:-4px;width:12px;height:12px;background:var(--accent);border-radius:50%;transition:left .5s;}
+  .compass-bar .bar-label-right{width:95px;color:var(--text-dim);flex-shrink:0;}
+
+  ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="toggleNB()">📓 Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">📓 Lia's Notitieboek</div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="nb-terms"><p class="dim" style="font-size:14px;font-family:'Inter',sans-serif;">Nog geen begrippen ontdekt...</p></div></div>
+    <div class="nb-section"><div class="nb-section-title">Lia's reflecties</div><div id="nb-reflections"><p class="dim" style="font-size:14px;font-family:'Inter',sans-serif;">Nog geen reflecties...</p></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch kompas</div>
+      <div id="nb-compass" class="nb-compass" style="display:none;">
+        <div class="compass-bar"><span class="bar-label">Dualisme</span><div class="bar-track"><div class="bar-dot" id="c-dual" style="left:50%"></div></div><span class="bar-label-right">Eenheid</span></div>
+        <div class="compass-bar"><span class="bar-label">Bepaald</span><div class="bar-track"><div class="bar-dot" id="c-free" style="left:50%"></div></div><span class="bar-label-right">Vrij</span></div>
+        <div class="compass-bar"><span class="bar-label">Essentie</span><div class="bar-track"><div class="bar-dot" id="c-exist" style="left:50%"></div></div><span class="bar-label-right">Existentie</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const S={passage:'',history:[],visited:0,total:24,dual:50,free:50,exist:50,stormPhase:0,lawsRead:0,terms:[],reflections:[]};
+function go(id){S.history.push(S.passage);S.passage=id;S.visited++;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{if(P[id])w.innerHTML=P[id]();setTimeout(()=>w.classList.add('visible'),50);},300);document.getElementById('progress-bar').style.width=Math.min(100,(S.visited/S.total)*100)+'%';document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function T(t,d){if(S.terms.find(x=>x.t===t))return'';S.terms.push({t,d});rNB();return'';}
+function R(t){S.reflections.push(t);rNB();}
+function adj(a,d){S[a]=Math.max(0,Math.min(100,S[a]+d));rC();}
+function rNB(){const te=document.getElementById('nb-terms'),re=document.getElementById('nb-reflections');if(S.terms.length)te.innerHTML=S.terms.map(x=>`<div class="nb-item"><span class="nb-term">${x.t}</span><span class="nb-def">${x.d}</span></div>`).join('');if(S.reflections.length)re.innerHTML=S.reflections.map(r=>`<div class="nb-item" style="color:var(--warm);font-style:italic;font-size:14px;">"${r}"</div>`).join('');}
+function rC(){document.getElementById('nb-compass').style.display='block';document.getElementById('c-dual').style.left=S.dual+'%';document.getElementById('c-free').style.left=S.free+'%';document.getElementById('c-exist').style.left=S.exist+'%';}
+function toggleNB(){document.getElementById('notebook-panel').classList.toggle('open');}
+
+// ============================================================
+const P={
+
+'start':()=>`
+<div style="text-align:center;padding:60px 0;">
+  <div class="ambient-text">Een interactief filosofisch verhaal</div>
+  <h1 style="font-family:'Inter',sans-serif;font-size:32px;font-weight:300;color:var(--text-bright);letter-spacing:2px;margin-bottom:8px;">LIA'S TRANSFORMATIE</h1>
+  <p style="color:var(--accent);font-family:'Inter',sans-serif;font-size:14px;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px;">Hoofdstuk 3 — De Excentrische Positionaliteit</p>
+  <p style="color:var(--accent-glow);font-family:'Inter',sans-serif;font-size:12px;letter-spacing:2px;margin-bottom:40px;">Helmuth Plessner &middot; Filosofische Antropologie</p>
+  <p style="max-width:460px;margin:0 auto 30px;font-size:17px;color:var(--text-dim);">
+    Descartes zei: je bent een denkend ding. Sheets-Johnstone zei: je bent een bewegend lichaam. Maar hoe verklaar je dat je tegelijk <em>in</em> jezelf zit en van buitenaf naar jezelf kijkt?
+  </p>
+  <button class="continue-btn" onclick="go('de-mok')" style="font-size:16px;padding:14px 40px;">De volgende dag</button>
+</div>`,
+
+'de-mok':()=>`
+<div class="ambient-text">Lia's kamer &middot; ochtend &middot; na weer een frustrerende sessie</div>
+<div class="passage-title">De Mok</div>
+<div class="passage-text">
+  <p>Terug op je kamer, na weer een frustrerende sessie met Ruben. Je kijkt naar de mok thee op je nachtkastje.</p>
+  <p>Een simpele handeling: pakken en drinken. Miljoenen mensen doen het elke ochtend zonder erbij na te denken.</p>
+  <p>Je concentreert je. Geeft het commando. Je hand beweegt &mdash; maar je vingers weigeren te sluiten. Ze blijven trillen, ongecoördineerd en vreemd. De mok blijft staan. Onbereikbaar.</p>
+</div>
+<button class="continue-btn" onclick="go('twee-lias')">Op dat moment voel je het</button>`,
+
+'twee-lias':()=>`
+<div class="passage-title">Twee Lia's</div>
+<div class="passage-text">
+  <p>Op dat moment voel je het scherper dan ooit: <strong>er zijn twee Lia's</strong>.</p>
+  <p>De ene Lia weet <em>precies</em> hoe de mok voelt, hoe de spieren moeten spannen &mdash; de herinnering, de intentie. De andere Lia is dit onwillige lichaam dat die kennis weigert uit te voeren.</p>
+  <p>Het is geen muur meer. Het is een interne breuk. Een absurde splijting in je eigen wezen.</p>
+</div>
+<div class="thought">Ik kijk naar mezelf die naar mezelf kijkt. Wie van de twee is de echte Lia?</div>
+<div class="passage-text">
+  <p>Een diepe zucht ontsnapt je. Die al snel verandert in iets anders.</p>
+</div>
+<button class="continue-btn" onclick="go('de-storm')">De storm breekt los</button>`,
+
+'de-storm':()=>{
+S.stormPhase=0;
+return`
+<div class="passage-title">De Storm</div>
+<div class="storm-container" id="storm-box">
+  <div class="storm-emoji" id="storm-face">😐</div>
+  <div class="storm-text" id="storm-text">De spanning bouwt zich op als een storm.</div>
+  <div style="margin-top:16px;" id="storm-controls">
+    <button class="storm-btn storm-btn-stop" id="storm-next" onclick="nextStorm()">Probeer het in te houden</button>
+  </div>
+</div>
+<div id="storm-after" style="display:none;"></div>`;
+},
+
+'na-de-storm':()=>`
+<div class="passage-title">Stilte</div>
+<div class="passage-text">
+  <p>Toen de storm eindelijk bedaarde, bleef je achter in een vreemde leegte. Vermoeid, maar ook lichter.</p>
+  <p>"Het spijt me," fluisterde je.</p>
+  <p>Ruben legde zijn hand zacht op je schouder. "<strong>Niet nodig. Soms neemt je lichaam het gewoon over. Dat is menselijker dan je denkt.</strong>"</p>
+</div>
+<div class="thought">Mijn lichaam nam het over. Niet mijn geest, niet mijn wil. Mijn lichaam besloot te lachen, te huilen, terwijl 'ik' alleen maar toekeek.</div>
+<div class="choices">
+  <button class="choice-btn" onclick="adj('dual',8);R('In lachen en huilen was ik mijn lichaam, niet mijn geest. De scheiding viel weg.');go('bibliotheek')">
+    <span class="choice-icon">A</span> In dat moment was ik mijn lichaam &mdash; de scheiding tussen geest en lichaam viel weg
+  </button>
+  <button class="choice-btn" onclick="R('Ik keek toe terwijl mijn lichaam het overnam — twee Lia\\'s, tegelijk.');go('bibliotheek')">
+    <span class="choice-icon">B</span> Ik keek toe terwijl mijn lichaam het overnam &mdash; ik was tegelijk <em>in</em> het huilen en <em>toeschouwer</em>
+  </button>
+  <button class="choice-btn" onclick="adj('dual',-5);R('Het was gewoon een lichamelijke reactie, een ontlading. Niet iets filosofisch.');go('bibliotheek')">
+    <span class="choice-icon">C</span> Het was gewoon een lichamelijke reactie, een ontlading van spanning &mdash; niet meer dan dat
+  </button>
+</div>`,
+
+'bibliotheek':()=>`
+<div class="ambient-text">Bibliotheek &middot; later die middag &middot; Sam is er ook</div>
+<div class="passage-title">Sam</div>
+<div class="passage-text">
+  <p>In de bibliotheek vertel je Sam wat er gebeurd was. Hij fronst.</p>
+  <p>"Heftig… maar was het wel nuttig? Emoties kunnen je herstel toch ook tegenwerken?"</p>
+  <p>Je voelt irritatie opkomen. "Het was niet nuttig of onnut, Sam. <em>Het gebeurde gewoon.</em> Ik zat ín mijn lichaam, ik voelde die tranen &mdash; maar tegelijk keek ik ook van buitenaf naar mezelf. Alsof er twee Lia's waren: de één die het ervoer, de ander die toekeek."</p>
+</div>
+<button class="continue-btn" onclick="go('sam-herkent')">Sam herkent het</button>`,
+
+'sam-herkent':()=>`
+<div class="passage-title">De Breuk</div>
+<div class="passage-text">
+  <p>Sam wordt stil. Zijn vingers draaien aan zijn wiel.</p>
+  <p>"Soms is het alsof er twee mensen in me zitten," zegt hij langzaam. "De ene die de pijn voelt, de andere die toekijkt en denkt: 'daar heb je Sam weer met zijn dramatiek.' Alsof ik mezelf van buitenaf zie leiden."</p>
+  <p>Hij zweeg even.</p>
+  <p>"Die filosoof waar ze het over hadden… Plessner? Ik snapte niet alles, maar dat van die <em>breuk</em>… dat herken ik wel. Na mijn ongeluk was er lang een tijd dat ik mezelf bekeek alsof ik naar een vreemde keek. 'Kijk, daar zit Sam in zijn rolstoel.' Niet: 'daar zit <em>ik</em>.' Alsof ik opzij was gestapt van mezelf."</p>
+</div>
+<div class="passage-text">
+  <p>Je kijkt naar je handen. Het idee geeft je een vreemd soort troost.</p>
+  <p>"Dus het is normaal dat ik me soms gespleten voel? Dat ik mezelf telkens opnieuw moet uitvinden?"</p>
+  <p>"Misschien is dat precies Plessners punt," zegt Sam. "<strong>We zijn nooit af. Het hoort bij mens-zijn dat we onszelf telkens weer vormgeven. Kunstmatig, zoekend, experimenterend.</strong>"</p>
+</div>
+<div class="thought">Het woord <em>experiment</em> bleef haken. Was dat ook wat de chip zou betekenen &mdash; een nieuw experiment met mezelf?</div>
+<div class="scene-break">&middot; &middot; &middot;</div>
+<button class="continue-btn" onclick="go('symposium')">De volgende dag &mdash; het symposium</button>`,
+
+'symposium':()=>`
+<div class="ambient-text">Collegezaal &middot; middag</div>
+<div class="passage-title">Het Symposium — Plessner</div>
+<div class="passage-text">
+  <p>De professor opent met een foto: een man met een hoog voorhoofd en een doordringende blik. <strong>Helmuth Plessner</strong>, 1892&ndash;1985. Zoöloog én filosoof.</p>
+  <p>"Descartes scheidde geest en lichaam. Sheets-Johnstone verenigde ze. Maar Plessner stelt een andere, diepere vraag: <em>wat onderscheidt de mens fundamenteel van andere levende wezens?</em>"</p>
+  <p>"Niet één specifieke eigenschap, zegt hij, maar onze unieke manier van <strong>zijn-in-de-wereld</strong>."</p>
+</div>
+
+${T('Helmuth Plessner','Duits zoöloog en filosoof (1892-1985). Ontwikkelde het concept excentrische positionaliteit: de mens kan afstand nemen van zijn directe ervaring.')}
+
+<div class="philosophy-box">
+  <div class="box-title">Plessners Project</div>
+  <p>Plessner wilde een <strong>filosofische antropologie</strong> die wetenschappelijk onderbouwd was. Hij baseerde zich op biologisch onderzoek, maar verzette zich tegen strikt <strong>determinisme</strong> &mdash; het idee dat de mens volledig bepaald is door natuurlijke processen.</p>
+  <p style="margin-top:10px;">Volgens Plessner is de mens van nature juist <em>onbepaald</em>: we hebben de vrijheid én de noodzaak om ons eigen bestaan vorm te geven.</p>
+</div>
+
+<button class="continue-btn" onclick="go('centrisch')">Centrisch vs. excentrisch</button>`,
+
+'centrisch':()=>`
+<div class="passage-title">Twee Manieren van Zijn</div>
+<div class="passage-text">
+  <p>"Laten we beginnen met een vergelijking," zegt de professor. "Kijk eens naar Max &mdash; Lia's kat."</p>
+</div>
+
+<div class="perspective-card" onclick="this.classList.toggle('selected')">
+  <span class="pc-icon">🐈</span>
+  <div class="pc-title" style="color:var(--teal);">Centrische positionaliteit &mdash; het dier</div>
+  <p style="font-size:16px;">Max leeft in het <strong>hier en nu</strong>. Hij <em>is</em> zijn honger als hij honger heeft, zijn angst als hij schrikt, zijn vreugde als hij spint. Hij valt samen met zijn directe ervaring. Er is geen afstand tussen Max en zijn beleving.</p>
+</div>
+
+<div class="perspective-card" onclick="this.classList.toggle('selected')">
+  <span class="pc-icon">🧑</span>
+  <div class="pc-title" style="color:var(--accent);">Excentrische positionaliteit &mdash; de mens</div>
+  <p style="font-size:16px;">Lia kan afstand nemen. Ze kan nadenken over haar honger, haar angst, haar verdriet. Ze kijkt als het ware <strong>'over haar eigen schouder mee'</strong>. Ze is haar lichaam, maar ze kan het ook bekijken als een object. Ze leeft tegelijk in het nu én reflecterend op dat nu.</p>
+</div>
+
+${T('Centrische positionaliteit','De manier van zijn van dieren: ze vallen samen met hun directe ervaring in het hier en nu.')}
+${T('Excentrische positionaliteit','De unieke menselijke manier van zijn: we kunnen afstand nemen van onze directe ervaring en op onszelf reflecteren.')}
+
+<div class="passage-text">
+  <p>Je denkt aan de storm van gisteren. Je huilde &mdash; en tegelijk keek je <em>naar</em> jezelf die huilde. Max, als die bang is, is gewoon bang. Jij bent bang én je weet dat je bang bent. Dat is de excentrische positie.</p>
+</div>
+<button class="continue-btn" onclick="go('de-breuk')">De breuk</button>`,
+
+'de-breuk':()=>`
+<div class="passage-title">De Breuk in Ons Wezen</div>
+<div class="passage-text">
+  <p>"Dit reflecterende 'ik'," zegt de professor, "staat <strong>buiten</strong> (ex-) het centrum van het directe lichamelijke zijn, maar is er onlosmakelijk mee verbonden."</p>
+</div>
+
+<div class="definition-box">
+  <span class="term">De Breuk</span>
+  We zijn ons lichaam (we ervaren het van binnenuit) én we hebben ons lichaam (we kunnen het van buitenaf bekijken). Dit is geen defect &mdash; het is fundamenteel menselijk. Het is de bron van zowel onze <strong>vrijheid</strong> (we kunnen reflecteren, kiezen) als onze <strong>problemen</strong> (we zijn nooit helemaal thuis in onszelf).
+</div>
+
+<div class="passage-text">
+  <p>"Plessner formuleert het zo:" de professor citeert:</p>
+</div>
+
+<div class="thought" style="font-size:18px;text-align:center;border:none;padding:20px;color:var(--accent-glow);">
+  "Zijn existentie legt hem de dubbelzinnigheid op van een 'lichamelijk' wezen en een wezen 'in het lichaam-ding', hetgeen voor zijn bestaan een werkelijke breuk betekent."
+  <div style="font-size:14px;color:var(--text-dim);margin-top:8px;">— Helmuth Plessner</div>
+</div>
+
+<div class="choices">
+  <button class="choice-btn" onclick="R('Ik herken de breuk: ik BEN mijn trillende hand en ik BEKIJK mijn trillende hand — tegelijk.');go('drie-wetten')">
+    <span class="choice-icon">A</span> Ik herken dit zo goed &mdash; ik <em>ben</em> mijn trillende hand en ik <em>bekijk</em> mijn trillende hand, tegelijk
+  </button>
+  <button class="choice-btn" onclick="adj('dual',-8);R('Bij Descartes voelde de scheiding als een probleem; bij Plessner is het een kenmerk van mens-zijn.');go('drie-wetten')">
+    <span class="choice-icon">B</span> Bij Descartes voelde de scheiding als een <em>probleem</em>; bij Plessner is het een <em>kenmerk</em> van mens-zijn
+  </button>
+</div>`,
+
+'drie-wetten':()=>`
+<div class="passage-title">Drie Paradoxen</div>
+<div class="passage-text">
+  <p>"Vanuit deze excentrische positie leidt Plessner drie fundamentele 'wetten' af," vervolgt de professor. "Hij formuleert ze bewust als <strong>paradoxen</strong> &mdash; tegenstrijdigheden die toch waar zijn."</p>
+  <p><em>Klik op elke wet om hem te verkennen.</em></p>
+</div>
+
+<div class="law-card" onclick="toggleLaw(1)">
+  <div class="law-num">Eerste Wet</div>
+  <div class="law-title">Natuurlijke Kunstmatigheid</div>
+  <div class="law-paradox">Het is onze natuur om kunstmatig te zijn</div>
+  <div class="law-expanded" id="law-1">
+    <p>Omdat we excentrisch zijn en dus 'onbepaald', moeten we ons leven <strong>actief vormgeven</strong>. We leven niet vanzelf volgens instinct. We moeten onszelf 'maken'.</p>
+    <p style="margin-top:10px;">Dit leidt tot <em>cultuur, taal, moraal, techniek</em> &mdash; allemaal 'kunstmatige' zaken die ons helpen leven. Deze kunstmatigheid is geen tegenstelling tot onze natuur, maar een <strong>gevolg</strong> ervan.</p>
+    <p style="margin-top:10px;color:var(--warm);font-style:italic;">Denk aan de BCI: is dat 'onnatuurlijk'? Of is het juist een uiting van onze natuur om onszelf te vormen?</p>
+    ${T('Natuurlijke kunstmatigheid','Plessners eerste wet: het is onze natuur om ons leven kunstmatig vorm te geven — via cultuur, taal, techniek.')}
+  </div>
+</div>
+
+<div class="law-card" onclick="toggleLaw(2)">
+  <div class="law-num">Tweede Wet</div>
+  <div class="law-title">Bemiddelde Onmiddellijkheid</div>
+  <div class="law-paradox">Onze directe ervaring is altijd al bemiddeld</div>
+  <div class="law-expanded" id="law-2">
+    <p>Onze ervaring van de wereld is altijd dubbel: <strong>onmiddellijk</strong> via ons lichaam en zintuigen, maar tegelijk <strong>bemiddeld</strong> door bewustzijn, taal, concepten en culturele kaders.</p>
+    <p style="margin-top:10px;">Juist omdat we ons bewust zijn van deze bemiddeling, voelen we de noodzaak tot <em>expressiviteit</em>: we willen onze innerlijke ervaringen uiten in de wereld &mdash; via taal, kunst, social media.</p>
+    <p style="margin-top:10px;color:var(--warm);font-style:italic;">Toen je huilde, was dat tegelijk direct (lichamelijk, rauw) en bemiddeld (je wist dat je huilde, je gaf er betekenis aan).</p>
+    ${T('Bemiddelde onmiddellijkheid','Plessners tweede wet: onze ervaring is tegelijk direct (lichamelijk) en bemiddeld (door bewustzijn, taal, cultuur).')}
+  </div>
+</div>
+
+<div class="law-card" onclick="toggleLaw(3)">
+  <div class="law-num">Derde Wet</div>
+  <div class="law-title">De Utopische Standplaats</div>
+  <div class="law-paradox">We staan nergens vast &mdash; en zoeken altijd houvast</div>
+  <div class="law-expanded" id="law-3">
+    <p>De mens heeft geen vaste, natuurlijke plaats of essentie. We staan op een <strong>'utopische' (niet-)plaats</strong>. Dit creëert fundamentele onrust: het verlangen naar het onbegrensde én de concrete begrensdheid van het hier en nu.</p>
+    <p style="margin-top:10px;">Dit leidt tot een eindeloze <em>zoektocht naar houvast</em> &mdash; via religie, ideologie, wetenschap &mdash; die echter nooit definitief kan slagen, omdat ons excentrische bewustzijn elk gevonden fundament weer kan bevragen.</p>
+    <p style="margin-top:10px;color:var(--warm);font-style:italic;">Is de BCI jouw houvast? Of de filosofie? Of de sport? De zoektocht houdt nooit op.</p>
+    ${T('Utopische standplaats','Plessners derde wet: de mens heeft geen vaste natuurlijke plaats en zoekt altijd houvast — maar vindt nooit een definitief fundament.')}
+  </div>
+</div>
+
+<div id="laws-continue" style="display:none;">
+  <button class="continue-btn" onclick="go('lachen-theorie')">Lachen en wenen</button>
+</div>
+<div id="laws-hint" style="margin-top:16px;">
+  <p class="dim" style="font-size:14px;font-family:'Inter',sans-serif;">Verken alle drie de wetten om door te gaan.</p>
+</div>`,
+
+'lachen-theorie':()=>`
+<div class="passage-title">Lachen en Wenen</div>
+<div class="passage-text">
+  <p>"En nu," zegt de professor, "het fenomeen dat jullie misschien het dichtst bij huis raakt."</p>
+  <p>"Plessner analyseerde lachen en wenen als typisch <strong>menselijke fenomenen</strong> die onze excentrische positie illustreren."</p>
+</div>
+
+<div class="definition-box">
+  <span class="term">Onbeantwoordbare situaties</span>
+  Momenten waarop we geen adequate rationele of sociale reactie weten. Onze normale manieren van doen schieten tekort. Lachen ontstaat bij ambiguïteit of ontlading; wenen bij capitulatie of uitzichtloosheid.
+</div>
+
+<div class="passage-text">
+  <p>"Cruciaal is: in lachen en wenen <strong>verliezen we de controle</strong>. Het lichaam neemt het over. En precies <em>dat</em> onthult de dubbelzinnige verhouding tot ons lichaam: we <em>zijn</em> het én we <em>hebben</em> het."</p>
+</div>
+
+<div class="thought" style="font-size:17px;text-align:center;border:none;padding:20px;color:var(--accent-glow);">
+  "Als deze speelruimte wordt ontnomen, blijft de mens niets anders over dan te lachen of te wenen."
+  <div style="font-size:14px;color:var(--text-dim);margin-top:8px;">— Helmuth Plessner</div>
+</div>
+
+${T('Lachen en wenen','Volgens Plessner typisch menselijke reacties op \'onbeantwoordbare situaties\' — momenten waarop het lichaam het overneemt en de breuk in onze excentrische positie onthult.')}
+
+<div class="passage-text">
+  <p>Je denkt aan gisteren. De mok, de absurditeit, de lach die overging in huilen. Het was geen keuze &mdash; je lichaam nam het over. En juist daarin zat de waarheid: je bent een wezen dat tegelijk <em>in</em> zichzelf en <em>buiten</em> zichzelf staat.</p>
+</div>
+
+<button class="continue-btn" onclick="go('sociobiologie')">Een andere benadering</button>`,
+
+'sociobiologie':()=>`
+<div class="passage-title">Contrast: Sociobiologie</div>
+<div class="passage-text">
+  <p>"Er is een alternatieve biologische benadering," merkt de professor op. "De <strong>sociobiologie</strong> probeert menselijk gedrag te verklaren vanuit een evolutionair perspectief."</p>
+</div>
+
+<div class="philosophy-box">
+  <div class="box-title">Sociobiologie</div>
+  <p>Gedrag wordt gezien als een strategie om de overleving en voortplanting van genen te maximaliseren (<strong>natuurlijke selectie</strong>, Darwin). Dit is vaak een meer <em>deterministische</em> benadering: menselijk gedrag wordt verklaard door biologische oorzaken.</p>
+</div>
+
+<div class="contrast-plessner">
+  <span class="cb-label">Plessner daarentegen</span>
+  De mens is van nature juist <em>onbepaald</em>. We hebben de <strong>vrijheid én de noodzaak</strong> om ons eigen bestaan vorm te geven. Biologie is het vertrekpunt, maar niet het eindpunt.
+</div>
+
+${T('Sociobiologie','Benadering die menselijk gedrag primair verklaart vanuit evolutie en genenselectie — meer deterministisch dan Plessner.')}
+
+<div class="choices">
+  <button class="choice-btn" onclick="adj('free',15);R('Plessner overtuigt me: we zijn meer dan onze genen. We zijn vrij om onszelf te vormen.');go('terug-lia')">
+    <span class="choice-icon">A</span> Plessner overtuigt me: we zijn meer dan onze biologie &mdash; we zijn vrij om onszelf te vormen
+  </button>
+  <button class="choice-btn" onclick="adj('free',-10);R('De sociobiologie heeft een punt — hoeveel van ons gedrag is echt vrij, en hoeveel is biologie?');go('terug-lia')">
+    <span class="choice-icon">B</span> De sociobiologie heeft een punt &mdash; hoeveel van ons gedrag is echt <em>vrij</em>?
+  </button>
+  <button class="choice-btn" onclick="adj('free',5);R('Misschien gaan vrijheid en biologie samen: onze biologie maakt ons juist tot wezens die kunnen kiezen.');go('terug-lia')">
+    <span class="choice-icon">C</span> Misschien gaan ze samen &mdash; onze biologie <em>maakt</em> ons tot wezens die kunnen kiezen
+  </button>
+</div>`,
+
+'terug-lia':()=>`
+<div class="ambient-text">Na het symposium &middot; het bankje buiten</div>
+<div class="passage-title">Drie Lenzen</div>
+<div class="passage-text">
+  <p>Je zit buiten op het bankje. De wind speelt met je haar. Je hebt nu drie manieren om naar je situatie te kijken.</p>
+</div>
+
+<div class="contrast-descartes">
+  <span class="cb-label">Descartes (H1)</span>
+  Je bent een denkend ding in een kapotte machine. De BCI repareert de machine. Jij &mdash; je geest &mdash; bent intact.
+</div>
+<div class="contrast-fenomeno">
+  <span class="cb-label">Sheets-Johnstone (H2)</span>
+  Je bent een bewustzijns-lichaam met een beschadigd lichaamsschema. Herstel komt van het lichaam opnieuw leren kennen &mdash; voelen, niet sturen.
+</div>
+<div class="contrast-plessner">
+  <span class="cb-label">Plessner (H3)</span>
+  Je bent een excentrisch wezen dat altijd al gespleten is &mdash; tegelijk in je lichaam en erbuiten. Die breuk is geen probleem, maar wie je bent. En je hebt de taak om jezelf telkens opnieuw vorm te geven.
+</div>
+
+<div class="choices">
+  <button class="choice-btn" onclick="adj('exist',12);R('Plessner geeft me troost: de gespletenheid is geen defect, het is mens-zijn. Ik hoef niet \"heel\" te worden — ik was altijd al gebroken.');go('reflectie')">
+    <span class="choice-icon">A</span> Plessner geeft me troost &mdash; de gespletenheid is geen defect maar <em>mens-zijn</em>
+  </button>
+  <button class="choice-btn" onclick="adj('free',8);R('Natuurlijke kunstmatigheid: de BCI is niet onnatuurlijk, maar een uiting van wie ik als mens ben.');go('reflectie')">
+    <span class="choice-icon">B</span> Natuurlijke kunstmatigheid &mdash; de BCI is niet onnatuurlijk, maar een uiting van wie ik ben
+  </button>
+  <button class="choice-btn" onclick="adj('exist',8);adj('free',5);R('Utopische standplaats: ik zoek houvast, in de chip, in de filosofie, in het klimmen. Ik zal altijd blijven zoeken.');go('reflectie')">
+    <span class="choice-icon">C</span> Utopische standplaats &mdash; ik zoek houvast, en ik zal altijd blijven zoeken
+  </button>
+  <button class="choice-btn" onclick="R('Alle drie de lenzen vangen iets, maar geen van drieën vertelt het hele verhaal.');go('reflectie')">
+    <span class="choice-icon">D</span> Elk perspectief vangt iets, maar geen enkel vertelt het héle verhaal
+  </button>
+</div>`,
+
+'reflectie':()=>`
+<div class="passage-title">Die Avond</div>
+<div class="passage-text">
+  <p>Je zit op je bed. Max spint naast je. De papieren van Verhoeven liggen er nog steeds.</p>
+  <p>Sam noemde het een experiment. Plessner zou het <em>natuurlijke kunstmatigheid</em> noemen: het is je natuur om jezelf te vormen, te zoeken, te experimenteren. De chip is niet het einde van het verhaal &mdash; het is het volgende hoofdstuk in een verhaal dat nooit af is.</p>
+  <p>Maar de vraag blijft: <em>welk</em> experiment kies je? Welke versie van jezelf wil je worden?</p>
+</div>
+
+<div class="max-moment">
+  Max rekt zich uit, geeuwt, en nestelt zich dichter tegen je aan. Hij hoeft zichzelf niet te vormen. Hij is gewoon Max. Centrisch, compleet, hier. Jij benijdt hem soms.
+</div>
+
+<div class="passage-text">
+  <p>Morgen gaat het symposium verder. Over hoe de blik van de ander je identiteit vormt &mdash; hoe je niet alleen <em>in jezelf</em> gespleten bent, maar ook gevormd door de ogen van anderen. Dat meisje in de supermarkt dat naar je rolstoel wees. De artsen die je zien als een casus. Je moeder die je ziet als fragiel.</p>
+  <p><em>Wie ben je als iedereen naar je kijkt?</em></p>
+</div>
+<button class="continue-btn" onclick="go('afsluiting')">Einde hoofdstuk 3</button>`,
+
+'afsluiting':()=>{
+let d=S.dual>60?'Je neigt naar <strong>eenheid</strong> — de breuk is niet een scheiding maar een kenmerk.':S.dual<40?'Je houdt vast aan een vorm van <strong>dualisme</strong>.':'Je positie is <strong>genuanceerd</strong>.';
+let f=S.free>60?'Je ziet de mens als fundamenteel <strong>vrij</strong> en zelfvormend.':S.free<40?'Je ziet de mens als sterker <strong>bepaald</strong> door biologie of structuren.':'Je zoekt een <strong>balans</strong> tussen vrijheid en bepaaldheid.';
+let e=S.exist>60?'Je kiest voor <strong>existentie</strong>: het concrete, geleefde bestaan.':S.exist<40?'Je kiest voor <strong>essentie</strong>: abstracte definities.':'Je waardeert <strong>beide</strong>.';
+return`
+<div class="ambient-text">Lia's kamer &middot; nacht</div>
+<div class="passage-title">Einde Hoofdstuk 3</div>
+<div class="passage-text">
+  <p>Plessner gaf je nieuwe woorden voor iets dat je al voelde: de gespletenheid is geen defect. Het is wat het betekent om mens te zijn. Je staat altijd tegelijk <em>in</em> jezelf en <em>buiten</em> jezelf. En juist die breuk maakt cultuur, techniek en vrijheid mogelijk.</p>
+  <p>In je notitieboek schrijf je:</p>
+</div>
+<div class="thought" style="font-size:17px;">"We zijn nooit af. Het hoort bij mens-zijn dat we onszelf telkens weer vormgeven. Kunstmatig, zoekend, experimenterend."</div>
+
+<div class="philosophy-box">
+  <div class="box-title">Jouw Filosofisch Profiel — Hoofdstuk 3</div>
+  <p>${d}</p><p style="margin-top:8px;">${f}</p><p style="margin-top:8px;">${e}</p>
+</div>
+
+<div class="scene-break">&middot; &middot; &middot;</div>
+<div style="text-align:center;margin-top:24px;">
+  <p style="color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;margin-bottom:6px;">Hoofdstuk 3 voltooid</p>
+  <p style="color:var(--accent);font-family:'Inter',sans-serif;font-size:13px;letter-spacing:2px;text-transform:uppercase;">Volgende: De Beauvoir &amp; Fanon &mdash; de blik van de ander</p>
+  <button class="continue-btn" style="margin-top:20px;" onclick="go('samenvatting')">Bekijk samenvatting</button>
+</div>`;
+},
+
+'samenvatting':()=>`
+<div class="passage-title">Overzicht Hoofdstuk 3</div>
+<div class="philosophy-box">
+  <div class="box-title">Kernbegrippen</div>
+  ${S.terms.map(t=>`<div class="definition-box"><span class="term">${t.t}</span>${t.d}</div>`).join('')}
+</div>
+<div class="philosophy-box" style="margin-top:20px;">
+  <div class="box-title">Jouw Reflecties</div>
+  ${S.reflections.map(r=>`<div class="thought" style="margin:10px 0;font-size:16px;">"${r}"</div>`).join('')}
+</div>
+<div class="philosophy-box" style="margin-top:20px;">
+  <div class="box-title">Leerdoelen — Check</div>
+  <p style="font-size:15px;line-height:1.8;">
+    ✦ Excentrische positionaliteit vs. centrische positie van het dier<br>
+    ✦ Eerste wet: Natuurlijke kunstmatigheid<br>
+    ✦ Tweede wet: Bemiddelde onmiddellijkheid<br>
+    ✦ Derde wet: De utopische standplaats (+ expressie)<br>
+    ✦ Lachen en wenen als onbeantwoordbare situaties en de menselijke breuk<br>
+    ✦ Plessner vs. sociobiologie (biologisch determinisme)
+  </p>
+</div>
+<div style="text-align:center;margin-top:30px;">
+  <button class="continue-btn" onclick="go('start')">Opnieuw spelen</button>
+</div>`
+};
+
+// ============================================================
+// STORM MINIGAME
+// ============================================================
+const stormPhases=[
+  {face:'😐',text:'De spanning bouwt zich op als een storm.',btn:'Probeer het in te houden',cls:''},
+  {face:'😬',text:'Een trilling in je borst. Iets wil naar buiten.',btn:'Houd het tegen',cls:''},
+  {face:'😂',text:'Je begint te lachen — hard, schokkend, onbeheerst. Niet vrolijk, maar wrang.',btn:'Probeer te stoppen',cls:'storm-laugh'},
+  {face:'😂😂',text:'De lach golft door je heen. De absurditeit overspoelt je: jij, de klimmer die ooit de zwaartekracht tartte, zit nu vast tegenover een balletje.',btn:'Je kunt niet stoppen',cls:'storm-laugh'},
+  {face:'😢',text:'De lach slaat om in snikken. Heet en onstuitbaar. Tranen stromen over je wangen.',btn:'....',cls:'storm-cry'},
+  {face:'😢',text:'Je huilt om je verlies, om de dagelijkse strijd, om dit lichaam dat een eigen agenda lijkt te hebben.',btn:null,cls:'storm-cry'},
+  {face:'😌',text:'De storm bedaart. Je blijft achter in een vreemde leegte. Vermoeid, maar ook... lichter.',btn:null,cls:'storm-calm'}
+];
+
+function nextStorm(){
+  S.stormPhase++;
+  if(S.stormPhase>=stormPhases.length){
+    document.getElementById('storm-after').style.display='block';
+    document.getElementById('storm-after').innerHTML=`<button class="continue-btn" onclick="go('na-de-storm')">De stilte na de storm</button>`;
+    return;
+  }
+  const p=stormPhases[S.stormPhase];
+  const box=document.getElementById('storm-box');
+  box.className='storm-container '+p.cls;
+  document.getElementById('storm-face').textContent=p.face;
+  document.getElementById('storm-text').textContent=p.text;
+  if(p.btn){
+    document.getElementById('storm-next').textContent=p.btn;
+    if(S.stormPhase>=4)document.getElementById('storm-next').disabled=true;
+  }else{
+    document.getElementById('storm-controls').innerHTML='';
+    setTimeout(()=>{
+      if(S.stormPhase<stormPhases.length-1){nextStorm();}
+      else{
+        document.getElementById('storm-after').style.display='block';
+        document.getElementById('storm-after').innerHTML=`<button class="continue-btn" onclick="go('na-de-storm')">De stilte na de storm</button>`;
+      }
+    },2000);
+  }
+}
+
+// ============================================================
+// LAWS INTERACTIVE
+// ============================================================
+function toggleLaw(n){
+  const el=document.getElementById('law-'+n);
+  const vis=el.style.display==='block';
+  el.style.display=vis?'none':'block';
+  if(!vis){
+    S.lawsRead++;
+    if(S.lawsRead>=3){
+      document.getElementById('laws-continue').style.display='block';
+      document.getElementById('laws-hint').style.display='none';
+    }
+  }
+}
+
+// ============================================================
+window.addEventListener('load',()=>go('start'));
+</script>
+</body>
+</html>

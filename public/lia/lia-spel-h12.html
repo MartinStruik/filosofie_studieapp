@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lia's Transformatie — Hoofdstuk 12: Morton & Despret</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap');
+  :root {
+    --bg:#060e08; --bg-card:#0e1810; --bg-hover:#162818;
+    --text:#b0d0b8; --text-bright:#d4f4da; --text-dim:#508858;
+    --accent:#408860; --accent-glow:#60c080; --accent-dim:#285838;
+    --warm:#e8a87c; --teal:#5ea8a0; --purple:#7b68ee; --amber:#d4a050; --rose:#e07088; --cyan:#50b8d8; --green:#50d890; --copper:#d08848; --silver:#7890c0; --violet:#9070d0; --red:#c05050; --indigo:#6060d0;
+    --danger:#e06070; --success:#60c080;
+    --border:#183820;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:19px;line-height:1.7;min-height:100vh;overflow-x:hidden;}
+  #game-container{display:flex;min-height:100vh;}
+  #story-panel{flex:1;display:flex;flex-direction:column;align-items:center;padding:40px 20px;overflow-y:auto;max-height:100vh;}
+  #passage-wrapper{max-width:680px;width:100%;opacity:0;transform:translateY(12px);transition:opacity .6s,transform .6s;}
+  #passage-wrapper.visible{opacity:1;transform:translateY(0);}
+  #notebook-panel{width:340px;background:var(--bg-card);border-left:1px solid var(--border);padding:30px 24px;overflow-y:auto;max-height:100vh;}
+  #notebook-toggle{display:none;position:fixed;top:16px;right:16px;z-index:100;background:var(--accent-dim);color:var(--text-bright);border:none;border-radius:8px;padding:8px 16px;font-family:'Inter',sans-serif;font-size:13px;cursor:pointer;}
+  @media(max-width:900px){#notebook-panel{position:fixed;right:0;top:0;height:100vh;z-index:99;transform:translateX(100%);}#notebook-panel.open{transform:translateX(0);}#notebook-toggle{display:block;}}
+  .passage-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:24px;opacity:.7;}
+  .passage-text p{margin-bottom:18px;}
+  .passage-text em{color:var(--accent-glow);font-style:italic;}
+  .passage-text strong{color:var(--text-bright);font-weight:600;}
+  .dim{color:var(--text-dim);}
+  .thought{font-style:italic;color:var(--accent-glow);border-left:2px solid var(--accent-dim);padding-left:16px;margin:20px 0;}
+  .philosophy-box{background:linear-gradient(135deg,rgba(64,136,96,.08),rgba(64,136,96,.02));border:1px solid rgba(64,136,96,.2);border-radius:12px;padding:20px 24px;margin:24px 0;}
+  .philosophy-box .box-title{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:12px;}
+  .contrast-box{border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;}
+  .cb-label{font-family:'Inter',sans-serif;font-weight:600;font-size:12px;letter-spacing:1px;text-transform:uppercase;display:block;margin-bottom:4px;}
+  .definition-box{background:rgba(64,136,96,.06);border:1px solid rgba(64,136,96,.15);border-radius:10px;padding:16px 20px;margin:16px 0;font-size:17px;}
+  .definition-box .term{font-family:'Inter',sans-serif;font-weight:600;color:var(--accent-glow);font-size:14px;display:block;margin-bottom:6px;}
+  .choices{margin-top:32px;display:flex;flex-direction:column;gap:10px;}
+  .choice-btn{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:14px 20px;color:var(--text);font-family:'Crimson Text',Georgia,serif;font-size:18px;text-align:left;cursor:pointer;transition:all .25s;line-height:1.5;}
+  .choice-btn:hover{background:var(--bg-hover);border-color:var(--accent-dim);color:var(--text-bright);transform:translateX(4px);}
+  .choice-btn .choice-icon{color:var(--accent);margin-right:8px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;}
+  .continue-btn{display:inline-block;margin-top:28px;background:transparent;border:1px solid var(--border);border-radius:8px;padding:10px 28px;color:var(--text-dim);font-family:'Inter',sans-serif;font-size:14px;cursor:pointer;transition:all .25s;letter-spacing:.5px;}
+  .continue-btn:hover{border-color:var(--accent-dim);color:var(--accent);}
+  .ambient-text{font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);opacity:.5;text-align:center;margin-bottom:30px;letter-spacing:1px;}
+  .max-moment{background:rgba(232,168,124,.04);border-radius:12px;padding:16px 20px;margin:16px 0;border:1px solid rgba(232,168,124,.1);font-size:17px;color:var(--text-dim);}
+  .max-moment::before{content:'🐈';margin-right:8px;}
+  #progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--accent-dim),var(--accent));transition:width .6s;z-index:200;}
+
+  /* MESH VISUALIZATION */
+  .mesh-container{border:1px solid var(--border);border-radius:14px;padding:0;margin:20px 0;overflow:hidden;background:#000;position:relative;height:280px;}
+  .mesh-canvas{width:100%;height:100%;}
+  .mesh-overlay{position:absolute;bottom:0;left:0;right:0;padding:16px;background:linear-gradient(transparent,rgba(0,0,0,.9));font-family:'Inter',sans-serif;font-size:14px;color:var(--text);line-height:1.6;}
+  .mesh-controls{position:absolute;top:12px;right:12px;display:flex;gap:6px;}
+  .mesh-btn{border:none;border-radius:6px;padding:6px 12px;font-family:'Inter',sans-serif;font-size:11px;cursor:pointer;background:rgba(64,136,96,.2);color:var(--accent-glow);border:1px solid rgba(64,136,96,.3);}
+  .mesh-btn:hover{background:rgba(64,136,96,.4);}
+  .mesh-btn.active{background:rgba(64,136,96,.5);}
+
+  /* COMPOSED BEING */
+  .compose-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:20px 0;}
+  @media(max-width:600px){.compose-grid{grid-template-columns:1fr 1fr;}}
+  .compose-card{border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;cursor:pointer;transition:all .3s;background:var(--bg-card);}
+  .compose-card:hover{border-color:var(--accent-dim);}
+  .compose-card.revealed{border-color:rgba(64,136,96,.3);background:rgba(64,136,96,.04);}
+  .compose-card .cc-icon{font-size:28px;margin-bottom:6px;}
+  .compose-card .cc-name{font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--text-bright);}
+  .compose-card .cc-detail{font-family:'Inter',sans-serif;font-size:11px;color:var(--text-dim);line-height:1.4;max-height:0;overflow:hidden;transition:max-height .4s;}
+  .compose-card.revealed .cc-detail{max-height:120px;margin-top:6px;}
+
+  /* AGENCY SPECTRUM */
+  .agency-item{border:1px solid var(--border);border-radius:12px;padding:16px;margin:10px 0;background:var(--bg-card);display:flex;align-items:center;gap:16px;cursor:pointer;transition:all .3s;}
+  .agency-item:hover{border-color:var(--accent-dim);}
+  .agency-item.revealed{border-color:rgba(64,136,96,.3);}
+  .agency-item .ai-icon{font-size:32px;flex-shrink:0;}
+  .agency-item .ai-content{flex:1;}
+  .agency-item .ai-name{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--text-bright);}
+  .agency-item .ai-q{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);margin-top:4px;}
+  .agency-item .ai-answer{font-family:'Inter',sans-serif;font-size:13px;color:var(--accent-glow);line-height:1.5;max-height:0;overflow:hidden;transition:max-height .4s;}
+  .agency-item.revealed .ai-answer{max-height:200px;margin-top:8px;}
+
+  /* WETFIL CARDS */
+  .wf-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0;}
+  @media(max-width:600px){.wf-grid{grid-template-columns:1fr;}}
+  .wf-card{border:1px solid var(--border);border-radius:12px;padding:18px;cursor:pointer;transition:all .3s;background:var(--bg-card);}
+  .wf-card:hover{border-color:var(--accent-dim);}
+  .wf-card.revealed{border-color:rgba(64,136,96,.3);background:rgba(64,136,96,.03);}
+  .wf-card .wf-name{font-family:'Inter',sans-serif;font-size:14px;font-weight:600;color:var(--text-bright);margin-bottom:4px;}
+  .wf-card .wf-thinker{font-family:'Inter',sans-serif;font-size:11px;color:var(--accent);margin-bottom:8px;}
+  .wf-card .wf-desc{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);line-height:1.5;max-height:0;overflow:hidden;transition:max-height .4s;}
+  .wf-card.revealed .wf-desc{max-height:200px;}
+
+  .nb-title{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:20px;}
+  .nb-section{margin-bottom:24px;}
+  .nb-section-title{font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);}
+  .nb-term{font-family:'Inter',sans-serif;font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid rgba(255,255,255,.03);line-height:1.5;}
+  .nb-term .nb-term-name{color:var(--accent-glow);font-weight:500;}
+  .nb-reflection{font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);padding:8px 12px;margin:4px 0;border-left:2px solid var(--accent-dim);line-height:1.5;font-style:italic;}
+  .nb-compass{margin-top:16px;}
+  .nb-compass-axis{display:flex;align-items:center;justify-content:space-between;margin:8px 0;font-family:'Inter',sans-serif;font-size:11px;}
+  .nb-compass-label{color:var(--text-dim);width:90px;font-size:10px;}
+  .nb-compass-label.right{text-align:right;}
+  .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
+  .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
+  .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+</style>
+</head>
+<body>
+<div id="progress-bar" style="width:0%"></div>
+<button id="notebook-toggle" onclick="document.getElementById('notebook-panel').classList.toggle('open')">Notitieboek</button>
+<div id="game-container">
+  <div id="story-panel"><div id="passage-wrapper"></div></div>
+  <div id="notebook-panel">
+    <div class="nb-title">Lia's Notitieboek — H12</div>
+    <div class="nb-section">
+      <div class="nb-section-title">Eerdere hoofdstukken</div>
+      <span class="nb-chapter-link" style="background:rgba(123,104,238,.06);border-color:rgba(123,104,238,.1);color:#4a3da0;">H1–H6</span>
+      <span class="nb-chapter-link" style="background:rgba(208,136,72,.06);border-color:rgba(208,136,72,.1);color:#885028;">H7–H8</span>
+      <span class="nb-chapter-link" style="background:rgba(144,112,208,.06);border-color:rgba(144,112,208,.1);color:#583898;">H9</span>
+      <span class="nb-chapter-link" style="background:rgba(192,80,80,.06);border-color:rgba(192,80,80,.1);color:#803030;">H10</span>
+      <span class="nb-chapter-link" style="background:rgba(96,96,208,.06);border-color:rgba(96,96,208,.1);color:#383880;">H11</span>
+    </div>
+    <div class="nb-section"><div class="nb-section-title">Begrippen</div><div id="terms-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Reflecties</div><div id="reflections-list"></div></div>
+    <div class="nb-section"><div class="nb-section-title">Filosofisch Kompas</div><div class="nb-compass" id="compass"></div></div>
+  </div>
+</div>
+<script>
+const state={passage:'start',history:[],visitedPassages:0,terms:[],reflections:[],
+  compass:{'Gescheiden — Verweven':50,'Antropocentrisch — Ecocentrisch':50,'Handelen — Gedrag':50,'Objectief — Interpretatief':50},
+  flags:{},composRevealed:0,agencyRevealed:0,wfRevealed:0};
+const totalPassages=24;
+function T(n,d){if(!state.terms.find(t=>t.name===n)){state.terms.push({name:n,desc:d});renderNotebook();}}
+function R(t){state.reflections.push(t);renderNotebook();}
+function adj(a,d){if(state.compass[a]!==undefined){state.compass[a]=Math.max(0,Math.min(100,state.compass[a]+d));renderNotebook();}}
+
+const P={
+start:{
+  title:'De botanische tuin',
+  text:`
+    <div class="ambient-text">Hoofdstuk 12 — Morton, Haraway & Despret over grensvervaging</div>
+    <p>Na alle discussies over technologie voelde de rust van de botanische tuin als een verademing. Een heldere herfstdag, de bladeren een palet van geel, oranje en rood.</p>
+    <p>Lia zat op een bankje onder een monumentale, oude eik, samen met Sam en haar broer Tom. Max lag half verborgen in haar tas.</p>
+    <p>Lia legde haar hand op de ruwe schors. <em>"Sinds de val voel ik me... anders verbonden. Meer deel van alles om me heen. Minder een los eilandje."</em></p>`,
+  choices:[{text:'"Verbonden? Met een boom?"',next:'tom_sceptisch'}]
+},
+tom_sceptisch:{
+  title:'Toms scepsis',
+  text:`
+    <p>Tom fronste. <em>"Verbonden? Met een boom? Wat bedoel je?"</em></p>
+    <p><em>"Niet zweverig,"</em> legde Lia uit. <em>"Meer het besef dat niets echt op zichzelf staat. Deze eik lijkt zo sterk en onafhankelijk, maar hij is totaal afhankelijk van de zon, de regen, de grond."</em></p>
+    <p><em>"Wist je dat bomen onderling 'praten'? Via schimmeldraden onder de grond — het Wood Wide Web."</em></p>
+    <p>Op dat moment spitste Max zijn oren. Zijn hele lichaam spande zich, zijn blik gefixeerd op een paar eenden bij de vijver. Een lage jachthouding.</p>
+    <p><em>"Kijk naar Max,"</em> fluisterde Lia. <em>"Is dat puur instinct? Of zit daar een plan achter?"</em></p>`,
+  onEnter:()=>{R('De schijn van scheiding: niets staat echt op zichzelf. De eik, de schimmeldraden, Max, de eenden — alles verweven.');},
+  choices:[{text:'Haraway en het doorbreken van grenzen',next:'haraway'}]
+},
+haraway:{
+  title:'Donna Haraway',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Voorgeschiedenis</div>
+      <p><strong>Donna Haraway</strong> — feministisch filosoof en bioloog — bekritiseerde scherpe Westerse dualismen: mens/dier, organisme/machine, fysiek/niet-fysiek.</p>
+      <p>Met haar concept van de <strong>cyborg</strong> — hybride van organisme en technologie — brak ze deze grenzen open. Dualismen creëren <em>hiërarchieën</em>.</p>
+    </div>
+    <p>Haraway schetst het kader. Nu gaat Timothy Morton verder met de meest radicale grensvervaging: die tussen mens en al het andere leven.</p>`,
+  onEnter:()=>{T('Donna Haraway','Feministisch filosoof die Westerse dualismen (mens/dier, organisme/machine) bekritiseerde. Haar cyborg-concept doorbreekt deze grenzen.'); T('Dualismen','Scherpe tweedelingen (mens/dier, geest/lichaam) die volgens Haraway hiërarchieën creëren en moeten worden doorbroken.');},
+  choices:[{text:'Timothy Morton: The Mesh',next:'mesh_intro'}]
+},
+mesh_intro:{
+  title:'The Mesh',
+  text:`
+    <div class="definition-box">
+      <span class="term">The Mesh (Timothy Morton)</span>
+      Onze realiteit bestaat niet uit losse objecten tegen een neutrale achtergrond. We leven <em>in</em> en zijn <em>deel van</em> een oneindig complex, onontwarbaar web van onderlinge verbindingen en afhankelijkheden — <strong>the mesh</strong>.
+    </div>
+    <p>Morton: <em>"'Mesh' kan verwijzen naar 'een complexe situatie waarbij een persoon gaandeweg verstrikt raakt'."</em></p>
+    <p>Drie kernpunten:</p>
+    <p><strong>1. Interconnectedness:</strong> Alles is verbonden. Er is geen absoluut centrum — de mens is niet het centrum. <em>"Elke levensvorm is letterlijk familie."</em></p>
+    <p><strong>2. Desoriëntatie:</strong> De stabiele 'achtergrond' verdwijnt. <em>"Als alles in beginsel belangrijk kan zijn, zijn we verloren."</em></p>
+    <p><strong>3. Samengesteld wezen:</strong> Ons eigen lichaam is een voorbeeld van de mesh.</p>`,
+  onEnter:()=>{T('The Mesh (Morton)','Een oneindig complex web van onderlinge verbindingen tussen alle entiteiten — levend en niet-levend. Er is geen centrum en geen buitenkant.'); T('Antropocentrisme','De visie waarin de mens centraal staat — door Morton uitgedaagd.');adj('Gescheiden — Verweven',15);adj('Antropocentrisch — Ecocentrisch',12);},
+  choices:[{text:'Verken: mens als samengesteld wezen',next:'compose_game'}]
+},
+
+/* ===== MINIGAME 1: SAMENGESTELD WEZEN ===== */
+compose_game:{
+  title:'Jij bent samengesteld',
+  text:`
+    <p>Ons lichaam is een voorbeeld van de mesh. Klik om te ontdekken waaruit je bent samengesteld:</p>
+    <div class="compose-grid" id="compose-grid"></div>
+    <div id="compose-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:8px;"></div>
+    <div id="compose-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initCompose,500);}
+},
+
+compose_done:{
+  title:'Poreuze grenzen',
+  text:`
+    <p>De grens van 'onszelf' is biologisch <strong>poreus</strong>. We zijn knooppunten in de mesh, niet afgesloten eilanden.</p>
+    <p class="thought">Ik ben niet Lia-op-zichzelf. Ik ben Lia-als-knooppunt: mijn darmbacteriën, mijn mitochondriën, de zuurstof van algen, de energie van de zon. Alles verweven.</p>`,
+  onEnter:()=>{R('De mens als samengesteld wezen: darmbacteriën, mitochondriën, viraal DNA. De grens van het "zelf" is poreus.');adj('Gescheiden — Verweven',10);},
+  choices:[{text:'Agency van dieren en planten',next:'agency_intro'}]
+},
+
+/* ===== AGENCY SPECTRUM ===== */
+agency_intro:{
+  title:'Handelingsvermogen',
+  text:`
+    <p>Morton betwijfelt de scherpe scheiding tussen menselijk <strong>'handelen'</strong> (bewust/vrij) en dierlijk/plantaardig <strong>'gedrag'</strong> (automatisch).</p>
+    <p>Is ons handelen altijd zo bewust? En is gedrag van anderen altijd zo simpel?</p>
+    <p>Verken het spectrum:</p>
+    <div id="agency-list"></div>
+    <div id="agency-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>
+    <div id="agency-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initAgency,500);}
+},
+
+agency_done:{
+  title:'Vervaging',
+  text:`
+    <p>De grenzen vervagen. Handelen versus gedrag, bewust versus automatisch, mens versus dier versus plant — het is een <em>spectrum</em>, geen scherpe lijn.</p>
+    <div class="max-moment">Max, met zijn strategische jachthouding bij de eenden, had meer 'agency' dan Tom wilde toegeven. Anticipatie. Planning. Perspectiefname. Waar stopt instinct en begint denken?</div>`,
+  onEnter:()=>{T('Agency (handelingsvermogen)','Het vermogen om effect te sorteren — door Morton ook toegekend aan dieren en planten. Niet beperkt tot bewust menselijk handelen.');adj('Handelen — Gedrag',12);},
+  choices:[{text:'Vinciane Despret',next:'despret'}]
+},
+
+despret:{
+  title:'Vinciane Despret',
+  text:`
+    <p>Als grenzen vervagen, hoe bestuderen we andere wezens? Wetenschapsfilosoof <strong>Vinciane Despret</strong> bekritiseert traditioneel diergedragsonderzoek:</p>
+    <div class="definition-box">
+      <span class="term">Kritiek op de spiegeltest</span>
+      De spiegeltest voor zelfbewustzijn is <em>antropocentrisch</em>: te gericht op menselijke (visuele) zelfherkenning. <em>"Zijn we allemaal wel zo geïnteresseerd in spiegels?"</em>
+    </div>
+    <p>Despret stelt voor: een andere onderzoekshouding die het <em>perspectief van het dier</em> probeert te begrijpen. Niet observeren van buitenaf, maar <strong>verstaan</strong>.</p>
+    <p>Haar indicator: het vermogen zich bewust te <strong>verstoppen</strong> — wat perspectiefname impliceert.</p>`,
+  onEnter:()=>{T('Vinciane Despret','Wetenschapsfilosoof die pleit voor een andere houding tegenover dieren: niet objectief observeren, maar proberen te verstaan.'); T('Spiegeltest (kritiek)','Test voor zelfbewustzijn die door Despret bekritiseerd wordt als antropocentrisch — andere indicatoren zijn mogelijk.');adj('Objectief — Interpretatief',10);},
+  choices:[{text:'Wetenschapsfilosofische reflecties',next:'wetfil_intro'}]
+},
+
+wetfil_intro:{
+  title:'Wetenschapsfilosofie',
+  text:`
+    <p>Deze radicale ideeën dwingen ons ook kritisch te kijken naar onze aannames over <strong>wetenschappelijke kennis</strong> zelf. Verken vier perspectieven:</p>
+    <div class="wf-grid" id="wf-grid"></div>
+    <div id="wf-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-dim);text-align:center;margin-top:8px;"></div>
+    <div id="wf-result" style="margin-top:16px;"></div>`,
+  onEnter:()=>{setTimeout(initWetfil,500);}
+},
+
+wetfil_done:{
+  title:'Paradigmaverschuiving?',
+  text:`
+    <p>Misschien zijn we getuige van een <strong>paradigmaverschuiving</strong> — van scheiding, objectiviteit en antropocentrisme naar een meer <em>ecologisch en relationeel</em> paradigma.</p>
+    <p class="thought">De wetenschapsfilosofie zelf kantelt. Van feiten meten naar betekenis verstaan. Van de mens als centrum naar de mens als knooppunt in de mesh.</p>
+    <div class="contrast-box" style="background:rgba(96,96,208,.05);border:1px solid rgba(96,96,208,.15);">
+      <span class="cb-label" style="color:var(--indigo);">De Mul (H11) — Toekomstige mens</span>
+      NBIN-technologieën transformeren de mens <em>van binnenuit</em>.
+    </div>
+    <div class="contrast-box" style="background:rgba(64,136,96,.05);border:1px solid rgba(64,136,96,.15);">
+      <span class="cb-label" style="color:var(--accent);">Morton (H12) — The mesh</span>
+      De mens was <em>nooit</em> gescheiden — we zijn altijd al verweven met al het andere.
+    </div>`,
+  onEnter:()=>{R('Wetenschapsfilosofie kantelt: van objectiviteit naar interpretatie, van scheiding naar verwevenheid.');},
+  choices:[{text:'Lia reflecteert',next:'lia_reflectie'}]
+},
+
+lia_reflectie:{
+  title:'Onder de eik',
+  text:`
+    <p>Lia leunde tegen de eik. De schors ruw onder haar vingers. Ergens in de grond wisselden schimmeldraden informatie uit tussen duizenden bomen.</p>
+    <p class="thought">Ik ben niet tegenover de natuur. Ik ben erin, ervan, ermee. De eik, Max, de darmbacteriën in mijn buik — we zijn allemaal knooppunten in hetzelfde web.</p>
+    <p class="thought">En als dat zo is — dan verandert mijn verantwoordelijkheid. Niet alleen voor mijzelf en andere mensen, maar voor alles waarmee ik verweven ben.</p>
+    <div class="max-moment">Max had de eenden opgegeven en lag nu tegen de stam van de eik, één oor gespitst op een verre merel. Een knooppunt in de mesh, op zijn eigen, katachtige manier.</div>`,
+  onEnter:()=>{R('Als we verweven zijn met alles, verandert onze verantwoordelijkheid: niet alleen voor mensen, maar voor het hele web.');},
+  choices:[{text:'Naar de afsluiting',next:'afsluiting'}]
+},
+
+afsluiting:{
+  title:'Afsluiting',
+  text:`
+    <div class="philosophy-box">
+      <div class="box-title">Hoofdstuk 12 — Kernbegrippen</div>
+      <p><strong>Donna Haraway</strong> — Dualismen doorbreken, cyborg-concept<br>
+      <strong>The Mesh</strong> — Mortons web van onderlinge verbindingen<br>
+      <strong>Interconnectedness</strong> — Alles is verbonden, geen centrum<br>
+      <strong>Samengesteld wezen</strong> — De mens is biologisch poreus<br>
+      <strong>Agency</strong> — Handelingsvermogen ook bij dieren en planten<br>
+      <strong>Despret</strong> — Kritiek op antropocentrisch onderzoek<br>
+      <strong>Hermeneutiek</strong> — Verstaan i.p.v. verklaren<br>
+      <strong>Paradigma (Kuhn)</strong> — Wetenschappelijke revoluties<br>
+      <strong>Falsificatie (Popper)</strong> — Weerlelbaarheid als criterium</p>
+    </div>
+    <p class="dim" style="text-align:center;margin-top:30px;">Einde Hoofdstuk 12 — Wordt vervolgd in H13: Latour & Hayles — Handelingsvermogen voorbij de mens</p>`,
+  onEnter:()=>{R('Hoofdstuk 12 afgerond. We zijn verweven met alles — de grens tussen mens, dier en plant vervaagt in the mesh.');}
+}
+};
+
+/* ===== ENGINE ===== */
+function go(id){state.history.push(state.passage);state.passage=id;state.visitedPassages++;renderPassage(id);updateProgress();document.getElementById('story-panel').scrollTo({top:0,behavior:'smooth'});}
+function renderPassage(id){const p=P[id];if(!p)return;const w=document.getElementById('passage-wrapper');w.classList.remove('visible');setTimeout(()=>{let h=`<div class="passage-title">${p.title||''}</div><div class="passage-text">${p.text}</div>`;if(p.choices&&p.choices.length){h+='<div class="choices">';p.choices.forEach((c,i)=>{h+=`<button class="choice-btn" onclick="go('${c.next}')"><span class="choice-icon">${String.fromCharCode(65+i)}</span>${c.text}</button>`;});h+='</div>';}w.innerHTML=h;setTimeout(()=>w.classList.add('visible'),30);if(p.onEnter)p.onEnter();},300);}
+function updateProgress(){document.getElementById('progress-bar').style.width=Math.min(100,Math.round((state.visitedPassages/totalPassages)*100))+'%';}
+function renderNotebook(){
+  document.getElementById('terms-list').innerHTML=state.terms.map(t=>`<div class="nb-term"><span class="nb-term-name">${t.name}</span> — ${t.desc}</div>`).join('');
+  document.getElementById('reflections-list').innerHTML=state.reflections.map(r=>`<div class="nb-reflection">${r}</div>`).join('');
+  document.getElementById('compass').innerHTML=Object.entries(state.compass).map(([a,v])=>{const[l,r]=a.split(' — ');return`<div class="nb-compass-axis"><span class="nb-compass-label">${l}</span><div class="nb-compass-bar"><div class="nb-compass-fill" style="left:${Math.min(v,50)}%;width:${Math.abs(v-50)}%;${v<50?'background:var(--accent);':'background:var(--success);'}"></div></div><span class="nb-compass-label right">${r}</span></div>`;}).join('');
+}
+
+/* ===== COMPOSED BEING GAME ===== */
+const composeData=[
+  {icon:'🦠',name:'Darmbacteriën',detail:'Biljoenen micro-organismen in je darmen die je spijsvertering, immuunsysteem en zelfs stemming beïnvloeden.'},
+  {icon:'⚡',name:'Mitochondriën',detail:'Ooit zelfstandige bacteriën, nu de energiecentrales in elke cel. Zonder hen geen leven.'},
+  {icon:'🧬',name:'Viraal DNA',detail:'8% van je DNA is afkomstig van virussen die zich ooit in je voorouders nestelden.'},
+  {icon:'🌿',name:'Zuurstof van algen',detail:'De zuurstof die je inademt wordt grotendeels geproduceerd door algen in de oceanen.'},
+  {icon:'☀️',name:'Zonne-energie',detail:'Alle energie in je lichaam is uiteindelijk afkomstig van de zon, via de voedselketen.'},
+  {icon:'💀',name:'Dode organismen',detail:'De atomen waaruit je bestaat maakten ooit deel uit van andere levensvormen — en sterren.'}
+];
+
+function initCompose(){
+  const grid=document.getElementById('compose-grid');
+  grid.innerHTML='';
+  composeData.forEach((d,i)=>{
+    const card=document.createElement('div');
+    card.className='compose-card';card.id='cc-'+i;
+    card.innerHTML=`<div class="cc-icon">${d.icon}</div><div class="cc-name">${d.name}</div><div class="cc-detail">${d.detail}</div>`;
+    card.onclick=()=>revealCompose(i);
+    grid.appendChild(card);
+  });
+  updateComposeCounter();
+}
+function revealCompose(i){
+  const c=document.getElementById('cc-'+i);
+  if(c.classList.contains('revealed'))return;
+  c.classList.add('revealed');state.composRevealed++;
+  updateComposeCounter();
+  if(state.composRevealed>=6){
+    setTimeout(()=>{document.getElementById('compose-result').innerHTML='<div class="philosophy-box"><div class="box-title">Samengesteld</div><p>Je bent opgebouwd uit biljoenen niet-menselijke entiteiten. De grens van je "zelf" is een illusie.</p></div><button class="continue-btn" onclick="go(\'compose_done\')">Verder</button>';},400);
+  }
+}
+function updateComposeCounter(){document.getElementById('compose-counter').textContent=state.composRevealed+' / 6 componenten ontdekt';}
+
+/* ===== AGENCY SPECTRUM ===== */
+const agencyData=[
+  {icon:'🐈',name:'Max de kat — jachthouding',q:'Instinct of strategie?',answer:'Max anticipeert op de eenden, past zijn positie aan, wacht het juiste moment af. Dit is niet simpel stimulus-respons, maar strategisch gedrag met perspectiefname.'},
+  {icon:'🐙',name:'Octopus — probleemoplossing',q:'Automatisme of intelligentie?',answer:'Octopussen openen potten, ontvluchten aquaria, herkennen individuele mensen. Complexe cognitie zonder gecentraliseerd brein — een ander soort intelligentie.'},
+  {icon:'🌳',name:'Bomen — Wood Wide Web',q:'Passief of communicerend?',answer:'Via schimmelnetwerken wisselen bomen voedingsstoffen en waarschuwingssignalen uit. Moederbomen "voeden" jonge bomen. Is dit communicatie? Zorg?'},
+  {icon:'🌱',name:'Mimosa pudica — leren',q:'Reflex of geheugen?',answer:'Deze plant leert dat vallen niet gevaarlijk is en stopt met bladeren sluiten. Ze "onthoudt" dit wekenlang. Leren zonder zenuwstelsel.'}
+];
+
+function initAgency(){
+  const list=document.getElementById('agency-list');list.innerHTML='';
+  agencyData.forEach((d,i)=>{
+    const item=document.createElement('div');item.className='agency-item';item.id='ag-'+i;
+    item.innerHTML=`<div class="ai-icon">${d.icon}</div><div class="ai-content"><div class="ai-name">${d.name}</div><div class="ai-q">${d.q}</div><div class="ai-answer">${d.answer}</div></div>`;
+    item.onclick=()=>revealAgency(i);
+    list.appendChild(item);
+  });
+  updateAgencyCounter();
+}
+function revealAgency(i){
+  const el=document.getElementById('ag-'+i);
+  if(el.classList.contains('revealed'))return;
+  el.classList.add('revealed');state.agencyRevealed++;
+  adj('Handelen — Gedrag',5);
+  updateAgencyCounter();
+  if(state.agencyRevealed>=4){
+    setTimeout(()=>{document.getElementById('agency-result').innerHTML='<button class="continue-btn" onclick="go(\'agency_done\')">Verder</button>';},400);
+  }
+}
+function updateAgencyCounter(){document.getElementById('agency-counter').textContent=state.agencyRevealed+' / 4 voorbeelden verkend';}
+
+/* ===== WETENSCHAPSFILOSOFIE ===== */
+const wfData=[
+  {name:'Hermeneutiek',thinker:'Dilthey / Despret',desc:'Niet verklaren via algemene wetten, maar <em>begrijpen</em> en interpreteren van betekenisvolle structuren. Het perspectief van het dier proberen te verstaan past hierin.'},
+  {name:'Logisch Positivisme',thinker:'Wenen-kring',desc:'Alleen uitspraken die direct geverifieerd kunnen worden door zintuiglijke waarneming zijn wetenschappelijk. Holistische concepten als "the mesh" zouden als onwetenschappelijk worden afgedaan.'},
+  {name:'Falsificatie',thinker:'Karl Popper',desc:'Een theorie is wetenschappelijk als ze <em>weerlegbaar</em> is. Hoe falsifieerbaar zijn concepten als "the mesh" of Desprets interpretaties? Toont dit de grenzen van falsificatie?'},
+  {name:'Paradigma\'s',thinker:'Thomas Kuhn',desc:'Wetenschap werkt binnen gedeelde raamwerken (paradigma\'s). Radicale verandering via <em>wetenschappelijke revoluties</em>. Morton en Despret wijzen mogelijk op een paradigmaverschuiving.'}
+];
+
+function initWetfil(){
+  const grid=document.getElementById('wf-grid');grid.innerHTML='';
+  wfData.forEach((d,i)=>{
+    const card=document.createElement('div');card.className='wf-card';card.id='wf-'+i;
+    card.innerHTML=`<div class="wf-name">${d.name}</div><div class="wf-thinker">${d.thinker}</div><div class="wf-desc">${d.desc}</div>`;
+    card.onclick=()=>revealWF(i);
+    grid.appendChild(card);
+  });
+  updateWFCounter();
+}
+function revealWF(i){
+  const c=document.getElementById('wf-'+i);
+  if(c.classList.contains('revealed'))return;
+  c.classList.add('revealed');state.wfRevealed++;
+  if(i===0){T('Hermeneutiek','Wetenschapsfilosofische benadering gericht op begrijpen en interpreteren van betekenis, niet op verklaren via wetten.');adj('Objectief — Interpretatief',8);}
+  if(i===1)T('Logisch Positivisme','Stroming die alleen verifieerbare uitspraken als wetenschappelijk beschouwt.');
+  if(i===2)T('Falsificatie (Popper)','Wetenschappelijk is wat weerlegbaar is. Criterium voor het onderscheiden van wetenschap en pseudowetenschap.');
+  if(i===3){T('Paradigma (Kuhn)','Gedeeld raamwerk van aannames en methoden waarbinnen wetenschap werkt. Verandert via wetenschappelijke revoluties.');T('Feyerabend','Filosoof die stelde dat er niet één wetenschappelijke methode bestaat: "anything goes".');}
+  updateWFCounter();
+  if(state.wfRevealed>=4){
+    setTimeout(()=>{document.getElementById('wf-result').innerHTML='<button class="continue-btn" onclick="go(\'wetfil_done\')">Verder</button>';},400);
+  }
+}
+function updateWFCounter(){document.getElementById('wf-counter').textContent=state.wfRevealed+' / 4 perspectieven verkend';}
+
+/* ===== INIT ===== */
+renderNotebook();renderPassage('start');
+setTimeout(()=>document.getElementById('passage-wrapper').classList.add('visible'),100);
+</script>
+</body>
+</html>
