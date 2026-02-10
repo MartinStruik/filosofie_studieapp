@@ -50,6 +50,16 @@ export function LiaSpelView({ progress, setProgress }) {
           title={`Lia's Transformatie — ${activeChapter.label}`}
           style={{ flex: 1, border: "none", width: "100%" }}
         />
+        <button onClick={closeChapter} style={{
+          position: "fixed", bottom: "20px", right: "20px", zIndex: 210,
+          background: activeChapter.color, color: "#fff", border: "none",
+          borderRadius: "50px", padding: "12px 20px", fontSize: "14px", fontWeight: 700,
+          cursor: "pointer", boxShadow: "0 4px 16px rgba(0,0,0,0.25)",
+          display: "flex", alignItems: "center", gap: "6px",
+          minWidth: "44px", minHeight: "44px",
+        }}>
+          {"← Terug"}
+        </button>
       </div>
     );
   }

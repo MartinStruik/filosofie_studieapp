@@ -86,6 +86,7 @@ export function VoortgangView({ progress, setProgress }) {
           { label: "Quiz", pct: overall.quiz.pct, sub: `${overall.quiz.done} gemaakt`, color: "#D97A4A" },
           { label: "Examenvragen", pct: overall.exam.pct, sub: `${overall.exam.done}/${overall.exam.total}`, color: "#4AD97A" },
           { label: "Teksten", pct: overall.tekst.pct, sub: `${overall.tekst.done}/${overall.tekst.total}`, color: "#B04AD9" },
+          { label: "Lia's verhaal", pct: overall.lia.pct, sub: `${overall.lia.done}/${overall.lia.total}`, color: "#9B59B6" },
         ].map(cat => (
           <div key={cat.label} style={{ marginBottom: "8px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#666", marginBottom: "3px" }}>

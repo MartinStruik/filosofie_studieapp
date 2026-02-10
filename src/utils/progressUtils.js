@@ -146,5 +146,8 @@ export function generateDagdoelen(progress) {
   else if (relevantCards.length > 0) doelen.push({ icon: "\uD83C\uDCCF", text: `${Math.min(15, relevantCards.length)} flashcards oefenen`, detail: focus.join(", ") });
   doelen.push({ icon: "\u2753", text: "1 quiz sessie (15 vragen)", detail: focus.join(", ") });
   if (examUndone.length > 0) doelen.push({ icon: "\uD83D\uDD0D", text: `${Math.min(2, examUndone.length)} examenvra${examUndone.length === 1 ? "ag" : "gen"} maken`, detail: focus.join(", ") });
+  const liaPlayed = progress.liaPlayed || [];
+  const liaUndone = LIA_CHAPTERS.filter(focusFilter).filter(c => !liaPlayed.includes(c.id));
+  if (liaUndone.length > 0) doelen.push({ icon: "\uD83C\uDFAD", text: `Speel 1 Lia-hoofdstuk`, detail: liaUndone[0].title });
   return { doelen, weekLabel: week.label, focus };
 }
