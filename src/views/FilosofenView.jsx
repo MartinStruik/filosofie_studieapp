@@ -21,6 +21,12 @@ export function FilosofenView() {
           <div style={{ fontSize: "11px", opacity: 0.8 }}>{f.et}</div>
           {f.lia && <div style={{ fontSize: "11px", opacity: 0.9, marginTop: "4px", background: "rgba(255,255,255,0.2)", display: "inline-block", padding: "2px 8px", borderRadius: "4px" }}>{f.lia}</div>}
         </div>
+        {f.img && (
+          <img src={f.img} alt={f.name}
+            style={{ width: "100%", maxWidth: "280px", borderRadius: "12px",
+                     margin: "16px auto", display: "block",
+                     boxShadow: "0 4px 20px rgba(0,0,0,0.15)" }} />
+        )}
         <div style={{ padding: "16px", background: "#f8f8fc", borderRadius: "12px", marginBottom: "16px" }}>
           <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 8px", color: "#1a1a2e" }}>Kernpositie</h3>
           <p style={{ fontSize: "14px", color: "#333", lineHeight: 1.6, margin: 0, fontFamily: "'Source Sans 3', sans-serif" }}>{f.kern}</p>
@@ -60,9 +66,19 @@ export function FilosofenView() {
             onMouseOver={e => e.currentTarget.style.boxShadow = "0 2px 8px rgba(0,0,0,0.06)"}
             onMouseOut={e => e.currentTarget.style.boxShadow = ""}
             >
-              <div style={{ width: "36px", height: "36px", borderRadius: "50%", background: k?.color || "#ccc", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: "14px", flexShrink: 0, fontFamily: "'Playfair Display', Georgia, serif" }}>
-                {f.name[0]}
-              </div>
+              {f.img ? (
+                <img src={f.img} alt={f.name}
+                  style={{ width: "44px", height: "44px", borderRadius: "50%",
+                           objectFit: "cover", objectPosition: "center 20%",
+                           border: `2px solid ${k?.color || "#ccc"}`, flexShrink: 0 }} />
+              ) : (
+                <div style={{ width: "44px", height: "44px", borderRadius: "50%",
+                              background: k?.color || "#ccc", color: "#fff",
+                              display: "flex", alignItems: "center", justifyContent: "center",
+                              fontWeight: 700, fontSize: "16px", flexShrink: 0 }}>
+                  {f.name[0]}
+                </div>
+              )}
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 700, fontSize: "14px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{f.name}</div>
                 <div style={{ fontSize: "11px", color: "#666", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.et} · {f.begrippen.slice(0, 3).join(", ")}</div>
