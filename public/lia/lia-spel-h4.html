@@ -117,6 +117,37 @@
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
 
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;background:rgba(224,112,136,.08);border:1px solid rgba(224,112,136,.12);color:var(--text-dim);text-decoration:none;cursor:default;}
+
+/* ===== IMAGES ===== */
+.scene-img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 1px solid var(--border);
+  display: block;
+}
+.scene-img.filosoof-card {
+  max-width: 340px;
+  margin: 20px auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.scene-img.concept-diagram {
+  max-width: 520px;
+  margin: 20px auto;
+}
+.scene-img.narrative {
+  max-width: 480px;
+  margin: 24px auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+.img-caption {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: -12px 0 20px;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -283,6 +314,7 @@ sam_gesprek: {
   title: 'Het college',
   text: `
     <p>'s Middags, naast Sam in de collegezaal. Lia fluisterde:</p>
+    <img src="/lia/img/h4-scene-lia-campus.jpg" class="scene-img narrative" alt="Lia op de campus" />
     <p class="thought">"Weet je wat het ergste is? Niet de pijn. Niet eens dat ik dingen niet kan. Het is hoe mensen kijken. Alsof ik niet meer mezelf ben."</p>
     <p>Sam knikte langzaam. <em>"Dat is precies waar de sprekers vandaag over gaan. Over hoe de blik van de ander je identiteit vormt…"</em></p>
     <p>Lia keek naar het podium. De spreker verscheen. Het onderwerp van vandaag:</p>
@@ -323,6 +355,7 @@ expressie_vormt: {
   text: `
     <p><em>"Expressies vormen ervaring,"</em> vervolgde de spreker. <em>"Hoe we praten, hoe we gezien worden, de culturele beelden — we internaliseren ze. Ze kleuren onze zelfbeleving."</em></p>
     <p>Dit raakt aan twee perspectieven die in spanning staan:</p>
+    <img src="/lia/img/h4-concept-existentialisme.jpg" class="scene-img concept-diagram" alt="Existentialisme" />
     <div class="contrast-box contrast-h4">
       <span class="cb-label">Structuralisme</span>
       Maatschappelijke structuren (taal, normen, machtsverhoudingen) <em>vormen</em> ons. We zijn producten van het systeem waarin we leven.
@@ -345,6 +378,7 @@ beauvoir_intro: {
   title: 'Simone de Beauvoir',
   text: `
     <p><em>"Simone de Beauvoir,"</em> zei de spreker, <em>"analyseerde hoe de bestaanservaring van vrouwen cultureel wordt gevormd."</em></p>
+    <img src="/lia/img/h4-filosoof-beauvoir.jpg" class="scene-img filosoof-card" alt="Simone de Beauvoir" />
     <p>Op het scherm verscheen de beroemde zin:</p>
     <div class="philosophy-box" style="text-align:center;font-size:22px;">
       <em>"Je wordt niet als vrouw geboren, maar tot vrouw <strong>gemaakt</strong>."</em>
@@ -385,6 +419,7 @@ fanon_intro: {
   title: 'Frantz Fanon',
   text: `
     <p><em>"Frantz Fanon,"</em> zei de spreker, <em>"analyseerde de impact van racisme op de bestaanservaring. Hij beschrijft hoe de 'witte blik' de Zwarte mens objectiveert."</em></p>
+    <img src="/lia/img/h4-filosoof-fanon.jpg" class="scene-img filosoof-card" alt="Frantz Fanon" />
     <p>Op het scherm verscheen Fanons tekst:</p>
     <div class="philosophy-box" style="font-size:18px;">
       <em>"Hé, een neger!' (...) maar in plaats daarvan werd ik mezelf gewaar als <strong>object</strong> te midden van andere objecten."</em>
@@ -407,6 +442,7 @@ epidermisch: {
   title: 'Epidermisch-raciaal schema',
   text: `
     <p>De spreker toonde een diagram:</p>
+    <img src="/lia/img/h4-concept-fanon-spiegel.jpg" class="scene-img concept-diagram" alt="Fanons spiegel" />
     <div class="contrast-fenomeno contrast-box">
       <span class="cb-label">Sheets-Johnstone (H2) — Lichaamsschema</span>
       Ons normale, pre-reflectieve gevoel van ons lichaam in de ruimte. Praktisch, impliciet, vanzelfsprekend.
@@ -460,6 +496,7 @@ label_game_done: {
   title: 'Na de storm',
   text: `
     <p>De labels bleven terugkomen. Hoe hard Lia ook probeerde — ze kon ze niet definitief verwijderen.</p>
+    <img src="/lia/img/h4-concept-socialisatie.jpg" class="scene-img concept-diagram" alt="Socialisatie" />
     <p class="thought">Dit is wat Fanon en De Beauvoir bedoelen. De labels komen niet van binnenuit. Ze worden opgelegd door de blik van de ander. En ze <em>kleven</em>.</p>
     <div class="philosophy-box">
       <div class="box-title">Inzicht</div>

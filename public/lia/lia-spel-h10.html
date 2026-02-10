@@ -93,6 +93,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+/* ===== IMAGES ===== */
+.scene-img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 1px solid var(--border);
+  display: block;
+}
+.scene-img.filosoof-card {
+  max-width: 340px;
+  margin: 20px auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.scene-img.concept-diagram {
+  max-width: 520px;
+  margin: 20px auto;
+}
+.scene-img.narrative {
+  max-width: 480px;
+  margin: 24px auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+.img-caption {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: -12px 0 20px;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -149,6 +180,7 @@ verbeek_intro:{
   title:'Peter-Paul Verbeek',
   text:`
     <p><em>"Dat doet me denken aan het symposium vandaag,"</em> zei Lia. <em>"Over een filosoof, Peter-Paul Verbeek, die betoogt dat technologie <strong>nooit zomaar een neutraal instrument</strong> is."</em></p>
+    <img src="/lia/img/h10-filosoof-verbeek.jpg" class="scene-img filosoof-card" alt="Peter-Paul Verbeek" />
     <div class="philosophy-box">
       <div class="box-title">Symposium — Hoofdstuk 10</div>
       <p><strong>Technologie als morele vormgever</strong></p>
@@ -210,6 +242,7 @@ echo_intro:{
   text:`
     <p>Verbeek illustreert zijn theorie met de casus van <strong>prenatale echoscopie</strong> — een technologie die ons moreel landschap fundamenteel heeft veranderd.</p>
     <p><em>"Vóór de echo,"</em> vertelde de spreker, <em>"was de zwangerschap een grotendeels onzichtbaar proces. Na de echo werd de foetus een zichtbaar wezen met een eigen status."</em></p>
+    <img src="/lia/img/h10-concept-echoscopie.jpg" class="scene-img concept-diagram" alt="Echoscopie-dilemma" />
     <p>Loop mee door drie fasen van morele transformatie:</p>
     <div id="echo-stages"></div>
     <div id="echo-progress" style="font-family:'Inter',sans-serif;font-size:12px;color:var(--text-dim);text-align:center;margin-top:12px;"></div>`,
@@ -251,6 +284,7 @@ ethiek_intro:{
 drie_ethieken:{
   title:'Plicht, Gevolgen, Deugd',
   text:`
+    <img src="/lia/img/h10-concept-ethiek.jpg" class="scene-img concept-diagram" alt="Utilisme en Kant" />
     <div class="definition-box">
       <span class="term">Plichtethiek (Kant)</span>
       Focust op <strong>principes en plichten</strong>. Respecteer de persoon als doel op zich. Is de keuze <em>universaliseerbaar</em>? Worden rechten gerespecteerd?
@@ -298,6 +332,7 @@ ethics_done:{
   title:'Drie lenzen, één dilemma',
   text:`
     <p>Lia zag hoe elk ethisch kader het dilemma anders belicht:</p>
+    <img src="/lia/img/h10-concept-deugd.jpg" class="scene-img concept-diagram" alt="Deugdethiek" />
     <div class="philosophy-box">
       <div class="box-title">Samenvatting</div>
       <p><strong>Plichtethiek:</strong> Respecteer Sams autonomie — hij moet zelf kiezen, vrij van druk.<br>
@@ -371,6 +406,7 @@ lia_reflectie:{
   title:'Lia en de BCI-keuze',
   text:`
     <p>Lia keek naar Sam. <em>"Dus als je straks kiest..."</em></p>
+    <img src="/lia/img/h10-scene-lia-gesprek.jpg" class="scene-img narrative" alt="Lia in gesprek" />
     <p>Sam knikte. <em>"Dan kies ik niet alleen een technische optie. Ik navigeer een moreel landschap dat door de technologie zelf is gecreëerd. En ik moet me daar bewust toe verhouden."</em></p>
     <div class="max-moment">Max lag op Lia's schoot, zich totaal niet bewust van morele scripts, technologische bemiddeling of ethische kaders. Voor Max was de wereld eenvoudig: warm, koud, honger, slaap.</div>
     <p class="thought">Misschien is dat het verschil. Wij mensen kunnen de bemiddeling herkennen. We kunnen nadenken over de waarden die in onze technologie zijn ingebouwd. Dat is onze vrijheid — en onze verantwoordelijkheid.</p>`,

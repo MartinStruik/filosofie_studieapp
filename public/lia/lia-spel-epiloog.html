@@ -83,6 +83,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -230,6 +261,7 @@ climb:{
   title:'De klimwand',
   text:`
     <p>Lia stond voor de oefenwand. Het aangepaste harnas steunde haar romp. Ze keek naar de grepen — standaard en aangepast.</p>
+    <img src="/lia/img/epiloog-scene-klimwand.jpg" class="scene-img narrative" alt="Lia bij de klimwand" />
     <p>Pak de grepen, één voor één. Elke greep is een filosoof, een inzicht, een stap:</p>
     <div class="climb-container" id="climb-wall"></div>
     <div id="climb-counter" style="font-family:'Inter',sans-serif;font-size:13px;color:var(--accent);text-align:center;margin-top:8px;"></div>
@@ -258,6 +290,7 @@ finale:{
       <p>Filosofie biedt geen zekerheid, maar <strong>gereedschap</strong>: om te zien, te denken, te voelen, te kiezen.</p>
       <p>En om verder te klimmen.</p>
     </div>
+    <img src="/lia/img/epiloog-scene-lia-portret.jpg" class="scene-img narrative" alt="Lia portret" />
     <p style="text-align:center;margin-top:40px;font-size:26px;color:var(--accent-glow);font-family:'Crimson Text',serif;">
       <em>Lia plaatste haar hand op de volgende greep.<br>Ze klom verder.</em>
     </p>

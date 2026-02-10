@@ -327,6 +327,37 @@
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
   ::-webkit-scrollbar-thumb:hover { background:var(--accent-dim); }
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -681,6 +712,8 @@ const passages = {
 
   ${addTerm('Fenomenologie','Filosofische methode die de directe, geleefde ervaring nauwkeurig beschrijft — hoe de wereld aan ons verschijnt, voordat we er theorieën over vormen.')}
 
+  <img src="/lia/img/h2-concept-appel.jpg" class="scene-img concept-diagram" alt="De geleefde appel" />
+
   <div class="passage-text">
     <p>"Fenomenologen proberen de vooronderstellingen van zowel de wetenschap als onze alledaagse aannames tijdelijk <em>'tussen haakjes te zetten'</em>. Dit noemen we de <strong>epoché</strong>."</p>
     <p>"Laten we dat zelf proberen."</p>
@@ -741,6 +774,8 @@ const passages = {
 
   ${addTerm('Intentionaliteit','De fundamentele gerichtheid van bewustzijn — het is altijd bewustzijn van iets. Geen lege doos, maar openheid naar de wereld.')}
 
+  <img src="/lia/img/h2-concept-intentionaliteit.jpg" class="scene-img concept-diagram" alt="Intentionaliteit" />
+
   <div class="passage-text">
     <p>Je denkt erover na. In het ziekenhuis was je bewustzijn altijd <em>ergens</em> op gericht: op de pijn, op je hand, op Max, op de angst. Het was nooit leeg. Zelfs als je niets deed, was je je bewust <em>van</em> de stilte, <em>van</em> het plafond, <em>van</em> je eigen lichaam.</p>
   </div>
@@ -787,6 +822,7 @@ const passages = {
   <div class="passage-title">Maxine Sheets-Johnstone</div>
   <div class="passage-text">
     <p>Op het scherm verschijnt een foto van een oudere vrouw met levendige ogen. Maxine Sheets-Johnstone, geboren in 1930. Ooit danseres.</p>
+    <img src="/lia/img/h2-filosoof-sheets.jpg" class="scene-img filosoof-card" alt="Maxine Sheets-Johnstone" />
     <p>"Sheets-Johnstone past de fenomenologische methode toe op iets specifieks," zegt de professor. "De ervaring van het <strong>bewegende lichaam</strong>."</p>
     <p>Ze citeert:</p>
   </div>
@@ -811,6 +847,8 @@ const passages = {
     <p>"Sheets-Johnstone's eerste argument," zegt de professor, "is dat de <strong>gewaarwording van beweging voorafgaat aan reflectie</strong>."</p>
     <p>"Een danser ervaart de flow en dynamiek direct, vanuit het eerstepersoonsperspectief. Pas <em>daarna</em> kan er gereflecteerd worden. Reflectie is secundair."</p>
   </div>
+
+  <img src="/lia/img/h2-concept-dans.jpg" class="scene-img concept-diagram" alt="Dans en beweging" />
 
   <div class="passage-text">
     <p>Je denkt onmiddellijk terug aan de flashback. Op de klimwand <em>was</em> je de beweging. Er was geen stap tussen willen en doen, geen commando en uitvoering. Je lichaam wist.</p>

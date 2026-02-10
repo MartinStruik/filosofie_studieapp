@@ -107,6 +107,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -181,6 +212,7 @@ swaab:{
   title:'Wij zijn ons brein',
   text:`
     <p>De spreker begon met een provocerende stelling:</p>
+    <img src="/lia/img/h6-filosoof-swaab.jpg" class="scene-img filosoof-card" alt="Dick Swaab" />
     <div class="philosophy-box" style="text-align:center;font-size:22px;">
       <em>"Wij zijn ons brein."</em>
       <div style="font-size:14px;margin-top:8px;color:var(--text-dim);">— Dick Swaab, neurobioloog</div>
@@ -250,6 +282,7 @@ symboolmanipulatie:{
   title:'Denken als berekenen',
   text:`
     <p>Veel functionalisten vatten denken op als <strong>symboolmanipulatie</strong>: in ons hoofd werken we met interne <em>mentale representaties</em> — codes of symbolen die staan voor dingen in de wereld — die volgens formele, logische regels worden bewerkt.</p>
+    <img src="/lia/img/h6-concept-cognitivisme.jpg" class="scene-img concept-diagram" alt="Cognitivisme" />
     <div class="philosophy-box">
       <div class="box-title">Het input-verwerking-output model</div>
       <p><strong>Input</strong> (zintuiglijke info) → <strong>Verwerking</strong> (symboolmanipulatie) → <strong>Output</strong> (gedrag)</p>
@@ -330,6 +363,7 @@ dreyfus_intro:{
   title:'Hubert Dreyfus',
   text:`
     <p>Nu betrad een tegenstem het podium.</p>
+    <img src="/lia/img/h6-filosoof-dreyfus.jpg" class="scene-img filosoof-card" alt="Hubert Dreyfus" />
     <p><em>"Filosoof Hubert Dreyfus leverde fundamentele kritiek. Zijn kernpunt: menselijke intelligentie is <strong>onlosmakelijk verbonden</strong> met onze belichaamde ervaring."</em></p>
     <div class="definition-box">
       <span class="term">Dreyfus' kernkritiek</span>
@@ -411,6 +445,7 @@ connectionisme:{
       <span class="term">Connectionisme (neurale netwerken)</span>
       Systemen die, geïnspireerd op het brein, niet met expliciete regels werken maar <strong>patronen leren herkennen</strong> uit grote hoeveelheden data. Het leerproces lijkt meer op menselijk leren (processimulatie). Denk aan ChatGPT.
     </div>
+    <img src="/lia/img/h6-concept-neuraal.jpg" class="scene-img concept-diagram" alt="Neuraal netwerk" />
     <p>Connectionisme komt deels tegemoet aan Dreyfus' kritiek: er zijn geen expliciete regels nodig. <strong>Maar</strong>:</p>
     <p class="thought">Eén punt blijft relevant: neurale netwerken missen nog steeds een lichaam en geleefde ervaring. Ze verwerken data, maar ze voelen niets.</p>`,
   onEnter:()=>{T('Connectionisme','AI op basis van neurale netwerken: leert patronen uit data in plaats van expliciete regels. Deels antwoord op Dreyfus, maar mist nog belichaming.');},
@@ -421,6 +456,7 @@ lia_reflectie:{
   title:'Lia\'s reflectie',
   text:`
     <p>Na het college zat Lia in de tuin. De BCI op haar lijst voelde anders nu.</p>
+    <img src="/lia/img/h6-scene-lia-bci.jpg" class="scene-img narrative" alt="Lia BCI-panels" />
     <p class="thought">De chip is functionalisme in de praktijk: hij neemt input (hersensignalen) en produceert output (vingerbewegingen). Zwakke AI, productsimulatie. Hij bootst het resultaat na, niet het proces.</p>
     <p class="thought">Maar ik wil niet alleen het resultaat — ik wil het gevoel terug. De warmte van de mok, de textuur van de rots. Dat is wat Dreyfus bedoelt: je kunt de functie kopiëren, maar niet de ervaring.</p>
     <div class="max-moment">Max krulde zich op op haar schoot. Zijn pootje gleed over de rand van de rolstoel. Instinct, warmte, gewicht — alles wat een computer nooit zou begrijpen.</div>`,

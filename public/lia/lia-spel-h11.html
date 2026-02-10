@@ -89,6 +89,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -126,6 +157,7 @@ start:{
   text:`
     <div class="ambient-text">Hoofdstuk 11 — Jos de Mul over de toekomstige mens</div>
     <p>Sam had zijn beslissing genomen: het BCI-implantaat, met focus op het exoskelet. Maar zijn opwinding had plaatsgemaakt voor een diepere, peinzende laag.</p>
+    <img src="/lia/img/h11-scene-exoskelet.jpg" class="scene-img narrative" alt="Exoskelet-man" />
     <p><em>"Weet je,"</em> zei hij, terwijl hij naar zijn benen keek, <em>"die keuze... het voelt groter dan alleen 'lopen of handen'. Alsof ik een <strong>deur openzet</strong>. Alsof ik een richting insla."</em></p>`,
   choices:[{text:'"Welke richting?"',next:'richting'}]
 },
@@ -147,6 +179,7 @@ demul_intro:{
       <p><strong>De toekomstige mens volgens Jos de Mul</strong></p>
       <p><span class="dim">Jos de Mul (1956) — filosoof, speculeert over de toekomst van de mens</span></p>
     </div>
+    <img src="/lia/img/h11-filosoof-demul.jpg" class="scene-img filosoof-card" alt="Jos de Mul" />
     <p>Waar Verbeek (H10) zich richt op hoe technologie <em>nu</em> onze moraal vormt, zet De Mul een stap verder. Hij speculeert over hoe technologie onze <strong>menselijke identiteit zelf</strong> kan transformeren.</p>
     <p>Staan we op het punt de <em>Homo sapiens</em> achter ons te laten?</p>`,
   choices:[{text:'NBIN-technologieën verkennen',next:'nbin_game'}]
@@ -167,11 +200,13 @@ nbin_done:{
   title:'Voorbij extern',
   text:`
     <p>De Mul stelt dat NBIN-technologieën een <strong>kwalitatief andere impact</strong> hebben dan eerdere technieken.</p>
+    <img src="/lia/img/h11-concept-nbin.jpg" class="scene-img concept-diagram" alt="NBIN" />
     <div class="philosophy-box">
       <div class="box-title">Het verschil</div>
       <p>Waar techniek <em>voorheen extern</em> bleef (gereedschap, machines), maken NBIN-technologieën het mogelijk <strong>intern en diep</strong> in te grijpen in onze biologische en cognitieve constitutie.</p>
     </div>
-    <p>Dit daagt ons <strong>traditionele humanistische zelfbeeld</strong> uit — de mens als autonoom, redelijk individu, duidelijk onderscheiden van dier en machine.</p>`,
+    <p>Dit daagt ons <strong>traditionele humanistische zelfbeeld</strong> uit — de mens als autonoom, redelijk individu, duidelijk onderscheiden van dier en machine.</p>
+    <img src="/lia/img/h11-concept-humanisme.jpg" class="scene-img concept-diagram" alt="Humanisme" />`,
   onEnter:()=>{T('NBIN-technologieën','Nano-, Bio-, Info- en Neuro/Cognotechnologie — vier versmeltende technologiedomeinen die intern ingrijpen in de mens.'); T('Humanisme','Het traditionele zelfbeeld van de mens als autonoom, redelijk individu, onderscheiden van dier en machine.');adj('Humanisme — Posthumanisme',10);},
   choices:[{text:'Drie scenario\'s voor de toekomst',next:'scenarios_intro'}]
 },
@@ -191,6 +226,8 @@ scenarios_done:{
   title:'Drie paden',
   text:`
     <p>De Mul benadrukt dat deze scenario's zullen <strong>overlappen</strong>. Het gaat niet om een simpele keuze, maar om convergerende ontwikkelingen.</p>
+    <img src="/lia/img/h11-concept-transhumanisme.jpg" class="scene-img concept-diagram" alt="Transhumanisme" />
+    <img src="/lia/img/h11-concept-posthumanisme.jpg" class="scene-img concept-diagram" alt="Posthumanisme" />
     <div class="contrast-box" style="background:rgba(192,80,80,.05);border:1px solid rgba(192,80,80,.15);">
       <span class="cb-label" style="color:var(--red);">Verbeek (H10) — Morele bemiddeling</span>
       Technologie vormt onze <em>moraal</em> en <em>keuzes</em>.
@@ -208,6 +245,7 @@ nietzsche:{
   title:'Nietzsche',
   text:`
     <p>De radicale transformaties maken de vraag naar <strong>waarden</strong> urgent. Friedrich Nietzsche wordt relevant:</p>
+    <img src="/lia/img/h11-concept-nietzsche.jpg" class="scene-img concept-diagram" alt="Nietzsche" />
     <div class="definition-box">
       <span class="term">Herwaardering van alle waarden</span>
       Nietzsche voorzag dat traditionele (christelijk-humanistische) waarden hun grondslag zouden verliezen — 'God is dood'. Hij pleitte voor een herwaardering door sterke individuen die <em>voorbij goed en kwaad</em> nieuwe waarden zouden scheppen: de <strong>Übermensch</strong>.

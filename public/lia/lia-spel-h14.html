@@ -90,6 +90,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -128,6 +159,7 @@ start:{
     <div class="ambient-text">Hoofdstuk 14 — Barad, Harari & Rasch over data en 'het else'</div>
     <p>De BCI-sessie voelde vandaag bijna <em>naadloos</em>. Lia bestuurde de cursor op het scherm door zich bewegingspatronen voor te stellen, en de cursor volgde met verbluffende vloeiendheid.</p>
     <p>Het was alsof de technologie — de elektroden, de draden, de computer — <em>verdween</em>. Alsof er een directe lijn liep van haar gedachte naar de actie op het scherm.</p>
+    <img src="/lia/img/h14-scene-lia-bci.jpg" class="scene-img narrative" alt="Lia met BCI" />
     <p>De grens tussen haar innerlijke wereld en de digitale representatie <strong>vervaagde</strong>.</p>`,
   choices:[{text:'"Jouw neurale data wordt feilloos omgezet"',next:'data_kilte'}]
 },
@@ -145,6 +177,7 @@ barad_intro:{
   title:'Karen Barad',
   text:`
     <p><strong>Karen Barad</strong> (1956) — natuurkundige en feministisch wetenschapsfilosoof — daagt de scheiding tussen materie en betekenis uit.</p>
+    <img src="/lia/img/h14-concept-intraactie.jpg" class="scene-img concept-diagram" alt="Intra-actie" />
     <div class="definition-box">
       <span class="term">Intra-actie vs. Interactie</span>
       <strong>Interactie:</strong> twee aparte dingen die op elkaar inwerken (bal raakt muur).<br>
@@ -192,10 +225,12 @@ dataisme:{
   title:'Dataïsme',
   text:`
     <p>Historicus <strong>Yuval Noah Harari</strong> beschrijft een opkomend wereldbeeld: <em>Dataïsme</em>.</p>
+    <img src="/lia/img/h14-filosoof-harari.jpg" class="scene-img filosoof-card" alt="Yuval Noah Harari" />
     <div class="definition-box">
       <span class="term">Dataïsme</span>
       Het universum bestaat uit <strong>datastromen</strong>. Alles is informatieverwerking. Levende wezens zijn complexe <em>biochemische algoritmes</em>. Bewustzijn en vrije wil zijn mogelijk slechts bijproducten.
     </div>
+    <img src="/lia/img/h14-concept-dataisme.jpg" class="scene-img concept-diagram" alt="Dataïsme" />
     <p>Een verschuiving: van <strong>theocentrisme</strong> → <strong>humanisme</strong> → <strong>techno-humanisme</strong> → <strong>dataïsme</strong> (het algoritme centraal, de menselijke wil secundair).</p>
     <p>De gedachte: <em>"het algoritme kent jou beter dan jijzelf."</em></p>`,
   onEnter:()=>{T('Dataïsme (Harari)','Wereldbeeld waarin alles informatieverwerking is en de mens een biochemisch algoritme. Autoriteit verschuift van mens naar data.'); T('Yuval Noah Harari','Historicus die de verschuiving beschrijft van humanisme naar dataïsme.');adj('Mens — Algoritme',15);},
@@ -219,6 +254,7 @@ selfie_done:{
   title:'Het else',
   text:`
     <p>Rasch: <em>"Ik kijk naar mijn data-selfie. Ben ik dat? Ja, misschien wel, maar ik ben toch zeker ook <strong>méér</strong> dan dat?"</em></p>
+    <img src="/lia/img/h14-filosoof-rasch.jpg" class="scene-img filosoof-card" alt="Miriam Rasch" />
     <div class="definition-box">
       <span class="term">Het Else (Miriam Rasch)</span>
       Datgene wat fundamenteel ontsnapt aan dataficatie, kwantificering en algoritmische logica. Het andere, het ongrijpbare, de ambiguïteit, de niet-meetbare kwaliteit. <em>"Het else is zélf oncategoriseerbaar."</em>

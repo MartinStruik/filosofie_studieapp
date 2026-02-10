@@ -81,6 +81,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -142,10 +173,12 @@ collegezaal:{
 ant_intro:{
   title:'Actor-Netwerktheorie',
   text:`
+    <img src="/lia/img/h13-filosoof-latour.jpg" class="scene-img filosoof-card" alt="Bruno Latour" />
     <div class="definition-box">
       <span class="term">Actor-Netwerktheorie (ANT) — Bruno Latour</span>
       Handelingsvermogen (agency) — het vermogen om effect te sorteren, een verschil te maken — is <strong>niet exclusief menselijk</strong>. Een actor is elk element dat een verschil maakt: mens, dier, object, technologie, idee, regel.
     </div>
+    <img src="/lia/img/h13-concept-ant.jpg" class="scene-img concept-diagram" alt="Actor-Network Theory" />
     <p>Kernpunten van ANT:</p>
     <p><strong>Agency zonder intentie:</strong> Bewustzijn of intentie is niet vereist. Agency ontstaat in de <em>relaties</em>, niet in de actor zelf.</p>
     <p><strong>Gedistribueerd handelen:</strong> Een handeling is nooit het werk van één actor, maar het resultaat van interacties tussen vele actoren. Autorijden = bestuurder + auto + weg + verkeersregels.</p>`,
@@ -158,6 +191,7 @@ berlijn_intro:{
   title:'De Berlijnse sleutel',
   text:`
     <p>In de pauze ontdekte Lia een vreemde sleutel in een vitrine: twee identieke, symmetrische kanten.</p>
+    <img src="/lia/img/h13-foto-sleutel.jpg" class="scene-img concept-diagram" alt="De Berlijnse sleutel" />
     <p><em>"Latours favoriete voorbeeld,"</em> zei Sam. <em>"Dit ding is zo ontworpen dat je de sleutel alleen uit het slot kunt halen nadat je de deur weer op slot hebt gedraaid."</em></p>
     <p>Volg de stappen van morele delegatie:</p>
     <div id="key-steps"></div>
@@ -181,6 +215,7 @@ hayles_intro:{
   title:'Katherine Hayles',
   text:`
     <p><strong>Katherine Hayles</strong> (1943) onderzoekt hoe complexe technologieën vormen van <em>niet-bewuste cognitie</em> vertonen.</p>
+    <img src="/lia/img/h13-filosoof-hayles.jpg" class="scene-img filosoof-card" alt="N. Katherine Hayles" />
     <div class="definition-box">
       <span class="term">Niet-bewuste cognitie</span>
       Cognitie breder dan menselijk bewust denken: informatie verwerken, patronen herkennen, leren, keuzes maken — <strong>zonder subjectief bewustzijn</strong>. Komt voor in biologische systemen (autonoom zenuwstelsel) én technische systemen (AI, algoritmes).

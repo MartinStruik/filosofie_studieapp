@@ -525,6 +525,37 @@
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -700,6 +731,7 @@ const passages = {
     <p>Wit. Overal wit.</p>
     <p>Je ogen wennen langzaam aan het licht. Het plafond is vlak en uitdrukkingsloos. Ergens piept een apparaat in een rustig ritme. De lucht ruikt naar desinfectiemiddel en iets zoets &mdash; bloemen, misschien, op een nachtkastje dat je nog niet kunt zien.</p>
     <p>Je probeert je hoofd te draaien. Dat lukt. <em>Dat lukt tenminste nog.</em></p>
+    <img src="/lia/img/h1-scene-lia-bed.jpg" class="scene-img narrative" alt="Lia in het ziekenhuisbed" />
     <p>Dan kijk je omlaag, naar je hand op het witte ziekenhuislaken. Je geeft het commando: <strong>beweeg</strong>.</p>
     <p>Je vingers trillen. Nauwelijks.</p>
     <p>Tussen jouw gedachte en de beweging gaapt een kloof die je niet kunt overbruggen.</p>
@@ -856,11 +888,13 @@ const passages = {
 'symposium-intro': () => `
   <div class="ambient-text">Collegezaal &middot; middag &middot; het geroezemoes sterft weg</div>
   <div class="passage-title">Het Symposium begint</div>
+  <img src="/lia/img/h1-scene-collegezaal.jpg" class="scene-img narrative" alt="Lia in de collegezaal" />
   <div class="passage-text">
     <p>De professor neemt het woord. Een warm, kalm stem vult de zaal.</p>
     <p>"Welkom bij <em>De Vraag naar de Mens in het Licht van Wetenschap en Technologie</em>. We beginnen met een denker die meer dan vierhonderd jaar geleden een vraag stelde die vandaag relevanter is dan ooit."</p>
     <p>Op het grote scherm verschijnt een portret: een man met donker haar, een mantel, en een doordringende blik.</p>
     <p>"<strong>René Descartes</strong>. 1596&ndash;1650. Wiskundige, wetenschapper, filosoof. De man die alles durfde te betwijfelen."</p>
+    <img src="/lia/img/h1-filosoof-descartes.jpg" class="scene-img filosoof-card" alt="René Descartes" />
   </div>
 
   <div class="philosophy-box">
@@ -1035,6 +1069,7 @@ const passages = {
   <div class="passage-title">Hoe Weten We Wat We Weten?</div>
   <div class="passage-text">
     <p>"Descartes' nadruk op het <em>denken</em> als bron van zekere kennis," zegt de professor, "plaatst hem in een belangrijke traditie: het <strong>rationalisme</strong>."</p>
+    <img src="/lia/img/h1-concept-epistemologie.jpg" class="scene-img concept-diagram" alt="Epistemologie" />
   </div>
 
   <div class="philosophy-box">
@@ -1078,6 +1113,7 @@ const passages = {
     <p>"Maar hier wringt de schoen. Als geest en lichaam zo <em>totaal verschillend</em> zijn &mdash; de een immaterieel, de ander materieel &mdash; hoe kunnen ze dan op elkaar inwerken?"</p>
     <p>Stilte in de zaal.</p>
     <p>"Denk er even over na. Als je besluit je hand op te tillen &mdash; hoe bereikt die <em>immateriële</em> gedachte je <em>materiële</em> spieren? Hoe kan iets dat geen ruimte inneemt, een fysiek lichaam in beweging zetten?"</p>
+    <img src="/lia/img/h1-concept-interactie.jpg" class="scene-img concept-diagram" alt="Het interactieprobleem" />
   </div>
 
   <div class="philosophy-box">

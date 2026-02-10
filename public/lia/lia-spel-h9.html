@@ -91,6 +91,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+/* ===== IMAGES ===== */
+.scene-img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 1px solid var(--border);
+  display: block;
+}
+.scene-img.filosoof-card {
+  max-width: 340px;
+  margin: 20px auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.scene-img.concept-diagram {
+  max-width: 520px;
+  margin: 20px auto;
+}
+.scene-img.narrative {
+  max-width: 480px;
+  margin: 24px auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+.img-caption {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: -12px 0 20px;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -127,6 +158,7 @@ start:{
   text:`
     <div class="ambient-text">Hoofdstuk 9 — Kockelkoren over techniek en zintuiglijke transformatie</div>
     <p>Het beeld was verbluffend realistisch. Lia stond, virtueel, aan de voet van een kleurrijke klimwand in het VR-lab.</p>
+    <img src="/lia/img/h9-scene-lia-vr.jpg" class="scene-img narrative" alt="Lia in VR" />
     <p>Ze zag de grepen, de structuur van de rots, de diepte onder haar. Maar toen ze haar hand — of beter: de avatar van haar hand — naar de eerste greep probeerde te bewegen, ging het mis.</p>
     <p>De beweging voelde <em>log, onnatuurlijk</em>. Haar ogen zagen een hand die reikte, maar haar lichaam voelde geen spierspanning, geen balansverschuiving. Het visuele en het lichamelijke leken compleet losgekoppeld.</p>
     <p>Een lichte golf van misselijkheid overviel haar.</p>`,
@@ -154,6 +186,7 @@ rolstoel_herinnering:{
       <div class="box-title">Symposium — Hoofdstuk 9</div>
       <p><strong>Kockelkoren over techniek en zintuiglijke transformatie</strong></p>
       <p><span class="dim">Petran Kockelkoren — bijzonder hoogleraar kunst en technologie</span></p>
+      <img src="/lia/img/h9-filosoof-kockelkoren.jpg" class="scene-img filosoof-card" alt="Petran Kockelkoren" />
     </div>`,
   choices:[{text:'Luister naar Kockelkoren',next:'decentrering_intro'}]
 },
@@ -203,6 +236,7 @@ trein_done:{
   title:'Na de trein',
   text:`
     <p>Lia zag het patroon. Precies wat ze met de rolstoel had meegemaakt:</p>
+    <img src="/lia/img/h9-concept-trein.jpg" class="scene-img concept-diagram" alt="De trein toen en nu" />
     <div class="phase-card active">
       <div class="phase-num">Fase 1 — Oude synesthesie</div>
       <div class="phase-title">De voetganger</div>

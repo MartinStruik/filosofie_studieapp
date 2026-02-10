@@ -90,6 +90,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -157,6 +188,7 @@ symposium_intro:{
       <p><strong>Denken voorbij de hersenen: het 4E-cognitiemodel</strong></p>
       <p>Cognitie is niet beperkt tot het brein, maar fundamenteel verbonden met ons <strong>Lichaam</strong>, onze <strong>Omgeving</strong>, onze <strong>Hulpmiddelen</strong> en onze <strong>Acties</strong>.</p>
     </div>
+    <img src="/lia/img/h7-concept-4e.jpg" class="scene-img concept-diagram" alt="4E-Cognitie overzicht" />
     <p>De 4E-denkers verwerpen het idee van cognitie als abstracte, 'ontlichaamde' symboolmanipulatie (H6). Ze benadrukken dat het functionalisme moeite heeft met:</p>
     <p>— de rol van lichaam en interactie<br>
     — de subjectieve kwaliteit van ervaring (<em>qualia</em>)<br>
@@ -175,19 +207,19 @@ four_e_explore:{
         <div class="e-letter">E¹</div>
         <div class="e-name">Embodied</div>
         <div class="e-dutch">Belichaamd</div>
-        <div class="e-detail">Cognitie wordt gevormd door het type lichaam dat we hebben. Ons denken is niet abstract maar <strong>lichamelijk geworteld</strong>. Concepten zijn gebaseerd op lichamelijke metaforen (H5). Denken gebeurt ook <em>door</em> het lichaam: beweging, houding, gebaren zijn geen uitvoer van gedachten, maar deel van het denkproces.<br><br><em>Lia's klimervaring: haar denken zat in haar vingertoppen, haar spieren, haar balans.</em></div>
+        <div class="e-detail">Cognitie wordt gevormd door het type lichaam dat we hebben. Ons denken is niet abstract maar <strong>lichamelijk geworteld</strong>. Concepten zijn gebaseerd op lichamelijke metaforen (H5). Denken gebeurt ook <em>door</em> het lichaam: beweging, houding, gebaren zijn geen uitvoer van gedachten, maar deel van het denkproces.<br><br><img src="/lia/img/h7-concept-embodied.jpg" class="scene-img concept-diagram" alt="Embodied cognitie" /><em>Lia's klimervaring: haar denken zat in haar vingertoppen, haar spieren, haar balans.</em></div>
       </div>
       <div class="four-e-card" id="card-embedded" onclick="exploreE('embedded')">
         <div class="e-letter">E²</div>
         <div class="e-name">Embedded</div>
         <div class="e-dutch">Ingebed</div>
-        <div class="e-detail">Cognitie vindt altijd plaats <strong>binnen een omgeving</strong> en maakt daar actief gebruik van. We 'offloaden' mentale taken naar de omgeving: notities, lijsten, digitale tools. De omgeving ondersteunt ons denken van buitenaf — maar blijft <em>extern</em>.<br><br><em>Lia's vader tekent schema's om na te denken — de omgeving ondersteunt zijn denkproces.</em></div>
+        <div class="e-detail">Cognitie vindt altijd plaats <strong>binnen een omgeving</strong> en maakt daar actief gebruik van. We 'offloaden' mentale taken naar de omgeving: notities, lijsten, digitale tools. De omgeving ondersteunt ons denken van buitenaf — maar blijft <em>extern</em>.<br><br><img src="/lia/img/h7-concept-embedded.jpg" class="scene-img concept-diagram" alt="Embedded cognitie" /><em>Lia's vader tekent schema's om na te denken — de omgeving ondersteunt zijn denkproces.</em></div>
       </div>
       <div class="four-e-card" id="card-extended" onclick="exploreE('extended')">
         <div class="e-letter">E³</div>
         <div class="e-name">Extended</div>
         <div class="e-dutch">Uitgebreid</div>
-        <div class="e-detail">De grenzen van de geest reiken <strong>voorbij huid en schedel</strong>. Externe objecten kunnen letterlijk deel worden van ons cognitieve systeem — niet alleen ondersteuning, maar <em>onderdeel</em> van het denken zelf. (Clark & Chalmers)<br><br><em>Sam: "Mijn telefoon ís mijn geheugen. Zonder functioneer ik niet."</em></div>
+        <div class="e-detail">De grenzen van de geest reiken <strong>voorbij huid en schedel</strong>. Externe objecten kunnen letterlijk deel worden van ons cognitieve systeem — niet alleen ondersteuning, maar <em>onderdeel</em> van het denken zelf. (Clark & Chalmers)<br><br><img src="/lia/img/h7-concept-extended.jpg" class="scene-img concept-diagram" alt="Extended cognitie" /><em>Sam: "Mijn telefoon ís mijn geheugen. Zonder functioneer ik niet."</em></div>
       </div>
       <div class="four-e-card" id="card-enactive" onclick="exploreE('enactive')">
         <div class="e-letter">E⁴</div>
@@ -270,6 +302,7 @@ enactive_deep:{
   title:'Enactive cognitie',
   text:`
     <p>De spreker ging dieper in op de vierde E:</p>
+    <img src="/lia/img/h7-concept-enactive.jpg" class="scene-img concept-diagram" alt="Enactive cognitie" />
     <div class="definition-box">
       <span class="term">Enactive cognition — Perceptie als actieve vaardigheid</span>
       Zien is geen passief ontvangen van een beeld, maar een <strong>actieve exploratie</strong> via beweging en aandacht. Deze exploratie wordt geleid door onze impliciete kennis van <em>sensomotorische contingenties</em>: hoe sensorische input verandert door onze acties.

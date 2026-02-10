@@ -92,6 +92,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -156,6 +187,7 @@ debat_thuis:{
     <p>Tom mengde zich: <em>"Is dat zo? Mensen krijgen toch al jaren pacemakers, kunstheupen? We stoppen altijd al technologie in ons lichaam."</em></p>
     <p><em>"Maar dit is een directe link met je denken, je hersenen. Verandert dat niet wie je fundamenteel bent?"</em></p>
     <p>Sam schudde zijn hoofd. <em>"Misschien is dat juist wie we zijn? Weet je nog, die filosoof Clark? Die zei dat we <strong>'natural-born cyborgs'</strong> zijn. Dat het onze natuur is om samen te smelten met onze tools."</em></p>
+    <img src="/lia/img/h8-scene-lia-sam.jpg" class="scene-img narrative" alt="Lia en Sam in gesprek" />
     <p>De term hing in de lucht. <em>Natuurlijke cyborgs.</em></p>`,
   choices:[
     {text:'"Misschien heeft Clark gelijk"',next:'clark_open'},
@@ -189,12 +221,14 @@ clark_these:{
       <p><strong>De Natural-Born Cyborg</strong></p>
       <p><span class="dim">Andy Clark (1957)</span></p>
     </div>
+    <img src="/lia/img/h8-filosoof-clark.jpg" class="scene-img filosoof-card" alt="Andy Clark" />
     <p>De centrale vraag: <em>Verandert het wezen van de mens door de omgang met techniek?</em></p>
     <p>Clarks antwoord is prikkelend:</p>
     <div class="philosophy-box" style="text-align:center;font-size:20px;">
       <em>"Nee, want het is ons wezen om met techniek om te gaan en ermee te versmelten. Wij zijn <strong>natural-born cyborgs</strong>."</em>
     </div>
-    <p>De mens is van nature een <strong>hybride wezen</strong>: een fundamentele versmelting van biologie en technologie. Taal, schrift, de eerste gereedschappen — dit waren vroege cognitieve technologieën die ons denken uitbreidden.</p>`,
+    <p>De mens is van nature een <strong>hybride wezen</strong>: een fundamentele versmelting van biologie en technologie. Taal, schrift, de eerste gereedschappen — dit waren vroege cognitieve technologieën die ons denken uitbreidden.</p>
+    <img src="/lia/img/h8-concept-cyborg.jpg" class="scene-img concept-diagram" alt="Natural-Born Cyborg" />`,
   onEnter:()=>{T('Andy Clark','Filosoof (1957). Stelling: de mens is een "natural-born cyborg" — het is onze natuur om met technologie te versmelten.'); T('Natural-born cyborg','Clarks term: de mens is van nature een hybride wezen dat biologie en technologie versmeldt.');},
   choices:[{text:'Argument 1: het brein als grensvervager',next:'argument1'}]
 },
@@ -204,6 +238,7 @@ argument1:{
   text:`
     <p><em>"Ons brein,"</em> legde de spreker uit, <em>"is evolutionair geoptimaliseerd om de omgeving als externe hulpbron te gebruiken."</em></p>
     <p>Denk aan hoe we een som op papier uitrekenen in plaats van alles in ons hoofd te doen. Dit is geen trucje, maar een <strong>fundamentele eigenschap</strong>.</p>
+    <img src="/lia/img/h8-concept-offloaden.jpg" class="scene-img concept-diagram" alt="Offloaden" />
     <div class="definition-box">
       <span class="term">Het brein als grensvervager</span>
       Ons brein is plastisch en ontworpen om flexibel samen te werken met externe structuren. Ons vermogen tot complex denken is juist mogelijk <em>dankzij</em> dit vermogen tot externalisatie.
@@ -335,6 +370,7 @@ trans_done:{
   title:'Transparantie en identiteit',
   text:`
     <p>De spreker concludeerde: <em>"Hoe transparanter de technologie, hoe dieper de integratie. Maar dit roept een fundamentele vraag op: als technologie onzichtbaar wordt, vervaagt dan ook de grens tussen mens en machine?"</em></p>
+    <img src="/lia/img/h8-concept-transparantie.jpg" class="scene-img concept-diagram" alt="Transparantie" />
     <p>Clark ziet dit niet als probleem, maar als <strong>bevestiging</strong> van onze natuur.</p>`,
   onEnter:()=>{R('Transparantie is het kenmerk van diepe integratie — maar vervaagt ook de grens mens/machine.'); adj('Tool — Extensie',12);},
   choices:[{text:'Dynamische apparaten',next:'dynamisch'}]
@@ -352,7 +388,8 @@ dynamisch:{
     <div class="definition-box">
       <span class="term">Cognitieve symbiose</span>
       Een wederzijdse aanpassing tussen brein/lichaam en lerende technologie. Beide partijen beïnvloeden elkaar. <em>"De combinatie van hersenen die leren over technologieën, met technologieën die 'leren' over individuele hersenen, zet de toon voor een cognitieve symbiose."</em>
-    </div>`,
+    </div>
+    <img src="/lia/img/h8-concept-symbiose.jpg" class="scene-img concept-diagram" alt="Cognitieve symbiose" />`,
   onEnter:()=>{T('Dynamische apparaten','Technologieën die over de gebruiker leren en zich aanpassen — niet passieve tools maar actieve partners.'); T('Cognitieve symbiose','Wederzijdse aanpassing tussen brein/lichaam en lerende technologie — beiden beïnvloeden elkaar.');},
   choices:[{text:'Probeer het cyborgspectrum',next:'spectrum_game'}]
 },

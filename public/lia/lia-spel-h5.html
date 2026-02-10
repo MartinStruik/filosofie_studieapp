@@ -122,6 +122,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;text-decoration:none;cursor:default;}
+
+/* ===== IMAGES ===== */
+.scene-img {
+  max-width: 100%;
+  border-radius: 12px;
+  margin: 20px 0;
+  border: 1px solid var(--border);
+  display: block;
+}
+.scene-img.filosoof-card {
+  max-width: 340px;
+  margin: 20px auto;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+.scene-img.concept-diagram {
+  max-width: 520px;
+  margin: 20px auto;
+}
+.scene-img.narrative {
+  max-width: 480px;
+  margin: 24px auto;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+}
+.img-caption {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-dim);
+  margin: -12px 0 20px;
+  font-style: italic;
+}
 </style>
 </head>
 <body>
@@ -229,6 +260,7 @@ metaforen_intro: {
   title: 'Meer dan stijlfiguren',
   text: `
     <p>De spreker begon: <em>"We denken vaak dat metaforen slechts stijlfiguren zijn — versiering van taal. Maar filosofen Lakoff en Johnson laten zien dat ze veel fundamenteler zijn."</em></p>
+    <img src="/lia/img/h5-filosoof-lakoff-johnson.jpg" class="scene-img filosoof-card" alt="Lakoff en Johnson" />
     <div class="philosophy-box" style="text-align:center;font-size:20px;">
       <em>"Het conceptuele systeem waarop ons denken en handelen is gebaseerd, is in wezen <strong>metaforisch</strong> van aard."</em>
       <div style="font-size:14px;margin-top:8px;color:var(--text-dim);">— Lakoff & Johnson</div>
@@ -250,11 +282,13 @@ twee_typen: {
       Organiseren concepten <strong>ruimtelijk</strong> (boven/beneden, voor/achter) en komen voort uit onze <em>lichamelijke ervaring</em>.<br>
       <span class="dim">Voorbeelden: 'Gelukkig is BOVEN, droevig is BENEDEN' · 'Meer is BOVEN, minder is BENEDEN' · 'Goed is BOVEN, slecht is BENEDEN'</span>
     </div>
+    <img src="/lia/img/h5-concept-orientatie.jpg" class="scene-img concept-diagram" alt="Oriëntatiemetaforen" />
     <div class="definition-box">
       <span class="term">2. Ontologische metaforen</span>
       Behandelen <strong>abstracte zaken</strong> alsof het concrete dingen zijn. Zo ingesleten dat we ze als letterlijke beschrijvingen ervaren.<br>
       <span class="dim">Voorbeelden: 'De geest is een MACHINE' · 'De geest is een BREEKBAAR VOORWERP' · 'Ideeën zijn OBJECTEN'</span>
     </div>
+    <img src="/lia/img/h5-concept-ontologisch.jpg" class="scene-img concept-diagram" alt="Ontologische metaforen" />
     <p>Het cruciale inzicht: zelfs abstract denken is geworteld in <strong>concrete, lichamelijke ervaring</strong> (a posteriori kennis). Dit maakt de scherpe scheiding met zuiver rationele a priori kennis problematisch.</p>
   `,
   onEnter: () => { T('Oriënterende metafoor', 'Organiseert concepten ruimtelijk (boven/beneden etc.), geworteld in lichamelijke ervaring.'); T('Ontologische metafoor', 'Behandelt abstracte zaken alsof het concrete dingen zijn (bv. "de geest is een machine").'); },
@@ -330,6 +364,7 @@ vroon_draaisma: {
   title: 'Vroon & Draaisma',
   text: `
     <p>De spreker wisselde van perspectief. <em>"Lakoff en Johnson benadrukken de lichamelijke basis. Maar psychologen Vroon en Draaisma wijzen op iets anders: de <strong>historische contingentie</strong> van onze metaforen."</em></p>
+    <img src="/lia/img/h5-filosoof-vroon-draaisma.jpg" class="scene-img filosoof-card" alt="Vroon en Draaisma" />
     <p><em>"In elk tijdperk dient de dominante technologie als bron voor metaforen over de menselijke geest."</em></p>
   `,
   onEnter: () => { T('Vroon & Draaisma', 'Psychologen die lieten zien dat metaforen voor de geest historisch veranderen met de dominante technologie van een tijdperk.'); T('Historische contingentie', 'Het idee dat iets niet noodzakelijk zo is, maar afhankelijk van historische omstandigheden — het had ook anders kunnen zijn.'); },
@@ -385,6 +420,7 @@ timeline_done: {
   title: 'Contingentie',
   text: `
     <p>Lia staarde naar de tijdlijn. Elk tijdperk met zijn eigen beeld van de mens — bepaald door de technologie van dat moment.</p>
+    <img src="/lia/img/h5-concept-tijdlijn.jpg" class="scene-img concept-diagram" alt="Zelfbeelden tijdlijn" />
     <p class="thought">Als we in de 18e eeuw leefden, zou de arts hebben gezegd: "het uurwerk loopt niet meer soepel". Nu zegt hij: "de bedrading is beschadigd". Niet omdat het waar is, maar omdat de <em>computer</em> onze dominante metafoor is.</p>
     <div class="definition-box">
       <span class="term">Theoriegeladenheid van waarneming</span>
@@ -411,6 +447,7 @@ wisselwerking: {
       <p><strong>Technologie</strong> levert metaforen → die sturen <strong>onderzoek</strong> → dat leidt tot nieuwe <strong>technologie</strong> → die levert nieuwe <strong>metaforen</strong> → …</p>
       <p class="dim">De computermetafoor stuurt AI-onderzoek, dat weer nieuwe beelden van de geest oplevert, die weer nieuwe metaforen produceren.</p>
     </div>
+    <img src="/lia/img/h5-concept-feedbackloop.jpg" class="scene-img concept-diagram" alt="Feedbackloop" />
     <p><em>"De conclusie is niet dat alles relatief is,"</em> zei de spreker, <em>"maar dat we ons bewust moeten zijn van de metaforen die we gebruiken. Ze zijn krachtige instrumenten — maar ook blinde vlekken."</em></p>
   `,
   choices: [

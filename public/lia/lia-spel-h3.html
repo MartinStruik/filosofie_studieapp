@@ -107,6 +107,37 @@
   .compass-bar .bar-label-right{width:95px;color:var(--text-dim);flex-shrink:0;}
 
   ::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -194,6 +225,7 @@ return`
 <div class="passage-title">Stilte</div>
 <div class="passage-text">
   <p>Toen de storm eindelijk bedaarde, bleef je achter in een vreemde leegte. Vermoeid, maar ook lichter.</p>
+  <img src="/lia/img/h3-scene-lia-huilen.jpg" class="scene-img narrative" alt="Lia huilen" />
   <p>"Het spijt me," fluisterde je.</p>
   <p>Ruben legde zijn hand zacht op je schouder. "<strong>Niet nodig. Soms neemt je lichaam het gewoon over. Dat is menselijker dan je denkt.</strong>"</p>
 </div>
@@ -242,6 +274,7 @@ return`
 <div class="passage-title">Het Symposium — Plessner</div>
 <div class="passage-text">
   <p>De professor opent met een foto: een man met een hoog voorhoofd en een doordringende blik. <strong>Helmuth Plessner</strong>, 1892&ndash;1985. Zoöloog én filosoof.</p>
+  <img src="/lia/img/h3-filosoof-plessner.jpg" class="scene-img filosoof-card" alt="Helmuth Plessner" />
   <p>"Descartes scheidde geest en lichaam. Sheets-Johnstone verenigde ze. Maar Plessner stelt een andere, diepere vraag: <em>wat onderscheidt de mens fundamenteel van andere levende wezens?</em>"</p>
   <p>"Niet één specifieke eigenschap, zegt hij, maar onze unieke manier van <strong>zijn-in-de-wereld</strong>."</p>
 </div>
@@ -278,6 +311,7 @@ ${T('Centrische positionaliteit','De manier van zijn van dieren: ze vallen samen
 ${T('Excentrische positionaliteit','De unieke menselijke manier van zijn: we kunnen afstand nemen van onze directe ervaring en op onszelf reflecteren.')}
 
 <div class="passage-text">
+  <img src="/lia/img/h3-concept-positionaliteit.jpg" class="scene-img concept-diagram" alt="Centrische en excentrische positionaliteit" />
   <p>Je denkt aan de storm van gisteren. Je huilde &mdash; en tegelijk keek je <em>naar</em> jezelf die huilde. Max, als die bang is, is gewoon bang. Jij bent bang én je weet dat je bang bent. Dat is de excentrische positie.</p>
 </div>
 <button class="continue-btn" onclick="go('de-breuk')">De breuk</button>`,
@@ -336,6 +370,7 @@ ${T('Excentrische positionaliteit','De unieke menselijke manier van zijn: we kun
   <div class="law-paradox">Onze directe ervaring is altijd al bemiddeld</div>
   <div class="law-expanded" id="law-2">
     <p>Onze ervaring van de wereld is altijd dubbel: <strong>onmiddellijk</strong> via ons lichaam en zintuigen, maar tegelijk <strong>bemiddeld</strong> door bewustzijn, taal, concepten en culturele kaders.</p>
+    <img src="/lia/img/h3-concept-bemiddeld.jpg" class="scene-img concept-diagram" alt="Bemiddelde onmiddellijkheid" />
     <p style="margin-top:10px;">Juist omdat we ons bewust zijn van deze bemiddeling, voelen we de noodzaak tot <em>expressiviteit</em>: we willen onze innerlijke ervaringen uiten in de wereld &mdash; via taal, kunst, social media.</p>
     <p style="margin-top:10px;color:var(--warm);font-style:italic;">Toen je huilde, was dat tegelijk direct (lichamelijk, rauw) en bemiddeld (je wist dat je huilde, je gaf er betekenis aan).</p>
     ${T('Bemiddelde onmiddellijkheid','Plessners tweede wet: onze ervaring is tegelijk direct (lichamelijk) en bemiddeld (door bewustzijn, taal, cultuur).')}
@@ -348,6 +383,7 @@ ${T('Excentrische positionaliteit','De unieke menselijke manier van zijn: we kun
   <div class="law-paradox">We staan nergens vast &mdash; en zoeken altijd houvast</div>
   <div class="law-expanded" id="law-3">
     <p>De mens heeft geen vaste, natuurlijke plaats of essentie. We staan op een <strong>'utopische' (niet-)plaats</strong>. Dit creëert fundamentele onrust: het verlangen naar het onbegrensde én de concrete begrensdheid van het hier en nu.</p>
+    <img src="/lia/img/h3-concept-utopisch.jpg" class="scene-img concept-diagram" alt="Utopische standplaats" />
     <p style="margin-top:10px;">Dit leidt tot een eindeloze <em>zoektocht naar houvast</em> &mdash; via religie, ideologie, wetenschap &mdash; die echter nooit definitief kan slagen, omdat ons excentrische bewustzijn elk gevonden fundament weer kan bevragen.</p>
     <p style="margin-top:10px;color:var(--warm);font-style:italic;">Is de BCI jouw houvast? Of de filosofie? Of de sport? De zoektocht houdt nooit op.</p>
     ${T('Utopische standplaats','Plessners derde wet: de mens heeft geen vaste natuurlijke plaats en zoekt altijd houvast — maar vindt nooit een definitief fundament.')}

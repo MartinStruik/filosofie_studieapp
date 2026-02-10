@@ -101,6 +101,37 @@
   .nb-compass-bar{flex:1;height:6px;background:var(--bg);border-radius:3px;margin:0 8px;position:relative;overflow:hidden;}
   .nb-compass-fill{position:absolute;top:0;height:100%;border-radius:3px;transition:all .6s;background:var(--accent);}
   .nb-chapter-link{display:inline-block;margin:4px 4px 4px 0;font-family:'Inter',sans-serif;font-size:11px;padding:4px 10px;border-radius:12px;border:1px solid;cursor:default;}
+
+  /* ===== IMAGES ===== */
+  .scene-img {
+    max-width: 100%;
+    border-radius: 12px;
+    margin: 20px 0;
+    border: 1px solid var(--border);
+    display: block;
+  }
+  .scene-img.filosoof-card {
+    max-width: 340px;
+    margin: 20px auto;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  }
+  .scene-img.concept-diagram {
+    max-width: 520px;
+    margin: 20px auto;
+  }
+  .scene-img.narrative {
+    max-width: 480px;
+    margin: 24px auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  }
+  .img-caption {
+    text-align: center;
+    font-size: 13px;
+    color: var(--text-dim);
+    margin: -12px 0 20px;
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -139,6 +170,7 @@ start:{
     <div class="ambient-text">Hoofdstuk 12 — Morton, Haraway & Despret over grensvervaging</div>
     <p>Na alle discussies over technologie voelde de rust van de botanische tuin als een verademing. Een heldere herfstdag, de bladeren een palet van geel, oranje en rood.</p>
     <p>Lia zat op een bankje onder een monumentale, oude eik, samen met Sam en haar broer Tom. Max lag half verborgen in haar tas.</p>
+    <img src="/lia/img/h12-scene-lia-boom.jpg" class="scene-img narrative" alt="Lia bij de boom" />
     <p>Lia legde haar hand op de ruwe schors. <em>"Sinds de val voel ik me... anders verbonden. Meer deel van alles om me heen. Minder een los eilandje."</em></p>`,
   choices:[{text:'"Verbonden? Met een boom?"',next:'tom_sceptisch'}]
 },
@@ -172,6 +204,8 @@ mesh_intro:{
       <span class="term">The Mesh (Timothy Morton)</span>
       Onze realiteit bestaat niet uit losse objecten tegen een neutrale achtergrond. We leven <em>in</em> en zijn <em>deel van</em> een oneindig complex, onontwarbaar web van onderlinge verbindingen en afhankelijkheden — <strong>the mesh</strong>.
     </div>
+    <img src="/lia/img/h12-filosoof-morton.jpg" class="scene-img filosoof-card" alt="Timothy Morton" />
+    <img src="/lia/img/h12-concept-mesh.jpg" class="scene-img concept-diagram" alt="The Mesh" />
     <p>Morton: <em>"'Mesh' kan verwijzen naar 'een complexe situatie waarbij een persoon gaandeweg verstrikt raakt'."</em></p>
     <p>Drie kernpunten:</p>
     <p><strong>1. Interconnectedness:</strong> Alles is verbonden. Er is geen absoluut centrum — de mens is niet het centrum. <em>"Elke levensvorm is letterlijk familie."</em></p>
@@ -206,6 +240,7 @@ agency_intro:{
   title:'Handelingsvermogen',
   text:`
     <p>Morton betwijfelt de scherpe scheiding tussen menselijk <strong>'handelen'</strong> (bewust/vrij) en dierlijk/plantaardig <strong>'gedrag'</strong> (automatisch).</p>
+    <img src="/lia/img/h12-concept-plant.jpg" class="scene-img concept-diagram" alt="Plant-agency" />
     <p>Is ons handelen altijd zo bewust? En is gedrag van anderen altijd zo simpel?</p>
     <p>Verken het spectrum:</p>
     <div id="agency-list"></div>
@@ -227,6 +262,7 @@ despret:{
   title:'Vinciane Despret',
   text:`
     <p>Als grenzen vervagen, hoe bestuderen we andere wezens? Wetenschapsfilosoof <strong>Vinciane Despret</strong> bekritiseert traditioneel diergedragsonderzoek:</p>
+    <img src="/lia/img/h12-filosoof-despret.jpg" class="scene-img filosoof-card" alt="Vinciane Despret" />
     <div class="definition-box">
       <span class="term">Kritiek op de spiegeltest</span>
       De spiegeltest voor zelfbewustzijn is <em>antropocentrisch</em>: te gericht op menselijke (visuele) zelfherkenning. <em>"Zijn we allemaal wel zo geïnteresseerd in spiegels?"</em>
