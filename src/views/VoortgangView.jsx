@@ -1,12 +1,17 @@
 import { useState } from "react";
 import { KWESTIES, DOMEINEN } from "../data/kwesties.js";
+import { CONFLICT_MAPS } from "../data/conflictMaps.js";
+import { RODE_DRAAD } from "../data/rodeDraad.js";
+import { PRIMAIRE_TEKSTEN } from "../data/primaireTeksten.js";
+import { EXAM_QUESTIONS } from "../data/examQuestions.js";
+import { BEGRIPSANALYSE } from "../data/begripsanalyse.js";
 import { EXAM_DATE, START_DATE } from "../data/config.js";
 import { getExamCountdown, getDateRange } from "../utils/dateUtils.js";
-import { computeOverallProgress, computeKwestieProgress, computeStreak, generateDagdoelen } from "../utils/progressUtils.js";
+import { computeOverallProgress, computeKwestieProgress, computeStreak } from "../utils/progressUtils.js";
 import { useToast } from "../hooks/useToast.js";
 import { Toast } from "../components/Toast.jsx";
 
-export function VoortgangView({ progress, setProgress }) {
+export function VoortgangView({ progress, setProgress, setView }) {
   const [manualMinutes, setManualMinutes] = useState(15);
   const [manualLabel, setManualLabel] = useState("");
   const { toast, show: showToast } = useToast();
@@ -14,7 +19,6 @@ export function VoortgangView({ progress, setProgress }) {
   const countdown = getExamCountdown();
   const overall = computeOverallProgress(progress);
   const streak = computeStreak(progress.tijdLog || []);
-  const dagdoelen = generateDagdoelen(progress);
   const today = new Date().toISOString().split("T")[0];
   const tijdLog = progress.tijdLog || [];
   const todayEntry = tijdLog.find(e => e.date === today);
@@ -49,7 +53,7 @@ export function VoortgangView({ progress, setProgress }) {
     showToast(`${manualMinutes} min toegevoegd`);
   };
 
-  const ringSize = 120;
+  const ringSize = 140;
   const ringStroke = 10;
   const ringRadius = (ringSize - ringStroke) / 2;
   const ringCircumference = 2 * Math.PI * ringRadius;
@@ -58,6 +62,61 @@ export function VoortgangView({ progress, setProgress }) {
     ...KWESTIES.map(k => ({ id: `K${k.id}`, label: `K${k.id}`, color: k.color })),
     ...DOMEINEN.map(d => ({ id: d.id, label: d.id, color: d.color })),
   ];
+
+  // Collect begrepen/lastig items across all trackers
+  const lastigItems = [];
+  const begrepenCount = { total: 0 };
+  const lastigCount = { total: 0 };
+
+  const ct = progress.conflictTracker || {};
+  const rt = progress.rodeDraadTracker || {};
+  const tt = progress.tekstTracker || {};
+  const et = progress.examTracker || {};
+  const bt = progress.begripsanalyseTracker || {};
+
+  Object.entries(ct).forEach(([id, status]) => {
+    if (status === "begrepen") begrepenCount.total++;
+    if (status === "lastig") {
+      lastigCount.total++;
+      const card = CONFLICT_MAPS.find(c => c.id === Number(id));
+      if (card) lastigItems.push({ type: "Conflictkaart", label: card.titel, view: "conceptmaps" });
+    }
+  });
+  Object.entries(rt).forEach(([id, status]) => {
+    if (status === "begrepen") begrepenCount.total++;
+    if (status === "lastig") {
+      lastigCount.total++;
+      const card = RODE_DRAAD.find(c => c.id === Number(id));
+      if (card) lastigItems.push({ type: "Rode draad", label: card.titel, view: "rodedraad" });
+    }
+  });
+  Object.entries(tt).forEach(([id, status]) => {
+    if (status === "begrepen") begrepenCount.total++;
+    if (status === "lastig") {
+      lastigCount.total++;
+      const pt = PRIMAIRE_TEKSTEN.find(t => t.id === id);
+      if (pt) lastigItems.push({ type: "Tekst", label: `${pt.filosoof} — ${pt.titel}`, view: "teksten" });
+    }
+  });
+  Object.entries(et).forEach(([id, status]) => {
+    if (status === "goed") begrepenCount.total++;
+    if (status === "lastig") {
+      lastigCount.total++;
+      const eq = EXAM_QUESTIONS.find(q => `${q.year}-${q.nr}` === id);
+      if (eq) lastigItems.push({ type: "Examenvraag", label: `${eq.year} vraag ${eq.nr}`, view: "exam" });
+    }
+  });
+  Object.entries(bt).forEach(([id, status]) => {
+    if (status === "begrepen") begrepenCount.total++;
+    if (status === "lastig") {
+      lastigCount.total++;
+      // id format: "Lichaam-Descartes"
+      const parts = id.split("-");
+      const filosoof = parts.pop();
+      const begrip = parts.join("-");
+      lastigItems.push({ type: "Begrip", label: `${begrip} (${filosoof})`, view: "begripsanalyse" });
+    }
+  });
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
@@ -68,7 +127,7 @@ export function VoortgangView({ progress, setProgress }) {
           <circle cx={ringSize / 2} cy={ringSize / 2} r={ringRadius} fill="none" stroke="#4A90D9" strokeWidth={ringStroke}
             strokeDasharray={ringCircumference} strokeDashoffset={ringCircumference * (1 - countdown.fraction)} strokeLinecap="round" />
         </svg>
-        <div style={{ marginTop: "-80px", marginBottom: "40px", fontFamily: "'Source Sans 3', sans-serif" }}>
+        <div style={{ marginTop: "-95px", marginBottom: "50px", fontFamily: "'Source Sans 3', sans-serif" }}>
           <div style={{ fontSize: "28px", fontWeight: 700, color: "#1a1a2e" }}>{countdown.days}</div>
           <div style={{ fontSize: "12px", color: "#666" }}>dagen tot examen</div>
           <div style={{ fontSize: "11px", color: "#666" }}>+ {countdown.hours} uur</div>
@@ -82,11 +141,14 @@ export function VoortgangView({ progress, setProgress }) {
           <span style={{ fontWeight: 700, fontSize: "20px", color: "#4A90D9" }}>{Math.round(overall.overall * 100)}%</span>
         </div>
         {[
-          { label: "Flashcards", pct: overall.flash.pct, sub: `${overall.flash.done}/${overall.flash.total}`, color: "#4A90D9" },
-          { label: "Quiz", pct: overall.quiz.pct, sub: `${overall.quiz.done} gemaakt`, color: "#D97A4A" },
-          { label: "Examenvragen", pct: overall.exam.pct, sub: `${overall.exam.done}/${overall.exam.total}`, color: "#4AD97A" },
-          { label: "Teksten", pct: overall.tekst.pct, sub: `${overall.tekst.done}/${overall.tekst.total}`, color: "#B04AD9" },
           { label: "Lia's verhaal", pct: overall.lia.pct, sub: `${overall.lia.done}/${overall.lia.total}`, color: "#9B59B6" },
+          { label: "Flashcards", pct: overall.flash.pct, sub: `${overall.flash.done}/${overall.flash.total}`, color: "#4A90D9" },
+          { label: "Begripsanalyse", pct: overall.begripsanalyse.pct, sub: `${overall.begripsanalyse.done}/${overall.begripsanalyse.total}`, color: "#E67E22" },
+          { label: "Teksten", pct: overall.tekst.pct, sub: `${overall.tekst.done}/${overall.tekst.total}`, color: "#B04AD9" },
+          { label: "Conflictkaarten", pct: overall.conflict.pct, sub: `${overall.conflict.done}/${overall.conflict.total}`, color: "#E74C3C" },
+          { label: "Rode draad", pct: overall.rodeDraad.pct, sub: `${overall.rodeDraad.done}/${overall.rodeDraad.total}`, color: "#C0392B" },
+          { label: "Examenvragen", pct: overall.exam.pct, sub: `${overall.exam.done}/${overall.exam.total}`, color: "#4AD97A" },
+          { label: "Quiz", pct: overall.quiz.pct, sub: `${overall.quiz.done} gemaakt`, color: "#D97A4A" },
         ].map(cat => (
           <div key={cat.label} style={{ marginBottom: "8px" }}>
             <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", color: "#666", marginBottom: "3px" }}>
@@ -98,6 +160,43 @@ export function VoortgangView({ progress, setProgress }) {
           </div>
         ))}
       </div>
+
+      {/* Begrepen vs lastig ratio */}
+      {(begrepenCount.total + lastigCount.total > 0) && (
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "16px" }}>
+          <div style={{ background: "#e8f5e9", borderRadius: "12px", padding: "14px", border: "1px solid #c8e6c9", textAlign: "center" }}>
+            <div style={{ fontSize: "24px", fontWeight: 700, color: "#2e7d32" }}>{begrepenCount.total}</div>
+            <div style={{ fontSize: "12px", color: "#4caf50", fontWeight: 600 }}>Begrepen</div>
+          </div>
+          <div style={{ background: "#fce4ec", borderRadius: "12px", padding: "14px", border: "1px solid #f0c0c0", textAlign: "center" }}>
+            <div style={{ fontSize: "24px", fontWeight: 700, color: "#c62828" }}>{lastigCount.total}</div>
+            <div style={{ fontSize: "12px", color: "#ef5350", fontWeight: 600 }}>Lastig</div>
+          </div>
+        </div>
+      )}
+
+      {/* Lastig gemarkeerd — clickable */}
+      {lastigItems.length > 0 && (
+        <div style={{ background: "#fce4ec", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #f0c0c0" }}>
+          <div style={{ fontWeight: 700, fontSize: "15px", color: "#c62828", marginBottom: "10px" }}>Lastig gemarkeerd ({lastigItems.length})</div>
+          {lastigItems.map((item, i) => (
+            <button key={i} onClick={() => setView(item.view)} style={{
+              display: "flex", alignItems: "center", gap: "8px", width: "100%",
+              background: "rgba(255,255,255,0.6)", border: "none", borderRadius: "8px",
+              padding: "8px 10px", cursor: "pointer", textAlign: "left",
+              marginBottom: i < lastigItems.length - 1 ? "6px" : 0,
+              transition: "background 0.15s",
+            }}
+            onMouseOver={e => e.currentTarget.style.background = "rgba(255,255,255,0.9)"}
+            onMouseOut={e => e.currentTarget.style.background = "rgba(255,255,255,0.6)"}
+            >
+              <span style={{ fontSize: "11px", fontWeight: 600, color: "#c62828", background: "#fff", padding: "2px 6px", borderRadius: "4px", flexShrink: 0 }}>{item.type}</span>
+              <span style={{ fontSize: "12px", color: "#444", flex: 1 }}>{item.label}</span>
+              <span style={{ fontSize: "12px", color: "#999", flexShrink: 0 }}>{">"}</span>
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* Per kwestie/domein */}
       <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
@@ -127,6 +226,24 @@ export function VoortgangView({ progress, setProgress }) {
         <div style={{ background: "#f0f4ff", borderRadius: "12px", padding: "16px", border: "1px solid #e8e8f0", textAlign: "center" }}>
           <div style={{ fontSize: "28px", fontWeight: 700, color: "#4A90D9" }}>{streak.longest}</div>
           <div style={{ fontSize: "12px", color: "#666" }}>langste streak</div>
+        </div>
+      </div>
+
+      {/* Vandaag */}
+      <div style={{ background: "#f0fff5", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
+        <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "8px" }}>Vandaag</div>
+        <div style={{ fontSize: "13px", color: "#666" }}>
+          App-tijd: <strong>{todayApp} min</strong>
+        </div>
+        {todayEntry && (todayEntry.manualEntries || []).length > 0 && (
+          <div style={{ marginTop: "6px" }}>
+            {(todayEntry.manualEntries || []).map((e, i) => (
+              <div key={i} style={{ fontSize: "12px", color: "#666" }}>{e.minutes} min — {e.label}</div>
+            ))}
+          </div>
+        )}
+        <div style={{ fontSize: "13px", color: "#4AD97A", fontWeight: 700, marginTop: "6px" }}>
+          Totaal: {todayApp + todayManual} min
         </div>
       </div>
 
@@ -179,40 +296,6 @@ export function VoortgangView({ progress, setProgress }) {
           <span style={{ fontSize: "11px", color: "#666" }}>Meer</span>
         </div>
       </div>
-
-      {/* Vandaag */}
-      <div style={{ background: "#f0fff5", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #e8e8f0" }}>
-        <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "8px" }}>Vandaag</div>
-        <div style={{ fontSize: "13px", color: "#666" }}>
-          App-tijd: <strong>{todayApp} min</strong>
-        </div>
-        {todayEntry && (todayEntry.manualEntries || []).length > 0 && (
-          <div style={{ marginTop: "6px" }}>
-            {(todayEntry.manualEntries || []).map((e, i) => (
-              <div key={i} style={{ fontSize: "12px", color: "#666" }}>{e.minutes} min — {e.label}</div>
-            ))}
-          </div>
-        )}
-        <div style={{ fontSize: "13px", color: "#4AD97A", fontWeight: 700, marginTop: "6px" }}>
-          Totaal: {todayApp + todayManual} min
-        </div>
-      </div>
-
-      {/* Dagdoelen */}
-      {dagdoelen && (
-        <div style={{ background: "#fffdf0", borderRadius: "12px", padding: "16px", marginBottom: "16px", border: "1px solid #f0e8c0" }}>
-          <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", marginBottom: "10px" }}>Dagdoel — {dagdoelen.weekLabel}</div>
-          {dagdoelen.doelen.map((d, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: i < dagdoelen.doelen.length - 1 ? "8px" : 0 }}>
-              <span style={{ fontSize: "16px" }}>{d.icon}</span>
-              <div>
-                <div style={{ fontSize: "13px", fontWeight: 600, color: "#333" }}>{d.text}</div>
-                <div style={{ fontSize: "11px", color: "#666" }}>{d.detail}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
 
       {/* Studietijd toevoegen */}
       <div style={{ background: "#f8f8fc", borderRadius: "12px", padding: "16px", border: "1px solid #e8e8f0" }}>

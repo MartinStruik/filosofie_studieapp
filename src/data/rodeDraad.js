@@ -1,0 +1,88 @@
+export const RODE_DRAAD = [
+  {
+    id: 1,
+    titel: "Van zelfkennis naar zelfbeeld",
+    van: 1,
+    naar: 2,
+    stappen: [
+      { filosoof: "Plessner", kwestie: 1, positie: "De mens is van nature kunstmatig — hij moet zichzelf altijd via cultuur en modellen vormgeven (excentrische positionaliteit)." },
+      { filosoof: "Vroon & Draaisma", kwestie: 2, positie: "Elke tijd begrijpt de geest via dominante metaforen (klok, stoommachine, computer). Het model dat we kiezen bepaalt wat we over onszelf kunnen denken." },
+    ],
+    rodeDraad: "Als de mens zichzelf altijd via modellen moet begrijpen (Plessner), dan is de vraag welke modellen we kiezen cruciaal. Dat is precies K2: de metaforen en wetenschappelijke beelden die ons mensbeeld vormen.",
+    examentip: "Leg uit hoe Plessners 'natuurlijke kunstmatigheid' verklaart waarom de mens vatbaar is voor de metaforen die Vroon & Draaisma beschrijven. De mens kan niet anders dan zichzelf in beelden vatten.",
+  },
+  {
+    id: 2,
+    titel: "Van kunstmatig naar cyborg",
+    van: 1,
+    naar: 3,
+    stappen: [
+      { filosoof: "Plessner", kwestie: 1, positie: "De mens is van nature kunstmatig — techniek en cultuur zijn geen toevoeging maar horen bij zijn wezen." },
+      { filosoof: "Clark", kwestie: 3, positie: "De mens is een natural-born cyborg — het brein is ontworpen om technische hulpmiddelen naadloos te integreren (extended mind)." },
+    ],
+    rodeDraad: "Beiden koppelen 'natuur' aan 'kunstmatigheid', maar op een ander niveau. Plessner bedoelt culturele zelfvorming, Clark bedoelt cognitieve uitbreiding in tools. De stap van filosofische antropologie naar cognitiewetenschap.",
+    examentip: "Het examen kan vragen: 'In hoeverre zou Plessner het eens zijn met Clark?' Benoem de overeenkomst (techniek hoort bij de mens) én het verschil (cultuur vs. cognitie).",
+  },
+  {
+    id: 3,
+    titel: "Van AI-kritiek naar extended mind",
+    van: 2,
+    naar: 3,
+    stappen: [
+      { filosoof: "Dreyfus", kwestie: 2, positie: "De geest is geen computer — menselijk begrip is belichaamd, intuïtief en niet-formaliseerbaar." },
+      { filosoof: "Clark", kwestie: 3, positie: "De geest breidt uit in technische tools — maar niet als berekening, wel als functionele koppeling tussen brein en omgeving." },
+    ],
+    rodeDraad: "Dreyfus laat zien dat de geest geen software is. Clark bouwt daarop voort: juist omdat het brein geen computer is, integreert het tools op een organische manier. Extended mind is geen computermetafoor maar een biologisch gegeven.",
+    examentip: "Subtiel punt: Clark is het met Dreyfus eens dat de geest geen computer is, maar trekt een andere conclusie. Dreyfus beschermt de grens mens/machine, Clark laat die los.",
+  },
+  {
+    id: 4,
+    titel: "Van neuroreductionisme naar posthumanisme",
+    van: 2,
+    naar: 4,
+    stappen: [
+      { filosoof: "Swaab", kwestie: 2, positie: "'Wij zijn ons brein' — de geest is reduceerbaar tot hersenprocessen en informatieverwerking." },
+      { filosoof: "Hayles", kwestie: 4, positie: "Als cognitie informatieverwerking is, dan is er geen reden waarom dat exclusief menselijk moet zijn. Informatie kan bestaan zonder menselijk lichaam." },
+    ],
+    rodeDraad: "Swaabs reductie van de geest tot informatieverwerking opent onbedoeld de deur voor Hayles' posthumanisme. Als 'wij zijn ons brein' betekent 'wij zijn informatie', dan kan die informatie ook elders bestaan. Het functionalisme van K2 maakt de posthumane vraag van K4 onvermijdelijk.",
+    examentip: "Sterke examenstrategie: laat zien dat Swaabs positie, doorgetrokken, leidt tot Hayles' conclusie. Wie de geest reduceert tot informatie, kan niet meer volhouden dat denken exclusief menselijk is.",
+  },
+  {
+    id: 5,
+    titel: "Van mediatie naar agency",
+    van: 3,
+    naar: 4,
+    stappen: [
+      { filosoof: "Verbeek", kwestie: 3, positie: "Techniek bemiddelt onze morele keuzes — het stuurt gedrag en vormt hoe we de wereld ervaren (technische mediatie)." },
+      { filosoof: "Latour", kwestie: 4, positie: "Niet-menselijke actanten handelen in netwerken. Agency is niet exclusief menselijk maar verdeeld over mens en ding." },
+    ],
+    rodeDraad: "Verbeek toont dat dingen ons gedrag sturen. Latour trekt die lijn door: als dingen ons gedrag sturen, handelen ze. Van 'techniek beïnvloedt ons' naar 'techniek handelt' — de stap van mediatie naar agency.",
+    examentip: "Het examen kan vragen om Verbeek en Latour te vergelijken. Kernverschil: bij Verbeek blijft de mens het morele subject (techniek bemiddelt), bij Latour is agency gelijkwaardig verdeeld.",
+  },
+  {
+    id: 6,
+    titel: "Van geconstrueerde identiteit naar geconstrueerde soortgrenzen",
+    van: 1,
+    naar: 4,
+    stappen: [
+      { filosoof: "De Beauvoir & Fanon", kwestie: 1, positie: "Identiteit (gender, ras) is geen biologisch feit maar een sociale constructie opgelegd door machtsstructuren." },
+      { filosoof: "Haraway", kwestie: 4, positie: "Ook de grens mens/dier/machine is een constructie. De cyborg toont dat categorieën altijd poreus en politiek zijn." },
+    ],
+    rodeDraad: "Dezelfde logica op een radicaler niveau: als gender en ras constructies zijn (K1), waarom zouden soortgrenzen dat dan niet zijn (K4)? Haraway past het constructivisme van De Beauvoir en Fanon toe op de grens mens/niet-mens.",
+    examentip: "Krachtig argument in een essay: 'Net zoals De Beauvoir liet zien dat vrouw-zijn een constructie is, laat Haraway zien dat mens-zijn dat ook is.' Dit toont begrip op synthese-niveau.",
+  },
+  {
+    id: 7,
+    titel: "De grote boog: van mensbeeld naar grensvervaging",
+    van: "1→2→3→4",
+    naar: null,
+    stappen: [
+      { filosoof: "K1", kwestie: 1, positie: "Wat is de mens? De mens probeert zichzelf te kennen — maar ontdekt dat hij altijd verborgen blijft (Plessner) en dat identiteit geconstrueerd is." },
+      { filosoof: "K2", kwestie: 2, positie: "Hoe kennen we onszelf? Via metaforen en wetenschap — maar die modellen vormen ons mensbeeld net zozeer als ze het beschrijven." },
+      { filosoof: "K3", kwestie: 3, positie: "Wat doet techniek met ons? Techniek verandert niet alleen wat we doen maar wie we zijn — van waarneming tot moraal tot identiteit." },
+      { filosoof: "K4", kwestie: 4, positie: "Is de mens nog uniek? De grenzen tussen mens, dier en machine vervagen. Het mensbeeld van K1 is fundamenteel ondermijnd." },
+    ],
+    rodeDraad: "De syllabus vertelt één verhaal: de mens zoekt zelfkennis (K1), gebruikt daarvoor wetenschap en metaforen (K2), wordt daardoor veranderd door techniek (K3) en verliest uiteindelijk zijn unieke positie (K4). Elk antwoord roept de volgende vraag op. Wie dit verhaal kan vertellen, begrijpt de hele stof.",
+    examentip: "Bij een essay-vraag over 'het mensbeeld': schets deze boog in 2-3 zinnen als inleiding. Dit toont de examinator dat je de samenhang ziet, niet alleen losse filosofen.",
+  },
+];

@@ -29,6 +29,8 @@ export const FLASHCARDS = [
   { term: "Historisch lichaamsschema (Fanon)", def: "Het lichaamsschema dat niet alleen individueel is, maar gevormd door collectieve geschiedenis. Voor mensen van kleur: de raciale ervaring wordt in het lichaam gegrift.", kwestie: 1 },
   { term: "Raciaal-epidermaal schema (Fanon)", def: "Het schema dat door de blik van de witte ander op het zwarte lichaam wordt gelegd: huidskleur wordt een 'label' dat de bestaanservaring bepaalt en beperkt.", kwestie: 1 },
   { term: "Existentialisme", def: "Stroming die stelt dat existentie voorafgaat aan essentie: de mens hééft geen vaststaand wezen maar máákt zichzelf. Achtergrond van De Beauvoir en Fanon.", kwestie: 1 },
+  { term: "Animal rationale (Aristoteles)", def: "De klassieke definitie van de mens als 'redelijk dier'. De rede onderscheidt de mens van andere dieren. Uitgangspunt dat de fenomenologie en 4E-cognitie later bekritiseren.", kwestie: 1 },
+  { term: "Tweedepersoonsperspectief", def: "Het perspectief van de ontmoeting: we verhouden ons tot anderen via een gedeelde wereld van taal en cultuur. De ander is geen object (3e persoon) maar iemand die we aanspreken en die ons aanspreekt.", kwestie: 1 },
 
   // ========== KWESTIE 2: MENSBEELD EN TECHNIEK (ET 10–12) ==========
   { term: "Oriënterende metafoor (Lakoff & Johnson)", def: "Metaforen gebaseerd op ruimtelijke oriëntatie van het lichaam: BOVEN = goed/meer, ONDER = slecht/minder. Bv. 'ik voel me down' of 'de koers stijgt'.", kwestie: 2 },
@@ -49,6 +51,12 @@ export const FLASHCARDS = [
   { term: "Enactieve cognitie (Noë)", def: "Waarneming is geen passief ontvangen maar een actieve vaardigheid. Zien = weten wat er verandert als je beweegt. Sensomotorische kennis is cruciaal.", kwestie: 2 },
   { term: "Sensomotorisch lichaam (Noë)", def: "Het waarnemende, bewegende lichaam als basis van cognitie. Waarneming is niet iets dat 'in het hoofd' gebeurt maar een activiteit van het hele lichaam in de wereld.", kwestie: 2 },
   { term: "Offloading", def: "Het 'uitbesteden' van cognitieve taken aan externe middelen: een boodschappenlijstje, een rekenmachine, GPS. Centraal concept bij extended cognition.", kwestie: 2 },
+  { term: "Uurwerkmetafoor (Vroon & Draaisma)", def: "In de 17e eeuw was het uurwerk de dominante metafoor voor de mens: een mechaniek van tandwielen en veren. Paste bij het mechanistisch wereldbeeld van Descartes.", kwestie: 2 },
+  { term: "Stoommachinemetafoor (Vroon & Draaisma)", def: "In de 19e eeuw werd de stoommachine de leidende metafoor: de mens als energiesysteem dat onder druk kan staan en moet 'ontladen'. Basis voor Freuds psychische energie.", kwestie: 2 },
+  { term: "Wisselwerking techniek en mensbeeld", def: "Techniek levert metaforen voor de mens (brein als computer), en die metaforen sturen het wetenschappelijk onderzoek naar de mens. Een zichzelf versterkende cirkel.", kwestie: 2 },
+  { term: "Weten-dat vs. weten-hoe (Dreyfus)", def: "'Weten dat' is theoretische kennis (feiten, regels). 'Weten hoe' is belichaamde vaardigheid (fietsen, een gezicht herkennen). Computers hebben alleen 'weten dat' — daarom falen ze bij contextueel handelen.", kwestie: 2 },
+  { term: "Pariteitsregel (Clark & Chalmers)", def: "Als een extern proces dezelfde functie vervult die we 'cognitief' zouden noemen als het in het hoofd plaatsvond, dan ís het cognitie. Otto's notitieboekje = Inga's geheugen.", kwestie: 2 },
+  { term: "Epistemische handeling (Clark & Chalmers)", def: "Een handeling in de wereld die dient om een denkprobleem op te lossen. Bv. Scrabble-letters draaien om woorden te vinden: de handeling is het denken, niet alleen een hulpmiddel erbij.", kwestie: 2 },
 
   // ========== KWESTIE 3: WEZEN EN TECHNIEK (ET 13–17) ==========
   { term: "Natural-born cyborg (Clark)", def: "De mens is van nature een hybride van biologie en technologie. We zijn altijd al cyborgs geweest — taal en gereedschap waren onze eerste cognitieve technologieën.", kwestie: 3 },
@@ -68,6 +76,11 @@ export const FLASHCARDS = [
   { term: "Transhumanisme (De Mul)", def: "Scenario 'Alien': biotechnologie (CRISPR) creëert een nieuw soort mens. De mens evolueert tot iets fundamenteel anders, een 'nieuwe biologische soort'.", kwestie: 3 },
   { term: "Posthumanisme (De Mul)", def: "Scenario 'Zombie': robotica/AI creëert kunstmatig leven zonder bewustzijn. De grens tussen leven en niet-leven vervaagt.", kwestie: 3 },
   { term: "Herwaardering van waarden (Nietzsche/De Mul)", def: "Bestaande waarden en normen moeten opnieuw onderzocht worden in het licht van technologische veranderingen. Niet vasthouden aan het oude, maar nieuwe waarden creëren.", kwestie: 3 },
+  { term: "Treinervaring (Kockelkoren)", def: "De trein in de 19e eeuw veroorzaakte zintuiglijke desoriëntatie: het lichaam zit stil maar het landschap raast voorbij. Klassiek voorbeeld van decentrering. Leidde tot klachten als 'railway-spine'.", kwestie: 3 },
+  { term: "Synesthesie van de wandelaar (Kockelkoren)", def: "De harmonieuze samensmelting van alle zintuigen bij het wandelen: je voelt de grond, hoort je stappen, ziet het landschap. Techniek (zoals de trein) verstoort deze zintuiglijke eenheid.", kwestie: 3 },
+  { term: "Culturele normalisering (Kockelkoren)", def: "De kermis en het theater hielpen in de 19e eeuw om het publiek te laten wennen aan nieuwe zintuiglijke ervaringen van techniek. Speelse vormen van recentrering.", kwestie: 3 },
+  { term: "Echoscopie als casus (Verbeek)", def: "De echoscopie maakt de foetus zichtbaar als individu, verandert zwangerschap in een keuzeproces en verschuift kennis van moeder naar arts. Kernvoorbeeld van technologische bemiddeling.", kwestie: 3 },
+  { term: "Speculatieve antropologie (De Mul)", def: "Methode om na te denken over hoe toekomstige technologieën het mens-zijn kunnen veranderen. Geen voorspelling maar verkenning van mogelijke mensbeelden (zwermgeest, alien, zombie).", kwestie: 3 },
 
   // ========== KWESTIE 4: GRENSVERVAGINGEN (ET 18–23) ==========
   { term: "The mesh (Morton)", def: "Het netwerk van alle levende en niet-levende wezens die fundamenteel met elkaar verbonden zijn. Er is geen 'buiten' de natuur — alles is verweven.", kwestie: 4 },
@@ -95,6 +108,10 @@ export const FLASHCARDS = [
   { term: "Despret – goede vragen stellen", def: "Onderzoekers moeten niet hun eigen kaders opleggen maar vragen stellen die dieren de ruimte geven om te 'antwoorden'. Slechte vragen leiden tot slechte wetenschap.", kwestie: 4 },
   { term: "Dataïsme (Harari)", def: "De opvatting dat data de ultieme bron van waarde en autoriteit is. Algoritmes begrijpen ons beter dan wijzelf. 'Homo Deus' voorbij het humanisme.", kwestie: 4 },
   { term: "Het else (Rasch)", def: "Dat wat bij datareductie altijd verloren gaat. De kloof tussen data en werkelijkheid. In die 'kier van licht' doet zich iets als vrijheid voor.", kwestie: 4 },
+  { term: "Pre-inscriptie (Latour)", def: "De gedragsvoorschriften die een ontwerper in een technisch object vastlegt. De Berlijnse sleutel 'schrijft voor' dat je de deur op slot doet — het gewenste programma zit in het ding ingebakken.", kwestie: 4 },
+  { term: "Antiprogramma (Latour)", def: "Het ongewenste gedrag dat een technisch object probeert te voorkomen. Bij de Berlijnse sleutel: de deur niet afsluiten is het antiprogramma dat door het ontwerp wordt geblokkeerd.", kwestie: 4 },
+  { term: "Techno-humanisme (Harari)", def: "De opvatting dat de mens verbeterd moet worden door technologie (genetica, herseninterfaces), maar de menselijke wil centraal blijft staan. Verschil met dataïsme: daar worden algoritmes de autoriteit.", kwestie: 4 },
+  { term: "Perspectivisme bij dieren (Despret)", def: "Het vermogen van dieren om rekening te houden met het perspectief van een ander. Gaat verder dan instinct: dieren hebben een eigen 'kijk' op de wereld die wetenschappers serieus moeten nemen.", kwestie: 4 },
 
   // ========== DOMEIN B1: WIJSGERIGE ANTROPOLOGIE ==========
   { term: "Subjectiviteit", def: "Het vermogen om de wereld vanuit een eigen, uniek perspectief te ervaren — het 'ik' dat ervaart. Centraal begrip in de wijsgerige antropologie.", kwestie: "B1" },

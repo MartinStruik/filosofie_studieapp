@@ -24,8 +24,14 @@ export function EindtermenView() {
         </div>
       ))}
 
+      <div style={{ marginTop: "24px", padding: "16px", background: "#f8f8fc", borderRadius: "12px", border: "1px solid #e8e8f0", marginBottom: "20px" }}>
+        <h3 style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px", fontFamily: "'Source Sans 3', sans-serif" }}>Studietip</h3>
+        <p style={{ fontSize: "12px", color: "#666", margin: 0, lineHeight: 1.5 }}>
+          90% gaat over de syllabus, waarin de bijbehorende eindtermen centraal staan. Focus daar in eerste instantie op. 10% gaat over de globale eindtermen over antropologie, ethiek, kennistheorie en wetenschapsfilosofie.
+        </p>
+      </div>
+
       <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: "28px 0 12px" }}>Specifieke eindtermen per kwestie</h2>
-      <p style={{ fontSize: "12px", color: "#666", marginBottom: "16px" }}>90% van het examen. De syllabus met bijbehorende eindtermen.</p>
       {KWESTIES.map(k => (
         <div key={k.id} style={{ marginBottom: "20px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "10px" }}>

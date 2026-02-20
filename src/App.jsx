@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
+import { useAuth } from "./hooks/useAuth.js";
+import { useProgressSync } from "./hooks/useProgressSync.js";
 
 // Views
 import { Home } from "./views/Home.jsx";
@@ -13,12 +15,20 @@ import { EindtermenView } from "./views/EindtermenView.jsx";
 import { BegripsanalyseView } from "./views/BegripsanalyseView.jsx";
 import { PrimaireTexten } from "./views/PrimaireTexten.jsx";
 import { LiaSpelView } from "./views/LiaSpelView.jsx";
+import { ConflictMapsView } from "./views/ConflictMapsView.jsx";
+import { RodeDraadView } from "./views/RodeDraadView.jsx";
+import { VideoView } from "./views/VideoView.jsx";
+import { LoginView } from "./views/LoginView.jsx";
+import { DocentView } from "./views/DocentView.jsx";
+import { DocentStudentDetail } from "./views/DocentStudentDetail.jsx";
+import { DocentAccountsView } from "./views/DocentAccountsView.jsx";
 
 export default function App() {
+  const { user, profile, loading: authLoading, login, logout, isDocent } = useAuth();
+  const { progress, setProgress, loaded } = useProgressSync(user);
+
   const [view, setView] = useState("home");
   const [viewHistory, setViewHistory] = useState([]);
-  const [progress, setProgress] = useState({ seenCards: [], quizScores: [] });
-  const [loaded, setLoaded] = useState(false);
 
   const navigateTo = useCallback((newView) => {
     setViewHistory(prev => [...prev, view]);
@@ -34,25 +44,6 @@ export default function App() {
       return copy;
     });
   }, []);
-
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem("filosofie-progress");
-      if (saved) {
-        setProgress(JSON.parse(saved));
-      }
-    } catch (e) {}
-    setLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (!loaded) return;
-    try {
-      localStorage.setItem("filosofie-progress", JSON.stringify(progress));
-    } catch (e) {
-      console.error("Storage save error:", e);
-    }
-  }, [progress, loaded]);
 
   // Automatic time tracking with Page Visibility API
   useEffect(() => {
@@ -118,6 +109,19 @@ export default function App() {
     };
   }, [loaded, setProgress]);
 
+  // Auth gate: show loading or login
+  if (authLoading) {
+    return (
+      <div style={{ maxWidth: "520px", margin: "0 auto", minHeight: "100vh", background: "#fff", fontFamily: "'Source Sans 3', -apple-system, sans-serif", display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div style={{ color: "#999", fontSize: "14px" }}>Laden...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginView onLogin={login} />;
+  }
+
   const viewTitles = {
     home: "Studieapp",
     lia: "Lia's verhaal",
@@ -128,16 +132,29 @@ export default function App() {
     filosofen: "Filosofen",
     eindtermen: "Eindtermen",
     begripsanalyse: "Begripsanalyse",
+    conceptmaps: "Conflictkaarten",
+    rodedraad: "Rode draad",
+    videos: "Uitlegvideo's",
     studiepad: "Studiepad",
     voortgang: "Voortgang",
+    dashboard: "Dashboard",
+    "docent-accounts": "Accounts",
   };
 
   const isKwestie = view.startsWith("kwestie-");
+  const isStudentDetail = view.startsWith("docent-student-");
   const kwestieId = isKwestie ? parseInt(view.split("-")[1]) : null;
-  const title = isKwestie ? `Kwestie ${kwestieId}` : (viewTitles[view] || "Studieapp");
+  const studentDetailId = isStudentDetail ? view.replace("docent-student-", "") : null;
+
+  const title = isKwestie
+    ? `Kwestie ${kwestieId}`
+    : isStudentDetail
+      ? "Leerling detail"
+      : (viewTitles[view] || "Studieapp");
 
   const renderView = () => {
     if (isKwestie) return <KwestieDetail id={kwestieId} setView={navigateTo} />;
+    if (isStudentDetail) return <DocentStudentDetail studentId={studentDetailId} />;
     switch (view) {
       case "lia": return <LiaSpelView progress={progress} setProgress={setProgress} />;
       case "flashcards": return <Flashcards progress={progress} setProgress={setProgress} />;
@@ -147,8 +164,13 @@ export default function App() {
       case "filosofen": return <FilosofenView />;
       case "eindtermen": return <EindtermenView />;
       case "begripsanalyse": return <BegripsanalyseView progress={progress} setProgress={setProgress} />;
+      case "conceptmaps": return <ConflictMapsView progress={progress} setProgress={setProgress} />;
+      case "rodedraad": return <RodeDraadView progress={progress} setProgress={setProgress} />;
+      case "videos": return <VideoView />;
       case "studiepad": return <StudiepadView progress={progress} setProgress={setProgress} setView={navigateTo} />;
-      case "voortgang": return <VoortgangView progress={progress} setProgress={setProgress} />;
+      case "voortgang": return <VoortgangView progress={progress} setProgress={setProgress} setView={navigateTo} />;
+      case "dashboard": return <DocentView setView={navigateTo} />;
+      case "docent-accounts": return <DocentAccountsView />;
       default: return <Home setView={navigateTo} progress={progress} />;
     }
   };
@@ -175,12 +197,27 @@ export default function App() {
         borderBottom: "1px solid #f0f0f5", padding: "12px 20px",
         display: "flex", alignItems: "center", gap: "12px",
       }}>
-        {view !== "home" && (
+        {view !== "home" && view !== "dashboard" && (
           <button onClick={goBack} aria-label="Terug" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "18px", color: "#666", padding: "10px", margin: "-6px", minWidth: "44px", minHeight: "44px", display: "flex", alignItems: "center", justifyContent: "center" }}>{"←"}</button>
         )}
         <span style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{title}</span>
-        <div style={{ marginLeft: "auto" }}>
+        <div style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: "8px" }}>
+          <a
+            href="mailto:m.struik@asg.nl?subject=Feedback%20Filosofie%20Studieapp"
+            aria-label="Feedback"
+            style={{ background: "none", border: "none", fontSize: "12px", color: "#999", textDecoration: "none", padding: "6px", display: "flex", alignItems: "center" }}
+          >
+            Feedback
+          </a>
           <button onClick={() => navigateTo("eindtermen")} aria-label="Eindtermen" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "12px", color: "#666", textDecoration: "underline", padding: "10px", margin: "-6px", minWidth: "44px", minHeight: "44px", display: "flex", alignItems: "center", justifyContent: "center" }}>ET</button>
+          <button
+            onClick={logout}
+            aria-label="Uitloggen"
+            style={{ background: "none", border: "none", cursor: "pointer", fontSize: "16px", color: "#999", padding: "6px", display: "flex", alignItems: "center", justifyContent: "center", minWidth: "36px", minHeight: "36px" }}
+            title={`Uitloggen (${profile?.display_name || ""})`}
+          >
+            ⏻
+          </button>
         </div>
       </header>
 
@@ -193,16 +230,24 @@ export default function App() {
         padding: "8px 0 12px", maxWidth: "520px", margin: "0 auto",
       }}>
         {[
-          { icon: "🏠", label: "Home", v: "home" },
-          { icon: "🎭", label: "Lia", v: "lia" },
-          { icon: "🎴", label: "Cards", v: "flashcards" },
-          { icon: "❓", label: "Quiz", v: "quiz" },
-          { icon: "🔍", label: "Examen", v: "exam" },
-          { icon: "📅", label: "Studiepad", v: "studiepad" },
+          ...(isDocent
+            ? [
+                { icon: "📊", label: "Dashboard", v: "dashboard" },
+                { icon: "👥", label: "Accounts", v: "docent-accounts" },
+              ]
+            : [
+                { icon: "🏠", label: "Home", v: "home" },
+                { icon: "🎭", label: "Lia", v: "lia" },
+                { icon: "🎴", label: "Cards", v: "flashcards" },
+                { icon: "❓", label: "Quiz", v: "quiz" },
+                { icon: "🔍", label: "Examen", v: "exam" },
+                { icon: "📅", label: "Studiepad", v: "studiepad" },
+              ]
+          ),
         ].map(nav => {
-          const isActive = view === nav.v || (nav.v === "home" && view === "home");
+          const isActive = view === nav.v;
           return (
-          <button key={nav.v} onClick={() => navigateTo(nav.v)} aria-current={isActive ? "page" : undefined} aria-label={nav.label} style={{
+          <button key={nav.v} onClick={() => { setViewHistory([]); setView(nav.v); }} aria-current={isActive ? "page" : undefined} aria-label={nav.label} style={{
             background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "2px", padding: "8px 12px",
             opacity: isActive ? 1 : 0.5, transition: "opacity 0.2s", position: "relative", minWidth: "48px", minHeight: "48px",
           }}>

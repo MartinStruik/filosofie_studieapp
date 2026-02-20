@@ -4,10 +4,14 @@ import { EXAM_QUESTIONS } from "../data/examQuestions.js";
 import { PRIMAIRE_TEKSTEN } from "../data/primaireTeksten.js";
 import { FILOSOFEN } from "../data/filosofen.js";
 import { BEGRIPSANALYSE } from "../data/begripsanalyse.js";
+import { CONFLICT_MAPS } from "../data/conflictMaps.js";
+import { RODE_DRAAD } from "../data/rodeDraad.js";
 import { STUDIEPAD_PRESETS, START_DATE } from "../data/config.js";
 import { getCurrentWeek, getExamCountdown } from "../utils/dateUtils.js";
-import { computeOverallProgress, generateDagdoelen } from "../utils/progressUtils.js";
+import { computeOverallProgress } from "../utils/progressUtils.js";
+import { getDueCards } from "../utils/leitnerUtils.js";
 import { LIA_CHAPTERS } from "../data/liaChapters.js";
+import { VIDEOS } from "../data/videos.js";
 
 export function Home({ setView, progress }) {
   const totalFlash = FLASHCARDS.length;
@@ -19,12 +23,110 @@ export function Home({ setView, progress }) {
   const totalBegripsanalyse = BEGRIPSANALYSE.reduce((sum, b) => sum + b.definities.length, 0);
   const begripDone = Object.values(progress.begripsanalyseTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
   const liaPlayed = (progress.liaPlayed || []).length;
+  const conflictDone = Object.values(progress.conflictTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
+  const rodeDraadDone = Object.values(progress.rodeDraadTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
 
   const studiepad = progress.studiepad || null;
   const currentWeek = getCurrentWeek(studiepad ? new Date(studiepad.startDate || START_DATE) : START_DATE);
   const countdown = getExamCountdown();
   const overallProg = computeOverallProgress(progress);
-  const dagdoelen = generateDagdoelen(progress);
+
+  // --- Aanbevolen engine ---
+  const aanbevolen = (() => {
+    const items = [];
+    const examTracker = progress.examTracker || {};
+    const tekstTracker = progress.tekstTracker || {};
+    const conflictTracker = progress.conflictTracker || {};
+    const rdTracker = progress.rodeDraadTracker || {};
+
+    // Current week focus kwesties
+    let focusNums = [];
+    if (studiepad) {
+      let weken;
+      if (studiepad.type === "preset") {
+        const preset = STUDIEPAD_PRESETS.find(p => p.id === studiepad.presetId);
+        weken = preset ? preset.weken : [];
+      } else {
+        weken = studiepad.customWeken || [];
+      }
+      const week = weken.find(w => w.week === currentWeek);
+      if (week) focusNums = week.focus.filter(f => f.startsWith("K")).map(f => parseInt(f[1]));
+    }
+
+    // 1. Due Leitner flashcards (highest priority)
+    const dueCards = getDueCards(progress, FLASHCARDS);
+    if (dueCards.length > 0) {
+      const count = Math.min(15, dueCards.length);
+      items.push({ p: 10, icon: "🔄", text: `${count} flashcards herhalen`, detail: `${dueCards.length} verlopen`, view: "flashcards" });
+    }
+
+    // 2. Lastig examenvragen
+    const lastigExam = Object.entries(examTracker).filter(([, v]) => v === "lastig");
+    if (lastigExam.length > 0) {
+      const key = lastigExam[0][0];
+      const eq = EXAM_QUESTIONS.find(q => `${q.year}-${q.nr}` === key);
+      items.push({ p: 8, icon: "🔁", text: eq ? `Examenvraag ${eq.year} nr ${eq.nr} herhalen` : "Lastige examenvraag herhalen", detail: "op lastig", view: "exam" });
+    }
+
+    // 3. Lastig teksten
+    const lastigTekst = Object.entries(tekstTracker).filter(([, v]) => v === "lastig");
+    if (lastigTekst.length > 0) {
+      const pt = PRIMAIRE_TEKSTEN.find(t => t.id === lastigTekst[0][0]);
+      items.push({ p: 7, icon: "🔁", text: pt ? `Tekst ${pt.filosoof} herhalen` : "Lastige tekst herhalen", detail: "op lastig", view: "teksten" });
+    }
+
+    // 4. Lastig conflictkaarten
+    const lastigConflict = Object.entries(conflictTracker).filter(([, v]) => v === "lastig");
+    if (lastigConflict.length > 0) {
+      const c = CONFLICT_MAPS.find(c => c.id === Number(lastigConflict[0][0]));
+      items.push({ p: 7, icon: "🔁", text: c ? `"${c.titel}" herhalen` : "Lastige conflictkaart herhalen", detail: "op lastig", view: "conceptmaps" });
+    }
+
+    // 5. Unseen conflictkaarten for current week
+    const weekConflict = focusNums.length > 0
+      ? CONFLICT_MAPS.filter(c => {
+          if (typeof c.kwestie === "string") return c.kwestie.split("+").map(Number).some(n => focusNums.includes(n));
+          return focusNums.includes(c.kwestie);
+        })
+      : CONFLICT_MAPS;
+    const unseenConflict = weekConflict.filter(c => !conflictTracker[c.id]);
+    if (unseenConflict.length > 0) {
+      items.push({ p: 6, icon: "⚡", text: `"${unseenConflict[0].titel}"`, detail: "nog niet bekeken", view: "conceptmaps" });
+    }
+
+    // 6. Unseen rode draad
+    const unseenRd = RODE_DRAAD.filter(r => !rdTracker[r.id]);
+    if (unseenRd.length > 0) {
+      items.push({ p: 5, icon: "🧵", text: `"${unseenRd[0].titel}"`, detail: "rode draad ontdekken", view: "rodedraad" });
+    }
+
+    // 7. Unseen flashcards (lower priority than due cards)
+    if (dueCards.length === 0) {
+      const unseenFlash = FLASHCARDS.filter(f => !(progress.seenCards || []).includes(f.term));
+      if (unseenFlash.length > 0) {
+        items.push({ p: 3, icon: "🎴", text: `${Math.min(15, unseenFlash.length)} nieuwe flashcards`, detail: `${unseenFlash.length} resterend`, view: "flashcards" });
+      }
+    }
+
+    // 8. Incomplete exam questions for week
+    const weekExam = focusNums.length > 0 ? EXAM_QUESTIONS.filter(e => focusNums.includes(e.kwestie)) : EXAM_QUESTIONS;
+    const undoneExam = weekExam.filter(e => !examTracker[`${e.year}-${e.nr}`]);
+    if (undoneExam.length > 0 && lastigExam.length === 0) {
+      items.push({ p: 4, icon: "🔍", text: `${Math.min(2, undoneExam.length)} examenvra${undoneExam.length === 1 ? "ag" : "gen"} maken`, detail: focusNums.length > 0 ? focusNums.map(n => `K${n}`).join(", ") : "", view: "exam" });
+    }
+
+    // Sort by priority, deduplicate by view, take top 3
+    items.sort((a, b) => b.p - a.p);
+    const seen = new Set();
+    const result = [];
+    for (const item of items) {
+      if (seen.has(item.view)) continue;
+      seen.add(item.view);
+      result.push(item);
+      if (result.length >= 3) break;
+    }
+    return result;
+  })();
 
   const getWeekLabel = () => {
     if (!studiepad) return null;
@@ -97,31 +199,32 @@ export function Home({ setView, progress }) {
         )}
       </button>
 
-      {/* Dagdoelen */}
-      {dagdoelen && (
-        <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", padding: "14px 16px", marginBottom: "16px" }}>
-          <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "8px" }}>Dagdoel — {dagdoelen.weekLabel}</div>
-          {dagdoelen.doelen.map((d, i) => (
-            <div key={i} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: i < dagdoelen.doelen.length - 1 ? "6px" : 0 }}>
-              <span style={{ fontSize: "14px" }}>{d.icon}</span>
-              <span style={{ fontSize: "13px", color: "#333" }}>{d.text}</span>
-              <span style={{ fontSize: "11px", color: "#666", marginLeft: "auto" }}>{d.detail}</span>
-            </div>
+      {/* Aanbevolen */}
+      {aanbevolen.length > 0 && (
+        <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden", marginBottom: "16px" }}>
+          <div style={{ padding: "12px 16px 8px", fontSize: "13px", fontWeight: 700, color: "#1a1a2e" }}>Aanbevolen</div>
+          {aanbevolen.map((item, i) => (
+            <button key={i} onClick={() => setView(item.view)} style={{
+              display: "flex", alignItems: "center", gap: "10px", width: "100%",
+              padding: "10px 16px", background: "none", border: "none", borderTop: "1px solid #f0f0f5",
+              cursor: "pointer", textAlign: "left",
+            }}
+            onMouseOver={e => e.currentTarget.style.background = "#f8f8fc"}
+            onMouseOut={e => e.currentTarget.style.background = "none"}
+            >
+              <span style={{ fontSize: "16px", flexShrink: 0 }}>{item.icon}</span>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ fontSize: "13px", color: "#1a1a2e", fontWeight: 500 }}>{item.text}</div>
+                {item.detail && <div style={{ fontSize: "11px", color: "#999", marginTop: "1px" }}>{item.detail}</div>}
+              </div>
+              <span style={{ fontSize: "14px", color: "#ccc", flexShrink: 0 }}>{"›"}</span>
+            </button>
           ))}
         </div>
       )}
 
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "24px" }}>
-        {[
-          { icon: "🎭", label: "Lia's verhaal", sub: `${liaPlayed}/${LIA_CHAPTERS.length} gespeeld`, view: "lia", bg: "#f5f0ff" },
-          { icon: "🎴", label: "Flashcards", sub: `${seenFlash}/${totalFlash} gezien`, view: "flashcards", bg: "#f0f4ff" },
-          { icon: "❓", label: "Quiz", sub: quizBest > 0 ? `Beste: ${quizBest}%` : "Test je kennis", view: "quiz", bg: "#fff5f0" },
-          { icon: "🔍", label: "Examenvragen", sub: examDone > 0 ? `${examDone}/${EXAM_QUESTIONS.length} gedaan` : `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
-          { icon: "📖", label: "Primaire teksten", sub: tekstDone > 0 ? `${tekstDone}/${PRIMAIRE_TEKSTEN.length} beoordeeld` : `${PRIMAIRE_TEKSTEN.length} teksten`, view: "teksten", bg: "#f5f0ff" },
-          { icon: "👤", label: "Filosofen", sub: `${FILOSOFEN.length} denkers`, view: "filosofen", bg: "#faf0ff" },
-          { icon: "🔬", label: "Begripsanalyse", sub: begripDone > 0 ? `${begripDone}/${totalBegripsanalyse} beoordeeld` : "ET 2 — oefenen", view: "begripsanalyse", bg: "#fff0f5" },
-          { icon: "📊", label: "Voortgang", sub: `${Math.round(overallProg.overall * 100)}% totaal`, view: "voortgang", bg: "#f0fff0" },
-        ].map(item => (
+      {(() => {
+        const tile = (item) => (
           <button key={item.view} onClick={() => setView(item.view)} style={{
             background: item.bg, border: "1px solid #e8e8f0", borderRadius: "12px", padding: "20px 16px",
             cursor: "pointer", textAlign: "left", transition: "transform 0.15s, box-shadow 0.15s",
@@ -133,8 +236,58 @@ export function Home({ setView, progress }) {
             <div style={{ fontWeight: 700, fontSize: "15px", color: "#1a1a2e", fontFamily: "'Source Sans 3', sans-serif" }}>{item.label}</div>
             <div style={{ fontSize: "12px", color: "#666", marginTop: "4px" }}>{item.sub}</div>
           </button>
-        ))}
-      </div>
+        );
+
+        const sections = [
+          {
+            title: "Leren",
+            sub: "Oriëntatie en begrippen",
+            tiles: [
+              { icon: "🎭", label: "Lia's verhaal", sub: `${liaPlayed}/${LIA_CHAPTERS.length} gespeeld`, view: "lia", bg: "#f5f0ff" },
+              { icon: "👤", label: "Filosofen", sub: `${FILOSOFEN.length} denkers`, view: "filosofen", bg: "#faf0ff" },
+              { icon: "🎴", label: "Flashcards", sub: `${seenFlash}/${totalFlash} gezien`, view: "flashcards", bg: "#f0f4ff" },
+              { icon: "🔬", label: "Begripsanalyse", sub: begripDone > 0 ? `${begripDone}/${totalBegripsanalyse} beoordeeld` : "ET 2 — oefenen", view: "begripsanalyse", bg: "#fff0f5" },
+              { icon: "🎬", label: "Uitlegvideo's", sub: `${VIDEOS.filter(v => v.youtubeId).length}/${VIDEOS.length} beschikbaar`, view: "videos", bg: "#f0f5ff" },
+            ],
+          },
+          {
+            title: "Verdiepen",
+            sub: "Spanningen en verbanden",
+            tiles: [
+              { icon: "📖", label: "Primaire teksten", sub: tekstDone > 0 ? `${tekstDone}/${PRIMAIRE_TEKSTEN.length} beoordeeld` : `${PRIMAIRE_TEKSTEN.length} teksten`, view: "teksten", bg: "#f5f0ff" },
+              { icon: "⚡", label: "Conflictkaarten", sub: conflictDone > 0 ? `${conflictDone}/${CONFLICT_MAPS.length} beoordeeld` : `${CONFLICT_MAPS.length} spanningen`, view: "conceptmaps", bg: "#fff5f5" },
+              { icon: "🧵", label: "Rode draad", sub: rodeDraadDone > 0 ? `${rodeDraadDone}/${RODE_DRAAD.length} beoordeeld` : `${RODE_DRAAD.length} verbindingen`, view: "rodedraad", bg: "#f5f0f0" },
+            ],
+          },
+          {
+            title: "Toetsen",
+            sub: "Oefen voor het examen",
+            tiles: [
+              { icon: "❓", label: "Quiz", sub: quizBest > 0 ? `Beste: ${quizBest}%` : "Test je kennis", view: "quiz", bg: "#fff5f0" },
+              { icon: "🔍", label: "Examenvragen", sub: examDone > 0 ? `${examDone}/${EXAM_QUESTIONS.length} gedaan` : `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
+            ],
+          },
+        ];
+
+        return (
+          <>
+            {sections.map(sec => (
+              <div key={sec.title}>
+                <div style={{ margin: "20px 0 10px" }}>
+                  <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "16px", color: "#1a1a2e", margin: 0 }}>{sec.title}</h2>
+                  <p style={{ fontSize: "12px", color: "#999", margin: "2px 0 0" }}>{sec.sub}</p>
+                </div>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginBottom: "4px" }}>
+                  {sec.tiles.map(tile)}
+                </div>
+              </div>
+            ))}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: "12px", margin: "16px 0 24px" }}>
+              {tile({ icon: "📊", label: "Voortgang", sub: `${Math.round(overallProg.overall * 100)}% totaal`, view: "voortgang", bg: "#f0fff0" })}
+            </div>
+          </>
+        );
+      })()}
 
       <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "18px", color: "#1a1a2e", margin: "28px 0 12px" }}>
         De vier kwesties
@@ -158,12 +311,6 @@ export function Home({ setView, progress }) {
         </button>
       ))}
 
-      <div style={{ marginTop: "24px", padding: "16px", background: "#f8f8fc", borderRadius: "12px", border: "1px solid #e8e8f0" }}>
-        <h3 style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", margin: "0 0 8px", fontFamily: "'Source Sans 3', sans-serif" }}>📊 Studietip</h3>
-        <p style={{ fontSize: "12px", color: "#666", margin: 0, lineHeight: 1.5 }}>
-          90% gaat over de syllabus, waarin de bijbehorende eindtermen centraal staan. Focus daar in eerste instantie op. 10% gaat over de globale eindtermen over antropologie, ethiek, kennistheorie en wetenschapsfilosofie.
-        </p>
-      </div>
     </div>
   );
 }

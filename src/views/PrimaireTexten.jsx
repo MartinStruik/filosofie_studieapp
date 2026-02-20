@@ -10,6 +10,7 @@ import { KwestieTag } from "../components/KwestieTag.jsx";
 export function PrimaireTexten({ progress, setProgress }) {
   const [selectedTekst, setSelectedTekst] = useState(null);
   const [openFragments, setOpenFragments] = useState({});
+  const [openToelichtingen, setOpenToelichtingen] = useState({});
   const [openVragen, setOpenVragen] = useState({});
   const { toast, show: showToast } = useToast();
 
@@ -30,6 +31,10 @@ export function PrimaireTexten({ progress, setProgress }) {
     setOpenFragments(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
+  const toggleToelichting = (idx) => {
+    setOpenToelichtingen(prev => ({ ...prev, [idx]: !prev[idx] }));
+  };
+
   const toggleVraag = (idx) => {
     setOpenVragen(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
@@ -48,9 +53,6 @@ export function PrimaireTexten({ progress, setProgress }) {
           </p>
           <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: "0 0 8px" }}>
             <strong>Oefen zo:</strong> lees het fragment aandachtig, beantwoord de oefenvraag in je eigen woorden, en vergelijk pas daarna met het modelantwoord. Markeer teksten als "begrepen" of "lastig" om je voortgang bij te houden.
-          </p>
-          <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
-            Tip: zoek in elke tekst naar de vooronderstelling van de filosoof en de implicatie voor het mensbeeld.
           </p>
         </div>
 
@@ -151,6 +153,25 @@ export function PrimaireTexten({ progress, setProgress }) {
               <div style={{ fontSize: "14px", color: "#333", lineHeight: 1.8, fontFamily: "'Source Sans 3', sans-serif", fontStyle: "italic", whiteSpace: "pre-wrap", borderLeft: `3px solid ${k?.color || "#1a1a2e"}30`, paddingLeft: "16px" }}>
                 {frag.tekst}
               </div>
+              {frag.toelichting && (
+                <div style={{ marginTop: "10px" }}>
+                  <button onClick={() => toggleToelichting(i)} style={{
+                    width: "100%", padding: "8px 0", background: "transparent", border: "none", cursor: "pointer",
+                    textAlign: "left", fontSize: "13px", fontWeight: 600, color: openToelichtingen[i] ? "#2D5A8E" : "#777",
+                    fontFamily: "'Source Sans 3', sans-serif",
+                  }}>
+                    {openToelichtingen[i] ? "▾ Verberg toelichting" : "▸ Toelichting — wat staat hier?"}
+                  </button>
+                  {openToelichtingen[i] && (
+                    <div style={{ padding: "12px 14px", background: "#fef9e7", borderRadius: "8px", border: "1px solid #f0e6b8" }}>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#856404", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Toelichting</div>
+                      <div style={{ fontSize: "13px", color: "#444", lineHeight: 1.7, fontFamily: "'Source Sans 3', sans-serif" }}>
+                        {frag.toelichting}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

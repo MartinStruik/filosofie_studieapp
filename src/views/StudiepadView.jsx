@@ -3,6 +3,10 @@ import { STUDIEPAD_PRESETS, ALL_FOCUS_IDS, START_DATE } from "../data/config.js"
 import { getCurrentWeek } from "../utils/dateUtils.js";
 import { computeKwestieProgress } from "../utils/progressUtils.js";
 import { LIA_CHAPTERS } from "../data/liaChapters.js";
+import { FILOSOFEN } from "../data/filosofen.js";
+import { BEGRIPSANALYSE } from "../data/begripsanalyse.js";
+import { CONFLICT_MAPS } from "../data/conflictMaps.js";
+import { RODE_DRAAD } from "../data/rodeDraad.js";
 
 export function StudiepadView({ progress, setProgress, setView }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -119,21 +123,28 @@ export function StudiepadView({ progress, setProgress, setView }) {
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Kies je studiepad</h2>
           <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — hoe wil je studeren?</p>
         </div>
-        {STUDIEPAD_PRESETS.map(preset => (
+        {STUDIEPAD_PRESETS.map((preset, i) => (
           <button key={preset.id} onClick={() => activatePreset(preset.id)}
             style={{
-              display: "block", width: "100%", background: "#f8f8fc", border: "2px solid #e8e8f0",
+              display: "block", width: "100%", background: "#f8f8fc",
+              border: i === 0 ? "2px solid #4A90D9" : "2px solid #e8e8f0",
               borderRadius: "12px", padding: "20px", marginBottom: "12px", cursor: "pointer", textAlign: "left",
               transition: "border-color 0.2s",
             }}
             onMouseOver={e => e.currentTarget.style.borderColor = "#4A90D9"}
-            onMouseOut={e => e.currentTarget.style.borderColor = "#e8e8f0"}
+            onMouseOut={e => { e.currentTarget.style.borderColor = i === 0 ? "#4A90D9" : "#e8e8f0"; }}
           >
-            <div style={{ fontSize: "28px", marginBottom: "8px" }}>{preset.icoon}</div>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "8px" }}>
+              <span style={{ fontSize: "28px" }}>{preset.icoon}</span>
+              {i === 0 && <span style={{ fontSize: "11px", fontWeight: 700, color: "#4A90D9", background: "#4A90D920", padding: "2px 8px", borderRadius: "4px" }}>Aanbevolen</span>}
+            </div>
             <div style={{ fontWeight: 700, fontSize: "16px", color: "#1a1a2e", marginBottom: "4px" }}>{preset.naam}</div>
             <div style={{ fontSize: "13px", color: "#666", lineHeight: 1.4 }}>{preset.beschrijving}</div>
           </button>
         ))}
+        <p style={{ fontSize: "12px", color: "#999", textAlign: "center", margin: "0 0 12px", lineHeight: 1.4 }}>
+          Twijfel je? Kies "gespreid" — die werkt voor de meeste leerlingen.
+        </p>
         <button onClick={() => setShowCustom(true)}
           style={{
             display: "block", width: "100%", background: "#fff", border: "2px dashed #ddd",
@@ -151,11 +162,31 @@ export function StudiepadView({ progress, setProgress, setView }) {
     );
   }
 
+  const dismissIntro = () => {
+    setProgress(prev => ({ ...prev, studiepadIntroSeen: true }));
+  };
+
   // --- Pad actief: weekoverzicht ---
   const weken = getWeken();
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
+      {/* Eenmalige intro */}
+      {!progress.studiepadIntroSeen && (
+        <div style={{ background: "#f0f4ff", border: "1px solid #d0d8f0", borderRadius: "12px", padding: "16px", margin: "16px 0 0" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", marginBottom: "6px" }}>Zo werkt je studiepad</div>
+            <button onClick={dismissIntro} style={{ background: "none", border: "none", cursor: "pointer", fontSize: "16px", color: "#999", padding: "0", lineHeight: 1 }}>{"×"}</button>
+          </div>
+          <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: "0 0 6px" }}>
+            Elke week zie je activiteiten in oplopende moeilijkheid. Werk van boven naar beneden: begin met kennismaken, eindig met examenvragen.
+          </p>
+          <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: 0 }}>
+            Je hoeft niet alles in één keer te doen — de app onthoudt je voortgang. Het groene vinkje verschijnt als je een onderdeel hebt afgerond.
+          </p>
+        </div>
+      )}
+
       {/* Tijdlijn */}
       <div style={{ padding: "20px 0 16px" }}>
         <div style={{ display: "flex", alignItems: "center", gap: "2px", marginBottom: "8px" }}>
@@ -244,37 +275,127 @@ export function StudiepadView({ progress, setProgress, setView }) {
                   <div style={{ height: "100%", width: `${weekPct}%`, background: "#4A90D9", borderRadius: "3px", transition: "width 0.3s" }} />
                 </div>
 
-                {/* Checklist items */}
-                {kp.flash.total > 0 && (
-                  <button onClick={() => { setView("flashcards"); }}
-                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
-                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"🎴"} Flashcards: <strong>{kp.flash.done}/{kp.flash.total}</strong> gezien</span>
-                  </button>
-                )}
-                {kp.quiz.total > 0 && (
-                  <button onClick={() => { setView("quiz"); }}
-                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
-                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"❓"} Quiz: doe een quiz</span>
-                  </button>
-                )}
-                {kp.exam.total > 0 && (
-                  <button onClick={() => { setView("exam"); }}
-                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
-                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"🔍"} Examenvragen: <strong>{kp.exam.done}/{kp.exam.total}</strong> gedaan</span>
-                  </button>
-                )}
-                {kp.tekst.total > 0 && (
-                  <button onClick={() => { setView("teksten"); }}
-                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
-                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"📖"} Teksten: <strong>{kp.tekst.done}/{kp.tekst.total}</strong> beoordeeld</span>
-                  </button>
-                )}
-                {liaForWeek.total > 0 && (
-                  <button onClick={() => { setView("lia"); }}
-                    style={{ display: "block", width: "100%", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left" }}>
-                    <span style={{ fontSize: "13px", color: "#1a1a2e" }}>{"🎭"} Lia's verhaal: <strong>{liaForWeek.done}/{liaForWeek.total}</strong> gespeeld</span>
-                  </button>
-                )}
+                {(() => {
+                  const focusNums = w.focus.filter(f => f.startsWith("K")).map(f => parseInt(f[1]));
+
+                  // Filosofen for this week's kwesties
+                  const filosofenForWeek = FILOSOFEN.filter(f => focusNums.includes(f.kwestie));
+
+                  // Begripsanalyse — cross-cutting, show overall
+                  const begripTracker = progress.begripsanalyseTracker || {};
+                  const totalBegrip = BEGRIPSANALYSE.reduce((sum, b) => sum + b.definities.length, 0);
+                  const begripDone = Object.values(begripTracker).filter(v => v === "begrepen" || v === "lastig").length;
+
+                  // Conflictkaarten for this week's kwesties
+                  const conflictForWeek = CONFLICT_MAPS.filter(c => {
+                    if (typeof c.kwestie === "string") return c.kwestie.split("+").map(Number).some(n => focusNums.includes(n));
+                    return focusNums.includes(c.kwestie);
+                  });
+                  const conflictTracker = progress.conflictTracker || {};
+                  const conflictDone = conflictForWeek.filter(c => conflictTracker[c.id] === "begrepen" || conflictTracker[c.id] === "lastig").length;
+
+                  // Rode draad for this week's kwesties
+                  const rodeDraadForWeek = RODE_DRAAD.filter(r => {
+                    if (typeof r.van === "number") return focusNums.includes(r.van);
+                    return focusNums.length >= 4;
+                  });
+                  const rdTracker = progress.rodeDraadTracker || {};
+                  const rdDone = rodeDraadForWeek.filter(r => rdTracker[r.id] === "begrepen" || rdTracker[r.id] === "lastig").length;
+
+                  // Track whether we've found the first incomplete item (for "Begin hier")
+                  let firstIncompleteFound = false;
+
+                  const badge = (done, total) => {
+                    if (total === 0) return null;
+                    const complete = done >= total;
+                    return (
+                      <span style={{
+                        marginLeft: "auto", fontSize: complete ? "13px" : "12px", fontWeight: 700, flexShrink: 0,
+                        color: complete ? "#2e7d32" : "#888",
+                        background: complete ? "#e8f5e9" : "transparent",
+                        padding: complete ? "2px 8px" : "0", borderRadius: "6px",
+                      }}>{complete ? "✓" : `${done}/${total}`}</span>
+                    );
+                  };
+
+                  const row = (icon, label, done, total, view) => {
+                    if (total === 0) return null;
+                    const complete = done >= total;
+                    const isNext = !complete && !firstIncompleteFound;
+                    if (isNext) firstIncompleteFound = true;
+                    return (
+                      <button key={label} onClick={() => setView(view)}
+                        style={{
+                          display: "flex", alignItems: "center", gap: "8px", width: "100%",
+                          background: complete ? "#f6fef6" : isNext ? "#f0f4ff" : "#fff",
+                          border: complete ? "1px solid #c8e6c9" : isNext ? "2px solid #4A90D9" : "1px solid #e8e8f0",
+                          borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left",
+                        }}>
+                        <span style={{ fontSize: "14px", flexShrink: 0 }}>{icon}</span>
+                        <span style={{ fontSize: "13px", color: "#1a1a2e", fontWeight: isNext ? 700 : 400 }}>{label}</span>
+                        {isNext && <span style={{ fontSize: "11px", fontWeight: 700, color: "#4A90D9", flexShrink: 0 }}>Begin hier</span>}
+                        {badge(done, total)}
+                      </button>
+                    );
+                  };
+
+                  const linkRow = (icon, label, detail, view) => {
+                    // linkRows don't have done/total, treat as never "complete" for begin-hier logic
+                    const isNext = !firstIncompleteFound;
+                    if (isNext) firstIncompleteFound = true;
+                    return (
+                      <button key={label} onClick={() => setView(view)}
+                        style={{
+                          display: "flex", alignItems: "center", gap: "8px", width: "100%",
+                          background: isNext ? "#f0f4ff" : "#fff",
+                          border: isNext ? "2px solid #4A90D9" : "1px solid #e8e8f0",
+                          borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left",
+                        }}>
+                        <span style={{ fontSize: "14px", flexShrink: 0 }}>{icon}</span>
+                        <span style={{ fontSize: "13px", color: "#1a1a2e", fontWeight: isNext ? 700 : 400 }}>{label}</span>
+                        {isNext && <span style={{ fontSize: "11px", fontWeight: 700, color: "#4A90D9", flexShrink: 0 }}>Begin hier</span>}
+                        <span style={{ marginLeft: "auto", fontSize: "11px", color: "#999", flexShrink: 0 }}>{detail}</span>
+                      </button>
+                    );
+                  };
+
+                  const sectionLabel = (num, title, hint) => (
+                    <div style={{ margin: "10px 0 4px" }}>
+                      <div style={{ fontSize: "11px", fontWeight: 700, color: "#1a1a2e" }}>
+                        <span style={{ color: "#4A90D9", marginRight: "4px" }}>{num}.</span>{title}
+                      </div>
+                      <div style={{ fontSize: "11px", color: "#aaa", marginTop: "1px" }}>{hint}</div>
+                    </div>
+                  );
+
+                  return (
+                    <>
+                      {(liaForWeek.total > 0 || filosofenForWeek.length > 0) &&
+                        sectionLabel(1, "Kennismaken", "Lees het verhaal en bekijk de filosofen")}
+                      {row("🎭", "Lia's verhaal", liaForWeek.done, liaForWeek.total, "lia")}
+                      {filosofenForWeek.length > 0 && linkRow("👤", "Filosofen", `${filosofenForWeek.length} denkers`, "filosofen")}
+
+                      {(kp.flash.total > 0 || totalBegrip > 0) &&
+                        sectionLabel(2, "Begrippen leren", "Oefen met flashcards en begripsanalyse")}
+                      {row("🎴", "Flashcards", kp.flash.done, kp.flash.total, "flashcards")}
+                      {totalBegrip > 0 && row("🔬", "Begripsanalyse", begripDone, totalBegrip, "begripsanalyse")}
+
+                      {(kp.tekst.total > 0 || conflictForWeek.length > 0) &&
+                        sectionLabel(3, "Verdiepen", "Lees originele teksten en ontdek spanningen")}
+                      {row("📖", "Primaire teksten", kp.tekst.done, kp.tekst.total, "teksten")}
+                      {row("⚡", "Conflictkaarten", conflictDone, conflictForWeek.length, "conceptmaps")}
+
+                      {rodeDraadForWeek.length > 0 &&
+                        sectionLabel(4, "Verbanden zien", "Zie de rode draad tussen kwesties")}
+                      {row("🧵", "Rode draad", rdDone, rodeDraadForWeek.length, "rodedraad")}
+
+                      {(kp.quiz.total > 0 || kp.exam.total > 0) &&
+                        sectionLabel(5, "Toetsen", "Test jezelf met quiz en examenvragen")}
+                      {kp.quiz.total > 0 && linkRow("❓", "Quiz", "Doe een quiz", "quiz")}
+                      {row("🔍", "Examenvragen", kp.exam.done, kp.exam.total, "exam")}
+                    </>
+                  );
+                })()}
               </div>
             )}
           </div>

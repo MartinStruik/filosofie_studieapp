@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LIA_CHAPTERS } from "../data/liaChapters.js";
+import { VIDEOS } from "../data/videos.js";
 
 const KWESTIE_GROUPS = [
   { kwestie: 1, label: "Kwestie 1 — Het lichaam", color: "#4a6fa5" },
@@ -41,9 +42,23 @@ export function LiaSpelView({ progress, setProgress }) {
           }}>
             {"← Terug"}
           </button>
-          <span style={{ fontWeight: 700, fontSize: "15px" }}>
+          <span style={{ fontWeight: 700, fontSize: "15px", flex: 1 }}>
             {activeChapter.label}: {activeChapter.title}
           </span>
+          {(() => {
+            const video = VIDEOS.find(v => v.id === activeChapter.id);
+            return video?.youtubeId ? (
+              <a href={`https://www.youtube.com/watch?v=${video.youtubeId}`} target="_blank" rel="noopener noreferrer"
+                style={{
+                  background: "rgba(255,255,255,0.2)", color: "#fff",
+                  borderRadius: "8px", padding: "8px 14px", fontSize: "13px", fontWeight: 700,
+                  textDecoration: "none", display: "flex", alignItems: "center", gap: "6px",
+                  minWidth: "44px", minHeight: "44px", justifyContent: "center", flexShrink: 0,
+                }}>
+                {"▶ Video"}
+              </a>
+            ) : null;
+          })()}
         </div>
         <iframe
           src={`/lia/${activeChapter.file}`}

@@ -3,6 +3,8 @@ import { QUIZ_QUESTIONS } from "../data/quizQuestions.js";
 import { EXAM_QUESTIONS } from "../data/examQuestions.js";
 import { PRIMAIRE_TEKSTEN } from "../data/primaireTeksten.js";
 import { BEGRIPSANALYSE } from "../data/begripsanalyse.js";
+import { CONFLICT_MAPS } from "../data/conflictMaps.js";
+import { RODE_DRAAD } from "../data/rodeDraad.js";
 import { LIA_CHAPTERS } from "../data/liaChapters.js";
 import { STUDIEPAD_PRESETS, START_DATE } from "../data/config.js";
 import { getCurrentWeek } from "./dateUtils.js";
@@ -32,14 +34,22 @@ export function computeOverallProgress(progress) {
   const totalLia = LIA_CHAPTERS.length;
   const liaDone = (progress.liaPlayed || []).length;
   const liaPct = totalLia > 0 ? liaDone / totalLia : 0;
+  const totalConflict = CONFLICT_MAPS.length;
+  const conflictDone = Object.values(progress.conflictTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
+  const conflictPct = totalConflict > 0 ? conflictDone / totalConflict : 0;
+  const totalRodeDraad = RODE_DRAAD.length;
+  const rodeDraadDone = Object.values(progress.rodeDraadTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
+  const rodeDraadPct = totalRodeDraad > 0 ? rodeDraadDone / totalRodeDraad : 0;
   return {
     flash: { done: seenFlash, total: totalFlash, pct: flashPct },
     quiz: { done: (progress.quizScores || []).length, pct: quizPct },
     exam: { done: examDone, total: totalExam, pct: examPct },
     tekst: { done: tekstDone, total: totalTekst, pct: tekstPct },
     begripsanalyse: { done: begripDone, total: totalBegripsanalyse, pct: begripPct },
+    conflict: { done: conflictDone, total: totalConflict, pct: conflictPct },
+    rodeDraad: { done: rodeDraadDone, total: totalRodeDraad, pct: rodeDraadPct },
     lia: { done: liaDone, total: totalLia, pct: liaPct },
-    overall: (flashPct + examPct + tekstPct + begripPct + liaPct) / 5,
+    overall: (flashPct + examPct + tekstPct + begripPct + conflictPct + rodeDraadPct + liaPct) / 7,
   };
 }
 

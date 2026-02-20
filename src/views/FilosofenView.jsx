@@ -1,7 +1,33 @@
 import { useState } from "react";
 import { KWESTIES } from "../data/kwesties.js";
 import { FILOSOFEN } from "../data/filosofen.js";
+import { VIDEOS } from "../data/videos.js";
 import { KwestieTag } from "../components/KwestieTag.jsx";
+
+const FILOSOOF_VIDEO = {
+  "Descartes": ["h1"],
+  "Sheets-Johnstone": ["h2"],
+  "Plessner": ["h3", "extra1"],
+  "De Beauvoir": ["h4"],
+  "Fanon": ["h4"],
+  "Lakoff & Johnson": ["h5"],
+  "Vroon & Draaisma": ["h5"],
+  "Swaab / computationalisme": ["h6"],
+  "Dreyfus": ["h6"],
+  "4E-cognitie": ["h7"],
+  "Clark": ["h8"],
+  "Kockelkoren": ["h9"],
+  "Verbeek": ["h10"],
+  "De Mul": ["h11"],
+  "Morton": ["h12"],
+  "Despret": ["h12"],
+  "Haraway": ["h12"],
+  "Latour": ["h13"],
+  "Hayles": ["h13"],
+  "Barad": ["h14"],
+  "Harari": ["h14"],
+  "Rasch": ["h14"],
+};
 
 export function FilosofenView() {
   const [selected, setSelected] = useState(null);
@@ -39,6 +65,31 @@ export function FilosofenView() {
             ))}
           </div>
         </div>
+        {(() => {
+          const videoIds = FILOSOOF_VIDEO[f.name];
+          if (!videoIds) return null;
+          const vids = videoIds.map(id => VIDEOS.find(v => v.id === id)).filter(v => v?.youtubeId);
+          if (vids.length === 0) return null;
+          return (
+            <div style={{ marginTop: "16px" }}>
+              <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 10px", color: "#1a1a2e" }}>Uitlegvideo{vids.length > 1 ? "'s" : ""}</h3>
+              {vids.map(v => (
+                <a key={v.id} href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noopener noreferrer"
+                  style={{
+                    display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px",
+                    background: "#f0f5ff", border: "1px solid #d0dff0", borderRadius: "12px",
+                    textDecoration: "none", marginBottom: "8px",
+                  }}>
+                  <span style={{ fontSize: "24px", color: "#4A90D9", flexShrink: 0 }}>{"▶"}</span>
+                  <div>
+                    <div style={{ fontWeight: 700, fontSize: "13px", color: "#1a1a2e" }}>{v.title}</div>
+                    <div style={{ fontSize: "11px", color: "#666" }}>{v.hoofdstuk}</div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          );
+        })()}
       </div>
     );
   }
