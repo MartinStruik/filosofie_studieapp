@@ -29,9 +29,20 @@ const FILOSOOF_VIDEO = {
   "Rasch": ["h14"],
 };
 
-export function FilosofenView() {
+export function FilosofenView({ progress, setProgress }) {
   const [selected, setSelected] = useState(null);
   const [filter, setFilter] = useState(0);
+
+  const tracker = progress?.filosofenTracker || {};
+
+  const setStatus = (name, status) => {
+    const current = tracker[name];
+    const newStatus = current === status ? null : status;
+    setProgress(prev => ({
+      ...prev,
+      filosofenTracker: { ...(prev.filosofenTracker || {}), [name]: newStatus },
+    }));
+  };
 
   const list = filter === 0 ? FILOSOFEN : FILOSOFEN.filter(f => f.kwestie === filter);
 
@@ -65,6 +76,22 @@ export function FilosofenView() {
             ))}
           </div>
         </div>
+        {/* Begrepen / Lastig */}
+        <div style={{ display: "flex", gap: "8px", marginTop: "16px" }}>
+          <button onClick={() => setStatus(f.name, "begrepen")} style={{
+            flex: 1, padding: "10px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600,
+            border: tracker[f.name] === "begrepen" ? "2px solid #4caf50" : "1px solid #e0e0e8",
+            background: tracker[f.name] === "begrepen" ? "#e8f5e9" : "#fff",
+            color: tracker[f.name] === "begrepen" ? "#2e7d32" : "#777",
+          }}>Begrepen</button>
+          <button onClick={() => setStatus(f.name, "lastig")} style={{
+            flex: 1, padding: "10px", borderRadius: "8px", cursor: "pointer", fontSize: "13px", fontWeight: 600,
+            border: tracker[f.name] === "lastig" ? "2px solid #ef5350" : "1px solid #e0e0e8",
+            background: tracker[f.name] === "lastig" ? "#fce4ec" : "#fff",
+            color: tracker[f.name] === "lastig" ? "#c62828" : "#777",
+          }}>Lastig</button>
+        </div>
+
         {(() => {
           const videoIds = FILOSOOF_VIDEO[f.name];
           if (!videoIds) return null;
@@ -135,7 +162,10 @@ export function FilosofenView() {
                 <div style={{ fontSize: "11px", color: "#666", marginTop: "2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.et} · {f.begrippen.slice(0, 3).join(", ")}</div>
                 {f.lia && <div style={{ fontSize: "11px", color: "#7A2D8E", marginTop: "2px" }}>{f.lia}</div>}
               </div>
-              <KwestieTag kwestie={f.kwestie} small />
+              <div style={{ display: "flex", alignItems: "center", gap: "6px", flexShrink: 0 }}>
+                {tracker[f.name] && <span style={{ fontSize: "11px", fontWeight: 600, color: tracker[f.name] === "begrepen" ? "#4caf50" : "#ef5350" }}>{tracker[f.name] === "begrepen" ? "✔" : "✗"}</span>}
+                <KwestieTag kwestie={f.kwestie} small />
+              </div>
             </button>
           );
         })}

@@ -161,7 +161,7 @@ export default function App() {
       case "quiz": return <Quiz progress={progress} setProgress={setProgress} setView={navigateTo} />;
       case "exam": return <ExamQuestions progress={progress} setProgress={setProgress} />;
       case "teksten": return <PrimaireTexten progress={progress} setProgress={setProgress} />;
-      case "filosofen": return <FilosofenView />;
+      case "filosofen": return <FilosofenView progress={progress} setProgress={setProgress} />;
       case "eindtermen": return <EindtermenView />;
       case "begripsanalyse": return <BegripsanalyseView progress={progress} setProgress={setProgress} />;
       case "conceptmaps": return <ConflictMapsView progress={progress} setProgress={setProgress} />;

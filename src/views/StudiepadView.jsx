@@ -295,8 +295,12 @@ export function StudiepadView({ progress, setProgress, setView }) {
             }, { done: 0, total: 0 })
           : { done: 0, total: 0 };
 
-        const weekTotal = kp.flash.total + kp.exam.total + kp.tekst.total + liaForWeek.total;
-        const weekDone = kp.flash.done + kp.exam.done + kp.tekst.done + liaForWeek.done;
+        const filosofenTracker2 = progress.filosofenTracker || {};
+        const filosofenForWeek2 = FILOSOFEN.filter(f => w.focus.filter(fid => fid.startsWith("K")).map(fid => parseInt(fid[1])).includes(f.kwestie));
+        const filosofenDone2 = filosofenForWeek2.filter(f => filosofenTracker2[f.name] === "begrepen" || filosofenTracker2[f.name] === "lastig").length;
+
+        const weekTotal = kp.flash.total + kp.exam.total + kp.tekst.total + liaForWeek.total + filosofenForWeek2.length;
+        const weekDone = kp.flash.done + kp.exam.done + kp.tekst.done + liaForWeek.done + filosofenDone2;
         const weekPct = weekTotal > 0 ? Math.round((weekDone / weekTotal) * 100) : 0;
 
         return (
@@ -341,6 +345,8 @@ export function StudiepadView({ progress, setProgress, setView }) {
 
                   // Filosofen for this week's kwesties
                   const filosofenForWeek = FILOSOFEN.filter(f => focusNums.includes(f.kwestie));
+                  const filosofenTracker = progress.filosofenTracker || {};
+                  const filosofenDone = filosofenForWeek.filter(f => filosofenTracker[f.name] === "begrepen" || filosofenTracker[f.name] === "lastig").length;
 
                   // Begripsanalyse — cross-cutting, show overall
                   const begripTracker = progress.begripsanalyseTracker || {};
@@ -434,7 +440,7 @@ export function StudiepadView({ progress, setProgress, setView }) {
                       {(liaForWeek.total > 0 || filosofenForWeek.length > 0) &&
                         sectionLabel(1, "Kennismaken", "Lees het verhaal en bekijk de filosofen")}
                       {row("🎭", "Lia's verhaal", liaForWeek.done, liaForWeek.total, "lia")}
-                      {filosofenForWeek.length > 0 && linkRow("👤", "Filosofen", `${filosofenForWeek.length} denkers`, "filosofen")}
+                      {filosofenForWeek.length > 0 && row("👤", "Filosofen", filosofenDone, filosofenForWeek.length, "filosofen")}
 
                       {(kp.flash.total > 0 || totalBegrip > 0) &&
                         sectionLabel(2, "Begrippen leren", "Oefen met flashcards en begripsanalyse")}
