@@ -8,11 +8,16 @@ export function useAuth() {
 
   // Fetch profile from profiles table
   const fetchProfile = useCallback(async (userId) => {
-    const { data } = await supabase
+    console.log("[Auth] Fetching profile for:", userId);
+    const { data, error } = await supabase
       .from("profiles")
       .select("*")
       .eq("id", userId)
       .single();
+    console.log("[Auth] Profile result:", { data, error });
+    if (error) {
+      console.error("[Auth] Profile fetch error:", error.message, error.code);
+    }
     setProfile(data);
   }, []);
 
