@@ -22,10 +22,23 @@ export function useAuth() {
   }, []);
 
   useEffect(() => {
+    // Safety timeout: if auth takes >5s, stop loading and show login
+    const timeout = setTimeout(() => {
+      setLoading(prev => {
+        if (prev) console.warn("[Auth] Timeout — forcing login screen");
+        return false;
+      });
+    }, 5000);
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session: s } }) => {
+      clearTimeout(timeout);
       setSession(s);
       if (s?.user) fetchProfile(s.user.id);
+      setLoading(false);
+    }).catch((err) => {
+      clearTimeout(timeout);
+      console.error("[Auth] getSession failed:", err);
       setLoading(false);
     });
 
@@ -41,7 +54,10 @@ export function useAuth() {
       }
     );
 
-    return () => subscription.unsubscribe();
+    return () => {
+      clearTimeout(timeout);
+      subscription.unsubscribe();
+    };
   }, [fetchProfile]);
 
   const login = useCallback(async (email, password) => {

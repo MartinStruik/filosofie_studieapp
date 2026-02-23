@@ -190,7 +190,7 @@ export const MINDMAPS = [
     title: "Verbeek: Technologische bemiddeling",
     kwestie: 3,
     context: ["tekst"],
-    tekstId: 7, // adjust to match Verbeek's primaire tekst id
+    tekstId: 9,
     beschrijving: "Hoe techniek onze waarneming en ons handelen bemiddelt",
     nodes: [
       { id: "centrum", label: "Technologische\nbemiddeling", type: "central", x: 50, y: 10 },
@@ -220,7 +220,7 @@ export const MINDMAPS = [
     title: "De Mul: Drie scenario's",
     kwestie: 3,
     context: ["tekst"],
-    tekstId: 8, // adjust to match De Mul's primaire tekst id
+    tekstId: 10,
     beschrijving: "NBIN-technologieën en drie toekomstscenario's voor de mens",
     nodes: [
       { id: "humanisme", label: "Humanisme", type: "concept", x: 50, y: 5, color: "#4A90D9" },
