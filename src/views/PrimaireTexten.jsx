@@ -178,31 +178,57 @@ export function PrimaireTexten({ progress, setProgress }) {
       ))}
 
       <h3 style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", margin: "24px 0 12px" }}>Oefenvragen</h3>
-      {pt.vragen.map((v, i) => (
-        <div key={i} style={{ marginBottom: "12px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden" }}>
-          <div style={{ padding: "16px", background: "#f0f4ff" }}>
-            <div style={{ fontSize: "11px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Vraag {i + 1}</div>
-            <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{v.vraag}</p>
-          </div>
-          <div style={{ padding: "12px 16px", borderTop: "1px solid #e8e8f0" }}>
-            <button onClick={() => toggleVraag(i)} style={{
-              width: "100%", padding: "10px 0", background: "transparent", border: "none", cursor: "pointer",
-              textAlign: "left", fontSize: "13px", fontWeight: 600, color: openVragen[i] ? "#2D8E5A" : "#777",
-              fontFamily: "'Source Sans 3', sans-serif",
-            }}>
-              {openVragen[i] ? "▾ Verberg antwoordmodel" : "▸ Toon antwoordmodel"}
-            </button>
-            {openVragen[i] && (
-              <div style={{ marginTop: "8px", padding: "16px", background: "#f0fff5", borderRadius: "8px", border: "1px solid #c8e6c9" }}>
-                <div style={{ fontSize: "11px", fontWeight: 700, color: "#2D8E5A", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>Modelantwoord</div>
-                <div style={{ fontSize: "13px", color: "#333", lineHeight: 1.7, fontFamily: "'Source Sans 3', sans-serif", whiteSpace: "pre-wrap" }}>
-                  {v.antwoord}
-                </div>
+      {pt.vragen.map((v, i) => {
+        const answerKey = `${pt.id}-q${i}`;
+        const savedAnswer = (progress.tekstAntwoorden || {})[answerKey] || "";
+        return (
+          <div key={i} style={{ marginBottom: "12px", background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden" }}>
+            <div style={{ padding: "16px", background: "#f0f4ff" }}>
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "#6B5CFF", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Vraag {i + 1}</div>
+              <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{v.vraag}</p>
+            </div>
+            <div style={{ padding: "12px 16px", borderTop: "1px solid #e8e8f0" }}>
+              {/* Schrijfruimte */}
+              <div style={{ marginBottom: "10px" }}>
+                <div style={{ fontSize: "11px", fontWeight: 700, color: "#555", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>Jouw antwoord</div>
+                <textarea
+                  value={savedAnswer}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setProgress(prev => ({
+                      ...prev,
+                      tekstAntwoorden: { ...(prev.tekstAntwoorden || {}), [answerKey]: val },
+                    }));
+                  }}
+                  placeholder="Schrijf hier je antwoord voordat je het modelantwoord bekijkt..."
+                  rows={4}
+                  style={{
+                    width: "100%", padding: "10px 12px", fontSize: "13px", lineHeight: 1.6,
+                    border: "1px solid #ddd", borderRadius: "8px", resize: "vertical",
+                    fontFamily: "'Source Sans 3', sans-serif", boxSizing: "border-box",
+                    background: savedAnswer ? "#fafffe" : "#fff",
+                  }}
+                />
               </div>
-            )}
+              <button onClick={() => toggleVraag(i)} style={{
+                width: "100%", padding: "10px 0", background: "transparent", border: "none", cursor: "pointer",
+                textAlign: "left", fontSize: "13px", fontWeight: 600, color: openVragen[i] ? "#2D8E5A" : "#777",
+                fontFamily: "'Source Sans 3', sans-serif",
+              }}>
+                {openVragen[i] ? "▾ Verberg antwoordmodel" : "▸ Toon antwoordmodel"}
+              </button>
+              {openVragen[i] && (
+                <div style={{ marginTop: "8px", padding: "16px", background: "#f0fff5", borderRadius: "8px", border: "1px solid #c8e6c9" }}>
+                  <div style={{ fontSize: "11px", fontWeight: 700, color: "#2D8E5A", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "8px" }}>Modelantwoord</div>
+                  <div style={{ fontSize: "13px", color: "#333", lineHeight: 1.7, fontFamily: "'Source Sans 3', sans-serif", whiteSpace: "pre-wrap" }}>
+                    {v.antwoord}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
 
       {/* Tracker buttons on detail page */}
       <div style={{ display: "flex", gap: "8px", padding: "16px 0", marginTop: "8px", borderTop: "1px solid #e8e8f0" }}>

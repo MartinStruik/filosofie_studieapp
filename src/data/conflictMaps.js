@@ -46,7 +46,7 @@ export const CONFLICT_MAPS = [
     nodes: [
       { filosoof: "Clark", stance: "Ja, en dat is niet erg — de mens is een 'natural-born cyborg'. Techniek is een natuurlijke uitbreiding van onze cognitie (extended mind).", side: "left" },
       { filosoof: "Kockelkoren", stance: "Techniek verandert onze waarneming fundamenteel. Via technische milieus (doorleefd, talig, interactief) ervaren we de wereld anders.", side: "center" },
-      { filosoof: "Verbeek", stance: "Techniek bemiddelt onze moraal: het stuurt gedrag en verandert hoe we ethische keuzes maken (technische mediatie).", side: "center" },
+      { filosoof: "Verbeek", stance: "Techniek bemiddelt onze moraal: het stuurt gedrag en verandert hoe we ethische keuzes maken (technische bemiddeling).", side: "center" },
       { filosoof: "De Mul", stance: "Techniek verandert niet alleen wat we doen, maar wie we zijn. Digitale technologie transformeert onze identiteit en ons mensbeeld fundamenteel.", side: "right" },
     ],
     crux: "Clark ziet techniek als onproblematische uitbreiding, maar Kockelkoren, Verbeek en De Mul tonen dat techniek dieper ingrijpt: het verandert waarneming, moraal en identiteit zelf.",

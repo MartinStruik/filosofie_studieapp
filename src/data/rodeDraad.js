@@ -43,20 +43,21 @@ export const RODE_DRAAD = [
     stappen: [
       { filosoof: "Swaab", kwestie: 2, positie: "'Wij zijn ons brein' — de geest is reduceerbaar tot hersenprocessen en informatieverwerking." },
       { filosoof: "Hayles", kwestie: 4, positie: "Als cognitie informatieverwerking is, dan is er geen reden waarom dat exclusief menselijk moet zijn. Informatie kan bestaan zonder menselijk lichaam." },
+      { filosoof: "Harari", kwestie: 4, positie: "Het dataïsme trekt deze lijn verder: niet alleen cognitie, maar alle waarde en autoriteit verschuift naar data en algoritmes. De mens wordt een dataverwerkend systeem tussen andere systemen." },
     ],
-    rodeDraad: "Swaabs reductie van de geest tot informatieverwerking opent onbedoeld de deur voor Hayles' posthumanisme. Als 'wij zijn ons brein' betekent 'wij zijn informatie', dan kan die informatie ook elders bestaan. Het functionalisme van K2 maakt de posthumane vraag van K4 onvermijdelijk.",
-    examentip: "Sterke examenstrategie: laat zien dat Swaabs positie, doorgetrokken, leidt tot Hayles' conclusie. Wie de geest reduceert tot informatie, kan niet meer volhouden dat denken exclusief menselijk is.",
+    rodeDraad: "Swaabs reductie van de geest tot informatieverwerking opent onbedoeld de deur voor Hayles' posthumanisme: als 'wij zijn ons brein' betekent 'wij zijn informatie', dan kan die informatie ook elders bestaan. Harari's dataïsme trekt deze lijn door naar de samenleving: als informatie de ultieme waarde is, worden algoritmes de nieuwe autoriteit en verliest de mens zijn bijzondere positie. Van neuroreductionisme via posthumanisme naar dataïsme — drie stappen in dezelfde logica.",
+    examentip: "Sterke examenstrategie: laat zien dat Swaabs positie, doorgetrokken, leidt tot Hayles' conclusie én Harari's dataïsme. De drie vormen een keten: wie de geest reduceert tot informatie (Swaab), opent de deur voor niet-menselijke cognitie (Hayles) én voor het primaat van data boven de mens (Harari). Rasch' 'else' biedt de tegenbeweging: er gaat altijd iets verloren bij datareductie.",
   },
   {
     id: 5,
-    titel: "Van mediatie naar agency",
+    titel: "Van bemiddeling naar agency",
     van: 3,
     naar: 4,
     stappen: [
-      { filosoof: "Verbeek", kwestie: 3, positie: "Techniek bemiddelt onze morele keuzes — het stuurt gedrag en vormt hoe we de wereld ervaren (technische mediatie)." },
+      { filosoof: "Verbeek", kwestie: 3, positie: "Techniek bemiddelt onze morele keuzes — het stuurt gedrag en vormt hoe we de wereld ervaren (technische bemiddeling)." },
       { filosoof: "Latour", kwestie: 4, positie: "Niet-menselijke actanten handelen in netwerken. Agency is niet exclusief menselijk maar verdeeld over mens en ding." },
     ],
-    rodeDraad: "Verbeek toont dat dingen ons gedrag sturen. Latour trekt die lijn door: als dingen ons gedrag sturen, handelen ze. Van 'techniek beïnvloedt ons' naar 'techniek handelt' — de stap van mediatie naar agency.",
+    rodeDraad: "Verbeek toont dat dingen ons gedrag sturen. Latour trekt die lijn door: als dingen ons gedrag sturen, handelen ze. Van 'techniek beïnvloedt ons' naar 'techniek handelt' — de stap van bemiddeling naar agency.",
     examentip: "Het examen kan vragen om Verbeek en Latour te vergelijken. Kernverschil: bij Verbeek blijft de mens het morele subject (techniek bemiddelt), bij Latour is agency gelijkwaardig verdeeld.",
   },
   {
