@@ -237,11 +237,9 @@ export default function App() {
               ]
             : [
                 { icon: "🏠", label: "Home", v: "home" },
-                { icon: "🎭", label: "Lia", v: "lia" },
-                { icon: "🎴", label: "Cards", v: "flashcards" },
-                { icon: "❓", label: "Quiz", v: "quiz" },
-                { icon: "🔍", label: "Examen", v: "exam" },
                 { icon: "📅", label: "Studiepad", v: "studiepad" },
+                { icon: "🎴", label: "Oefenen", v: "flashcards" },
+                { icon: "📊", label: "Voortgang", v: "voortgang" },
               ]
           ),
         ].map(nav => {

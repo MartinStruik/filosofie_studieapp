@@ -199,6 +199,37 @@ export function Home({ setView, progress }) {
         )}
       </button>
 
+      {/* Snelle sessie knop */}
+      {(progress.seenCards?.length > 0 || (progress.quizScores || []).length > 0) && (
+        <button onClick={() => {
+          const dueCards = getDueCards(progress, FLASHCARDS);
+          if (dueCards.length > 0) { setView("flashcards"); }
+          else { setView("quiz"); }
+        }}
+          style={{
+            display: "flex", alignItems: "center", gap: "12px", width: "100%",
+            background: "#fff", border: "2px solid #4A90D9", borderRadius: "12px",
+            padding: "14px 18px", marginBottom: "16px", cursor: "pointer", textAlign: "left",
+            transition: "background 0.15s",
+          }}
+          onMouseOver={e => e.currentTarget.style.background = "#f0f4ff"}
+          onMouseOut={e => e.currentTarget.style.background = "#fff"}
+        >
+          <span style={{ fontSize: "24px", flexShrink: 0 }}>{"⚡"}</span>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e" }}>Heb je 5 minuten?</div>
+            <div style={{ fontSize: "12px", color: "#666", marginTop: "2px" }}>
+              {(() => {
+                const dueCards = getDueCards(progress, FLASHCARDS);
+                if (dueCards.length > 0) return `${Math.min(15, dueCards.length)} flashcards herhalen`;
+                return "Doe een snelle quiz";
+              })()}
+            </div>
+          </div>
+          <span style={{ fontSize: "18px", color: "#4A90D9", fontWeight: 700, flexShrink: 0 }}>{"→"}</span>
+        </button>
+      )}
+
       {/* Deze week / Aanbevolen */}
       {aanbevolen.length > 0 && (
         <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden", marginBottom: "16px" }}>

@@ -385,7 +385,7 @@ export function StudiepadView({ progress, setProgress, setView }) {
                     );
                   };
 
-                  const row = (icon, label, done, total, view) => {
+                  const row = (icon, label, done, total, view, minutes) => {
                     if (total === 0) return null;
                     const complete = done >= total;
                     const isNext = !complete && !firstIncompleteFound;
@@ -399,7 +399,10 @@ export function StudiepadView({ progress, setProgress, setView }) {
                           borderRadius: "8px", padding: "10px 12px", marginBottom: "6px", cursor: "pointer", textAlign: "left",
                         }}>
                         <span style={{ fontSize: "14px", flexShrink: 0 }}>{icon}</span>
-                        <span style={{ fontSize: "13px", color: "#1a1a2e", fontWeight: isNext ? 700 : 400 }}>{label}</span>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span style={{ fontSize: "13px", color: "#1a1a2e", fontWeight: isNext ? 700 : 400 }}>{label}</span>
+                          {minutes && !complete && <span style={{ fontSize: "11px", color: "#aaa", marginLeft: "6px" }}>~{minutes} min</span>}
+                        </div>
                         {isNext && <span style={{ fontSize: "11px", fontWeight: 700, color: "#4A90D9", flexShrink: 0 }}>Begin hier</span>}
                         {badge(done, total)}
                       </button>
@@ -439,27 +442,27 @@ export function StudiepadView({ progress, setProgress, setView }) {
                     <>
                       {(liaForWeek.total > 0 || filosofenForWeek.length > 0) &&
                         sectionLabel(1, "Kennismaken", "Lees het verhaal en bekijk de filosofen")}
-                      {row("🎭", "Lia's verhaal", liaForWeek.done, liaForWeek.total, "lia")}
-                      {filosofenForWeek.length > 0 && row("👤", "Filosofen", filosofenDone, filosofenForWeek.length, "filosofen")}
+                      {row("🎭", "Lia's verhaal", liaForWeek.done, liaForWeek.total, "lia", Math.max(5, liaForWeek.total * 5))}
+                      {filosofenForWeek.length > 0 && row("👤", "Filosofen", filosofenDone, filosofenForWeek.length, "filosofen", Math.max(3, filosofenForWeek.length * 2))}
 
                       {(kp.flash.total > 0 || totalBegrip > 0) &&
                         sectionLabel(2, "Begrippen leren", "Oefen met flashcards en begripsanalyse")}
-                      {row("🎴", "Flashcards", kp.flash.done, kp.flash.total, "flashcards")}
-                      {totalBegrip > 0 && row("🔬", "Begripsanalyse", begripDone, totalBegrip, "begripsanalyse")}
+                      {row("🎴", "Flashcards", kp.flash.done, kp.flash.total, "flashcards", Math.max(5, Math.ceil((kp.flash.total - kp.flash.done) / 3)))}
+                      {totalBegrip > 0 && row("🔬", "Begripsanalyse", begripDone, totalBegrip, "begripsanalyse", Math.max(5, Math.ceil((totalBegrip - begripDone) * 2)))}
 
                       {(kp.tekst.total > 0 || conflictForWeek.length > 0) &&
                         sectionLabel(3, "Verdiepen", "Lees originele teksten en ontdek spanningen")}
-                      {row("📖", "Primaire teksten", kp.tekst.done, kp.tekst.total, "teksten")}
-                      {row("⚡", "Conflictkaarten", conflictDone, conflictForWeek.length, "conceptmaps")}
+                      {row("📖", "Primaire teksten", kp.tekst.done, kp.tekst.total, "teksten", Math.max(10, (kp.tekst.total - kp.tekst.done) * 10))}
+                      {row("⚡", "Conflictkaarten", conflictDone, conflictForWeek.length, "conceptmaps", Math.max(3, (conflictForWeek.length - conflictDone) * 3))}
 
                       {rodeDraadForWeek.length > 0 &&
                         sectionLabel(4, "Verbanden zien", "Zie de rode draad tussen kwesties")}
-                      {row("🧵", "Rode draad", rdDone, rodeDraadForWeek.length, "rodedraad")}
+                      {row("🧵", "Rode draad", rdDone, rodeDraadForWeek.length, "rodedraad", Math.max(3, (rodeDraadForWeek.length - rdDone) * 3))}
 
                       {(kp.quiz.total > 0 || kp.exam.total > 0) &&
                         sectionLabel(5, "Toetsen", "Test jezelf met quiz en examenvragen")}
-                      {kp.quiz.total > 0 && linkRow("❓", "Quiz", "Doe een quiz", "quiz")}
-                      {row("🔍", "Examenvragen", kp.exam.done, kp.exam.total, "exam")}
+                      {kp.quiz.total > 0 && linkRow("❓", "Quiz", "~10 min", "quiz")}
+                      {row("🔍", "Examenvragen", kp.exam.done, kp.exam.total, "exam", Math.max(10, (kp.exam.total - kp.exam.done) * 8))}
                     </>
                   );
                 })()}
