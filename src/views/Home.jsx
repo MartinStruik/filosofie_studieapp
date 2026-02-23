@@ -199,10 +199,13 @@ export function Home({ setView, progress }) {
         )}
       </button>
 
-      {/* Aanbevolen */}
+      {/* Deze week / Aanbevolen */}
       {aanbevolen.length > 0 && (
         <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden", marginBottom: "16px" }}>
-          <div style={{ padding: "12px 16px 8px", fontSize: "13px", fontWeight: 700, color: "#1a1a2e" }}>Aanbevolen</div>
+          <div style={{ padding: "12px 16px 8px", display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+            <span style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e" }}>{studiepad ? "Deze week" : "Aanbevolen"}</span>
+            {studiepad && getWeekLabel() && <span style={{ fontSize: "11px", color: "#999" }}>{getWeekLabel()}</span>}
+          </div>
           {aanbevolen.map((item, i) => (
             <button key={i} onClick={() => setView(item.view)} style={{
               display: "flex", alignItems: "center", gap: "10px", width: "100%",

@@ -147,6 +147,13 @@ export function ConflictMapsView({ progress, setProgress }) {
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
+      {/* Intro */}
+      <div style={{ background: "#f8f8fc", border: "1px solid #e8e8f0", borderRadius: "12px", padding: "14px 16px", margin: "16px 0 0", lineHeight: 1.6 }}>
+        <p style={{ fontSize: "13px", color: "#444", margin: 0 }}>
+          Filosofen zijn het zelden met elkaar eens. Elke kaart laat zien hoe denkers tegenover elkaar staan op een kernvraag — en waar de spanning precies zit. Handig voor examenvragen die je vragen standpunten te <em>vergelijken</em>.
+        </p>
+      </div>
+
       {/* Filter buttons */}
       <div style={{ display: "flex", gap: "6px", flexWrap: "wrap", margin: "16px 0" }}>
         {KWESTIE_FILTERS.map(f => (

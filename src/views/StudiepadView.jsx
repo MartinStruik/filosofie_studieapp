@@ -123,6 +123,67 @@ export function StudiepadView({ progress, setProgress, setView }) {
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Kies je studiepad</h2>
           <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — hoe wil je studeren?</p>
         </div>
+
+        {/* Uitleg examenstof */}
+        <div style={{ background: "#f8f8fc", border: "1px solid #e8e8f0", borderRadius: "12px", padding: "16px", marginBottom: "20px", lineHeight: 1.6 }}>
+          <div style={{ fontSize: "14px", fontWeight: 700, color: "#1a1a2e", marginBottom: "8px" }}>Hoe is de examenstof opgebouwd?</div>
+          <p style={{ fontSize: "13px", color: "#444", margin: "0 0 8px" }}>
+            Alle stof draait om vier grote <strong>kwesties</strong> — de rode draad van het examen. Je leert ze kennen via het verhaal van Lia:
+          </p>
+          <div style={{ display: "flex", gap: "8px", marginBottom: "10px" }}>
+            <div style={{ flex: 1, background: "#fff", borderRadius: "8px", padding: "10px", border: "1px solid #e8e8f0" }}>
+              <div style={{ fontSize: "12px", fontWeight: 700, color: "#4A90D9", marginBottom: "4px" }}>Lia deel 1</div>
+              <div style={{ fontSize: "12px", color: "#555" }}>
+                <strong>Kwestie 1</strong> — Wie ben ik?<br />
+                <strong>Kwestie 2</strong> — Hoe denk ik?
+              </div>
+            </div>
+            <div style={{ flex: 1, background: "#fff", borderRadius: "8px", padding: "10px", border: "1px solid #e8e8f0" }}>
+              <div style={{ fontSize: "12px", fontWeight: 700, color: "#4A90D9", marginBottom: "4px" }}>Lia deel 2</div>
+              <div style={{ fontSize: "12px", color: "#555" }}>
+                <strong>Kwestie 3</strong> — Wat doet techniek?<br />
+                <strong>Kwestie 4</strong> — Hoe leef ik samen?
+              </div>
+            </div>
+          </div>
+          <p style={{ fontSize: "13px", color: "#444", margin: 0 }}>
+            Daarnaast komen vier <strong>filosofische domeinen</strong> terug — antropologie, ethiek, kennistheorie en wetenschapsfilosofie. Die lopen dwars door alle kwesties heen en komen in beide delen van Lia's verhaal aan bod.
+          </p>
+        </div>
+
+        {/* Leerbouwstenen overzicht */}
+        <details style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", marginBottom: "20px", overflow: "hidden" }}>
+          <summary style={{ padding: "14px 16px", fontSize: "14px", fontWeight: 700, color: "#1a1a2e", cursor: "pointer", listStyle: "none", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span>Wat zit er in deze app?</span>
+            <span style={{ fontSize: "12px", color: "#999", fontWeight: 400 }}>Tik om te bekijken</span>
+          </summary>
+          <div style={{ padding: "0 16px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+            <p style={{ fontSize: "12px", color: "#666", margin: "0 0 4px", lineHeight: 1.5 }}>
+              De app heeft tien onderdelen die samen de hele examenstof dekken — van kennismaken tot toetsen. Je studiepad combineert ze in een logische volgorde.
+            </p>
+            {[
+              { icon: "🎭", naam: "Lia's verhaal", uitleg: "Een doorlopend verhaal dat je meeneemt door alle kwesties. Deel 1 behandelt kwestie 1 en 2, deel 2 kwestie 3 en 4." },
+              { icon: "👤", naam: "Filosofen", uitleg: "Korte portretten van alle denkers die je moet kennen — wie ze zijn, wat ze vinden, en bij welke kwestie ze horen." },
+              { icon: "🎴", naam: "Flashcards", uitleg: "Begrippen leren door herhaling. Het systeem onthoudt wat je al kent en laat moeilijke kaarten vaker terugkomen." },
+              { icon: "🔬", naam: "Begripsanalyse", uitleg: "Filosofische begrippen ontleden: wat betekent het precies, en hoe gebruiken verschillende filosofen dezelfde term?" },
+              { icon: "📖", naam: "Primaire teksten", uitleg: "Originele fragmenten van filosofen, met toelichting en richtvragen. Dit is wat je op het examen ook tegenkomt." },
+              { icon: "⚡", naam: "Conflictkaarten", uitleg: "Tegengestelde standpunten naast elkaar. Laat zien waar filosofen het oneens zijn — essentieel voor vergelijkingsvragen op het examen." },
+              { icon: "🧵", naam: "Rode draad", uitleg: "Verbanden tussen de kwesties onderling. Helpt je het grotere geheel te zien en dwarsverbanden te leggen." },
+              { icon: "❓", naam: "Quiz", uitleg: "Multiple-choice vragen per kwestie om je kennis te testen. Snelle feedback op wat je al weet." },
+              { icon: "🔍", naam: "Examenvragen", uitleg: "Echte examenvragen met modelantwoorden. Oefen met het type vragen dat je op het centraal examen krijgt." },
+              { icon: "🎬", naam: "Uitlegvideo's", uitleg: "Korte video's die lastige onderwerpen visueel uitleggen." },
+            ].map(item => (
+              <div key={item.naam} style={{ display: "flex", gap: "10px", alignItems: "flex-start", padding: "8px 10px", background: "#f8f8fc", borderRadius: "8px" }}>
+                <span style={{ fontSize: "18px", flexShrink: 0, marginTop: "1px" }}>{item.icon}</span>
+                <div>
+                  <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "2px" }}>{item.naam}</div>
+                  <div style={{ fontSize: "12px", color: "#555", lineHeight: 1.5 }}>{item.uitleg}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </details>
+
         {STUDIEPAD_PRESETS.map((preset, i) => (
           <button key={preset.id} onClick={() => activatePreset(preset.id)}
             style={{
