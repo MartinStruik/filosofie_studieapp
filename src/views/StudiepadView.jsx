@@ -7,6 +7,8 @@ import { FILOSOFEN } from "../data/filosofen.js";
 import { BEGRIPSANALYSE } from "../data/begripsanalyse.js";
 import { CONFLICT_MAPS } from "../data/conflictMaps.js";
 import { RODE_DRAAD } from "../data/rodeDraad.js";
+import { MINDMAPS } from "../data/mindmaps.js";
+import { FOUTENJACHT_ITEMS } from "../data/foutenjacht.js";
 
 export function StudiepadView({ progress, setProgress, setView }) {
   const [showConfirm, setShowConfirm] = useState(false);
@@ -170,7 +172,9 @@ export function StudiepadView({ progress, setProgress, setView }) {
               { icon: "⚡", naam: "Conflictkaarten", uitleg: "Tegengestelde standpunten naast elkaar. Laat zien waar filosofen het oneens zijn — essentieel voor vergelijkingsvragen op het examen." },
               { icon: "🧵", naam: "Rode draad", uitleg: "Verbanden tussen de kwesties onderling. Helpt je het grotere geheel te zien en dwarsverbanden te leggen." },
               { icon: "❓", naam: "Quiz", uitleg: "Multiple-choice vragen per kwestie om je kennis te testen. Snelle feedback op wat je al weet." },
-              { icon: "🔍", naam: "Examenvragen", uitleg: "Echte examenvragen met modelantwoorden. Oefen met het type vragen dat je op het centraal examen krijgt." },
+              { icon: "🗺️", naam: "Denkschema's", uitleg: "Interactieve mindmaps per kwestie. Tik op een filosoof voor stelling, kernbegrippen, argumenten en kritiek — ideaal als overzicht bij het begin van een kwestie." },
+              { icon: "🔍", naam: "Foutenjacht", uitleg: "Beoordeel spoof-antwoorden van 'medeleerlingen'. Tik op fouten en leer zorgvuldig lezen, goed formuleren en typische CE-valkuilen herkennen." },
+              { icon: "📝", naam: "Examenvragen", uitleg: "Echte examenvragen met modelantwoorden. Oefen met het type vragen dat je op het centraal examen krijgt." },
               { icon: "🎬", naam: "Uitlegvideo's", uitleg: "Korte video's die lastige onderwerpen visueel uitleggen." },
             ].map(item => (
               <div key={item.naam} style={{ display: "flex", gap: "10px", alignItems: "flex-start", padding: "8px 10px", background: "#f8f8fc", borderRadius: "8px" }}>
@@ -438,10 +442,17 @@ export function StudiepadView({ progress, setProgress, setView }) {
                     </div>
                   );
 
+                  // Denkschema's for this week's kwesties
+                  const mindmapsForWeek = MINDMAPS.filter(m => m.kwestie && focusNums.includes(m.kwestie) && m.context.includes("kwestie"));
+
+                  // Foutenjacht for this week's kwesties
+                  const fjForWeek = FOUTENJACHT_ITEMS.filter(fj => focusNums.includes(fj.kwestie));
+
                   return (
                     <>
-                      {(liaForWeek.total > 0 || filosofenForWeek.length > 0) &&
-                        sectionLabel(1, "Kennismaken", "Lees het verhaal en bekijk de filosofen")}
+                      {(liaForWeek.total > 0 || filosofenForWeek.length > 0 || mindmapsForWeek.length > 0) &&
+                        sectionLabel(1, "Kennismaken", "Bekijk het overzicht, lees het verhaal, ontdek de filosofen")}
+                      {mindmapsForWeek.length > 0 && linkRow("🗺️", `Denkschema ${focusNums.map(n => "K" + n).join("+")}`, `${mindmapsForWeek.length} kaart${mindmapsForWeek.length > 1 ? "en" : ""}`, "mindmaps")}
                       {row("🎭", "Lia's verhaal", liaForWeek.done, liaForWeek.total, "lia", Math.max(5, liaForWeek.total * 5))}
                       {filosofenForWeek.length > 0 && row("👤", "Filosofen", filosofenDone, filosofenForWeek.length, "filosofen", Math.max(3, filosofenForWeek.length * 2))}
 
@@ -459,10 +470,11 @@ export function StudiepadView({ progress, setProgress, setView }) {
                         sectionLabel(4, "Verbanden zien", "Zie de rode draad tussen kwesties")}
                       {row("🧵", "Rode draad", rdDone, rodeDraadForWeek.length, "rodedraad", Math.max(3, (rodeDraadForWeek.length - rdDone) * 3))}
 
-                      {(kp.quiz.total > 0 || kp.exam.total > 0) &&
-                        sectionLabel(5, "Toetsen", "Test jezelf met quiz en examenvragen")}
+                      {(kp.quiz.total > 0 || kp.exam.total > 0 || fjForWeek.length > 0) &&
+                        sectionLabel(5, "Toetsen", "Test jezelf met quiz, foutenjacht en examenvragen")}
                       {kp.quiz.total > 0 && linkRow("❓", "Quiz", "~10 min", "quiz")}
-                      {row("🔍", "Examenvragen", kp.exam.done, kp.exam.total, "exam", Math.max(10, (kp.exam.total - kp.exam.done) * 8))}
+                      {fjForWeek.length > 0 && linkRow("🔍", "Foutenjacht", `${fjForWeek.length} antwoorden`, "foutenjacht")}
+                      {row("📝", "Examenvragen", kp.exam.done, kp.exam.total, "exam", Math.max(10, (kp.exam.total - kp.exam.done) * 8))}
                     </>
                   );
                 })()}
