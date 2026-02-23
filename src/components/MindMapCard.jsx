@@ -1,5 +1,23 @@
 import { useState } from "react";
 import { FILOSOOF_EXAMINFO } from "../data/mindmaps.js";
+import { FLASHCARDS } from "../data/flashcards.js";
+
+/** Lookup: find flashcard definition for a kernbegrip term */
+function findDef(term) {
+  const t = term.toLowerCase().replace(/\s+/g, " ");
+  // exact match first
+  let card = FLASHCARDS.find(f => f.term.toLowerCase() === t);
+  if (card) return card.def;
+  // partial: flashcard term starts with our term (ignores "(Descartes)" suffixes)
+  card = FLASHCARDS.find(f => f.term.toLowerCase().split(" (")[0] === t);
+  if (card) return card.def;
+  // our term contains the flashcard base term or vice versa
+  card = FLASHCARDS.find(f => {
+    const base = f.term.toLowerCase().split(" (")[0].split(" /")[0];
+    return base.length > 3 && (t.includes(base) || base.includes(t));
+  });
+  return card ? card.def : null;
+}
 
 /**
  * Interactive mindmap component rendered as SVG.
@@ -208,16 +226,9 @@ function ExamInfoSheet({ node, onClose }) {
           {info.stelling}
         </div>
 
-        {/* Kernbegrippen */}
+        {/* Kernbegrippen — tappable chips with flashcard definitions */}
         <Section label="Kernbegrippen" color={color}>
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
-            {info.kernbegrippen.map((b, i) => (
-              <span key={i} style={{
-                background: color + "15", color, border: `1px solid ${color}30`,
-                borderRadius: "6px", padding: "2px 8px", fontSize: "10.5px", fontWeight: 500,
-              }}>{b}</span>
-            ))}
-          </div>
+          <KernbegripChips begrippen={info.kernbegrippen} color={color} />
         </Section>
 
         {/* Argumenten */}
@@ -259,6 +270,64 @@ function ExamInfoSheet({ node, onClose }) {
           </Section>
         )}
       </div>
+    </div>
+  );
+}
+
+function KernbegripChips({ begrippen, color }) {
+  const [openIdx, setOpenIdx] = useState(null);
+
+  return (
+    <div>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px" }}>
+        {begrippen.map((b, i) => {
+          const def = findDef(b);
+          const isOpen = openIdx === i;
+          return (
+            <button
+              key={i}
+              onClick={() => def && setOpenIdx(isOpen ? null : i)}
+              style={{
+                background: isOpen ? color + "22" : color + "12",
+                color,
+                border: `1px solid ${isOpen ? color + "60" : color + "30"}`,
+                borderRadius: "6px",
+                padding: "3px 9px",
+                fontSize: "10.5px",
+                fontWeight: 500,
+                cursor: def ? "pointer" : "default",
+                transition: "all 0.12s",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "3px",
+              }}
+            >
+              {b}
+              {def && <span style={{ fontSize: "8px", opacity: 0.6 }}>{isOpen ? "▲" : "▼"}</span>}
+            </button>
+          );
+        })}
+      </div>
+      {openIdx !== null && (() => {
+        const def = findDef(begrippen[openIdx]);
+        return def ? (
+          <div style={{
+            marginTop: "6px",
+            fontSize: "11px",
+            color: "#444",
+            lineHeight: 1.5,
+            background: color + "08",
+            borderRadius: "6px",
+            padding: "8px 10px",
+            borderLeft: `2px solid ${color}40`,
+            animation: "fadeIn 0.12s ease",
+          }}>
+            <span style={{ fontWeight: 600, color }}>{begrippen[openIdx]}</span>
+            <span style={{ margin: "0 4px", color: "#ccc" }}>—</span>
+            {def}
+          </div>
+        ) : null;
+      })()}
     </div>
   );
 }
