@@ -22,6 +22,7 @@ import { LoginView } from "./views/LoginView.jsx";
 import { DocentView } from "./views/DocentView.jsx";
 import { DocentStudentDetail } from "./views/DocentStudentDetail.jsx";
 import { DocentAccountsView } from "./views/DocentAccountsView.jsx";
+import { MindmapView } from "./views/MindmapView.jsx";
 
 export default function App() {
   const { user, profile, loading: authLoading, login, logout, isDocent } = useAuth();
@@ -134,6 +135,7 @@ export default function App() {
     begripsanalyse: "Begripsanalyse",
     conceptmaps: "Conflictkaarten",
     rodedraad: "Rode draad",
+    mindmaps: "Denkschema's",
     videos: "Uitlegvideo's",
     studiepad: "Studiepad",
     voortgang: "Voortgang",
@@ -166,6 +168,7 @@ export default function App() {
       case "begripsanalyse": return <BegripsanalyseView progress={progress} setProgress={setProgress} />;
       case "conceptmaps": return <ConflictMapsView progress={progress} setProgress={setProgress} />;
       case "rodedraad": return <RodeDraadView progress={progress} setProgress={setProgress} />;
+      case "mindmaps": return <MindmapView />;
       case "videos": return <VideoView />;
       case "studiepad": return <StudiepadView progress={progress} setProgress={setProgress} setView={navigateTo} />;
       case "voortgang": return <VoortgangView progress={progress} setProgress={setProgress} setView={navigateTo} />;

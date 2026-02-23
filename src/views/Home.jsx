@@ -12,6 +12,7 @@ import { computeOverallProgress } from "../utils/progressUtils.js";
 import { getDueCards } from "../utils/leitnerUtils.js";
 import { LIA_CHAPTERS } from "../data/liaChapters.js";
 import { VIDEOS } from "../data/videos.js";
+import { MINDMAPS } from "../data/mindmaps.js";
 
 export function Home({ setView, progress }) {
   const totalFlash = FLASHCARDS.length;
@@ -291,6 +292,7 @@ export function Home({ setView, progress }) {
               { icon: "📖", label: "Primaire teksten", sub: tekstDone > 0 ? `${tekstDone}/${PRIMAIRE_TEKSTEN.length} beoordeeld` : `${PRIMAIRE_TEKSTEN.length} teksten`, view: "teksten", bg: "#f5f0ff" },
               { icon: "⚡", label: "Conflictkaarten", sub: conflictDone > 0 ? `${conflictDone}/${CONFLICT_MAPS.length} beoordeeld` : `${CONFLICT_MAPS.length} spanningen`, view: "conceptmaps", bg: "#fff5f5" },
               { icon: "🧵", label: "Rode draad", sub: rodeDraadDone > 0 ? `${rodeDraadDone}/${RODE_DRAAD.length} beoordeeld` : `${RODE_DRAAD.length} verbindingen`, view: "rodedraad", bg: "#f5f0f0" },
+              { icon: "🗺️", label: "Denkschema's", sub: `${MINDMAPS.length} kaarten`, view: "mindmaps", bg: "#f0fff8" },
             ],
           },
           {

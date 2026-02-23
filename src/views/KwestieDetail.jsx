@@ -5,6 +5,8 @@ import { FLASHCARDS } from "../data/flashcards.js";
 import { EXAM_QUESTIONS } from "../data/examQuestions.js";
 import { SPECIFIEKE_EINDTERMEN } from "../data/eindtermen.js";
 import { KwestieTag } from "../components/KwestieTag.jsx";
+import { MINDMAPS } from "../data/mindmaps.js";
+import { MindMapCard } from "../components/MindMapCard.jsx";
 
 const KWESTIE_STRUCTUUR = {
   1: {
@@ -56,6 +58,7 @@ export function KwestieDetail({ id, setView }) {
 
   const ets = SPECIFIEKE_EINDTERMEN[id] || [];
   const structuur = KWESTIE_STRUCTUUR[id];
+  const kwestieMindmap = MINDMAPS.find(m => m.kwestie === id && m.context.includes("kwestie"));
 
   return (
     <div style={{ padding: "0 20px 40px" }}>
@@ -64,6 +67,8 @@ export function KwestieDetail({ id, setView }) {
         <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", margin: "0 0 8px", lineHeight: 1.2 }}>{k.title}</h2>
         <p style={{ fontSize: "13px", opacity: 0.8, margin: 0 }}>{k.chapters} · {k.eindtermen}</p>
       </div>
+
+      {kwestieMindmap && <MindMapCard mindmap={kwestieMindmap} />}
 
       {structuur && (
         <>

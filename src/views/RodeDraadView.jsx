@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { RODE_DRAAD } from "../data/rodeDraad.js";
 import { KWESTIES } from "../data/kwesties.js";
+import { MINDMAPS } from "../data/mindmaps.js";
+import { CollapsibleMindMap } from "../components/MindMapCard.jsx";
 
 function getKwestieColor(id) {
   const k = KWESTIES.find(k => k.id === id);
@@ -85,6 +87,12 @@ export function RodeDraadView({ progress, setProgress }) {
           <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 8px", color: "#856404" }}>Examentip</h3>
           <p style={{ fontSize: "13px", color: "#666", lineHeight: 1.6, margin: 0 }}>{card.examentip}</p>
         </div>
+
+        {/* Bonus: mindmap als die bestaat voor deze rode draad */}
+        {(() => {
+          const mm = MINDMAPS.find(m => m.context.includes("rodedraad") && m.rodeDraadId === card.id);
+          return mm ? <CollapsibleMindMap mindmap={mm} label="Bekijk denkschema" /> : null;
+        })()}
 
         {/* Begrepen / Lastig */}
         <div style={{ display: "flex", gap: "8px" }}>

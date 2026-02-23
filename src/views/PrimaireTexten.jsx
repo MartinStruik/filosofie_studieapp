@@ -6,6 +6,8 @@ import { useToast } from "../hooks/useToast.js";
 import { Toast } from "../components/Toast.jsx";
 import { LiaBadge } from "../components/LiaBadge.jsx";
 import { KwestieTag } from "../components/KwestieTag.jsx";
+import { MINDMAPS } from "../data/mindmaps.js";
+import { CollapsibleMindMap } from "../components/MindMapCard.jsx";
 
 export function PrimaireTexten({ progress, setProgress }) {
   const [selectedTekst, setSelectedTekst] = useState(null);
@@ -229,6 +231,12 @@ export function PrimaireTexten({ progress, setProgress }) {
           </div>
         );
       })}
+
+      {/* Bonus: denkschema als die bestaat voor deze tekst */}
+      {(() => {
+        const mm = MINDMAPS.find(m => m.context.includes("tekst") && m.tekstId === pt.id);
+        return mm ? <CollapsibleMindMap mindmap={mm} label={`Denkschema: ${mm.title}`} /> : null;
+      })()}
 
       {/* Tracker buttons on detail page */}
       <div style={{ display: "flex", gap: "8px", padding: "16px 0", marginTop: "8px", borderTop: "1px solid #e8e8f0" }}>
