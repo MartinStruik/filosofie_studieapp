@@ -22,6 +22,12 @@ export const BEGRIPSANALYSE = [
         implicatie: "Lachen en wenen zijn grenservaringen waarin het lichaam 'het overneemt' — bewijs dat we geen pure geesten zijn. De mens is principieel onbepaald."
       },
       {
+        filosoof: "De Beauvoir",
+        definitie: "Het lichaam is een 'situatie': niet een biologisch lot maar een geleefde ervaring die gevormd wordt door culturele opvattingen over gender.",
+        vooronderstelling: "Jongens en meisjes starten met dezelfde lichamelijke en intellectuele vermogens, maar opvoeding dwingt meisjes om hun lichaam als object voor de ander te ervaren.",
+        implicatie: "'Men wordt niet als vrouw geboren, men wordt het.' Het lichaam is niet neutraal maar cultureel gevormd — een situatie die veranderbaar is, geen onveranderlijk gegeven."
+      },
+      {
         filosoof: "Fanon",
         definitie: "Het lichaam is een sociaal-politieke realiteit: de huidskleur wordt door de blik van de ander tot een 'raciaal-epidermaal schema' gemaakt dat de ervaring bepaalt.",
         vooronderstelling: "Het lichaam is nooit neutraal maar altijd ingebed in machtsverhoudingen. De ander kan het lichaam objectiveren en vervreemden.",
@@ -40,7 +46,7 @@ export const BEGRIPSANALYSE = [
         implicatie: "Een blinde met een stok 'voelt' met de stokpunt. Een smartphone kan deel worden van je cognitieve systeem. De grens lichaam/techniek is vloeiend."
       }
     ],
-    vergelijking: "Descartes ziet het lichaam als een mechanisch object los van de geest. Sheets-Johnstone en Plessner benadrukken juist de eenheid van lichaam en bewustzijn, maar verschillen: Sheets-Johnstone focust op pre-reflectieve beweging, Plessner op de dubbelheid van zijn/hebben. Fanon voegt de sociale en politieke dimensie toe: het lichaam wordt mede gevormd door de blik van de ander. Dreyfus benadrukt het lichaam als voorwaarde voor intelligentie, terwijl Clark het lichaam ziet als een open systeem dat technologie inlijft."
+    vergelijking: "Descartes ziet het lichaam als een mechanisch object los van de geest. Sheets-Johnstone en Plessner benadrukken juist de eenheid van lichaam en bewustzijn, maar verschillen: Sheets-Johnstone focust op pre-reflectieve beweging, Plessner op de dubbelheid van zijn/hebben. De Beauvoir en Fanon voegen de sociale dimensie toe: het lichaam is een situatie die door cultuur (gender) en machtsverhoudingen (ras) gevormd wordt. Dreyfus benadrukt het lichaam als voorwaarde voor intelligentie, terwijl Clark het lichaam ziet als een open systeem dat technologie inlijft."
   },
   {
     begrip: "Techniek",

@@ -11,7 +11,8 @@ export const FILOSOOF_EXAMINFO = {
     kernbegrippen: ["Dualisme", "Res cogitans / res extensa", "Methodische twijfel", "Cogito ergo sum"],
     argumenten: [
       "Via methodische twijfel komt Descartes tot het cogito: het enige dat niet te betwijfelen is, is dat ik denk.",
-      "Het lichaam is een machine die werkt volgens natuurwetten; de geest is immaterieel en vrij."
+      "Het lichaam is een machine die werkt volgens natuurwetten; de geest is immaterieel en vrij.",
+      "Ethische implicatie: dieren hebben alleen res extensa (geen geest), en mogen daarom als machines worden behandeld."
     ],
     voorbeeld: "Een robot kan bewegen als een mens, maar mist bewustzijn — dat is het verschil tussen res extensa en res cogitans.",
     kritiek: "Hoe kunnen twee totaal verschillende substanties (geest en lichaam) op elkaar inwerken? Het interactieprobleem blijft onopgelost.",
@@ -108,7 +109,7 @@ export const FILOSOOF_EXAMINFO = {
     argumenten: [
       "Het lichaamsprobleem: computers missen een lichaam en dus de basis voor begrip.",
       "Het contextprobleem: computers kunnen niet bepalen wat relevant is in een situatie.",
-      "Het emotioneprobleem: zonder emoties geen intelligente keuzes."
+      "Het emotieprobleem: zonder emoties geen intelligente keuzes."
     ],
     voorbeeld: "Een schaakcomputer kan winnen maar 'begrijpt' niet wat schaken is — het mist de geleefde ervaring.",
     kritiek: "Connectionisme (zelflerende netwerken) lost deels het symboolprobleem op, maar de belichaming blijft een punt.",
@@ -141,7 +142,7 @@ export const FILOSOOF_EXAMINFO = {
   verbeek: {
     naam: "Peter-Paul Verbeek",
     stelling: "Technologie is nooit moreel neutraal: het bemiddelt actief onze waarneming en ons handelen.",
-    kernbegrippen: ["Technologische bemiddeling", "Morele scripts", "Vrijheid als 'zich verhouden'"],
+    kernbegrippen: ["Technologische bemiddeling", "Ontwerpen van moraal", "Vrijheid als 'zich verhouden'"],
     argumenten: [
       "Bemiddeling van waarneming: technologie bepaalt hóe de werkelijkheid aan ons verschijnt.",
       "Bemiddeling van handelen: technologie dwingt gedrag af via 'scripts' (de drempel dwingt tot afremmen)."
@@ -166,10 +167,11 @@ export const FILOSOOF_EXAMINFO = {
   morton: {
     naam: "Timothy Morton",
     stelling: "Alles is verbonden in 'the mesh' — de grens tussen mens en natuur is een illusie.",
-    kernbegrippen: ["The mesh", "Hyperobject", "Ecologisch denken", "Interconnectedness"],
+    kernbegrippen: ["The mesh", "Hyperobject", "Ecologisch denken", "Handelingsvermogen planten/dieren"],
     argumenten: [
       "The mesh: alles (mensen, dieren, planten, dingen) is verweven in een oneindig netwerk van relaties.",
-      "Hyperobjecten (klimaatverandering, plasticsoep) zijn zo groot dat ze ons denken overstijgen."
+      "Hyperobjecten (klimaatverandering, plasticsoep) zijn zo groot dat ze ons denken overstijgen.",
+      "Dieren en planten hebben handelingsvermogen: het onderscheid tussen 'intentioneel handelen' (mens) en blind 'gedrag' (dier) is kunstmatig. Wij overschatten onszelf — we overzien de gevolgen van onze acties zelden."
     ],
     voorbeeld: "Klimaatverandering is een hyperobject: je kunt het niet zien of vasthouden, maar het bepaalt alles.",
     kritiek: "Als alles verbonden is en er geen 'buiten' is, hoe neem je dan nog een ethisch standpunt in?",
@@ -189,11 +191,11 @@ export const FILOSOOF_EXAMINFO = {
   },
   haraway: {
     naam: "Donna Haraway",
-    stelling: "De cyborg doorbreekt alle dualismen: mens/dier, mens/machine, fysiek/niet-fysiek zijn poreuse grenzen.",
-    kernbegrippen: ["Cyborg Manifesto", "Staying with the trouble", "Symbiopoiesis", "Response-ability"],
+    stelling: "De cyborg doorbreekt drie dualismen (mens/dier, mens/machine, fysiek/niet-fysiek) én de hiërarchieën die eruit voortvloeien.",
+    kernbegrippen: ["Cyborg", "Staying with the trouble", "Response-ability"],
     argumenten: [
-      "De cyborg is geen science fiction maar onze huidige realiteit: we zijn altijd al verstrengeld met techniek en andere soorten.",
-      "Staying with the trouble: neem verantwoordelijkheid voor de rommelige wereld in plaats van te vluchten in utopieën."
+      "De cyborg is geen science fiction maar onze huidige realiteit: we zijn altijd al verstrengeld met techniek en andere soorten. Het opheffen van grenzen moet uitsluiting en onderdrukking voorkomen.",
+      "Staying with the trouble: neem verantwoordelijkheid voor de rommelige wereld in plaats van te vluchten in utopieën. Response-ability: de plicht om antwoord te blijven geven."
     ],
     voorbeeld: "Een pacemaker-drager is letterlijk een cyborg: de grens mens/machine is allang overschreden.",
     kritiek: "Als alle grenzen poreus zijn, hoe definieer je dan nog 'de mens'? Is dat juist Haraway's punt?",
