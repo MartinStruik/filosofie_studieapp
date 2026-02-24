@@ -2,14 +2,13 @@ import { useState, useMemo } from "react";
 import { FOUTENJACHT_ITEMS, FOUT_TYPES } from "../data/foutenjacht.js";
 
 /**
- * Foutenjacht: leerlingen beoordelen spoof-antwoorden op examenvragen.
- * Tik op een zin die je fout vindt → kies het fouttype → krijg feedback.
+ * Foutenjacht v2: herken typische CE-fouten in spoof-antwoorden.
  *
  * Flow:
- *  1. Overzicht: kies een item (of "volgende")
- *  2. Lees vraag + "leerling-antwoord"
- *  3. Tik op zinnen die je fout vindt
- *  4. Check: toon welke fouten er waren + uitleg
+ *  1. Overzicht: kies een item
+ *  2. Lees examvraag + leerlingantwoord
+ *  3. Beantwoord MC-vraag: "Wat gaat er mis?"
+ *  4. Krijg uitleg + correctiemodel
  */
 
 const KWESTIE_LABELS = { 1: "K1", 2: "K2", 3: "K3", 4: "K4" };
@@ -22,19 +21,20 @@ function ItemList({ items, onSelect, progress }) {
       <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "4px" }}>
         Foutenjacht
       </div>
-      <div style={{ fontSize: "11px", color: "#888", marginBottom: "16px" }}>
-        Beoordeel antwoorden van "medeleerlingen". Tik op de zinnen die fouten bevatten.
+      <div style={{ fontSize: "11px", color: "#888", marginBottom: "16px", lineHeight: 1.5 }}>
+        Lees het antwoord van een "medeleerling" op een examenvraag. Wat gaat er mis? Herken typische CE-fouten.
       </div>
       {items.map((item) => {
-        const done = progress[item.id];
+        const result = progress[item.id];
         const kColor = KWESTIE_COLORS[item.kwestie] || "#666";
+        const ft = FOUT_TYPES[item.foutType];
         return (
           <button
             key={item.id}
             onClick={() => onSelect(item)}
             style={{
               display: "flex", alignItems: "center", gap: "10px",
-              width: "100%", background: done ? "#f0faf0" : "#fff",
+              width: "100%", background: result ? (result.correct ? "#f0faf0" : "#fff5f0") : "#fff",
               border: "1px solid #e8e8f0", borderRadius: "10px",
               padding: "12px 14px", marginBottom: "8px",
               cursor: "pointer", textAlign: "left",
@@ -57,11 +57,24 @@ function ItemList({ items, onSelect, progress }) {
               </div>
               <div style={{ fontSize: "10px", color: "#888", marginTop: "2px" }}>
                 Antwoord van {item.naam} · {item.punten}p
+                {result && (
+                  <span style={{
+                    marginLeft: "6px",
+                    color: ft?.color || "#888",
+                    fontWeight: 600,
+                  }}>
+                    {ft?.icon} {ft?.label}
+                  </span>
+                )}
               </div>
             </div>
-            {done ? (
-              <span style={{ fontSize: "10px", color: "#2E9E5A", fontWeight: 600 }}>
-                {done.score}/{done.total}
+            {result ? (
+              <span style={{
+                fontSize: "13px",
+                color: result.correct ? "#2E9E5A" : "#D97A4A",
+                fontWeight: 600,
+              }}>
+                {result.correct ? "✓" : "✗"}
               </span>
             ) : (
               <span style={{ fontSize: "14px", color: "#ccc" }}>›</span>
@@ -75,37 +88,23 @@ function ItemList({ items, onSelect, progress }) {
 
 /* ===== Speel screen ===== */
 function PlayScreen({ item, onDone, onBack }) {
-  const [selected, setSelected] = useState(new Set());       // indices of segments tapped as "fout"
+  const [selectedOption, setSelectedOption] = useState(null);
   const [checked, setChecked] = useState(false);
   const [showCorrectiemodel, setShowCorrectiemodel] = useState(false);
 
-  const fouten = useMemo(() =>
-    item.segmenten.map((s, i) => ({ ...s, idx: i })).filter(s => !s.correct),
+  const correctIdx = useMemo(
+    () => item.opties.findIndex(o => o.correct),
     [item]
   );
-  const totalFouten = fouten.length;
-
-  const toggleSegment = (idx) => {
-    if (checked) return;
-    setSelected(prev => {
-      const next = new Set(prev);
-      next.has(idx) ? next.delete(idx) : next.add(idx);
-      return next;
-    });
-  };
 
   const handleCheck = () => {
+    if (selectedOption === null) return;
     setChecked(true);
-    // Calculate score
-    let correctFound = 0;
-    let falsePositives = 0;
-    selected.forEach(idx => {
-      const seg = item.segmenten[idx];
-      if (!seg.correct) correctFound++;
-      else falsePositives++;
-    });
-    onDone({ score: Math.max(0, correctFound - falsePositives), total: totalFouten });
+    const isCorrect = selectedOption === correctIdx;
+    onDone({ correct: isCorrect });
   };
+
+  const ft = FOUT_TYPES[item.foutType];
 
   return (
     <div>
@@ -129,7 +128,7 @@ function PlayScreen({ item, onDone, onBack }) {
       {/* Examvraag */}
       <div style={{
         background: "#f8f8fc", borderRadius: "10px", padding: "12px 14px",
-        marginBottom: "14px", border: "1px solid #e8e8f0",
+        marginBottom: "12px", border: "1px solid #e8e8f0",
       }}>
         <div style={{ fontSize: "10px", fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>
           Examvraag
@@ -139,130 +138,157 @@ function PlayScreen({ item, onDone, onBack }) {
         </div>
       </div>
 
-      {/* Instructie */}
-      {!checked && (
-        <div style={{
-          fontSize: "11px", color: "#4A90D9", fontWeight: 600,
-          marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px",
-        }}>
-          <span style={{ fontSize: "14px" }}>👆</span>
-          Tik op de zinnen die je fout vindt
-        </div>
-      )}
-
-      {/* Antwoord van "leerling" */}
+      {/* Leerlingantwoord */}
       <div style={{
         background: "#fff", borderRadius: "10px", padding: "12px 14px",
-        border: "1px solid #e8e8f0", marginBottom: "14px",
+        border: "1px solid #e8e8f0", marginBottom: "16px",
       }}>
-        <div style={{ fontSize: "10px", fontWeight: 700, color: "#888", marginBottom: "8px" }}>
+        <div style={{
+          fontSize: "10px", fontWeight: 700, color: "#888", marginBottom: "8px",
+          display: "flex", alignItems: "center", gap: "6px",
+        }}>
+          <span style={{
+            width: "20px", height: "20px", borderRadius: "50%",
+            background: "#e8e8f0", display: "flex", alignItems: "center",
+            justifyContent: "center", fontSize: "10px",
+          }}>
+            {item.naam[0]}
+          </span>
           Antwoord van {item.naam}:
         </div>
-        {item.segmenten.map((seg, i) => {
-          const isSelected = selected.has(i);
-          const isFout = !seg.correct;
+        <div style={{
+          fontSize: "12px", color: "#333", lineHeight: 1.7,
+          fontStyle: "italic",
+        }}>
+          "{item.antwoord}"
+        </div>
+      </div>
 
-          // After check: green for correct segments, red for found errors, yellow for missed errors
-          let bg = "transparent";
-          let borderColor = "transparent";
+      {/* MC vraag */}
+      <div style={{ marginBottom: "14px" }}>
+        <div style={{
+          fontSize: "12px", fontWeight: 700, color: "#1a1a2e", marginBottom: "10px",
+        }}>
+          Wat gaat er mis in dit antwoord?
+        </div>
+        {item.opties.map((optie, i) => {
+          const isSelected = selectedOption === i;
+          const isCorrectOption = i === correctIdx;
+
+          let bg = "#fff";
+          let border = "1px solid #e8e8f0";
+          let textColor = "#333";
+
           if (!checked && isSelected) {
-            bg = "#fff0f0";
-            borderColor = "#e88";
+            bg = "#f0f4ff";
+            border = "2px solid #4A90D9";
           }
           if (checked) {
-            if (isFout && isSelected) { bg = "#e8f5e9"; borderColor = "#4caf50"; }     // correct catch
-            else if (isFout && !isSelected) { bg = "#fff3e0"; borderColor = "#ff9800"; } // missed
-            else if (!isFout && isSelected) { bg = "#ffebee"; borderColor = "#ef5350"; } // false positive
-            else { bg = "transparent"; borderColor = "transparent"; }
+            if (isCorrectOption) {
+              bg = "#e8f5e9";
+              border = "2px solid #4caf50";
+              textColor = "#1b5e20";
+            } else if (isSelected && !isCorrectOption) {
+              bg = "#ffebee";
+              border = "2px solid #ef5350";
+              textColor = "#b71c1c";
+            }
           }
 
           return (
-            <div key={i} style={{ marginBottom: "6px" }}>
-              <div
-                onClick={() => toggleSegment(i)}
-                style={{
-                  fontSize: "12px", color: "#333", lineHeight: 1.6,
-                  padding: "6px 10px", borderRadius: "8px",
-                  background: bg,
-                  border: `1.5px solid ${borderColor}`,
-                  cursor: checked ? "default" : "pointer",
-                  transition: "all 0.12s",
-                  position: "relative",
-                }}
-              >
-                {seg.text}
-                {/* Fout type badge after check */}
-                {checked && isFout && (
-                  <span style={{
-                    display: "inline-block", marginLeft: "6px",
-                    fontSize: "9px", fontWeight: 600,
-                    color: FOUT_TYPES[seg.foutType]?.color || "#c62828",
-                    background: (FOUT_TYPES[seg.foutType]?.color || "#c62828") + "15",
-                    borderRadius: "4px", padding: "1px 6px",
-                  }}>
-                    {FOUT_TYPES[seg.foutType]?.icon} {FOUT_TYPES[seg.foutType]?.label}
-                  </span>
-                )}
-                {checked && !isFout && isSelected && (
-                  <span style={{
-                    display: "inline-block", marginLeft: "6px",
-                    fontSize: "9px", fontWeight: 600, color: "#ef5350",
-                  }}>
-                    ✗ Deze zin was correct
-                  </span>
-                )}
-              </div>
-              {/* Uitleg after check */}
-              {checked && isFout && seg.uitleg && (
-                <div style={{
-                  marginTop: "4px", marginLeft: "10px",
-                  fontSize: "11px", color: "#555", lineHeight: 1.5,
-                  borderLeft: `2px solid ${FOUT_TYPES[seg.foutType]?.color || "#c62828"}40`,
-                  paddingLeft: "10px",
-                  animation: "fadeIn 0.15s ease",
-                }}>
-                  {seg.uitleg}
-                </div>
-              )}
-            </div>
+            <button
+              key={i}
+              onClick={() => !checked && setSelectedOption(i)}
+              style={{
+                display: "flex", alignItems: "flex-start", gap: "10px",
+                width: "100%", background: bg, border, borderRadius: "10px",
+                padding: "10px 14px", marginBottom: "8px",
+                cursor: checked ? "default" : "pointer", textAlign: "left",
+                transition: "all 0.12s",
+              }}
+            >
+              <span style={{
+                width: "22px", height: "22px", borderRadius: "50%", flexShrink: 0,
+                border: isSelected || (checked && isCorrectOption)
+                  ? "none"
+                  : "2px solid #ccc",
+                background: checked
+                  ? (isCorrectOption ? "#4caf50" : (isSelected ? "#ef5350" : "transparent"))
+                  : (isSelected ? "#4A90D9" : "transparent"),
+                display: "flex", alignItems: "center", justifyContent: "center",
+                color: "#fff", fontSize: "12px", fontWeight: 700,
+                marginTop: "1px",
+              }}>
+                {checked && isCorrectOption && "✓"}
+                {checked && isSelected && !isCorrectOption && "✗"}
+                {!checked && isSelected && "●"}
+              </span>
+              <span style={{
+                fontSize: "12px", color: textColor, lineHeight: 1.5,
+                fontWeight: (checked && isCorrectOption) ? 600 : 400,
+              }}>
+                {optie.label}
+              </span>
+            </button>
           );
         })}
       </div>
 
-      {/* Check button or score */}
+      {/* Check button of feedback */}
       {!checked ? (
         <button
           onClick={handleCheck}
-          disabled={selected.size === 0}
+          disabled={selectedOption === null}
           style={{
             width: "100%", padding: "12px",
-            background: selected.size > 0 ? "#1a1a2e" : "#ddd",
-            color: selected.size > 0 ? "#fff" : "#999",
+            background: selectedOption !== null ? "#1a1a2e" : "#ddd",
+            color: selectedOption !== null ? "#fff" : "#999",
             border: "none", borderRadius: "10px",
             fontSize: "13px", fontWeight: 700,
-            cursor: selected.size > 0 ? "pointer" : "default",
+            cursor: selectedOption !== null ? "pointer" : "default",
             transition: "all 0.15s",
           }}
         >
-          Controleer ({selected.size} {selected.size === 1 ? "zin" : "zinnen"} geselecteerd)
+          Controleer
         </button>
       ) : (
         <div>
-          {/* Score summary */}
+          {/* Resultaat */}
           <div style={{
-            background: "#f8f8fc", borderRadius: "10px", padding: "12px 14px",
-            marginBottom: "10px", textAlign: "center",
+            background: selectedOption === correctIdx ? "#e8f5e9" : "#fff3e0",
+            borderRadius: "10px", padding: "12px 14px",
+            marginBottom: "12px", textAlign: "center",
           }}>
-            <div style={{ fontSize: "11px", color: "#888", marginBottom: "4px" }}>Je vond</div>
-            <div style={{ fontSize: "20px", fontWeight: 700, color: "#1a1a2e" }}>
-              {[...selected].filter(i => !item.segmenten[i].correct).length} / {totalFouten}
-              <span style={{ fontSize: "12px", fontWeight: 400, color: "#888" }}> fouten</span>
+            <div style={{
+              fontSize: "16px", fontWeight: 700,
+              color: selectedOption === correctIdx ? "#2E7D32" : "#E65100",
+              marginBottom: "4px",
+            }}>
+              {selectedOption === correctIdx ? "Goed gezien!" : "Niet helemaal..."}
             </div>
-            {[...selected].filter(i => item.segmenten[i].correct).length > 0 && (
-              <div style={{ fontSize: "11px", color: "#ef5350", marginTop: "4px" }}>
-                {[...selected].filter(i => item.segmenten[i].correct).length} correcte {[...selected].filter(i => item.segmenten[i].correct).length === 1 ? "zin" : "zinnen"} onterecht als fout aangemerkt
+            {ft && (
+              <div style={{
+                display: "inline-flex", alignItems: "center", gap: "6px",
+                background: ft.color + "15", color: ft.color,
+                borderRadius: "6px", padding: "4px 10px",
+                fontSize: "11px", fontWeight: 600,
+              }}>
+                {ft.icon} {ft.label}
               </div>
             )}
+          </div>
+
+          {/* Uitleg */}
+          <div style={{
+            background: "#f8f8fc", borderRadius: "10px", padding: "12px 14px",
+            marginBottom: "10px", border: "1px solid #e8e8f0",
+          }}>
+            <div style={{ fontSize: "10px", fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "6px" }}>
+              Uitleg
+            </div>
+            <div style={{ fontSize: "12px", color: "#333", lineHeight: 1.7 }}>
+              {item.uitleg}
+            </div>
           </div>
 
           {/* Correctiemodel toggle */}
@@ -278,7 +304,7 @@ function PlayScreen({ item, onDone, onBack }) {
             }}
           >
             <span>📋</span>
-            <span style={{ flex: 1 }}>Bekijk correctiemodel</span>
+            <span style={{ flex: 1 }}>Hoe had het wél gemoeten?</span>
             <span style={{ fontSize: "11px", color: "#999" }}>{showCorrectiemodel ? "▲" : "▼"}</span>
           </button>
           {showCorrectiemodel && (
@@ -336,6 +362,9 @@ export default function FoutenjachtView() {
     );
   }
 
+  const doneCount = Object.keys(progress).length;
+  const correctCount = Object.values(progress).filter(p => p.correct).length;
+
   return (
     <div>
       {/* Filter chips */}
@@ -359,17 +388,14 @@ export default function FoutenjachtView() {
       </div>
 
       {/* Stats bar */}
-      {Object.keys(progress).length > 0 && (
+      {doneCount > 0 && (
         <div style={{
           background: "#f0faf0", borderRadius: "8px", padding: "8px 14px",
           marginBottom: "14px", fontSize: "11px", color: "#2E9E5A", fontWeight: 600,
           display: "flex", justifyContent: "space-between",
         }}>
-          <span>{Object.keys(progress).length}/{FOUTENJACHT_ITEMS.length} gedaan</span>
-          <span>
-            {Object.values(progress).reduce((s, p) => s + p.score, 0)}/
-            {Object.values(progress).reduce((s, p) => s + p.total, 0)} fouten gevonden
-          </span>
+          <span>{doneCount}/{FOUTENJACHT_ITEMS.length} gedaan</span>
+          <span>{correctCount}/{doneCount} goed</span>
         </div>
       )}
 
@@ -378,6 +404,43 @@ export default function FoutenjachtView() {
         onSelect={setActiveItem}
         progress={progress}
       />
+
+      {/* Fouttypes legenda */}
+      <details style={{
+        marginTop: "16px", background: "#f8f8fc", borderRadius: "10px",
+        border: "1px solid #e8e8f0", overflow: "hidden",
+      }}>
+        <summary style={{
+          padding: "10px 14px", fontSize: "11px", fontWeight: 600,
+          color: "#888", cursor: "pointer", listStyle: "none",
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+        }}>
+          <span>Welke fouttypes zijn er?</span>
+          <span style={{ fontSize: "10px" }}>▼</span>
+        </summary>
+        <div style={{ padding: "0 14px 12px", display: "flex", flexDirection: "column", gap: "6px" }}>
+          {Object.entries(FOUT_TYPES).map(([key, ft]) => (
+            <div key={key} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <span style={{
+                display: "inline-flex", alignItems: "center", gap: "4px",
+                background: ft.color + "15", color: ft.color,
+                borderRadius: "4px", padding: "2px 8px",
+                fontSize: "10px", fontWeight: 600, flexShrink: 0,
+              }}>
+                {ft.icon} {ft.label}
+              </span>
+              <span style={{ fontSize: "10px", color: "#666" }}>
+                {key === "vraag_niet_gelezen" && "Het antwoord gaat langs de vraag heen"}
+                {key === "tekstverwijzing_mist" && "De gevraagde tekstverwijzing ontbreekt"}
+                {key === "voorbeeld_ipv_uitleg" && "Er wordt een voorbeeld gegeven ipv een algemene uitleg"}
+                {key === "onvolledig" && "Er missen scoringselementen of onderdelen"}
+                {key === "te_vaag" && "Geen filosofische taal, te oppervlakkig of circulair"}
+                {key === "begripsverwarring" && "Verwante begrippen worden door elkaar gehaald"}
+              </span>
+            </div>
+          ))}
+        </div>
+      </details>
     </div>
   );
 }
