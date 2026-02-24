@@ -141,6 +141,21 @@ function PlayScreen({ item, onDone, onBack }) {
         </div>
       )}
 
+      {/* Casuscontext */}
+      {item.casus && (
+        <div style={{
+          background: "#f4f0e8", borderRadius: "10px", padding: "10px 14px",
+          marginBottom: "10px", border: "1px solid #e4dfd4",
+        }}>
+          <div style={{ fontSize: "10px", fontWeight: 700, color: "#998a6d", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>
+            Context
+          </div>
+          <div style={{ fontSize: "11px", color: "#5a5040", lineHeight: 1.6, fontStyle: "italic" }}>
+            {item.casus}
+          </div>
+        </div>
+      )}
+
       {/* Examvraag */}
       <div style={{
         background: "#f8f8fc", borderRadius: "10px", padding: "12px 14px",
