@@ -123,7 +123,7 @@ export function StudiepadView({ progress, setProgress, setView }) {
       <div style={{ padding: "0 20px 40px" }}>
         <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Kies je studiepad</h2>
-          <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — hoe wil je studeren?</p>
+          <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — elke dag ~15 minuten is genoeg</p>
         </div>
 
         {/* Uitleg examenstof */}
@@ -208,7 +208,7 @@ export function StudiepadView({ progress, setProgress, setView }) {
           </button>
         ))}
         <p style={{ fontSize: "12px", color: "#999", textAlign: "center", margin: "0 0 12px", lineHeight: 1.4 }}>
-          Twijfel je? Kies "gespreid" — die werkt voor de meeste leerlingen.
+          Twijfel je? Kies "Spiraal" — die werkt voor de meeste leerlingen. Dagelijks 15 minuten met herhaling is effectiever dan lang blokken vlak voor het examen.
         </p>
         <button onClick={() => setShowCustom(true)}
           style={{
