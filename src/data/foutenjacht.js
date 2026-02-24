@@ -1,13 +1,15 @@
-// Foutenjacht: leerlingen herkennen typische CE-fouten in spoof-antwoorden.
-// Format: examvraag + leerlingantwoord + MC "wat gaat er mis?" + uitleg.
+// Foutenjacht: herken typische CE-fouten in spoof-antwoorden op echte examenvragen.
 //
-// Fouttypes gebaseerd op landelijke examenbesprekingen 2019–2025:
-//   "vraag_niet_gelezen"   — antwoord gaat langs de vraag heen
-//   "tekstverwijzing_mist" — "met behulp van tekst" genegeerd
-//   "voorbeeld_ipv_uitleg" — geeft een voorbeeld terwijl om uitleg wordt gevraagd
-//   "onvolledig"           — mist scoringselementen / beantwoordt maar de helft
-//   "te_vaag"              — geen filosofische taal, common sense, circulair
-//   "begripsverwarring"    — verwante begrippen door elkaar
+// Gebaseerd op de landelijke examenbesprekingen filosofie VWO (Cito/SLO)
+// en docentendiscussies op het VFVO-forum (2024–2025).
+//
+// Fouttypes — de zes meest voorkomende fouten bij CE filosofie:
+//   "vraag_niet_gelezen"   — antwoord gaat langs de vraag heen / mist een expliciet gevraagd element
+//   "tekstverwijzing_mist" — "met behulp van tekst X" genegeerd, geen concrete verwijzing
+//   "voorbeeld_ipv_uitleg" — geeft een voorbeeld terwijl om een algemene uitleg wordt gevraagd
+//   "onvolledig"           — mist scoringselementen, beantwoordt maar de helft van de vraag
+//   "te_vaag"              — geen filosofische taal, common sense, circulair, oppervlakkig
+//   "begripsverwarring"    — verwante begrippen of filosofen door elkaar
 
 export const FOUT_TYPES = {
   vraag_niet_gelezen:   { label: "Vraag niet goed gelezen",   color: "#c62828", icon: "👁️" },
@@ -21,234 +23,385 @@ export const FOUT_TYPES = {
 export const FOUTENJACHT_ITEMS = [
 
   // ====================================================================
-  // K1 — Wie ben ik?
+  // CE 2025 TV1 — Vraag 16: Plessner over lachen
+  // Examenbespreking: "een van de wreedste examenvragen" — bijna geen
+  // leerling beantwoordt dit correct. De meesten beschrijven lachen ALS
+  // symbolische expressie ipv als het FALEN ervan.
   // ====================================================================
-
   {
-    id: "fj-1",
+    id: "fj-01",
     kwestie: 1,
+    bron: "CE 2025 TV1, vraag 16",
     naam: "Sanne",
+    punten: 3,
+    vraag: "Plessner stelt dat lachen een 'grenservaring' is. Leg uit wat hij hiermee bedoelt. Gebruik in je antwoord het begrip 'symbolische expressie'. (3p)",
+    antwoord: "Lachen is volgens Plessner een vorm van symbolische expressie. Het is een grenservaring omdat het laat zien dat de mens meer is dan alleen een lichaam. Als we lachen, drukken we iets uit wat niet in woorden te vangen is. Dit toont dat de mens excentrisch gepositioneerd is.",
+    foutType: "begripsverwarring",
+    opties: [
+      { label: "Lachen wordt beschreven als een vorm van symbolische expressie, terwijl het juist optreedt wanneer symbolische expressie faalt", correct: true },
+      { label: "Het antwoord is te vaag en mist filosofische diepgang", correct: false },
+      { label: "Het antwoord beantwoordt een andere vraag dan gesteld", correct: false },
+      { label: "Het antwoord is onvolledig: er missen scoringselementen", correct: false },
+    ],
+    uitleg: "Dit is de meest gemaakte fout bij deze vraag (examenbespreking 2025: 'een van de wreedste examenvragen — bijna geen leerling beantwoordt dit correct'). Plessner stelt juist dat lachen optreedt wanneer symbolische expressie FAALT — het lichaam neemt het over als woorden en gebaren niet meer toereikend zijn. Lachen is dus niet een vórm van symbolische expressie, maar wat er gebeurt als symbolische expressie tekortschiet. Het is een grenservaring omdat de mens hier de grens ervaart van zijn vermogen om zichzelf uit te drukken.",
+    correctiemodel: "Grenservaring: lachen treedt op wanneer symbolische expressie faalt (1p). Het lichaam neemt het over: je 'valt' terug op een lichamelijke reactie die je niet kunt sturen (1p). Dit toont de excentrische positie: de mens is een lichaam dat hij tegelijk 'heeft' en 'is' — bij lachen verliest hij de regie (1p).",
+  },
+
+  // ====================================================================
+  // CE 2025 TV1 — Vraag 2: Hubot en visuele waarneming
+  // Examenbespreking: "Bijna alle kandidaten raken hier hopeloos de weg
+  // kwijt." Leerlingen focussen op het ontbreken van een menselijk lichaam
+  // ipv op het ontbreken van herinneringen/ervaringen.
+  // ====================================================================
+  {
+    id: "fj-02",
+    kwestie: 2,
+    bron: "CE 2025 TV1, vraag 2",
+    naam: "Tim",
+    punten: 3,
+    vraag: "De hubot heeft een camera als oog. Leg uit waarom de hubot volgens de syllabus niet op dezelfde manier visueel kan waarnemen als een mens. Gebruik in je antwoord de drie functies van het lichaam bij waarneming. (3p)",
+    antwoord: "De hubot kan niet echt waarnemen omdat hij geen menselijk lichaam heeft. Een camera registreert alleen beelden, maar begrijpt niet wat het ziet. Mensen gebruiken hun lichaam om de wereld te ervaren, een robot kan dat niet. Daarom is de waarneming van een hubot fundamenteel anders.",
+    foutType: "vraag_niet_gelezen",
+    opties: [
+      { label: "Het antwoord verwijst niet naar de examentekst", correct: false },
+      { label: "Het antwoord noemt geen van de drie functies van het lichaam bij waarneming, terwijl de vraag daar expliciet om vraagt", correct: true },
+      { label: "Het antwoord bevat een begripsverwarring", correct: false },
+      { label: "Het antwoord is feitelijk onjuist over hubots", correct: false },
+    ],
+    uitleg: "De examenbespreking 2025 noemt dit 'de vraag waar bijna alle kandidaten hopeloos de weg kwijt raken'. De vraag vraagt expliciet om de drie functies van het lichaam bij waarneming (uit de syllabus p.30). Tim geeft in plaats daarvan een vaag algemeen verhaal over robots en lichamen. Op het CE is dit fataal: als er staat 'gebruik de drie functies', dan moeten die drie functies er staan. Lees altijd woord voor woord wat de vraag precies vraagt.",
+    correctiemodel: "Drie functies van het lichaam bij waarneming: (1) het lichaam als bron van behoeften en verwachtingen die de waarneming sturen (1p), (2) het lichaam als basis van aangeleerde vaardigheden die herkenning mogelijk maken (1p), (3) het lichaam als basis van een affectieve relatie met de omgeving (1p). De hubot mist deze drie functies omdat hij geen lichaamsgeschiedenis en ervaringen heeft.",
+  },
+
+  // ====================================================================
+  // CE 2025 TV1 — Vraag 10: Contingentie en culturele invloeden
+  // Examenbespreking: leerlingen focussen op "wetenschappelijke invloeden"
+  // terwijl de vraag over "culturele invloeden" gaat.
+  // ====================================================================
+  {
+    id: "fj-03",
+    kwestie: 2,
+    bron: "CE 2025 TV1, vraag 10",
+    naam: "Lieke",
+    punten: 2,
+    vraag: "Leg uit wat bedoeld wordt met de stelling dat onze zelfkennis 'contingent' is. Geef een voorbeeld van hoe culturele invloeden ons zelfbeeld vormen. (2p)",
+    antwoord: "Contingent betekent dat iets toevallig is. Onze zelfkennis is contingent omdat het toeval is hoe we over onszelf denken. Een voorbeeld is dat wetenschappelijk onderzoek naar het brein ons laat zien dat we gestuurd worden door neuronen, wat ons zelfbeeld verandert.",
+    foutType: "vraag_niet_gelezen",
+    opties: [
+      { label: "Het antwoord verwart contingentie met toeval", correct: false },
+      { label: "Het voorbeeld gaat over wetenschappelijke invloeden terwijl de vraag om culturele invloeden vraagt", correct: true },
+      { label: "Het antwoord is te vaag", correct: false },
+      { label: "Het antwoord mist een tekstverwijzing", correct: false },
+    ],
+    uitleg: "De vraag vraagt specifiek om 'culturele invloeden', maar Lieke geeft een voorbeeld van een wetenschappelijke invloed (hersenonderzoek). Dit lijkt een klein verschil, maar op het CE kost het je het punt. Culturele invloeden gaan over hoe de tijd en maatschappij waarin je leeft je zelfbeeld vormen — bijvoorbeeld: in de 17e eeuw zag men de mens als een machine (machinemetafoor), in onze tijd als een computer (computermetafoor). Contingent betekent hier: bepaald door de historische periode, het had ook anders kunnen zijn.",
+    correctiemodel: "Contingent: afhankelijk van historische/culturele context, niet noodzakelijk zo — het had ook anders kunnen zijn (1p). Voorbeeld van culturele invloed op zelfbeeld, bv. machinemetafoor in de 17e eeuw vs. computermetafoor nu (1p).",
+  },
+
+  // ====================================================================
+  // CE 2024 TV1 — Vraag 6: Morton over planten en agency
+  // Examenbespreking: "Bijna ALLE leerlingen gebruiken plantenneurobiologie
+  // als argument, terwijl de vraag om Mortons twee specifieke argumenten
+  // vraagt." Gecorrigeerd via N-term.
+  // ====================================================================
+  {
+    id: "fj-04",
+    kwestie: 4,
+    bron: "CE 2024 TV1, vraag 6",
+    naam: "Jamal",
+    punten: 3,
+    vraag: "Morton stelt dat planten als actoren beschouwd moeten worden. Noem twee argumenten die Morton hiervoor geeft. (3p)",
+    antwoord: "Morton vindt dat planten actoren zijn omdat uit de plantenneurobiologie blijkt dat planten kunnen communiceren via schimmeldraadnetwerken (mycelia). Ze sturen chemische signalen naar elkaar als er gevaar dreigt. Dit bewijst dat planten niet passief zijn maar actief handelen in hun omgeving.",
+    foutType: "vraag_niet_gelezen",
+    opties: [
+      { label: "Het antwoord is te vaag en mist filosofische taal", correct: false },
+      { label: "Het antwoord noemt plantenneurobiologie als argument, maar de vraag vraagt om Mortons eigen filosofische argumenten — niet om wetenschappelijk bewijs", correct: true },
+      { label: "Het antwoord bevat een feitelijke fout over mycelia", correct: false },
+      { label: "Het antwoord mist een tekstverwijzing", correct: false },
+    ],
+    uitleg: "Dit was een van de meest problematische vragen van 2024 — bijna alle leerlingen maakten dezelfde fout (gecorrigeerd via N-term). De vraag vraagt om Mortons eigen filosofische argumenten, maar leerlingen grijpen naar het wetenschappelijke bewijs uit de plantenneurobiologie. Morton geeft twee andere argumenten: (1) het mesh-argument (alles is verbonden in een netwerk zonder hiërarchie, dus planten zijn gelijkwaardige knooppunten), en (2) het dark ecology-argument (we moeten onze antropocentrische blik loslaten). Het verschil tussen een wetenschappelijk en een filosofisch argument herkennen is cruciaal op het CE.",
+    correctiemodel: "Argument 1: het mesh — in het ecologische netwerk zijn planten gelijkwaardige actoren, niet ondergeschikt aan mensen (1p). Argument 2: dark ecology — onze antropocentrische blik verhindert ons om planten als actoren te zien; we moeten die blik loslaten (1p). Uitleg van ten minste één argument (1p).",
+  },
+
+  // ====================================================================
+  // CE 2024 TV1 — Vraag 12: Verbeek — morele visie vs. handelen
+  // Examenbespreking: leerlingen noemen alleen bemiddeling van waarneming,
+  // niet van handelen.
+  // ====================================================================
+  {
+    id: "fj-05",
+    kwestie: 3,
+    bron: "CE 2024 TV1, vraag 12",
+    naam: "Noor",
+    punten: 3,
+    vraag: "Verbeek stelt dat technologie onze moraal bemiddelt. Leg uit hoe technologie zowel onze morele visie als ons morele handelen beïnvloedt. Geef bij elk een voorbeeld. (3p)",
+    antwoord: "Technologie beïnvloedt onze morele visie doordat het bepaalt hoe wij de wereld zien. De echoscopie maakt de foetus zichtbaar als een patiënt, waardoor ouders het ongeboren kind anders gaan bekijken. Sociale media laten ons voortdurend beelden zien van leed in de wereld, waardoor we moreel geraakt worden door dingen die ver weg gebeuren.",
+    foutType: "onvolledig",
+    opties: [
+      { label: "De voorbeelden zijn te vaag en niet filosofisch genoeg", correct: false },
+      { label: "Het antwoord mist het tweede deel: bemiddeling van moreel handelen wordt niet uitgelegd, alleen morele visie", correct: true },
+      { label: "Het antwoord verwart Verbeek met Latour", correct: false },
+      { label: "Het antwoord verwijst niet naar de examentekst", correct: false },
+    ],
+    uitleg: "De examenbespreking 2024 signaleert dit als veelgemaakte fout: leerlingen focussen alleen op hoe technologie onze waarneming/visie verandert en vergeten het handelen. De vraag vraagt expliciet om 'zowel morele visie als moreel handelen'. Noor geeft twee voorbeelden van morele visie maar geen van moreel handelen. Bemiddeling van handelen: de echoscopie dwingt ouders in de rol van beslisser — ze moéten kiezen over de zwangerschap op basis van wat ze zien. Technologie opent of sluit handelingsmogelijkheden.",
+    correctiemodel: "Morele visie: technologie bepaalt hoe de werkelijkheid aan ons verschijnt, bv. echoscopie maakt foetus zichtbaar als patiënt (1p). Moreel handelen: technologie beïnvloedt onze handelingsmogelijkheden, bv. echoscopie maakt ouders tot beslisser over leven (1p). Bij elk een voorbeeld (1p).",
+  },
+
+  // ====================================================================
+  // CE 2024 TV1 — Vraag 14: Despret over dieronderzoek
+  // Examenbespreking: leerlingen snappen wel dát de relatie
+  // onderzoeker-dier belangrijk is, maar leggen niet uit WAAROM
+  // onzichtbaarheid tot verkeerde conclusies leidt.
+  // ====================================================================
+  {
+    id: "fj-06",
+    kwestie: 4,
+    bron: "CE 2024 TV1, vraag 14",
+    naam: "Emma",
+    punten: 3,
+    vraag: "Despret bekritiseert het traditionele dieronderzoek. Leg uit waarom het onzichtbaar maken van de onderzoeker volgens Despret leidt tot verkeerde conclusies over dieren. (3p)",
+    antwoord: "Volgens Despret is het belangrijk dat onderzoekers een relatie opbouwen met de dieren die ze onderzoeken. Als de onderzoeker onzichtbaar is, mist hij de sociale kenmerken van het dier. Despret pleit daarom voor een betrokken manier van onderzoek doen.",
+    foutType: "te_vaag",
+    opties: [
+      { label: "Het antwoord noemt de verkeerde filosoof", correct: false },
+      { label: "Het antwoord beantwoordt de vraag niet: het legt niet uit WAAROM onzichtbaarheid tot verkeerde conclusies leidt, alleen DÁT het zo is", correct: true },
+      { label: "Het antwoord bevat een begripsverwarring", correct: false },
+      { label: "Het antwoord mist een tekstverwijzing", correct: false },
+    ],
+    uitleg: "De examenbespreking 2024 noemt dit: 'leerlingen missen massaal het tweede punt — ze leggen niet uit waaróm onzichtbaarheid tot verkeerde conclusies leidt.' Het mechanisme is: als de onderzoeker zich onzichtbaar maakt, worden de sociale kenmerken van het dier ook onzichtbaar. Het dier reageert namelijk anders als er geen relatie is — het verbergt gedrag, is gestrest, of toont niet zijn normale sociale repertoire. Daardoor trekt de onderzoeker conclusies over een dier dat zich niet-natuurlijk gedraagt. Het woord 'waarom' in de vraag vereist dat je dit mechanisme uitlegt, niet alleen het feit benoemt.",
+    correctiemodel: "Onzichtbaarheid onderzoeker: als de onderzoeker zich verbergt, reageert het dier anders (1p). Gevolg: de sociale kenmerken van het dier worden ook onzichtbaar — het toont niet zijn natuurlijke gedrag (1p). Verkeerde conclusies: de onderzoeker beschrijft een gestrest/onnatuurlijk dier alsof het natuurlijk gedrag is (1p).",
+  },
+
+  // ====================================================================
+  // CE 2024 TV2 — Vraag 1: Metaforen uit wetenschap/technologie
+  // VFVO-forum: leerlingen geven vage antwoorden die de strekking raken
+  // maar niet het specifieke element "waarvoor nog geen beschrijving bestaat"
+  // ====================================================================
+  {
+    id: "fj-07",
+    kwestie: 2,
+    bron: "CE 2024 TV2, vraag 1",
+    naam: "Mila",
+    punten: 2,
+    vraag: "Leg uit waarom we volgens Vroon & Draaisma metaforen uit wetenschap en technologie gebruiken om onszelf te begrijpen. (2p)",
+    antwoord: "We gebruiken metaforen uit wetenschap en technologie omdat die ons helpen om onszelf beter te begrijpen. Het brein is ingewikkeld en door het te vergelijken met een computer wordt het makkelijker te begrijpen. Metaforen maken abstracte dingen concreet.",
+    foutType: "te_vaag",
+    opties: [
+      { label: "Het antwoord is circulair: het herhaalt de vraag ('om onszelf te begrijpen') als antwoord", correct: true },
+      { label: "Het antwoord verwart Vroon & Draaisma met Lakoff & Johnson", correct: false },
+      { label: "Het antwoord mist een tekstverwijzing", correct: false },
+      { label: "Het antwoord is feitelijk onjuist", correct: false },
+    ],
+    uitleg: "Het VFVO-forum signaleert dat leerlingen bij deze vraag vaak 'de vraag herhalen als antwoord'. Mila schrijft dat metaforen helpen 'om onszelf te begrijpen' — maar dat stond al in de vraag. Het specifieke element dat het CV vereist is: we gebruiken metaforen uit wetenschap en technologie voor aspecten van onszelf waarvoor nog geen eigen beschrijving bestaat. De metafoor is niet zomaar een verduidelijking, maar een noodzakelijke omweg omdat we geen directe taal hebben voor hoe het brein werkt. Let op circulaire antwoorden: als je antwoord dezelfde woorden gebruikt als de vraag, voeg je waarschijnlijk niets toe.",
+    correctiemodel: "We gebruiken metaforen uit wetenschap/technologie voor aspecten van onszelf waarvoor nog geen eigen beschrijving bestaat (1p). De beschikbare technologie bepaalt welke metaforen beschikbaar zijn: als de technologie anders was geweest, hadden we andere metaforen gehad (contingentie) (1p).",
+  },
+
+  // ====================================================================
+  // CE 2024 TV2 — Vraag 5: Dataïsme (essentie vs. bestaanservaring)
+  // VFVO-forum: leerlingen worstelen met het onderscheid essentie/
+  // bestaanservaring en beschrijven dataïsme ipv het argument ervoor.
+  // ====================================================================
+  {
+    id: "fj-08",
+    kwestie: 4,
+    bron: "CE 2024 TV2, vraag 5",
+    naam: "Bram",
+    punten: 3,
+    vraag: "Het dataïsme stelt dat algoritmes ons beter kennen dan wijzelf. Geef een argument voor deze stelling en leg uit waarom dit een bedreiging vormt voor het idee van een menselijke 'essentie'. (3p)",
+    antwoord: "Dataïsme is het idee dat data de belangrijkste bron van waarde is. Google en Amazon weten door onze zoekgeschiedenis en koopgedrag meer over ons dan wij zelf. Dit is een bedreiging voor de menselijke essentie omdat het betekent dat we eigenlijk gewoon data zijn.",
+    foutType: "onvolledig",
+    opties: [
+      { label: "Het antwoord verwart dataïsme met een andere stroming", correct: false },
+      { label: "Het antwoord beschrijft wat dataïsme IS maar geeft niet het gevraagde argument, en de uitleg over 'essentie' is te oppervlakkig", correct: true },
+      { label: "Het antwoord leest de vraag verkeerd", correct: false },
+      { label: "Het antwoord bevat een feitelijke fout over algoritmes", correct: false },
+    ],
+    uitleg: "Het VFVO-forum signaleert twee problemen bij deze vraag. (1) Leerlingen beschrijven wat dataïsme IS in plaats van een argument te geven VOOR de stelling. Een argument zou zijn: mensen vertrouwen steeds minder op hun eigen beslissingsvermogen en laten keuzes over aan algoritmes (partnerkeuze, routeplanning, muziekkeuze). (2) De uitleg over 'essentie' is te oppervlakkig ('we zijn eigenlijk gewoon data'). Het punt is: als algoritmes ons beter kennen dan wijzelf, dan is er geen unieke menselijke kern (essentie) die ontoegankelijk is voor data-analyse — de bestaanservaring wordt gereduceerd tot datapatronen.",
+    correctiemodel: "Argument: mensen vertrouwen steeds minder op eigen oordeel en laten beslissingen over aan algoritmes die gebaseerd zijn op datapatronen (1p). Bedreiging essentie: als algoritmes ons beter kennen dan wijzelf, is de unieke menselijke kern/essentie een illusie (1p). Het onderscheid tussen essentie en bestaanservaring wordt opgeheven (1p).",
+  },
+
+  // ====================================================================
+  // CE 2024 TV2 — Vraag 8: Interface en transparantie (Clark)
+  // VFVO-forum: leerlingen beschrijven de interface als iets dat er is of
+  // niet, in plaats van als iets met gradaties van transparantie.
+  // ====================================================================
+  {
+    id: "fj-09",
+    kwestie: 3,
+    bron: "CE 2024 TV2, vraag 8",
+    naam: "Fleur",
+    punten: 2,
+    vraag: "Clark stelt dat technologie 'transparant' kan worden. Leg uit wat hiermee bedoeld wordt en geef een voorbeeld. (2p)",
+    antwoord: "Clark bedoelt dat op een gegeven moment de mens niet meer via een interface communiceert maar direct met de technologie verbonden is. Een voorbeeld is een cochleair implantaat: de drager hoort gewoon, zonder na te denken over het apparaat. De interface verdwijnt.",
+    foutType: "begripsverwarring",
+    opties: [
+      { label: "Het antwoord is te vaag", correct: false },
+      { label: "Het voorbeeld van het cochleair implantaat is onjuist", correct: false },
+      { label: "Het antwoord stelt dat de interface 'verdwijnt', terwijl Clark bedoelt dat de interface transparant wordt — hij is er nog wel, maar je merkt hem niet meer op", correct: true },
+      { label: "Het antwoord beantwoordt een andere vraag dan gesteld", correct: false },
+    ],
+    uitleg: "Het VFVO-forum signaleert dat het CV hier onnauwkeurig is, maar het filosofische punt is belangrijk: de interface verdwijnt niet, hij wordt transparant. Net als een bril — die zit er nog steeds, maar je kijkt er doorheen zonder hem op te merken. Bij Clark gaat het om gradaties: een nieuw stuk technologie is eerst opaque (je bent je er bewust van), maar wordt met gebruik steeds transparanter. Dit is een nuance die leerlingen vaak missen: ze denken in binaire termen (er is een interface / er is geen interface) in plaats van in een glijdende schaal.",
+    correctiemodel: "Transparant: de technologie wordt zo vertrouwd dat je je er niet meer bewust van bent — de interface is er nog wel maar valt weg uit je aandacht (1p). Voorbeeld: bv. lezen (je ziet letters niet meer, alleen betekenis), fietsen, cochleair implantaat — met uitleg van de transparantie (1p).",
+  },
+
+  // ====================================================================
+  // CE 2025 TV2 — Vraag 7: De Mul — Iron Man en posthumanisme
+  // VFVO-forum: "meest bediscussieerde vraag" — leerlingen worden
+  // gedwongen te kiezen terwijl afwijzen verdedigbaar is.
+  // ====================================================================
+  {
+    id: "fj-10",
+    kwestie: 3,
+    bron: "CE 2025 TV2, vraag 7",
+    naam: "Sem",
+    punten: 4,
+    vraag: "De Mul beschrijft drie scenario's voor de toekomst van de mens. Leg uit welk scenario het beste past bij Iron Man. Beargumenteer vervolgens of dit scenario een verbetering van de mens inhoudt. (4p)",
+    antwoord: "Bij Iron Man past het transhumanisme-scenario het beste, want Tony Stark verbetert zichzelf met technologie. Het pak geeft hem superkrachten die een gewoon mens niet heeft. Dit is een verbetering van de mens, want hij kan dingen die normaal onmogelijk zijn, zoals vliegen en kogels stoppen.",
+    foutType: "te_vaag",
+    opties: [
+      { label: "Het antwoord verwart transhumanisme met een ander scenario van De Mul", correct: false },
+      { label: "Het antwoord mist een tekstverwijzing", correct: false },
+      { label: "De toewijzing mist een filosofische onderbouwing, en 'verbetering' wordt alleen als 'meer kunnen' opgevat zonder de keerzijde te bespreken", correct: true },
+      { label: "Het antwoord beantwoordt de vraag niet volledig", correct: false },
+    ],
+    uitleg: "Het VFVO-forum noemt dit 'de meest bediscussieerde vraag van het examen'. Twee problemen: (1) Sem kiest transhumanisme maar onderbouwt niet filosofisch waaróm — hij noemt alleen dat Stark 'zichzelf verbetert'. Het CV vraagt om een scenario van De Mul, dus je moet De Muls kenmerken van dat scenario noemen (NBIC-convergentie, fundamentele transformatie). (2) De argumentatie over 'verbetering' is oppervlakkig: 'meer kunnen' is geen filosofisch argument. De brontekst noemt juist ook keerzijden (afhankelijkheid van technologie, verlies van autonomie). Op het CE wordt van je verwacht dat je beide kanten belicht bij een 'beargumenteer'-vraag.",
+    correctiemodel: "Scenario: transhumanisme of posthumanistisch zombiescenario (met onderbouwing uit De Muls kenmerken) (1p). Waarom dit past bij Iron Man: specifieke kenmerken benoemen (1p). Argumentatie verbetering: filosofisch argument voor óf tegen, met aandacht voor keerzijden (1p). Conclusie die volgt uit de argumentatie (1p).",
+  },
+
+  // ====================================================================
+  // CE 2025 TV2 — Vraag 11: Dataïsme vs. techno-humanisme
+  // VFVO-forum: leerlingen verwachten tegenstelling humanisme-dataïsme
+  // (zoals in syllabus) maar krijgen techno-humanisme-dataïsme.
+  // ====================================================================
+  {
+    id: "fj-11",
+    kwestie: 4,
+    bron: "CE 2025 TV2, vraag 11",
+    naam: "Daan",
+    punten: 3,
+    vraag: "Leg het verschil uit tussen het techno-humanisme en het dataïsme volgens Harari. (3p)",
+    antwoord: "Het techno-humanisme en het dataïsme zijn tegengestelde visies. Het techno-humanisme stelt dat technologie de mens moet dienen en verbeteren, terwijl het dataïsme stelt dat data belangrijker is dan de mens. Het verschil is dus dat het ene de mens centraal stelt en het andere data.",
+    foutType: "begripsverwarring",
+    opties: [
+      { label: "Het antwoord is te vaag en oppervlakkig", correct: false },
+      { label: "Het antwoord presenteert techno-humanisme en dataïsme als tegenstellingen, terwijl Harari ze beschrijft als een ontwikkeling (humanisme → techno-humanisme → dataïsme)", correct: true },
+      { label: "Het antwoord mist een tekstverwijzing", correct: false },
+      { label: "Het antwoord is onvolledig: er missen scoringselementen", correct: false },
+    ],
+    uitleg: "Het VFVO-forum noemt dit een principieel probleem: de syllabus zet humanisme en dataïsme tegenover elkaar, maar de examenvraag vraagt om techno-humanisme vs. dataïsme. Bij Harari is de relatie geen tegenstelling maar een ontwikkeling: het techno-humanisme zet nog de mens centraal maar gebruikt technologie om menselijke ervaringen te upgraden. Het dataïsme gaat een stap verder: de mens is niet meer het eindpunt, data-algoritmes zijn dat. Leerlingen die de syllabus goed kennen verwachten de tegenstelling humanisme-dataïsme en projecteren die structuur op deze vraag — maar dat klopt niet.",
+    correctiemodel: "Techno-humanisme: technologie wordt ingezet om menselijke ervaringen en vermogens te upgraden — de mens blijft centraal (1p). Dataïsme: data-algoritmes zijn de ultieme autoriteit, de mens is niet langer het eindpunt (1p). Relatie: het is een ontwikkeling, geen tegenstelling — het dataïsme bouwt voort op het techno-humanisme maar overstijgt het (1p).",
+  },
+
+  // ====================================================================
+  // CE 2024 TV2 — Vraag 13: Connectionisme en AI-bias
+  // VFVO-forum: leerlingen benoemen het praktische probleem (bias) maar
+  // kunnen de theorie (connectionisme) niet koppelen.
+  // ====================================================================
+  {
+    id: "fj-12",
+    kwestie: 2,
+    bron: "CE 2024 TV2, vraag 13",
+    naam: "Roos",
+    punten: 3,
+    vraag: "Een gezichtsherkenningssysteem herkent mensen met een donkere huidskleur slechter dan mensen met een lichte huidskleur. Leg vanuit het connectionisme uit hoe dit probleem ontstaat en hoe het opgelost kan worden. (3p)",
+    antwoord: "Het probleem is dat het systeem getraind is met te weinig foto's van mensen met een donkere huidskleur. Hierdoor kan het deze gezichten minder goed herkennen. De oplossing is om meer diverse data te gebruiken bij het trainen van het systeem, zodat het evenveel leert van alle huidskleuren.",
+    foutType: "onvolledig",
+    opties: [
+      { label: "Het antwoord bevat een feitelijke fout", correct: false },
+      { label: "Het antwoord geeft het praktische probleem en de oplossing maar legt niet uit hoe dit vanuit het connectionisme werkt — de theorie ontbreekt", correct: true },
+      { label: "Het antwoord beantwoordt een andere vraag", correct: false },
+      { label: "Het antwoord is te vaag", correct: false },
+    ],
+    uitleg: "Het VFVO-forum signaleert precies dit: 'leerlingen benoemen wel het praktische probleem maar kunnen de theorie niet uitleggen.' De vraag zegt 'vanuit het connectionisme' — dan moet je uitleggen wat connectionisme IS: een AI-systeem leert patronen door de verbindingen (connecties) tussen knooppunten te versterken op basis van trainingsdata. Als die data eenzijdig is, worden bepaalde patronen sterker aangeleerd dan andere. De koppeling tussen theorie (connectionisme: leren door patroonversterking) en toepassing (bias door eenzijdige data) is wat het CE vraagt.",
+    correctiemodel: "Connectionisme: het systeem leert door verbindingen tussen knooppunten te versterken op basis van patronen in de trainingsdata (1p). Probleem: als de trainingsdata overwegend lichte huidskleuren bevat, worden die patronen sterker — het systeem 'kent' donkere huidskleuren minder goed (1p). Oplossing: meer diverse trainingsdata zodat de connecties evenwichtiger worden (1p).",
+  },
+
+  // ====================================================================
+  // Gebaseerd op examenbespreking 2025 + VFVO — Plessner excentrische
+  // positionaliteit: het missen van de dubbelheid centrisch+excentrisch
+  // ====================================================================
+  {
+    id: "fj-13",
+    kwestie: 1,
+    bron: "CE-stijl, gebaseerd op examenbesprekingen 2024–2025",
+    naam: "Thijs",
     punten: 3,
     vraag: "Leg uit wat Plessner bedoelt met 'excentrische positionaliteit' en geef aan hoe dit verschilt van de positionaliteit van een dier. (3p)",
     antwoord: "Plessner bedoelt dat de mens zichzelf van buitenaf kan bekijken, alsof hij een toeschouwer is van zijn eigen leven. Een dier kan dat niet omdat het geen bewustzijn heeft. De mens is dus uniek doordat hij kan reflecteren op zijn eigen bestaan.",
     foutType: "onvolledig",
     opties: [
       { label: "Het antwoord noemt de verkeerde filosoof", correct: false },
-      { label: "Het antwoord mist de kern van excentrische positionaliteit: de dubbelheid van centrisch ÉN excentrisch", correct: true },
+      { label: "Het antwoord mist de kern: excentrische positionaliteit is de dubbelheid van tegelijk centrisch ÉN excentrisch zijn", correct: true },
       { label: "Het antwoord geeft een voorbeeld in plaats van een uitleg", correct: false },
       { label: "Het antwoord verwijst niet naar de examentekst", correct: false },
     ],
-    uitleg: "Excentrische positionaliteit is niet alleen 'jezelf van buitenaf bekijken'. De kern is de dubbelheid: de mens is tegelijk centrum van zijn ervaring (centrisch, net als een dier) ÉN kan buiten dat centrum treden. Sanne noemt alleen de excentrische kant en mist de centrische. Bovendien: bij Plessner heeft een dier wél bewustzijn (centrische positionaliteit) — het verschil is dat het dier niet buiten dat centrum kan treden.",
-    correctiemodel: "Excentrische positionaliteit: de mens is tegelijk centrum van zijn ervaring én kan buiten dat centrum treden (1p). Centrische positionaliteit: het dier ervaart vanuit een centrum maar kan er niet op reflecteren (1p). Verschil: het dier heeft wél bewustzijn maar kan niet reflecteren (1p).",
+    uitleg: "Dit is een van de meest voorkomende fouten bij Plessner. Excentrische positionaliteit is niet alleen 'jezelf van buitenaf bekijken'. De kern is de dubbelheid: de mens is tegelijk centrum van zijn ervaring (centrisch, net als een dier) ÉN kan buiten dat centrum treden. Thijs noemt alleen de excentrische kant en mist de centrische. Bovendien: bij Plessner heeft een dier wél bewustzijn (centrische positionaliteit) — het verschil is dat het dier niet buiten dat centrum kan treden om op zichzelf te reflecteren. Bewustzijn ≠ zelfreflectie.",
+    correctiemodel: "Excentrische positionaliteit: de mens is tegelijk centrum van zijn ervaring én kan buiten dat centrum treden (1p). Centrische positionaliteit: het dier ervaart vanuit een centrum maar kan er niet op reflecteren (1p). Verschil: het dier heeft wél bewustzijn maar mist het vermogen tot zelfreflectie (1p).",
   },
 
+  // ====================================================================
+  // Gebaseerd op examenbespreking 2024 — Fanon: voorbeeld ipv uitleg
+  // ====================================================================
   {
-    id: "fj-2",
+    id: "fj-14",
     kwestie: 1,
-    naam: "Tim",
-    punten: 3,
-    vraag: "Plessner stelt dat lachen een 'grenservaring' is. Leg uit wat hij hiermee bedoelt. Gebruik in je antwoord het begrip 'symbolische expressie'. (3p)",
-    antwoord: "Lachen is volgens Plessner een vorm van symbolische expressie. Het is een grenservaring omdat het laat zien dat de mens meer is dan alleen een lichaam. Als we lachen, drukken we iets uit wat niet in woorden te vangen is. Dit toont dat de mens excentrisch gepositioneerd is.",
-    foutType: "begripsverwarring",
-    opties: [
-      { label: "Het antwoord beschrijft lachen als een vorm van symbolische expressie, terwijl het juist het falen ervan is", correct: true },
-      { label: "Het antwoord is te vaag en gebruikt geen filosofische taal", correct: false },
-      { label: "Het antwoord beantwoordt een andere vraag dan gesteld", correct: false },
-      { label: "Het antwoord is onvolledig: er missen scoringselementen", correct: false },
-    ],
-    uitleg: "Dit is een veelgemaakte fout op het CE (examenbespreking 2025: 'een van de wreedste examenvragen'). Plessner stelt juist dat lachen optreedt wanneer symbolische expressie FAALT — het lichaam neemt het over als woorden en gebaren niet meer toereikend zijn. Lachen is dus niet een vórm van symbolische expressie, maar wat er gebeurt als symbolische expressie tekortschiet. Bijna geen leerling beantwoordt dit correct.",
-    correctiemodel: "Grenservaring: lachen treedt op wanneer symbolische expressie faalt (1p). Het lichaam neemt het over: je 'valt' terug op lichamelijke reactie (1p). Dit toont de excentrische positie: de mens is een lichaam dat hij tegelijk 'heeft' en 'is' (1p).",
-  },
-
-  {
-    id: "fj-3",
-    kwestie: 1,
-    naam: "Lieke",
+    bron: "CE-stijl, gebaseerd op examenbesprekingen 2024–2025",
+    naam: "Lisa",
     punten: 4,
     vraag: "Leg uit wat Fanon bedoelt met het 'raciaal-epidermaal schema'. Geef daarbij aan hoe dit schema zich verhoudt tot het lichaamsschema. (4p)",
     antwoord: "Fanon beschrijft hoe iemand op straat naar hem roept: 'Kijk, een neger!' Hierdoor beseft hij dat hij door anderen alleen als zijn huidskleur wordt gezien. Dit is het raciaal-epidermaal schema. Het verschil met het gewone lichaamsschema is dat je lichaam nu van buitenaf wordt bepaald.",
     foutType: "voorbeeld_ipv_uitleg",
     opties: [
-      { label: "Het antwoord geeft een voorbeeld (de treinscène) maar legt het begrip niet algemeen uit", correct: true },
+      { label: "Het antwoord geeft Fanons ervaring (de treinscène) als voorbeeld maar legt het begrip niet algemeen uit", correct: true },
       { label: "Het antwoord noemt de verkeerde filosoof bij het lichaamsschema", correct: false },
       { label: "Het antwoord is feitelijk onjuist over Fanon", correct: false },
       { label: "Het antwoord leest de vraag verkeerd: er wordt niet om een voorbeeld gevraagd", correct: false },
     ],
-    uitleg: "Op het CE zie je dit vaak: een leerling geeft een voorbeeld (het treinscène) in plaats van een algemene uitleg van het begrip. Het raciaal-epidermaal schema moet als begrip uitgelegd worden: het is het schema dat van buitenaf op het zwarte lichaam wordt gelegd door de dominante (witte) blik, waardoor huidskleur de hele identiteit gaat bepalen. Het voorbeeld mag erbij, maar de vraag is: 'leg uit wat Fanon bedoelt met...' — dan moet eerst de algemene uitleg komen.",
+    uitleg: "Op het CE komt dit vaak voor: een leerling vertelt het voorbeeld (de scène op straat / in de trein) in plaats van het begrip algemeen uit te leggen. De vraag is: 'leg uit wat Fanon bedoelt met...' — dan moet eerst een algemene definitie komen. Het raciaal-epidermaal schema is het schema dat van buitenaf op het zwarte lichaam wordt gelegd door de dominante (witte) blik, waardoor huidskleur de hele identiteit gaat bepalen. Het voorbeeld mag erbij als illustratie, maar vervangt niet de definitie. Tip: begin altijd met de definitie, voeg dan optioneel een voorbeeld toe.",
     correctiemodel: "Raciaal-epidermaal schema: het schema dat van buitenaf op het zwarte lichaam wordt gelegd door de dominante blik (1p). Huidskleur wordt tot kern van identiteit gemaakt (1p). Lichaamsschema: het prereflexieve schema waarmee je je lichaam ervaart (1p). Verhouding: het raciaal-epidermaal schema overschrijft/verstoort het gewone lichaamsschema (1p).",
   },
 
   // ====================================================================
-  // K2 — Hoe denk ik?
+  // Gebaseerd op VFVO 2025 TV2 — Vraag 16: computermetafoor en neuronen
+  // Leerlingen blijven hangen in de metafoor en schakelen niet over.
   // ====================================================================
-
   {
-    id: "fj-4",
+    id: "fj-15",
     kwestie: 2,
-    naam: "Jamal",
+    bron: "CE 2025 TV2, vraag 16",
+    naam: "Max",
     punten: 3,
-    vraag: "In tekst 2 beschrijft Swaab de relatie tussen het brein en bewustzijn. Leg met behulp van tekst 2 uit waarom Swaab een neuroreductionist genoemd kan worden. (3p)",
-    antwoord: "Swaab is een neuroreductionist omdat hij vindt dat alles wat we denken en voelen uiteindelijk door het brein wordt bepaald. Het bewustzijn is gewoon hersenactiviteit. Dit past bij het idee dat 'wij ons brein zijn'.",
-    foutType: "tekstverwijzing_mist",
-    opties: [
-      { label: "Het antwoord verwijst niet naar tekst 2, terwijl de vraag dat expliciet vraagt", correct: true },
-      { label: "Het antwoord geeft een voorbeeld in plaats van een uitleg", correct: false },
-      { label: "Het antwoord bevat een begripsverwarring over neuroreductionisme", correct: false },
-      { label: "Het antwoord is te vaag en oppervlakkig", correct: false },
-    ],
-    uitleg: "Het antwoord is inhoudelijk niet verkeerd, maar mist een essentieel onderdeel: de vraag zegt 'met behulp van tekst 2'. Op het CE moet je dan concreet verwijzen naar wat er in de tekst staat — een specifieke passage, formulering of voorbeeld uit de tekst gebruiken om je punt te onderbouwen. Zonder tekstverwijzing verlies je minstens 1 punt, ook als je uitleg inhoudelijk klopt. Dit is een van de meest voorkomende fouten op het CE.",
-    correctiemodel: "Neuroreductionisme: bewustzijn wordt volledig herleid tot hersenprocessen (1p). Verwijzing naar tekst 2: [specifieke passage citeren/parafraseren] (1p). Conclusie: Swaab is neuroreductionist omdat hij geen ruimte laat voor bewustzijn los van het brein (1p).",
-  },
-
-  {
-    id: "fj-5",
-    kwestie: 2,
-    naam: "Emma",
-    punten: 3,
-    vraag: "Dreyfus bekritiseert de klassieke benadering van kunstmatige intelligentie. Noem twee van zijn drie problemen en leg uit waarom het lichaam hierbij volgens Dreyfus essentieel is. (3p)",
-    antwoord: "Dreyfus vindt dat computers nooit echt intelligent kunnen worden. Ze missen het lichaam en kunnen daarom niet echt begrijpen wat ze doen. Zo kan ChatGPT wel tekst genereren maar begrijpt het niet wat het zegt. Het lichaam is dus nodig voor echte intelligentie.",
-    foutType: "vraag_niet_gelezen",
-    opties: [
-      { label: "Het antwoord is inhoudelijk onjuist over Dreyfus", correct: false },
-      { label: "Het antwoord noemt geen van de drie problemen bij naam, terwijl de vraag daar expliciet om vraagt", correct: true },
-      { label: "Het antwoord bevat een begripsverwarring tussen Dreyfus en Clark", correct: false },
-      { label: "Het antwoord mist een tekstverwijzing", correct: false },
-    ],
-    uitleg: "De vraag is heel specifiek: 'noem twee van zijn drie problemen'. Dan moet je het contextprobleem, relevantieprobleem en/of lichaamsprobleem bij naam noemen en elk kort uitleggen. Emma geeft in plaats daarvan een vaag algemeen verhaal over AI en het lichaam. Op het CE is dit fataal: de vraag vraagt om concrete begrippen en die staan er niet. Lees de vraag altijd woord voor woord en check: heb ik elk onderdeel beantwoord?",
-    correctiemodel: "Twee problemen uit: contextprobleem (computers kunnen niet bepalen welke context relevant is), relevantieprobleem (computers kunnen niet filteren wat belangrijk is), lichaamsprobleem (computers missen lichamelijke ervaring) (2×1p). Lichaam essentieel: basis van behoeften, vaardigheden en/of sociale interactie (1p).",
-  },
-
-  {
-    id: "fj-6",
-    kwestie: 2,
-    naam: "Daan",
-    punten: 2,
-    vraag: "Leg uit wat Lakoff & Johnson bedoelen met een 'oriënterende metafoor' en geef een voorbeeld. (2p)",
-    antwoord: "Een oriënterende metafoor is een metafoor die een abstract begrip koppelt aan iets concreets. Een voorbeeld is 'de tijd is geld': tijd wordt behandeld als iets dat je kunt uitgeven en besparen. Zo structureren metaforen ons denken.",
-    foutType: "begripsverwarring",
-    opties: [
-      { label: "Het antwoord is te vaag", correct: false },
-      { label: "Het voorbeeld klopt niet bij de uitleg", correct: false },
-      { label: "Zowel de uitleg als het voorbeeld beschrijven een ontologische metafoor, niet een oriënterende", correct: true },
-      { label: "Het antwoord beantwoordt de vraag niet volledig", correct: false },
-    ],
-    uitleg: "Daan beschrijft een ontologische metafoor (abstract → concreet ding) en geeft daar ook een voorbeeld van ('tijd is geld'). Een oriënterende metafoor is gebaseerd op de ruimtelijke oriëntatie van het lichaam: boven/onder, voor/achter. Voorbeelden: 'ik voel me down' (onder = slecht), 'de koers stijgt' (boven = meer). Het onderscheid tussen de drie soorten metaforen is een klassiek CE-onderwerp waar veel leerlingen punten verliezen.",
-    correctiemodel: "Oriënterende metafoor: metafoor gebaseerd op ruimtelijke oriëntatie van het lichaam (boven/onder, voor/achter) (1p). Juist voorbeeld met uitleg, bv. 'ik voel me down' = onder is slecht/negatief (1p).",
-  },
-
-  // ====================================================================
-  // K3 — Wat doet techniek?
-  // ====================================================================
-
-  {
-    id: "fj-7",
-    kwestie: 3,
-    naam: "Noor",
-    punten: 3,
-    vraag: "Verbeek stelt dat technologie 'niet neutraal' is. Leg uit wat hij bedoelt met technologische bemiddeling. Maak in je antwoord onderscheid tussen bemiddeling van waarneming en bemiddeling van handelen. (3p)",
-    antwoord: "Verbeek bedoelt dat technologie niet neutraal is omdat het invloed heeft op hoe we de wereld zien. Een goed voorbeeld is de echoscopie: die maakt het mogelijk om een ongeboren kind te zien, waardoor ouders een band opbouwen met het kind nog voor de geboorte. Technologie verandert dus onze blik op de werkelijkheid.",
-    foutType: "onvolledig",
-    opties: [
-      { label: "Het antwoord bevat een feitelijke fout over Verbeek", correct: false },
-      { label: "Het antwoord legt alleen bemiddeling van waarneming uit en mist bemiddeling van handelen, terwijl de vraag om beide vraagt", correct: true },
-      { label: "Het antwoord geeft een voorbeeld in plaats van een uitleg", correct: false },
-      { label: "Het antwoord leest de vraag verkeerd", correct: false },
-    ],
-    uitleg: "De vraag vraagt expliciet om onderscheid tussen bemiddeling van waarneming EN van handelen. Noor legt alleen de waarnemingskant uit (de echoscopie maakt de foetus zichtbaar). Maar bij Verbeek is de handeling net zo belangrijk: de echoscopie dwingt ouders in de rol van beslisser — ze moeten keuzes maken over de zwangerschap op basis van wat ze zien. Op het CE verlies je hier punten als je maar één kant noemt. Lees altijd: staat er 'en'? Dan moet je beide noemen.",
-    correctiemodel: "Technologische bemiddeling: technologie vormt actief onze relatie met de wereld (1p). Bemiddeling van waarneming: technologie bepaalt hoe de werkelijkheid aan ons verschijnt, bv. echoscopie maakt foetus zichtbaar als patiënt (1p). Bemiddeling van handelen: technologie beïnvloedt onze handelingsmogelijkheden, bv. echoscopie maakt ouders tot beslisser over leven (1p).",
-  },
-
-  {
-    id: "fj-8",
-    kwestie: 3,
-    naam: "Mila",
-    punten: 3,
-    vraag: "Clark noemt de mens een 'natural-born cyborg'. Leg uit wat hij hiermee bedoelt en geef aan waarom dit volgens hem geen recente ontwikkeling is. (3p)",
-    antwoord: "Clark bedoelt dat de mens steeds meer technologie gebruikt en daardoor langzaam een cyborg wordt. Denk aan smartphones, smartwatches en AI-assistenten. We zijn steeds afhankelijker van technologie en dat maakt ons tot cyborgs. Vroeger was dat minder.",
-    foutType: "vraag_niet_gelezen",
-    opties: [
-      { label: "Het antwoord verwijst niet naar de examentekst", correct: false },
-      { label: "Het antwoord is te vaag en oppervlakkig", correct: false },
-      { label: "Het antwoord geeft een voorbeeld in plaats van een uitleg", correct: false },
-      { label: "Het antwoord draait Clarks argument om: hij zegt juist dat we altijd al cyborgs waren, niet dat we het langzaam worden", correct: true },
-    ],
-    uitleg: "Mila leest de vraag niet goed. De vraag zegt: 'waarom dit volgens hem geen recente ontwikkeling is' — het antwoord moet dus uitleggen dat Clark vindt dat we ALTIJD AL cyborgs waren. Mila beschrijft het omgekeerde: we worden steeds meer cyborg. Dat is precies niet wat Clark bedoelt. Clark stelt dat taal en gereedschap al onze eerste cognitieve technologieën waren — de mens is van nature een hybride. Dit is geen toekomstscenario maar onze natuurlijke staat.",
-    correctiemodel: "Natural-born cyborg: de mens is van nature een hybride van biologie en technologie (1p). Geen recente ontwikkeling: taal en gereedschap waren al de eerste cognitieve technologieën (1p). Kernpunt: hybriditeit is de natuurlijke staat van de mens, geen breuk of toekomstscenario (1p).",
-  },
-
-  // ====================================================================
-  // K4 — Hoe leef ik samen?
-  // ====================================================================
-
-  {
-    id: "fj-9",
-    kwestie: 4,
-    naam: "Sem",
-    punten: 4,
-    vraag: "In tekst 4 beschrijft Morton het begrip 'mesh'. Leg met behulp van tekst 4 uit wat Morton hiermee bedoelt. Geef vervolgens aan waarom dit begrip volgens Morton leidt tot 'ontregeling' van de mens. (4p)",
-    antwoord: "Morton bedoelt met mesh dat alles in de natuur met elkaar verbonden is. Dit is een ecologisch begrip dat laat zien dat we onderdeel zijn van een groter geheel. Dit leidt tot ontregeling omdat mensen zich realiseren dat ze de natuur aan het vernietigen zijn en dat dit ook henzelf raakt.",
-    foutType: "te_vaag",
-    opties: [
-      { label: "Het antwoord beantwoordt een andere vraag dan gesteld", correct: false },
-      { label: "Het antwoord mist de tekstverwijzing naar tekst 4", correct: false },
-      { label: "Het antwoord is te vaag ('alles is verbonden') en mist de filosofische kern: dat het mesh betekent dat er geen vaste hiërarchie of centrum is", correct: true },
-      { label: "Het antwoord verwart Morton met Latour", correct: false },
-    ],
-    uitleg: "Op het CE is 'alles is verbonden' een typisch te vaag antwoord. Morton bedoelt met mesh niet simpelweg verbondenheid, maar een netwerk zonder centrum of hiërarchie — de mens is niet het middelpunt maar één knooppunt in een vlak netwerk. De ontregeling komt niet doordat we 'de natuur vernietigen' (dat is een milieuargument, geen filosofisch argument), maar doordat het mesh ons vaste referentiepunt wegneemt: als de mens niet het centrum is, wie zijn we dan? Dit verlies van houvast is de ontregeling.",
-    correctiemodel: "Mesh: netwerk van verbindingen zonder centrum of hiërarchie (1p). Verwijzing naar tekst 4: [specifiek element uit de tekst] (1p). Ontregeling: het mesh ondermijnt het idee dat de mens het middelpunt of de maat van alles is (1p). De mens verliest zijn vaste referentiepunt/houvast (1p).",
-  },
-
-  {
-    id: "fj-10",
-    kwestie: 4,
-    naam: "Roos",
-    punten: 3,
-    vraag: "Vergelijk de positie van Harari over data met de kritiek van Rasch. Wat is het kernverschil? (3p)",
-    antwoord: "Harari stelt dat data de ultieme bron van waarde is en dat algoritmes ons beter kennen dan wijzelf. Dit noemt hij dataïsme. Rasch is het hier niet mee eens en vindt dat data niet alles kan vastleggen.",
-    foutType: "te_vaag",
-    opties: [
-      { label: "Het antwoord verwart Harari met een andere filosoof", correct: false },
-      { label: "Het antwoord geeft een voorbeeld in plaats van een uitleg", correct: false },
-      { label: "Harari's positie is goed uitgelegd, maar Raschs kritiek is te vaag: 'niet mee eens' en 'niet alles vastleggen' is geen filosofisch argument", correct: true },
-      { label: "Het antwoord beantwoordt de vraag niet: het kernverschil ontbreekt", correct: false },
-    ],
-    uitleg: "Dit is een klassieke CE-fout: je legt filosoof A goed uit, maar bij filosoof B schrijf je alleen dát hij het oneens is, niet waaróm. Rasch stelt dat bij elke datareductie iets principieel verloren gaat — 'het else'. Dat is geen technisch probleem (betere algoritmes lossen het niet op), maar een fundamenteel filosofisch punt: de kloof tussen data en werkelijkheid is onoverbrugbaar. In die kloof schuilt juist de menselijke vrijheid. 'Niet mee eens' levert op het CE 0 punten op.",
-    correctiemodel: "Harari: dataïsme — data als ultieme bron van waarde, algoritmes kennen ons beter dan wijzelf (1p). Rasch: bij datareductie gaat altijd iets verloren: 'het else' (1p). Kernverschil: Rasch stelt dat die kloof principieel is en niet door technologie overbrugd kan worden — daarin schuilt menselijke vrijheid (1p).",
-  },
-
-  {
-    id: "fj-11",
-    kwestie: 4,
-    naam: "Bram",
-    punten: 3,
-    vraag: "Leg uit wat Latour bedoelt met een 'niet-menselijke actant'. Gebruik het begrip 'delegatie' in je antwoord. (3p)",
-    antwoord: "Latour bedoelt dat ook niet-menselijke dingen een rol spelen in het sociale leven. Een voorbeeld is een verkeersdrempel die automobilisten dwingt langzamer te rijden. De verkeersdrempel is een actant omdat hij invloed heeft op het gedrag van mensen.",
+    vraag: "De computermetafoor vergelijkt het brein met een computer. Leg uit op welk punt deze metafoor tekortschiet als beschrijving van hoe neuronen werken. (3p)",
+    antwoord: "De computermetafoor schiet tekort omdat een computer alleen gegevens verwerkt volgens een vast programma, terwijl het brein veel flexibeler is. Een computer doet precies wat je hem opdraagt, maar het brein kan creatief zijn en nieuwe verbindingen leggen. Bovendien is een computer gemaakt van silicium en het brein van biologisch materiaal.",
     foutType: "vraag_niet_gelezen",
     opties: [
       { label: "Het antwoord is inhoudelijk onjuist", correct: false },
-      { label: "Het antwoord gebruikt het begrip 'delegatie' niet, terwijl de vraag dat expliciet vraagt", correct: true },
-      { label: "Het voorbeeld van de verkeersdrempel is verkeerd gekozen", correct: false },
-      { label: "Het antwoord verwart actant met actor", correct: false },
+      { label: "Het antwoord blijft op het niveau van de metafoor (computer vs. brein) en schakelt niet over naar het gevraagde: hoe neuronen werken", correct: true },
+      { label: "Het antwoord verwart de computermetafoor met een andere metafoor", correct: false },
+      { label: "Het antwoord is te vaag", correct: false },
     ],
-    uitleg: "Het antwoord is inhoudelijk niet slecht — het voorbeeld van de verkeersdrempel is zelfs goed gekozen. Maar de vraag zegt: 'gebruik het begrip delegatie in je antwoord.' Dat begrip staat er niet in. Op het CE kost dit je een scoringspunt. Delegatie bij Latour: het overdragen van een moreel programma aan een niet-menselijk object. De verkeersdrempel 'draagt' het morele gebod 'rij langzaam'. Lees de vraag altijd opnieuw als je klaar bent met schrijven: heb ik alle gevraagde begrippen gebruikt?",
-    correctiemodel: "Niet-menselijke actant: een niet-menselijk ding dat 'handelt' / agency heeft in een netwerk (1p). Delegatie: het overdragen van een moreel programma aan een niet-menselijk object (1p). Voorbeeld met uitleg, bv. verkeersdrempel draagt het gebod 'rij langzaam' (1p).",
+    uitleg: "Het VFVO-forum signaleert: 'leerlingen blijven hangen in de computermetafoor en komen niet tot het neurobiologische antwoord.' De vraag vraagt specifiek op welk punt de metafoor tekortschiet als beschrijving van hoe neuronen werken. Dan moet je iets zeggen over neuronen: bv. neuronen werken niet digitaal (aan/uit) maar met graduele signalen, of neuronen vormen plastische verbindingen die veranderen door ervaring (connecties versterken/verzwakken). Max vergelijkt alleen computer met brein op een algemeen niveau en noemt het woord 'neuron' niet eens.",
+    correctiemodel: "Computermetafoor: brein als informatie-verwerkende machine met input → verwerking → output (1p). Tekortkoming: neuronen werken niet digitaal maar met graduele, plastische verbindingen die veranderen door ervaring (1p). Verschil: een computer volgt een vast programma, neuronen vormen een zelforganiserend netwerk (1p).",
   },
 
+  // ====================================================================
+  // Gebaseerd op VFVO 2025 TV2 — Vraag 15: impliciete eis
+  // Leerlingen missen het impliciete element dat het CV vereist.
+  // ====================================================================
   {
-    id: "fj-12",
-    kwestie: 3,
-    naam: "Fleur",
+    id: "fj-16",
+    kwestie: 4,
+    bron: "CE 2025 TV2, vraag 15",
+    naam: "Anouk",
     punten: 3,
-    vraag: "In tekst 3 beschrijft De Mul drie scenario's voor de toekomst van de mens. Leg met behulp van tekst 3 uit wat De Mul bedoelt met het transhumanisme-scenario. (3p)",
-    antwoord: "Het transhumanisme-scenario houdt in dat de mens door middel van technologie steeds beter wordt. Door technologieën als nano, bio, info en cogno (NBIC) kan de mens zichzelf verbeteren en uiteindelijk evolueren naar een nieuwe, betere soort mens. Dit is een optimistisch scenario.",
-    foutType: "tekstverwijzing_mist",
+    vraag: "Leg uit wat het verschil is tussen een symbolische en een hermeneutische relatie met technologie. (3p)",
+    antwoord: "Bij een symbolische relatie staat de technologie voor iets anders, het heeft een betekenis die verder gaat dan het object zelf. Bij een hermeneutische relatie gebruik je technologie om de wereld te interpreteren. Het verschil is dus dat het ene over betekenis gaat en het andere over interpretatie.",
+    foutType: "te_vaag",
     opties: [
-      { label: "Het antwoord is inhoudelijk onjuist over transhumanisme", correct: false },
-      { label: "Het antwoord is te vaag en mist filosofische diepgang", correct: false },
-      { label: "De vraag zegt 'met behulp van tekst 3' maar het antwoord verwijst nergens concreet naar de tekst", correct: true },
-      { label: "Het antwoord verwart transhumanisme met een ander scenario van De Mul", correct: false },
+      { label: "Het antwoord verwart symbolisch met semiotisch", correct: false },
+      { label: "Het antwoord is onvolledig: er missen voorbeelden", correct: false },
+      { label: "Het verschil ('betekenis vs. interpretatie') is zo vaag dat het niets toevoegt — de twee termen worden niet scherp genoeg onderscheiden", correct: true },
+      { label: "Het antwoord beantwoordt een andere vraag", correct: false },
     ],
-    uitleg: "Het antwoord is inhoudelijk redelijk, maar mist de tekstverwijzing. De vraag zegt expliciet 'met behulp van tekst 3' — dan moet je concreet verwijzen naar wat er in de tekst staat. Citeer of parafraseer een specifieke passage. Zonder tekstverwijzing verlies je op het CE minstens 1 punt, ook als je uitleg verder klopt. Tip: onderstreep in de tekst wat je gebruikt en verwijs er expliciet naar in je antwoord.",
-    correctiemodel: "Transhumanisme: de mens evolueert door NBIC-technologieën naar een nieuwe, verbeterde soort (1p). Verwijzing naar tekst 3: [specifieke passage over enhancement/convergentie] (1p). Optimistisch scenario: technologie als middel tot menselijke perfectie (1p).",
+    uitleg: "Het VFVO-forum signaleert dat leerlingen bij dit soort vragen 'de juiste richting hebben maar het vereiste begrip niet scherp genoeg uitwerken'. Het probleem: 'betekenis' en 'interpretatie' liggen zo dicht bij elkaar dat Anouks antwoord geen echt onderscheid maakt. Scherper: bij een hermeneutische relatie lees je de wereld AF via technologie (thermometer → je 'leest' de temperatuur), bij een symbolische relatie verwijst de technologie ZELF naar iets (een kerktoren symboliseert de gemeenschap). Het verschil zit in de richting: hermeneutisch = technologie als venster op de wereld, symbolisch = technologie als drager van culturele betekenis.",
+    correctiemodel: "Hermeneutische relatie: technologie als middel om de wereld af te lezen/interpreteren, bv. thermometer, echografie (1p). Symbolische relatie: de technologie zelf verwijst naar/staat voor iets, bv. kerktoren als symbool van gemeenschap (1p). Verschil in richting: hermeneutisch = venster op de wereld, symbolisch = drager van culturele betekenis (1p).",
   },
 ];

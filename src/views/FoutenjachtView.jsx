@@ -21,8 +21,14 @@ function ItemList({ items, onSelect, progress }) {
       <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "4px" }}>
         Foutenjacht
       </div>
-      <div style={{ fontSize: "11px", color: "#888", marginBottom: "16px", lineHeight: 1.5 }}>
+      <div style={{ fontSize: "11px", color: "#888", marginBottom: "12px", lineHeight: 1.5 }}>
         Lees het antwoord van een "medeleerling" op een examenvraag. Wat gaat er mis? Herken typische CE-fouten.
+      </div>
+      <div style={{
+        fontSize: "10px", color: "#aaa", marginBottom: "16px", lineHeight: 1.5,
+        fontStyle: "italic",
+      }}>
+        De voorbeelden zijn gebaseerd op echte examenvragen en de landelijke examenbesprekingen filosofie VWO (Cito/SLO, 2024–2025) en docentendiscussies op het VFVO-forum.
       </div>
       {items.map((item) => {
         const result = progress[item.id];
@@ -56,7 +62,7 @@ function ItemList({ items, onSelect, progress }) {
                 {item.vraag.split("(")[0].trim()}
               </div>
               <div style={{ fontSize: "10px", color: "#888", marginTop: "2px" }}>
-                Antwoord van {item.naam} · {item.punten}p
+                {item.bron ? <span style={{ color: "#aaa" }}>{item.bron}</span> : `Antwoord van ${item.naam}`} · {item.punten}p
                 {result && (
                   <span style={{
                     marginLeft: "6px",
@@ -125,6 +131,16 @@ function PlayScreen({ item, onDone, onBack }) {
         <span style={{ fontSize: "11px", color: "#888" }}>{item.punten} punten</span>
       </div>
 
+      {/* Bron */}
+      {item.bron && (
+        <div style={{
+          fontSize: "10px", color: "#aaa", fontStyle: "italic",
+          marginBottom: "8px",
+        }}>
+          {item.bron}
+        </div>
+      )}
+
       {/* Examvraag */}
       <div style={{
         background: "#f8f8fc", borderRadius: "10px", padding: "12px 14px",
@@ -138,14 +154,18 @@ function PlayScreen({ item, onDone, onBack }) {
         </div>
       </div>
 
-      {/* Leerlingantwoord */}
+      {/* Leerlingantwoord — handschrift-stijl */}
       <div style={{
-        background: "#fff", borderRadius: "10px", padding: "12px 14px",
-        border: "1px solid #e8e8f0", marginBottom: "16px",
+        background: "#fffef7", borderRadius: "10px", padding: "14px 16px",
+        border: "1px solid #e8e4d8", marginBottom: "16px",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+        backgroundImage: "repeating-linear-gradient(transparent, transparent 27px, #e8e4d8 27px, #e8e4d8 28px)",
+        backgroundPosition: "0 42px",
       }}>
         <div style={{
           fontSize: "10px", fontWeight: 700, color: "#888", marginBottom: "8px",
           display: "flex", alignItems: "center", gap: "6px",
+          fontFamily: "'Source Sans 3', sans-serif",
         }}>
           <span style={{
             width: "20px", height: "20px", borderRadius: "50%",
@@ -157,10 +177,10 @@ function PlayScreen({ item, onDone, onBack }) {
           Antwoord van {item.naam}:
         </div>
         <div style={{
-          fontSize: "12px", color: "#333", lineHeight: 1.7,
-          fontStyle: "italic",
+          fontFamily: "'Caveat', cursive",
+          fontSize: "16px", color: "#2a2a3a", lineHeight: 1.75,
         }}>
-          "{item.antwoord}"
+          {item.antwoord}
         </div>
       </div>
 
