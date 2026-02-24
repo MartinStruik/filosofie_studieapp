@@ -47,17 +47,34 @@ export function LiaSpelView({ progress, setProgress }) {
           </span>
           {(() => {
             const video = VIDEOS.find(v => v.id === activeChapter.id);
-            return video?.youtubeId ? (
-              <a href={`https://www.youtube.com/watch?v=${video.youtubeId}`} target="_blank" rel="noopener noreferrer"
-                style={{
-                  background: "rgba(255,255,255,0.2)", color: "#fff",
-                  borderRadius: "8px", padding: "8px 14px", fontSize: "13px", fontWeight: 700,
-                  textDecoration: "none", display: "flex", alignItems: "center", gap: "6px",
-                  minWidth: "44px", minHeight: "44px", justifyContent: "center", flexShrink: 0,
-                }}>
-                {"▶ Video"}
-              </a>
-            ) : null;
+            if (!video) return null;
+            const hasFb = video.filosofiebroers && video.filosofiebroers.length > 0;
+            return (
+              <div style={{ display: "flex", gap: "6px", flexShrink: 0 }}>
+                {video.youtubeId && (
+                  <a href={`https://www.youtube.com/watch?v=${video.youtubeId}`} target="_blank" rel="noopener noreferrer"
+                    style={{
+                      background: "rgba(255,255,255,0.2)", color: "#fff",
+                      borderRadius: "8px", padding: "8px 14px", fontSize: "13px", fontWeight: 700,
+                      textDecoration: "none", display: "flex", alignItems: "center", gap: "6px",
+                      minWidth: "44px", minHeight: "44px", justifyContent: "center",
+                    }}>
+                    {"▶ NLM"}
+                  </a>
+                )}
+                {hasFb && (
+                  <a href={`https://www.youtube.com/watch?v=${video.filosofiebroers[0].youtubeId}`} target="_blank" rel="noopener noreferrer"
+                    style={{
+                      background: "rgba(255,255,255,0.35)", color: "#fff",
+                      borderRadius: "8px", padding: "8px 14px", fontSize: "13px", fontWeight: 700,
+                      textDecoration: "none", display: "flex", alignItems: "center", gap: "6px",
+                      minWidth: "44px", minHeight: "44px", justifyContent: "center",
+                    }}>
+                    {"▶ B&R"}
+                  </a>
+                )}
+              </div>
+            );
           })()}
         </div>
         <iframe

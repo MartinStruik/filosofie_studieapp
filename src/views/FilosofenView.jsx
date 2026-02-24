@@ -97,9 +97,14 @@ export function FilosofenView({ progress, setProgress }) {
           if (!videoIds) return null;
           const vids = videoIds.map(id => VIDEOS.find(v => v.id === id)).filter(v => v?.youtubeId);
           if (vids.length === 0) return null;
+          // Collect all filosofiebroers videos from matching entries
+          const fbVids = videoIds
+            .map(id => VIDEOS.find(v => v.id === id))
+            .filter(v => v?.filosofiebroers?.length > 0)
+            .flatMap(v => v.filosofiebroers);
           return (
             <div style={{ marginTop: "16px" }}>
-              <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 10px", color: "#1a1a2e" }}>Uitlegvideo{vids.length > 1 ? "'s" : ""}</h3>
+              <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "0 0 10px", color: "#1a1a2e" }}>Uitlegvideo's — NotebookLM</h3>
               {vids.map(v => (
                 <a key={v.id} href={`https://www.youtube.com/watch?v=${v.youtubeId}`} target="_blank" rel="noopener noreferrer"
                   style={{
@@ -114,6 +119,25 @@ export function FilosofenView({ progress, setProgress }) {
                   </div>
                 </a>
               ))}
+              {fbVids.length > 0 && (
+                <>
+                  <h3 style={{ fontSize: "13px", fontWeight: 700, margin: "12px 0 10px", color: "#1a1a2e" }}>Uitlegvideo's — Ben & Rob</h3>
+                  {fbVids.map(fb => (
+                    <a key={fb.youtubeId} href={`https://www.youtube.com/watch?v=${fb.youtubeId}`} target="_blank" rel="noopener noreferrer"
+                      style={{
+                        display: "flex", alignItems: "center", gap: "12px", padding: "12px 16px",
+                        background: "#f5f0ff", border: "1px solid #e0d8f0", borderRadius: "12px",
+                        textDecoration: "none", marginBottom: "8px",
+                      }}>
+                      <span style={{ fontSize: "24px", color: "#5b3e9e", flexShrink: 0 }}>{"▶"}</span>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: "13px", color: "#1a1a2e" }}>{fb.title}</div>
+                        <div style={{ fontSize: "11px", color: "#5b3e9e" }}>Filosofiebroers</div>
+                      </div>
+                    </a>
+                  ))}
+                </>
+              )}
             </div>
           );
         })()}
