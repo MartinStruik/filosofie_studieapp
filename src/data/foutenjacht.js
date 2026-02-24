@@ -23,32 +23,6 @@ export const FOUT_TYPES = {
 export const FOUTENJACHT_ITEMS = [
 
   // ====================================================================
-  // CE 2025 TV1 — Vraag 16: Plessner over lachen
-  // Examenbespreking: "een van de wreedste examenvragen" — bijna geen
-  // leerling beantwoordt dit correct. De meesten beschrijven lachen ALS
-  // symbolische expressie ipv als het FALEN ervan.
-  // ====================================================================
-  {
-    id: "fj-01",
-    kwestie: 1,
-    bron: "CE 2025 TV1, vraag 16",
-    casus: "De examentekst gaat over 'Opa', een grootvader met cognitieve achteruitgang, en een zorgrobot ('Hubot Opa'). Bij deze vraag wordt een fragment van Plessner over lachen behandeld: waarom lachen mensen anders dan chimpansees?",
-    naam: "Sanne",
-    punten: 3,
-    vraag: "Plessner stelt dat lachen een 'grenservaring' is. Leg uit wat hij hiermee bedoelt. Gebruik in je antwoord het begrip 'symbolische expressie'. (3p)",
-    antwoord: "Lachen is volgens Plessner een vorm van symbolische expressie. Het is een grenservaring omdat het laat zien dat de mens meer is dan alleen een lichaam. Als we lachen, drukken we iets uit wat niet in woorden te vangen is. Dit toont dat de mens excentrisch gepositioneerd is.",
-    foutType: "begripsverwarring",
-    opties: [
-      { label: "Lachen wordt beschreven als een vorm van symbolische expressie, terwijl het juist optreedt wanneer symbolische expressie faalt", correct: true },
-      { label: "Het antwoord is te vaag en mist filosofische diepgang", correct: false },
-      { label: "Het antwoord beantwoordt een andere vraag dan gesteld", correct: false },
-      { label: "Het antwoord is onvolledig: er missen scoringselementen", correct: false },
-    ],
-    uitleg: "Dit is de meest gemaakte fout bij deze vraag (examenbespreking 2025: 'een van de wreedste examenvragen — bijna geen leerling beantwoordt dit correct'). Plessner stelt juist dat lachen optreedt wanneer symbolische expressie FAALT — het lichaam neemt het over als woorden en gebaren niet meer toereikend zijn. Lachen is dus niet een vórm van symbolische expressie, maar wat er gebeurt als symbolische expressie tekortschiet. Het is een grenservaring omdat de mens hier de grens ervaart van zijn vermogen om zichzelf uit te drukken.",
-    correctiemodel: "Grenservaring: lachen treedt op wanneer symbolische expressie faalt (1p). Het lichaam neemt het over: je 'valt' terug op een lichamelijke reactie die je niet kunt sturen (1p). Dit toont de excentrische positie: de mens is een lichaam dat hij tegelijk 'heeft' en 'is' — bij lachen verliest hij de regie (1p).",
-  },
-
-  // ====================================================================
   // CE 2025 TV1 — Vraag 2: Hubot en visuele waarneming
   // Examenbespreking: "Bijna alle kandidaten raken hier hopeloos de weg
   // kwijt." Leerlingen focussen op het ontbreken van een menselijk lichaam
@@ -72,31 +46,6 @@ export const FOUTENJACHT_ITEMS = [
     ],
     uitleg: "De examenbespreking 2025 noemt dit 'de vraag waar bijna alle kandidaten hopeloos de weg kwijt raken'. De vraag vraagt expliciet om de drie functies van het lichaam bij waarneming (uit de syllabus p.30). Tim geeft in plaats daarvan een vaag algemeen verhaal over robots en lichamen. Op het CE is dit fataal: als er staat 'gebruik de drie functies', dan moeten die drie functies er staan. Lees altijd woord voor woord wat de vraag precies vraagt.",
     correctiemodel: "Drie functies van het lichaam bij waarneming: (1) het lichaam als bron van behoeften en verwachtingen die de waarneming sturen (1p), (2) het lichaam als basis van aangeleerde vaardigheden die herkenning mogelijk maken (1p), (3) het lichaam als basis van een affectieve relatie met de omgeving (1p). De hubot mist deze drie functies omdat hij geen lichaamsgeschiedenis en ervaringen heeft.",
-  },
-
-  // ====================================================================
-  // CE 2025 TV1 — Vraag 10: Contingentie en culturele invloeden
-  // Examenbespreking: leerlingen focussen op "wetenschappelijke invloeden"
-  // terwijl de vraag over "culturele invloeden" gaat.
-  // ====================================================================
-  {
-    id: "fj-03",
-    kwestie: 2,
-    bron: "CE 2025 TV1, vraag 10",
-    casus: "In de tekst over Opa wordt beschreven hoe het beeld dat we van onszelf hebben afhangt van de tijd waarin we leven. De vraag gaat over contingentie: ons zelfbeeld is niet vaststaand maar wordt gevormd door culturele invloeden.",
-    naam: "Lieke",
-    punten: 2,
-    vraag: "Leg uit wat bedoeld wordt met de stelling dat onze zelfkennis 'contingent' is. Geef een voorbeeld van hoe culturele invloeden ons zelfbeeld vormen. (2p)",
-    antwoord: "Contingent betekent dat iets toevallig is. Onze zelfkennis is contingent omdat het toeval is hoe we over onszelf denken. Een voorbeeld is dat wetenschappelijk onderzoek naar het brein ons laat zien dat we gestuurd worden door neuronen, wat ons zelfbeeld verandert.",
-    foutType: "vraag_niet_gelezen",
-    opties: [
-      { label: "Het antwoord verwart contingentie met toeval", correct: false },
-      { label: "Het voorbeeld gaat over wetenschappelijke invloeden terwijl de vraag om culturele invloeden vraagt", correct: true },
-      { label: "Het antwoord is te vaag", correct: false },
-      { label: "Het antwoord mist een tekstverwijzing", correct: false },
-    ],
-    uitleg: "De vraag vraagt specifiek om 'culturele invloeden', maar Lieke geeft een voorbeeld van een wetenschappelijke invloed (hersenonderzoek). Dit lijkt een klein verschil, maar op het CE kost het je het punt. Culturele invloeden gaan over hoe de tijd en maatschappij waarin je leeft je zelfbeeld vormen — bijvoorbeeld: in de 17e eeuw zag men de mens als een machine (machinemetafoor), in onze tijd als een computer (computermetafoor). Contingent betekent hier: bepaald door de historische periode, het had ook anders kunnen zijn.",
-    correctiemodel: "Contingent: afhankelijk van historische/culturele context, niet noodzakelijk zo — het had ook anders kunnen zijn (1p). Voorbeeld van culturele invloed op zelfbeeld, bv. machinemetafoor in de 17e eeuw vs. computermetafoor nu (1p).",
   },
 
   // ====================================================================
@@ -224,31 +173,6 @@ export const FOUTENJACHT_ITEMS = [
     ],
     uitleg: "Het VFVO-forum signaleert twee problemen bij deze vraag. (1) Leerlingen beschrijven wat dataïsme IS in plaats van een argument te geven VOOR de stelling. Een argument zou zijn: mensen vertrouwen steeds minder op hun eigen beslissingsvermogen en laten keuzes over aan algoritmes (partnerkeuze, routeplanning, muziekkeuze). (2) De uitleg over 'essentie' is te oppervlakkig ('we zijn eigenlijk gewoon data'). Het punt is: als algoritmes ons beter kennen dan wijzelf, dan is er geen unieke menselijke kern (essentie) die ontoegankelijk is voor data-analyse — de bestaanservaring wordt gereduceerd tot datapatronen.",
     correctiemodel: "Argument: mensen vertrouwen steeds minder op eigen oordeel en laten beslissingen over aan algoritmes die gebaseerd zijn op datapatronen (1p). Bedreiging essentie: als algoritmes ons beter kennen dan wijzelf, is de unieke menselijke kern/essentie een illusie (1p). Het onderscheid tussen essentie en bestaanservaring wordt opgeheven (1p).",
-  },
-
-  // ====================================================================
-  // CE 2024 TV2 — Vraag 8: Interface en transparantie (Clark)
-  // VFVO-forum: leerlingen beschrijven de interface als iets dat er is of
-  // niet, in plaats van als iets met gradaties van transparantie.
-  // ====================================================================
-  {
-    id: "fj-09",
-    kwestie: 3,
-    bron: "CE 2024 TV2, vraag 8",
-    casus: "De examentekst bespreekt Andy Clark's theorie over hoe technologie een verlengstuk van ons lichaam kan worden. Het voorbeeld gaat over een cochleair implantaat: de drager hoort 'gewoon', zonder het apparaat bewust op te merken.",
-    naam: "Fleur",
-    punten: 2,
-    vraag: "Clark stelt dat technologie 'transparant' kan worden. Leg uit wat hiermee bedoeld wordt en geef een voorbeeld. (2p)",
-    antwoord: "Clark bedoelt dat op een gegeven moment de mens niet meer via een interface communiceert maar direct met de technologie verbonden is. Een voorbeeld is een cochleair implantaat: de drager hoort gewoon, zonder na te denken over het apparaat. De interface verdwijnt.",
-    foutType: "begripsverwarring",
-    opties: [
-      { label: "Het antwoord is te vaag", correct: false },
-      { label: "Het voorbeeld van het cochleair implantaat is onjuist", correct: false },
-      { label: "Het antwoord stelt dat de interface 'verdwijnt', terwijl Clark bedoelt dat de interface transparant wordt — hij is er nog wel, maar je merkt hem niet meer op", correct: true },
-      { label: "Het antwoord beantwoordt een andere vraag dan gesteld", correct: false },
-    ],
-    uitleg: "Het VFVO-forum signaleert dat het CV hier onnauwkeurig is, maar het filosofische punt is belangrijk: de interface verdwijnt niet, hij wordt transparant. Net als een bril — die zit er nog steeds, maar je kijkt er doorheen zonder hem op te merken. Bij Clark gaat het om gradaties: een nieuw stuk technologie is eerst opaque (je bent je er bewust van), maar wordt met gebruik steeds transparanter. Dit is een nuance die leerlingen vaak missen: ze denken in binaire termen (er is een interface / er is geen interface) in plaats van in een glijdende schaal.",
-    correctiemodel: "Transparant: de technologie wordt zo vertrouwd dat je je er niet meer bewust van bent — de interface is er nog wel maar valt weg uit je aandacht (1p). Voorbeeld: bv. lezen (je ziet letters niet meer, alleen betekenis), fietsen, cochleair implantaat — met uitleg van de transparantie (1p).",
   },
 
   // ====================================================================
@@ -397,27 +321,4 @@ export const FOUTENJACHT_ITEMS = [
     correctiemodel: "Computermetafoor: brein als informatie-verwerkende machine met input → verwerking → output (1p). Tekortkoming: neuronen werken niet digitaal maar met graduele, plastische verbindingen die veranderen door ervaring (1p). Verschil: een computer volgt een vast programma, neuronen vormen een zelforganiserend netwerk (1p).",
   },
 
-  // ====================================================================
-  // Gebaseerd op VFVO 2025 TV2 — Vraag 15: impliciete eis
-  // Leerlingen missen het impliciete element dat het CV vereist.
-  // ====================================================================
-  {
-    id: "fj-16",
-    kwestie: 4,
-    bron: "CE 2025 TV2, vraag 15",
-    casus: "De examentekst behandelt verschillende mens-technologierelaties (Verbeek/Ihde). De vraag gaat over het onderscheid tussen een symbolische relatie (technologie als betekenisdrager) en een hermeneutische relatie (technologie als venster op de wereld).",
-    naam: "Anouk",
-    punten: 3,
-    vraag: "Leg uit wat het verschil is tussen een symbolische en een hermeneutische relatie met technologie. (3p)",
-    antwoord: "Bij een symbolische relatie staat de technologie voor iets anders, het heeft een betekenis die verder gaat dan het object zelf. Bij een hermeneutische relatie gebruik je technologie om de wereld te interpreteren. Het verschil is dus dat het ene over betekenis gaat en het andere over interpretatie.",
-    foutType: "te_vaag",
-    opties: [
-      { label: "Het antwoord verwart symbolisch met semiotisch", correct: false },
-      { label: "Het antwoord is onvolledig: er missen voorbeelden", correct: false },
-      { label: "Het verschil ('betekenis vs. interpretatie') is zo vaag dat het niets toevoegt — de twee termen worden niet scherp genoeg onderscheiden", correct: true },
-      { label: "Het antwoord beantwoordt een andere vraag", correct: false },
-    ],
-    uitleg: "Het VFVO-forum signaleert dat leerlingen bij dit soort vragen 'de juiste richting hebben maar het vereiste begrip niet scherp genoeg uitwerken'. Het probleem: 'betekenis' en 'interpretatie' liggen zo dicht bij elkaar dat Anouks antwoord geen echt onderscheid maakt. Scherper: bij een hermeneutische relatie lees je de wereld AF via technologie (thermometer → je 'leest' de temperatuur), bij een symbolische relatie verwijst de technologie ZELF naar iets (een kerktoren symboliseert de gemeenschap). Het verschil zit in de richting: hermeneutisch = technologie als venster op de wereld, symbolisch = technologie als drager van culturele betekenis.",
-    correctiemodel: "Hermeneutische relatie: technologie als middel om de wereld af te lezen/interpreteren, bv. thermometer, echografie (1p). Symbolische relatie: de technologie zelf verwijst naar/staat voor iets, bv. kerktoren als symbool van gemeenschap (1p). Verschil in richting: hermeneutisch = venster op de wereld, symbolisch = drager van culturele betekenis (1p).",
-  },
 ];
