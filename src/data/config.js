@@ -49,4 +49,4 @@ export const ALL_FOCUS_IDS = ["K1", "K2", "K3", "K4", "B1", "C1", "D1", "E1"];
 
 export const LEITNER_INTERVALS = [0, 1, 3, 7, 14]; // box 1-5
 
-export const SESSION_SIZE = 15;
+export const SESSION_SIZE = 999;
