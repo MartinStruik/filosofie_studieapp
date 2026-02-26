@@ -123,7 +123,7 @@ export function StudiepadView({ progress, setProgress, setView }) {
       <div style={{ padding: "0 20px 40px" }}>
         <div style={{ textAlign: "center", padding: "24px 0 16px" }}>
           <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "22px", color: "#1a1a2e", margin: 0 }}>Kies je studiepad</h2>
-          <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — elke dag ~15 minuten is genoeg</p>
+          <p style={{ color: "#666", fontSize: "13px", margin: "8px 0 0" }}>10 weken tot het examen — 1 uur zelfstudie + 30 min les per week</p>
         </div>
 
         {/* Uitleg examenstof */}
@@ -208,7 +208,7 @@ export function StudiepadView({ progress, setProgress, setView }) {
           </button>
         ))}
         <p style={{ fontSize: "12px", color: "#999", textAlign: "center", margin: "0 0 12px", lineHeight: 1.4 }}>
-          Twijfel je? Kies "Spiraal" — die werkt voor de meeste leerlingen. Dagelijks 15 minuten met herhaling is effectiever dan lang blokken vlak voor het examen.
+          Twijfel je? Kies "Spiraal" — die werkt voor de meeste leerlingen. Nieuwe stof afwisselen met herhaling is effectiever dan alles vlak voor het examen blokken.
         </p>
         <button onClick={() => setShowCustom(true)}
           style={{
@@ -338,6 +338,42 @@ export function StudiepadView({ progress, setProgress, setView }) {
             {isExpanded && (
               <div style={{ padding: "0 16px 16px", borderTop: "1px solid #e8e8f020" }}>
                 <p style={{ fontSize: "13px", color: "#666", margin: "0 0 12px", lineHeight: 1.4 }}>{w.beschrijving}</p>
+
+                {/* Zelfstudie / Lesuur / Blokuur instructies */}
+                {(w.zelfstudie || w.lesuur || w.blokuur) && (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginBottom: "12px" }}>
+                    {w.zelfstudie && (
+                      <div style={{ background: "#fff", borderRadius: "8px", padding: "10px 12px", border: "1px solid #e8e8f0" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+                          <span style={{ fontSize: "12px" }}>{"🏠"}</span>
+                          <span style={{ fontSize: "12px", fontWeight: 700, color: "#1a1a2e" }}>Zelfstudie</span>
+                          <span style={{ fontSize: "11px", color: "#999" }}>~60 min</span>
+                        </div>
+                        <p style={{ fontSize: "12px", color: "#555", margin: 0, lineHeight: 1.5 }}>{w.zelfstudie}</p>
+                      </div>
+                    )}
+                    {w.lesuur && (
+                      <div style={{ background: "#fff", borderRadius: "8px", padding: "10px 12px", border: "1px solid #e8e8f0" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+                          <span style={{ fontSize: "12px" }}>{"📚"}</span>
+                          <span style={{ fontSize: "12px", fontWeight: 700, color: "#1a1a2e" }}>Lesuur</span>
+                          <span style={{ fontSize: "11px", color: "#999" }}>~15 min</span>
+                        </div>
+                        <p style={{ fontSize: "12px", color: "#555", margin: 0, lineHeight: 1.5 }}>{w.lesuur}</p>
+                      </div>
+                    )}
+                    {w.blokuur && (
+                      <div style={{ background: "#fff", borderRadius: "8px", padding: "10px 12px", border: "1px solid #e8e8f0" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
+                          <span style={{ fontSize: "12px" }}>{"🔬"}</span>
+                          <span style={{ fontSize: "12px", fontWeight: 700, color: "#1a1a2e" }}>Blokuur</span>
+                          <span style={{ fontSize: "11px", color: "#999" }}>~15 min</span>
+                        </div>
+                        <p style={{ fontSize: "12px", color: "#555", margin: 0, lineHeight: 1.5 }}>{w.blokuur}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
 
                 {/* Week progress bar */}
                 <div style={{ height: "6px", background: "#e8e8f0", borderRadius: "3px", overflow: "hidden", marginBottom: "12px" }}>
