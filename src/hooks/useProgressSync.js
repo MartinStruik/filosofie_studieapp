@@ -69,6 +69,19 @@ function mergeProgress(local, server) {
 
   // Trackers (examTracker, tekstTracker, begripsanalyseTracker, conflictTracker, rodeDraadTracker):
   // merge keys, prefer non-null, prefer "goed"/"begrepen" over "lastig"
+  // tekstAntwoorden: per-user written answers — only keep non-empty, prefer longer answer
+  const localAntw = local.tekstAntwoorden || {};
+  const serverAntw = server.tekstAntwoorden || {};
+  const mergedAntw = { ...serverAntw };
+  for (const [k, v] of Object.entries(localAntw)) {
+    if (!v || v.trim() === "") continue; // skip empty
+    const existing = mergedAntw[k];
+    if (!existing || existing.trim() === "" || v.length > existing.length) {
+      mergedAntw[k] = v;
+    }
+  }
+  merged.tekstAntwoorden = mergedAntw;
+
   for (const key of ["examTracker", "tekstTracker", "begripsanalyseTracker", "conflictTracker", "rodeDraadTracker"]) {
     const a = local[key] || {};
     const b = server[key] || {};
