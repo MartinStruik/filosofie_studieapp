@@ -24,6 +24,7 @@ import { DocentStudentDetail } from "./views/DocentStudentDetail.jsx";
 import { DocentAccountsView } from "./views/DocentAccountsView.jsx";
 import { MindmapView } from "./views/MindmapView.jsx";
 import FoutenjachtView from "./views/FoutenjachtView.jsx";
+import { CognitieGameView } from "./views/CognitieGameView.jsx";
 
 export default function App() {
   const { user, profile, loading: authLoading, login, logout, isDocent } = useAuth();
@@ -142,6 +143,7 @@ export default function App() {
     voortgang: "Voortgang",
     dashboard: "Dashboard",
     "docent-accounts": "Accounts",
+    "4e-game": "4E Cognitie Game",
   };
 
   const isKwestie = view.startsWith("kwestie-");
@@ -171,6 +173,7 @@ export default function App() {
       case "rodedraad": return <RodeDraadView progress={progress} setProgress={setProgress} />;
       case "mindmaps": return <MindmapView />;
       case "foutenjacht": return <FoutenjachtView />;
+      case "4e-game": return <CognitieGameView progress={progress} setProgress={setProgress} />;
       case "videos": return <VideoView />;
       case "studiepad": return <StudiepadView progress={progress} setProgress={setProgress} setView={navigateTo} />;
       case "voortgang": return <VoortgangView progress={progress} setProgress={setProgress} setView={navigateTo} />;

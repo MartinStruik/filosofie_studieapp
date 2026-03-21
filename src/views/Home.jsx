@@ -303,6 +303,7 @@ export function Home({ setView, progress }) {
             tiles: [
               { icon: "❓", label: "Quiz", sub: quizBest > 0 ? `Beste: ${quizBest}%` : "Test je kennis", view: "quiz", bg: "#fff5f0" },
               { icon: "🔍", label: "Examenvragen", sub: examDone > 0 ? `${examDone}/${EXAM_QUESTIONS.length} gedaan` : `${EXAM_QUESTIONS.length} vragen`, view: "exam", bg: "#f0fff5" },
+              { icon: "🧠", label: "4E Game", sub: progress.cognitieGameBest ? `Beste: ${progress.cognitieGameBest}%` : "4E-cognitie oefenen", view: "4e-game", bg: "#f0f4ff" },
             ],
           },
         ];
