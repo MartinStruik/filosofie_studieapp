@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { supabase } from "../lib/supabase.js";
-import { computeOverallProgress } from "../utils/progressUtils.js";
+import { computeOverallProgress, computeQuizStats, computeLeitnerStats } from "../utils/progressUtils.js";
 
 export function DocentView({ setView }) {
   const [students, setStudents] = useState([]);
@@ -62,6 +62,8 @@ export function DocentView({ setView }) {
 
   const getStudentSummary = (s) => {
     const p = computeOverallProgress(s.progressData);
+    const qs = computeQuizStats(s.progressData);
+    const ls = computeLeitnerStats(s.progressData);
     const tijdLog = s.progressData.tijdLog || [];
     const totalMinutes = tijdLog.reduce((sum, e) => sum + (e.appMinutes || 0), 0);
 
@@ -73,7 +75,12 @@ export function DocentView({ setView }) {
       ...Object.values(s.progressData.rodeDraadTracker || {}).filter(v => v === "lastig"),
     ].length;
 
-    return { overallPct: p.overall, flashDone: p.flash.done, flashTotal: p.flash.total, quizCount: p.quiz.done, totalMinutes, lastigCount, updatedAt: s.updatedAt };
+    return {
+      overallPct: p.overall, flashDone: p.flash.done, flashTotal: p.flash.total,
+      quizAvg: qs.avgScore, quizSessions: qs.sessions,
+      leitnerMastery: ls.masteryPct, leitnerDifficult: ls.difficult,
+      totalMinutes, lastigCount, updatedAt: s.updatedAt,
+    };
   };
 
   if (loading) {
@@ -125,10 +132,12 @@ export function DocentView({ setView }) {
 
       {/* Leerlingentabel */}
       <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", overflow: "hidden" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 50px 50px 50px 50px", padding: "10px 14px", fontSize: "11px", fontWeight: 700, color: "#999", borderBottom: "1px solid #f0f0f5", gap: "4px" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 42px 42px 42px 42px 42px 42px", padding: "10px 14px", fontSize: "10px", fontWeight: 700, color: "#999", borderBottom: "1px solid #f0f0f5", gap: "4px" }}>
           <div>Naam</div>
           <div style={{ textAlign: "center" }}>%</div>
+          <div style={{ textAlign: "center" }}>Quiz</div>
           <div style={{ textAlign: "center" }}>Cards</div>
+          <div style={{ textAlign: "center" }}>Beheerst</div>
           <div style={{ textAlign: "center" }}>Tijd</div>
           <div style={{ textAlign: "center" }}>Lastig</div>
         </div>
@@ -136,6 +145,8 @@ export function DocentView({ setView }) {
         {students.map(s => {
           const sum = getStudentSummary(s);
           const pctColor = sum.overallPct >= 0.6 ? "#2e7d32" : sum.overallPct >= 0.3 ? "#f57c00" : "#c62828";
+          const quizColor = sum.quizSessions === 0 ? "#999" : sum.quizAvg >= 70 ? "#2e7d32" : sum.quizAvg >= 50 ? "#f57c00" : "#c62828";
+          const masteryColor = sum.leitnerMastery >= 0.5 ? "#2e7d32" : sum.leitnerMastery >= 0.2 ? "#f57c00" : "#999";
           const lastActive = sum.updatedAt
             ? formatRelativeDate(sum.updatedAt)
             : "nooit";
@@ -145,7 +156,7 @@ export function DocentView({ setView }) {
               key={s.id}
               onClick={() => setView(`docent-student-${s.id}`)}
               style={{
-                display: "grid", gridTemplateColumns: "1fr 50px 50px 50px 50px",
+                display: "grid", gridTemplateColumns: "1fr 42px 42px 42px 42px 42px 42px",
                 width: "100%", padding: "12px 14px", background: "none",
                 border: "none", borderTop: "1px solid #f0f0f5", cursor: "pointer",
                 textAlign: "left", gap: "4px", alignItems: "center",
@@ -160,15 +171,21 @@ export function DocentView({ setView }) {
               <div style={{ textAlign: "center" }}>
                 <span style={{ fontSize: "14px", fontWeight: 700, color: pctColor }}>{Math.round(sum.overallPct * 100)}</span>
               </div>
-              <div style={{ textAlign: "center", fontSize: "13px", color: "#444" }}>
+              <div style={{ textAlign: "center", fontSize: "12px", color: quizColor, fontWeight: 600 }}>
+                {sum.quizSessions > 0 ? `${sum.quizAvg}%` : "—"}
+              </div>
+              <div style={{ textAlign: "center", fontSize: "12px", color: "#444" }}>
                 {sum.flashDone}/{sum.flashTotal}
               </div>
-              <div style={{ textAlign: "center", fontSize: "13px", color: "#444" }}>
+              <div style={{ textAlign: "center", fontSize: "12px", color: masteryColor, fontWeight: 600 }}>
+                {sum.leitnerMastery > 0 ? `${Math.round(sum.leitnerMastery * 100)}%` : "—"}
+              </div>
+              <div style={{ textAlign: "center", fontSize: "12px", color: "#444" }}>
                 {sum.totalMinutes > 0 ? `${Math.round(sum.totalMinutes / 60)}u` : "—"}
               </div>
               <div style={{ textAlign: "center" }}>
                 {sum.lastigCount > 0 && (
-                  <span style={{ background: "#fff0f0", color: "#c62828", fontSize: "12px", fontWeight: 600, padding: "2px 6px", borderRadius: "8px" }}>
+                  <span style={{ background: "#fff0f0", color: "#c62828", fontSize: "11px", fontWeight: 600, padding: "2px 5px", borderRadius: "8px" }}>
                     {sum.lastigCount}
                   </span>
                 )}

@@ -18,14 +18,11 @@ export function focusToKwestieFilter(focusId) {
 export function computeOverallProgress(progress) {
   const totalFlash = FLASHCARDS.length;
   const seenFlash = (progress.seenCards || []).length;
-  const totalQuiz = QUIZ_QUESTIONS.length;
-  const quizDone = (progress.quizScores || []).length > 0 ? 1 : 0;
   const totalExam = EXAM_QUESTIONS.length;
   const examDone = Object.values(progress.examTracker || {}).filter(v => v === "goed" || v === "lastig").length;
   const totalTekst = PRIMAIRE_TEKSTEN.length;
   const tekstDone = Object.values(progress.tekstTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
   const flashPct = totalFlash > 0 ? seenFlash / totalFlash : 0;
-  const quizPct = quizDone;
   const examPct = totalExam > 0 ? examDone / totalExam : 0;
   const tekstPct = totalTekst > 0 ? tekstDone / totalTekst : 0;
   const totalBegripsanalyse = BEGRIPSANALYSE.reduce((sum, b) => sum + b.definities.length, 0);
@@ -40,17 +37,67 @@ export function computeOverallProgress(progress) {
   const totalRodeDraad = RODE_DRAAD.length;
   const rodeDraadDone = Object.values(progress.rodeDraadTracker || {}).filter(v => v === "begrepen" || v === "lastig").length;
   const rodeDraadPct = totalRodeDraad > 0 ? rodeDraadDone / totalRodeDraad : 0;
+
+  // Quiz: use average score (0-1) if attempted, 0 otherwise
+  const quizScores = progress.quizScores || [];
+  const quizStats = computeQuizStats(progress);
+  const quizPct = quizStats.avgScore / 100; // convert 0-100 to 0-1
+
   return {
     flash: { done: seenFlash, total: totalFlash, pct: flashPct },
-    quiz: { done: (progress.quizScores || []).length, pct: quizPct },
+    quiz: { done: quizScores.length, pct: quizPct, avgScore: quizStats.avgScore, bestScore: quizStats.bestScore, perKwestie: quizStats.perKwestie },
     exam: { done: examDone, total: totalExam, pct: examPct },
     tekst: { done: tekstDone, total: totalTekst, pct: tekstPct },
     begripsanalyse: { done: begripDone, total: totalBegripsanalyse, pct: begripPct },
     conflict: { done: conflictDone, total: totalConflict, pct: conflictPct },
     rodeDraad: { done: rodeDraadDone, total: totalRodeDraad, pct: rodeDraadPct },
     lia: { done: liaDone, total: totalLia, pct: liaPct },
-    overall: (flashPct + examPct + tekstPct + begripPct + conflictPct + rodeDraadPct + liaPct) / 7,
+    overall: (flashPct + quizPct + examPct + tekstPct + begripPct + conflictPct + rodeDraadPct + liaPct) / 8,
   };
+}
+
+export function computeQuizStats(progress) {
+  const scores = progress.quizScores || [];
+  if (scores.length === 0) return { avgScore: 0, bestScore: 0, sessions: 0, perKwestie: {} };
+
+  const avg = scores.reduce((s, q) => s + (q.pct || 0), 0) / scores.length;
+  const best = Math.max(...scores.map(q => q.pct || 0));
+
+  // Per-kwestie breakdown (last score per kwestie)
+  const perKwestie = {};
+  for (const s of scores) {
+    const k = s.kwestie ?? "alle";
+    if (!perKwestie[k]) perKwestie[k] = { scores: [], last: 0 };
+    perKwestie[k].scores.push(s.pct || 0);
+    perKwestie[k].last = s.pct || 0;
+  }
+  for (const k of Object.keys(perKwestie)) {
+    const arr = perKwestie[k].scores;
+    perKwestie[k].avg = Math.round(arr.reduce((a, b) => a + b, 0) / arr.length);
+    perKwestie[k].best = Math.max(...arr);
+    perKwestie[k].count = arr.length;
+  }
+
+  return { avgScore: Math.round(avg), bestScore: Math.round(best), sessions: scores.length, perKwestie };
+}
+
+export function computeLeitnerStats(progress) {
+  const boxes = progress.leitnerBoxes || {};
+  const entries = Object.values(boxes);
+  if (entries.length === 0) return { total: 0, mastered: 0, learning: 0, difficult: 0, distribution: [0,0,0,0,0], masteryPct: 0 };
+
+  const distribution = [0, 0, 0, 0, 0];
+  for (const e of entries) {
+    const b = Math.max(1, Math.min(5, e.box || 1));
+    distribution[b - 1]++;
+  }
+
+  const total = entries.length;
+  const mastered = distribution[3] + distribution[4]; // box 4+5
+  const difficult = distribution[0]; // box 1
+  const learning = distribution[1] + distribution[2]; // box 2+3
+
+  return { total, mastered, learning, difficult, distribution, masteryPct: total > 0 ? mastered / total : 0 };
 }
 
 export function computeKwestieProgress(progress, focusId) {

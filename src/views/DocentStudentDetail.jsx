@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase.js";
-import { computeOverallProgress, computeKwestieProgress } from "../utils/progressUtils.js";
+import { computeOverallProgress, computeKwestieProgress, computeQuizStats, computeLeitnerStats } from "../utils/progressUtils.js";
 import { ALL_FOCUS_IDS } from "../data/config.js";
 import { PRIMAIRE_TEKSTEN } from "../data/primaireTeksten.js";
 import { EXAM_QUESTIONS } from "../data/examQuestions.js";
@@ -199,6 +199,90 @@ export function DocentStudentDetail({ studentId }) {
           </div>
         ))}
       </div>
+
+      {/* Quiz prestaties */}
+      {(() => {
+        const qs = computeQuizStats(progressData);
+        if (qs.sessions === 0) return null;
+        const kColors = { 0: "#666", 1: "#4A90D9", 2: "#E87C3E", 3: "#7B61C4", 4: "#2E9E5A" };
+        return (
+          <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "12px" }}>Quiz prestaties</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginBottom: "12px" }}>
+              <div style={{ background: "#f0f4ff", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: qs.avgScore >= 70 ? "#2e7d32" : qs.avgScore >= 50 ? "#f57c00" : "#c62828" }}>{qs.avgScore}%</div>
+                <div style={{ fontSize: "10px", color: "#666" }}>Gemiddeld</div>
+              </div>
+              <div style={{ background: "#f0f4ff", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: "#2D5A8E" }}>{qs.bestScore}%</div>
+                <div style={{ fontSize: "10px", color: "#666" }}>Beste</div>
+              </div>
+              <div style={{ background: "#f0f4ff", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: "#2D5A8E" }}>{qs.sessions}</div>
+                <div style={{ fontSize: "10px", color: "#666" }}>Sessies</div>
+              </div>
+            </div>
+            {Object.keys(qs.perKwestie).length > 1 && (
+              <div>
+                <div style={{ fontSize: "11px", fontWeight: 600, color: "#999", marginBottom: "6px" }}>Per kwestie</div>
+                {Object.entries(qs.perKwestie).map(([k, v]) => {
+                  const label = k === "0" || k === "alle" ? "Alle" : `K${k}`;
+                  const color = kColors[parseInt(k)] || "#666";
+                  return (
+                    <div key={k} style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                      <span style={{ fontSize: "11px", fontWeight: 600, color, minWidth: "28px" }}>{label}</span>
+                      <div style={{ flex: 1, height: "6px", background: "#f0f0f5", borderRadius: "3px", overflow: "hidden" }}>
+                        <div style={{ height: "100%", width: `${v.avg}%`, background: color, borderRadius: "3px" }} />
+                      </div>
+                      <span style={{ fontSize: "11px", color: "#666", minWidth: "48px", textAlign: "right" }}>{v.avg}% ({v.count}x)</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      })()}
+
+      {/* Flashcard beheersing (Leitner) */}
+      {(() => {
+        const ls = computeLeitnerStats(progressData);
+        if (ls.total === 0) return null;
+        const boxColors = ["#ef5350", "#ff9800", "#ffc107", "#8bc34a", "#4caf50"];
+        const boxLabels = ["Moeilijk", "Herkenning", "Begrip", "Goed", "Beheerst"];
+        return (
+          <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>
+            <div style={{ fontSize: "13px", fontWeight: 700, color: "#1a1a2e", marginBottom: "12px" }}>Flashcard beheersing (Leitner)</div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "8px", marginBottom: "12px" }}>
+              <div style={{ background: "#e8f5e9", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: "#2e7d32" }}>{ls.mastered}</div>
+                <div style={{ fontSize: "10px", color: "#666" }}>Beheerst</div>
+              </div>
+              <div style={{ background: "#fff8e1", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: "#f57c00" }}>{ls.learning}</div>
+                <div style={{ fontSize: "10px", color: "#666" }}>Bezig</div>
+              </div>
+              <div style={{ background: "#fce4ec", borderRadius: "8px", padding: "10px", textAlign: "center" }}>
+                <div style={{ fontSize: "20px", fontWeight: 700, color: "#c62828" }}>{ls.difficult}</div>
+                <div style={{ fontSize: "10px", color: "#666" }}>Moeilijk</div>
+              </div>
+            </div>
+            <div style={{ display: "flex", gap: "3px", alignItems: "flex-end", height: "40px" }}>
+              {ls.distribution.map((count, i) => {
+                const maxH = Math.max(...ls.distribution, 1);
+                const h = count > 0 ? Math.max(6, (count / maxH) * 40) : 2;
+                return (
+                  <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: "2px" }}>
+                    <span style={{ fontSize: "10px", fontWeight: 600, color: "#444" }}>{count}</span>
+                    <div style={{ width: "100%", height: `${h}px`, background: boxColors[i], borderRadius: "3px 3px 0 0" }} />
+                    <span style={{ fontSize: "9px", color: "#999" }}>{boxLabels[i]}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Voortgang per kwestie */}
       <div style={{ background: "#fff", border: "1px solid #e8e8f0", borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>

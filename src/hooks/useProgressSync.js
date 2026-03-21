@@ -83,14 +83,21 @@ function mergeProgress(local, server) {
     merged[key] = m;
   }
 
-  // leitnerBoxes: prefer higher box number (more progress)
+  // leitnerBoxes: prefer most recently reviewed (reflects actual student knowledge)
   const localBoxes = local.leitnerBoxes || {};
   const serverBoxes = server.leitnerBoxes || {};
   const mergedBoxes = { ...serverBoxes };
   for (const [term, val] of Object.entries(localBoxes)) {
     const existing = mergedBoxes[term];
-    if (!existing || (val.box > existing.box)) {
+    if (!existing) {
       mergedBoxes[term] = val;
+    } else {
+      // prefer whichever was reviewed more recently
+      const localDate = val.lastReviewed || "";
+      const serverDate = existing.lastReviewed || "";
+      if (localDate >= serverDate) {
+        mergedBoxes[term] = val;
+      }
     }
   }
   merged.leitnerBoxes = mergedBoxes;

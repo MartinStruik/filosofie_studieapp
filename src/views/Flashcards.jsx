@@ -1,17 +1,18 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { KWESTIES, DOMEINEN } from "../data/kwesties.js";
 import { FLASHCARDS } from "../data/flashcards.js";
 import { SESSION_SIZE } from "../data/config.js";
 import { getLeitnerBox, getDueCards } from "../utils/leitnerUtils.js";
 import { shuffleArray } from "../utils/arrayUtils.js";
 import { LiaBadge } from "../components/LiaBadge.jsx";
+import { useSessionState } from "../hooks/useSessionState.js";
 
 export function Flashcards({ progress, setProgress }) {
-  const [filter, setFilter] = useState(null);
-  const [mode, setMode] = useState("alle"); // "alle", "mix", "herhalen"
-  const [idx, setIdx] = useState(0);
+  const [filter, setFilter] = useSessionState("fc-filter", null);
+  const [mode, setMode] = useSessionState("fc-mode", "alle"); // "alle", "mix", "herhalen"
+  const [idx, setIdx] = useSessionState("fc-idx", 0);
   const [flipped, setFlipped] = useState(false);
-  const [sessionCards, setSessionCards] = useState(null);
+  const [sessionCards, setSessionCards] = useSessionState("fc-session", null);
 
   const baseCards = filter === null ? FLASHCARDS : FLASHCARDS.filter(c => c.kwestie === filter);
 
@@ -25,7 +26,13 @@ export function Flashcards({ progress, setProgress }) {
     setFlipped(false);
   }, [progress]);
 
+  // Skip init on first mount if we restored a session from sessionStorage
+  const isFirstMount = useRef(true);
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      if (sessionCards && sessionCards.length > 0) return;
+    }
     initSession(baseCards, mode);
   }, [filter, mode]);
 

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { LIA_CHAPTERS } from "../data/liaChapters.js";
 import { VIDEOS } from "../data/videos.js";
+import { useSessionState } from "../hooks/useSessionState.js";
 
 const KWESTIE_GROUPS = [
   { kwestie: 1, label: "Kwestie 1 — Het lichaam", color: "#4a6fa5" },
@@ -10,7 +11,16 @@ const KWESTIE_GROUPS = [
 ];
 
 export function LiaSpelView({ progress, setProgress }) {
-  const [activeChapter, setActiveChapter] = useState(null);
+  const [savedChapterId, setSavedChapterId] = useSessionState("lia-chapter", null);
+  const [activeChapter, setActiveChapterRaw] = useState(() => {
+    if (savedChapterId) return LIA_CHAPTERS.find(c => c.id === savedChapterId) || null;
+    return null;
+  });
+
+  const setActiveChapter = (ch) => {
+    setActiveChapterRaw(ch);
+    setSavedChapterId(ch ? ch.id : null);
+  };
   const liaPlayed = progress.liaPlayed || [];
 
   const openChapter = (chapter) => {

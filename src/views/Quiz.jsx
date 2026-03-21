@@ -1,22 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { KWESTIES, DOMEINEN } from "../data/kwesties.js";
 import { QUIZ_QUESTIONS } from "../data/quizQuestions.js";
 import { SESSION_SIZE } from "../data/config.js";
 import { shuffleArray } from "../utils/arrayUtils.js";
 import { LiaBadge } from "../components/LiaBadge.jsx";
 import { KwestieTag } from "../components/KwestieTag.jsx";
+import { useSessionState } from "../hooks/useSessionState.js";
 
 export function Quiz({ progress, setProgress, setView }) {
-  const [filter, setFilter] = useState(0);
-  const [mixMode, setMixMode] = useState(false);
-  const [current, setCurrent] = useState(0);
-  const [answers, setAnswers] = useState([]);
-  const [finished, setFinished] = useState(false);
-  const [sessionQuestions, setSessionQuestions] = useState(null);
+  const [filter, setFilter] = useSessionState("quiz-filter", 0);
+  const [mixMode, setMixMode] = useSessionState("quiz-mix", false);
+  const [current, setCurrent] = useSessionState("quiz-current", 0);
+  const [answers, setAnswers] = useSessionState("quiz-answers", []);
+  const [finished, setFinished] = useSessionState("quiz-finished", false);
+  const [sessionQuestions, setSessionQuestions] = useSessionState("quiz-session", null);
 
   const baseQuestions = filter === 0 ? QUIZ_QUESTIONS : QUIZ_QUESTIONS.filter(q => q.kwestie === filter);
 
+  // Skip the first mount effect if we restored a session from sessionStorage
+  const isFirstMount = useRef(true);
   useEffect(() => {
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      // Only init a new session if there was no saved session
+      if (sessionQuestions && sessionQuestions.length > 0) return;
+    }
     let pool = mixMode ? shuffleArray(QUIZ_QUESTIONS) : baseQuestions;
     setSessionQuestions(pool.slice(0, SESSION_SIZE));
     setCurrent(0); setAnswers([]); setFinished(false);
