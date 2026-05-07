@@ -32,6 +32,25 @@ export function Home({ setView, progress }) {
   const currentWeek = getCurrentWeek(studiepad ? new Date(studiepad.startDate || START_DATE) : START_DATE);
   const countdown = getExamCountdown();
   const overallProg = computeOverallProgress(progress);
+  const isFinalWeek = countdown.total > 0 && countdown.days <= 7;
+
+  const finalWeekActions = [
+    {
+      label: "Haal op",
+      text: "Begin met kaarten die verlopen zijn of eerder lastig waren.",
+      view: "flashcards",
+    },
+    {
+      label: "Pas toe",
+      text: "Maak een examenvraag en denk in losse scorepunten.",
+      view: "exam",
+    },
+    {
+      label: "Check je fout",
+      text: "Gebruik Foutenjacht om een typische misser te herkennen.",
+      view: "foutenjacht",
+    },
+  ];
 
   // --- Aanbevolen engine ---
   const aanbevolen = (() => {
@@ -154,6 +173,65 @@ export function Home({ setView, progress }) {
         </p>
       </div>
 
+      {isFinalWeek && (
+        <section style={{
+          background: "#f4fbf6",
+          border: "1px solid #cfe8d6",
+          borderRadius: "12px",
+          padding: "16px",
+          marginBottom: "16px",
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", gap: "12px", alignItems: "flex-start", marginBottom: "10px" }}>
+            <div>
+              <div style={{ fontSize: "11px", fontWeight: 700, color: "#2D8E5A", textTransform: "uppercase", letterSpacing: "0.5px", marginBottom: "4px" }}>
+                Laatste examenweek
+              </div>
+              <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: 0, lineHeight: 1.25 }}>
+                Rustig scherp worden
+              </h2>
+            </div>
+            <div style={{ textAlign: "right", flexShrink: 0 }}>
+              <div style={{ fontSize: "24px", fontWeight: 700, color: "#2D8E5A", lineHeight: 1 }}>{countdown.days}</div>
+              <div style={{ fontSize: "11px", color: "#5f7f68" }}>dagen</div>
+            </div>
+          </div>
+          <p style={{ fontSize: "13px", color: "#34513b", lineHeight: 1.6, margin: "0 0 12px" }}>
+            Je hoeft niet alles opnieuw te leren. Je brein leert nu vooral door ophalen: kernbegrip, casus, scorepunt. Kies vandaag kort en precies; stop liever goed dan uitgeput.
+          </p>
+          <div style={{ borderTop: "1px solid #dcefe1" }}>
+            {finalWeekActions.map((action, i) => (
+              <button key={action.label} onClick={() => setView(action.view)} style={{
+                width: "100%",
+                display: "flex",
+                gap: "10px",
+                alignItems: "flex-start",
+                background: "transparent",
+                border: "none",
+                borderTop: i > 0 ? "1px solid #dcefe1" : "none",
+                padding: "10px 0",
+                cursor: "pointer",
+                textAlign: "left",
+              }}>
+                <span style={{
+                  fontSize: "11px",
+                  fontWeight: 700,
+                  color: "#2D8E5A",
+                  background: "#e5f4ea",
+                  borderRadius: "6px",
+                  padding: "3px 8px",
+                  whiteSpace: "nowrap",
+                }}>
+                  {action.label}
+                </span>
+                <span style={{ fontSize: "12px", color: "#34513b", lineHeight: 1.5 }}>
+                  {action.text}
+                </span>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
       {/* Introductie voor nieuwe gebruikers */}
       {!(progress.seenCards?.length > 0 || (progress.quizScores || []).length > 0) && (
         <div style={{ background: "#f0f4ff", border: "1px solid #d0d8f0", borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>
@@ -162,7 +240,7 @@ export function Home({ setView, progress }) {
             Dit is jouw persoonlijke studietool voor het filosofie-examen. De app helpt je stap voor stap de stof te beheersen: van begrippen en filosofen tot examenvragen en primaire teksten.
           </p>
           <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: 0 }}>
-            Begin met het instellen van je studiepad hieronder, of duik direct in de flashcards. Elke minuut telt — je kunt dit!
+            Begin met het instellen van je studiepad hieronder, of duik direct in de flashcards. Kort ophalen werkt nu beter dan lang doorlezen.
           </p>
         </div>
       )}
