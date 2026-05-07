@@ -7,6 +7,19 @@ import { LiaBadge } from "../components/LiaBadge.jsx";
 import { LiaRefBadge } from "../components/LiaRefBadge.jsx";
 import { KwestieTag } from "../components/KwestieTag.jsx";
 
+const VRAAGTYPE_LABELS = {
+  R: "reproductie",
+  T: "toepassing",
+  V: "vergelijking",
+  PF: "perspectief",
+  Arg: "argumentatie",
+  S: "synthese",
+  DVI: "begripsanalyse",
+  Red: "redenering",
+};
+const formatVraagtype = (code) =>
+  (code || "").split("+").map(c => VRAAGTYPE_LABELS[c.trim()] || c.trim()).filter(Boolean).join(" + ");
+
 export function ExamQuestions({ progress, setProgress }) {
   const [openIdx, setOpenIdx] = useState(null);
   const [filter, setFilter] = useState(0);
@@ -111,6 +124,16 @@ export function ExamQuestions({ progress, setProgress }) {
                 <KwestieTag kwestie={eq.kwestie} small />
                 <span style={{ fontSize: "11px", color: "#666" }}>{eq.et}</span>
                 <LiaRefBadge refs={eq.lia} />
+                {eq.vraagtype && (
+                  <span title={`Vraagtype ${eq.vraagtype}`} style={{
+                    display: "inline-block", padding: "2px 6px", borderRadius: "4px",
+                    fontSize: "11px", fontWeight: 600,
+                    background: "#fff4e6", color: "#a85a00",
+                    letterSpacing: "0.3px", whiteSpace: "nowrap",
+                  }}>
+                    {formatVraagtype(eq.vraagtype)}
+                  </span>
+                )}
               </div>
               <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{eq.question}</p>
             </div>
