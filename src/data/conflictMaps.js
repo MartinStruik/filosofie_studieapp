@@ -82,7 +82,7 @@ export const CONFLICT_MAPS = [
     id: 7,
     titel: "Vangen data de mens?",
     kwestie: 4,
-    eindtermen: "ET 22–23",
+    eindtermen: "ET 21",
     nodes: [
       { filosoof: "Harari", stance: "Ja — dataïsme kan de mens volledig in data vangen. Algoritmen kennen ons beter dan wij onszelf. Homo sapiens maakt plaats voor Homo deus.", side: "left" },
       { filosoof: "Rasch", stance: "Nee — data reduceren de mens tot meetbare patronen. De mens is altijd méér dan wat data kunnen vatten: er blijft een onherleidbare rest.", side: "right" },
