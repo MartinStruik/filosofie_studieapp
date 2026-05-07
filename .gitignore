@@ -2,3 +2,12 @@ node_modules
 dist
 .env
 .env.local
+
+# Lokale onderzoeks-/databronnen (CSE-pdfs, notulen-extracten) — niet in publieke repo
+src/data/inventory-parts/
+src/data/foutenjacht-research.md
+*.tmp
+.~lock.*
+
+# Lokale bestanden die niet bij de app horen
+kick-off-les-filosofie.*

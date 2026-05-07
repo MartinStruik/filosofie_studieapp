@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { FOUTENJACHT_ITEMS, FOUT_TYPES } from "../data/foutenjacht.js";
+import { LiaRefBadge } from "../components/LiaRefBadge.jsx";
 
 /**
  * Foutenjacht v2: herken typische CE-fouten in spoof-antwoorden.
@@ -131,13 +132,18 @@ function PlayScreen({ item, onDone, onBack }) {
         <span style={{ fontSize: "11px", color: "#888" }}>{item.punten} punten</span>
       </div>
 
-      {/* Bron */}
-      {item.bron && (
+      {/* Bron + Lia-referentie */}
+      {(item.bron || (item.lia && item.lia.length > 0)) && (
         <div style={{
-          fontSize: "10px", color: "#aaa", fontStyle: "italic",
+          display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap",
           marginBottom: "8px",
         }}>
-          {item.bron}
+          {item.bron && (
+            <span style={{ fontSize: "10px", color: "#aaa", fontStyle: "italic" }}>
+              {item.bron}
+            </span>
+          )}
+          <LiaRefBadge refs={item.lia} />
         </div>
       )}
 

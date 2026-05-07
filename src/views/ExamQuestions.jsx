@@ -4,6 +4,7 @@ import { EXAM_QUESTIONS } from "../data/examQuestions.js";
 import { useToast } from "../hooks/useToast.js";
 import { Toast } from "../components/Toast.jsx";
 import { LiaBadge } from "../components/LiaBadge.jsx";
+import { LiaRefBadge } from "../components/LiaRefBadge.jsx";
 import { KwestieTag } from "../components/KwestieTag.jsx";
 
 export function ExamQuestions({ progress, setProgress }) {
@@ -109,7 +110,7 @@ export function ExamQuestions({ progress, setProgress }) {
                 <span style={{ fontSize: "11px", color: "#666" }}>{eq.points}p</span>
                 <KwestieTag kwestie={eq.kwestie} small />
                 <span style={{ fontSize: "11px", color: "#666" }}>{eq.et}</span>
-                <LiaBadge text={eq.question} kwestie={eq.kwestie} />
+                <LiaRefBadge refs={eq.lia} />
               </div>
               <p style={{ fontSize: "14px", fontWeight: 600, color: "#1a1a2e", margin: 0, lineHeight: 1.5, fontFamily: "'Source Sans 3', sans-serif" }}>{eq.question}</p>
             </div>
