@@ -33,8 +33,35 @@ export function Home({ setView, progress }) {
   const countdown = getExamCountdown();
   const overallProg = computeOverallProgress(progress);
   const isFinalWeek = countdown.total > 0 && countdown.days <= 7;
+  const isStarter = isFinalWeek && overallProg.overall < 0.20;
 
-  const finalWeekActions = [
+  const finalWeekTitle = isStarter ? "Frisse start — vandaag kan nog" : "Rustig scherp worden";
+  const finalWeekIntro = isStarter
+    ? "Geen paniek. Volg deze volgorde — kalm, één à twee stappen per dag. Stop liever na een uur dan dat je uitgeput raakt."
+    : "Je hoeft niet alles opnieuw te leren. Je brein leert nu vooral door ophalen: kernbegrip, casus, scorepunt. Kies vandaag kort en precies; stop liever goed dan uitgeput.";
+
+  const finalWeekActions = isStarter ? [
+    {
+      label: "Stap 1",
+      text: "Bekijk de 4 kwesties en de filosofen — overzicht eerst, dan diepte.",
+      view: "filosofen",
+    },
+    {
+      label: "Stap 2",
+      text: "Doe 20 flashcards. Kort en actief — kernbegrippen vastzetten.",
+      view: "flashcards",
+    },
+    {
+      label: "Stap 3",
+      text: "Maak 4 examenvragen, één per kwestie. Voel hoe het CE werkt.",
+      view: "exam",
+    },
+    {
+      label: "Stap 4",
+      text: "Doe 2 foutenjacht-items. Herken de typische valkuilen.",
+      view: "foutenjacht",
+    },
+  ] : [
     {
       label: "Haal op",
       text: "Begin met kaarten die verlopen zijn of eerder lastig waren.",
@@ -187,7 +214,7 @@ export function Home({ setView, progress }) {
                 Laatste examenweek
               </div>
               <h2 style={{ fontFamily: "'Playfair Display', Georgia, serif", fontSize: "20px", color: "#1a1a2e", margin: 0, lineHeight: 1.25 }}>
-                Rustig scherp worden
+                {finalWeekTitle}
               </h2>
             </div>
             <div style={{ textAlign: "right", flexShrink: 0 }}>
@@ -196,7 +223,7 @@ export function Home({ setView, progress }) {
             </div>
           </div>
           <p style={{ fontSize: "13px", color: "#34513b", lineHeight: 1.6, margin: "0 0 12px" }}>
-            Je hoeft niet alles opnieuw te leren. Je brein leert nu vooral door ophalen: kernbegrip, casus, scorepunt. Kies vandaag kort en precies; stop liever goed dan uitgeput.
+            {finalWeekIntro}
           </p>
           <div style={{ borderTop: "1px solid #dcefe1" }}>
             {finalWeekActions.map((action, i) => (
@@ -232,8 +259,8 @@ export function Home({ setView, progress }) {
         </section>
       )}
 
-      {/* Introductie voor nieuwe gebruikers */}
-      {!(progress.seenCards?.length > 0 || (progress.quizScores || []).length > 0) && (
+      {/* Introductie voor nieuwe gebruikers (in laatste week vervangen door Frisse start-blok hierboven) */}
+      {!isFinalWeek && !(progress.seenCards?.length > 0 || (progress.quizScores || []).length > 0) && (
         <div style={{ background: "#f0f4ff", border: "1px solid #d0d8f0", borderRadius: "12px", padding: "16px", marginBottom: "16px" }}>
           <div style={{ fontSize: "15px", fontWeight: 700, color: "#1a1a2e", marginBottom: "6px" }}>Welkom!</div>
           <p style={{ fontSize: "13px", color: "#444", lineHeight: 1.6, margin: "0 0 8px" }}>
